@@ -5,10 +5,9 @@
       <v-app-bar
         app
         clipped-left
-        color="amber"
       >
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        <span class="title ml-3 mr-5">Google&nbsp;<span class="font-weight-light">Keep</span></span>
+        <span class="title ml-3 mr-5">Quest&nbsp;<span class="font-weight-light">Lists</span></span>
         <v-text-field
           solo-inverted
           flat
@@ -22,11 +21,9 @@
         v-model="drawer"
         app
         clipped
-        color="grey lighten-4"
       >
         <v-list
           dense
-          class="grey lighten-4"
         >
           <template v-for="(item, i) in items">
             <v-row
