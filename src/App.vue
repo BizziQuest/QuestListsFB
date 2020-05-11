@@ -16,10 +16,8 @@
           label="Search"
           prepend-inner-icon="search"
         ></v-text-field>
-  
         <v-spacer></v-spacer>
       </v-app-bar>
-  
       <v-navigation-drawer
         v-model="drawer"
         app
@@ -74,7 +72,6 @@
           </template>
         </v-list>
       </v-navigation-drawer>
-  
       <v-content>
         <v-container
           fluid
@@ -113,13 +110,13 @@ display: none
 }
 </style>
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+// import HelloWorld from './components/HelloWorld.vue';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    // HelloWorld,
   },
   props: {
     source: String,
