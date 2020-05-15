@@ -2,3 +2,14 @@ tasks:
   - init: yarn install && yarn serve
 image:
   file: .gitpod.Dockerfile
+
+vscode:
+  extensions:
+    - octref.vetur@0.24.0:aselSn+QoeM1P6qPDDZJXg==
+    - RudeBoyEnterprises.rbe-matrix-skin-theme@1.0.2:KzlZReaPyERgShp2vHd5yg==
+    - toba.vsfire@1.4.1:h61hf1SYLs3VPHlSFosLlQ==
+    - jsayol.firebase-explorer@0.3.3:dTQmzKOz2EVA/5W3EP1pWw==
+    - oderwat.indent-rainbow@7.4.0:nth8lnJRnQu9NcWvNc9KPA==
+    - CoenraadS.bracket-pair-colorizer@1.0.61:fqPT1sJEqaEdrfXeYbdW+A==
+    - Metatype.copilot-vscode@1.3.0:s16G4ML43Vzj0I5ko5Qv6A==
+    - antfu.i18n-ally@2.1.6:kexij0pxswJjDrcTQ1uJsw==
