@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="drawer" app clipped>
+    <v-navigation-drawer :value="drawer" app clipped>
       <v-list dense>
         <template v-for="(item, i) in items">
           <v-row v-if="item.heading" :key="i" align="center">
@@ -49,6 +49,7 @@ export default {
         { icon: "keyboard", text: "Keyboard shortcuts" }
       ]
     };
-  }
+  },
+
 };
 </script>

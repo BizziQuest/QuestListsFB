@@ -61,10 +61,7 @@ export default {
     };
   },
   methods: {
-    drawerStatus(value) {
-      console.log("the value parent drawer ", value);
-      this.drawer = value;
-    }
+   
   }
 };
 </script>
