@@ -16,16 +16,16 @@ export default new Vuetify({
       // iconfont: 'mdi', // default - only for display purposes
       iconfont: 'md', // default - only for display purposes
     },
-    // themes: {
-    //   light: {
-    //     primary: '#ee44aa',
-    //     secondary: '#424242',
-    //     accent: '#82B1FF',
-    //     error: '#FF5252',
-    //     info: '#2196F3',
-    //     success: '#4CAF50',
-    //     warning: '#FFC107',
-    //   },
-    // },
+    themes: {
+      light: {
+        primary: '#ee44aa',
+        secondary: '#424242',
+        accent: '#82B1FF',
+        error: '#FF5252',
+        info: '#2196F3',
+        success: '#4CAF50',
+        warning: '#FFC107',
+      },
+    },
   },
 });
