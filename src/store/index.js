@@ -49,6 +49,9 @@ export default new Vuex.Store({
       } catch (error) {
         console.log(error)
       }
-    }
+    },
+    autoSignIn({ commit }, payload) {
+      commit("setUser", payload);
+    },
   }
 });
