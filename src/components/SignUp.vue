@@ -13,13 +13,22 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field v-model="email" label="Email*" autocomplete="email" type="email" required></v-text-field>
+                  <v-text-field
+                    v-model="email"
+                    label="Email*"
+                    autocomplete="email"
+                    type="email"
+                    required
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field v-model="password" autocomplete="new-password" label="Password*" type="password" required></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field v-model="bio" label="Biography" required></v-text-field>
+                  <v-text-field
+                    v-model="password"
+                    autocomplete="new-password"
+                    label="Password*"
+                    type="password"
+                    required
+                  ></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -31,7 +40,6 @@
           </v-card-actions>
         </v-card>
       </v-form>
-      
     </v-dialog>
   </v-row>
 </template>
@@ -43,8 +51,7 @@ export default {
     return {
       dialog: false,
       email: null,
-      password: null,
-      bio: null,
+      password: null
     };
   },
   methods: {
@@ -52,8 +59,8 @@ export default {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("signupUser", {
           email: this.email,
-          password: this.password,
-         biography: this.bio});
+          password: this.password
+        });
         this.$refs.form.reset();
         this.dialog = false;
       }
