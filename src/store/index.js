@@ -15,7 +15,7 @@ export default new Vuex.Store({
     setUser(state, payload) {
       //this one is thorwing an error 
       //  state.user =[...payload]
-      
+
       // the following one will have issue if obj includes objs?
       state.user = JSON.parse(JSON.stringify(payload))
 
@@ -30,7 +30,15 @@ export default new Vuex.Store({
       } catch (error) {
         console.log(error)
       }
-
+    },
+    async loginUser({ commit }, payload) {
+      try {
+        const cred = await auth.signInWithEmailAndPassword(payload.email, payload.password)
+        console.log(cred)
+        commit("setUser", payload)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 });
