@@ -15,6 +15,7 @@ export default new Vuex.Store({
     setUser(state, payload) {
       //this one is thorwing an error 
       //  state.user =[...payload]
+      
       // the following one will have issue if obj includes objs?
       state.user = JSON.parse(JSON.stringify(payload))
 
