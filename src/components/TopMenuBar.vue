@@ -8,15 +8,21 @@
     <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field>
     <v-spacer></v-spacer>
     <signup-btn></signup-btn>
+    <login-btn></login-btn>
+    <logout-btn></logout-btn>
   </v-app-bar>
 </template>
 <script>
 import SignUp from "../components/SignUp";
+import LogIn from '../components/LogIn';
+import LogOut from '../components/LogOut'
 export default {
   name: "TopMenuBar",
   props: ["drawer"],
   components: {
-    "signup-btn": SignUp
+    "signup-btn": SignUp,
+    'login-btn': LogIn,
+    'logout-btn': LogOut
   },
 
   methods: {
