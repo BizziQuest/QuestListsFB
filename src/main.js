@@ -5,10 +5,26 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
-// import '@mdi/font/css/materialdesignicons.css';
+import firebase from "firebase/app";
+import "@firebase/auth";
+require("dotenv").config();
 
 Vue.config.productionTip = false;
 
+
+const firebaseConfig = {
+  apiKey: process.env.VUE_APP_API_KEY,
+  authDomain: process.env.authDomain,
+  databaseURL: process.env.VUE_APP_DATABASE_URL,
+  projectId: "questlists",
+  storageBucket: process.env.VUE_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appId,
+};
+
+firebase.initializeApp(firebaseConfig);
+
+export const auth = firebase.auth();
 new Vue({
   router,
   store,
