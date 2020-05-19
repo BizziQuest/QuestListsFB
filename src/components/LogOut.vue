@@ -8,7 +8,7 @@ export default {
   name: "LogOut",
   methods: {
     logoutUser() {
-      this.$store.dispatch("logoutUser");
+      this.$store.dispatch("logOut");
     }
   }
 };
