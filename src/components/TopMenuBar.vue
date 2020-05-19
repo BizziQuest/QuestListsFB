@@ -7,24 +7,36 @@
     </span>
     <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field>
     <v-spacer></v-spacer>
-    <signup-btn></signup-btn>
-    <login-btn></login-btn>
-    <logout-btn></logout-btn>
+    <span v-if="isUserUthenticated">
+      <logout-btn></logout-btn>
+    </span>
+    <span v-else>
+      <signup-btn></signup-btn>
+      <login-btn></login-btn>
+    </span>
   </v-app-bar>
 </template>
 <script>
 import SignUp from "../components/SignUp";
-import LogIn from '../components/LogIn';
-import LogOut from '../components/LogOut'
+import LogIn from "../components/LogIn";
+import LogOut from "../components/LogOut";
 export default {
   name: "TopMenuBar",
   props: ["drawer"],
   components: {
     "signup-btn": SignUp,
-    'login-btn': LogIn,
-    'logout-btn': LogOut
+    "login-btn": LogIn,
+    "logout-btn": LogOut
   },
-
+  computed: {
+  
+    isUserUthenticated() {
+      return (
+        this.$store.getters.user !== undefined &&
+        this.$store.getters.user !== null
+      );
+    }
+  },
   methods: {
     openOrCloseDrawer(drawerProp) {
       //https://antenna.io/blog/2018/01/state-management-in-vue-js/
