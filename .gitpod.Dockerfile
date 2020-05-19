@@ -9,4 +9,4 @@ USER gitpod
 #
 # More information: https://www.gitpod.io/docs/config-docker/
 
-RUN nvm install 10 && nvm use --default 10 && npm install -g yarn firebase-tools @vue/cli
+# RUN nvm install 10 && nvm use --default 10 && npm install -g yarn firebase-tools @vue/cli
