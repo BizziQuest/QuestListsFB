@@ -39,6 +39,16 @@ export default new Vuex.Store({
       } catch (error) {
         console.log(error)
       }
+    },
+
+    async logOut({ commit }) {
+      try {
+        const cred = await auth.signOut()
+        console.log(cred)
+        commit("setUser", null)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 });
