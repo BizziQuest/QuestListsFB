@@ -11,43 +11,42 @@
       <logout-btn></logout-btn>
     </span>
     <span v-else>
-      <signup-btn></signup-btn>
-      <login-btn></login-btn>
+      <login-or-signup-btn></login-or-signup-btn>
     </span>
   </v-app-bar>
 </template>
 <script>
-import SignUp from "../components/SignUp";
-import LogIn from "../components/LogIn";
-import LogOut from "../components/LogOut";
+ 
+import LogInorSignUp from './LogInorSignUp';
+import LogOut from './LogOut';
+
 export default {
-  name: "TopMenuBar",
-  props: ["drawer"],
+  name: 'TopMenuBar',
+  props: ['drawer'],
   components: {
-    "signup-btn": SignUp,
-    "login-btn": LogIn,
-    "logout-btn": LogOut
+    'login-or-signup-btn': LogInorSignUp,
+    'logout-btn': LogOut,
   },
   computed: {
-  
+
     isUserUthenticated() {
       return (
-        this.$store.getters.user !== undefined &&
-        this.$store.getters.user !== null
+        this.$store.getters.user !== undefined
+        && this.$store.getters.user !== null
       );
-    }
+    },
   },
   methods: {
     openOrCloseDrawer(drawerProp) {
-      //https://antenna.io/blog/2018/01/state-management-in-vue-js/
+      // https://antenna.io/blog/2018/01/state-management-in-vue-js/
       //  Avoid mutating a prop directly since the value will be overwritten whenever
       //  the parent component re-renders issue
       // using sync
       // drawerProp = !drawerProp;
       // alert(drawerProp);
       // this.$emit("updrawer-status", drawerProp);
-      this.$emit("update:drawer", !drawerProp);
-    }
-  }
+      this.$emit('update:drawer', !drawerProp);
+    },
+  },
 };
 </script>

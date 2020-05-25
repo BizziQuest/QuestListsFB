@@ -2,12 +2,12 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">
-        <v-btn outlined class="primary z-depth-0 darken" v-on="on">Log In</v-btn>
+        <v-btn outlined class="primary z-depth-0 darken" v-on="on"> Log In / Sign up</v-btn>
       </template>
       <v-form ref="form">
         <v-card>
           <v-card-title>
-            <span class="headline">Log In Form</span>
+            <span class="headline">Log In or Sign Up</span>
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -24,7 +24,8 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
-            <v-btn color="blue darken-1" text @click="loginUser">Log In</v-btn>
+            <v-btn color="blue darken-1" text @click="loginOrSignUser">Log In</v-btn>
+            <v-btn color="blue darken-1" text @click="loginOrSignUser(true)">Sign Up</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -33,7 +34,7 @@
 </template>
 <script>
 export default {
-  name: "LogIn",
+  name: 'LogInorSignUp',
   data() {
     return {
       email: null,
@@ -42,16 +43,18 @@ export default {
     };
   },
   methods: {
-    loginUser() {
+    loginOrSignUser(signup=false) {
+      console.debug(arguments);
+      const action = signup ?  'signupUser' : 'loginUser';
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("loginUser", {
+        this.$store.dispatch(action, {
           email: this.email,
-          password: this.password
+          password: this.password,
         });
         this.$refs.form.reset();
-        this.dialog = false
+        this.dialog = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>

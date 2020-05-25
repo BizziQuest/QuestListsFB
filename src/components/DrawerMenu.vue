@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer :value="drawer" app clipped>
+    <v-navigation-drawer v-model="localDrawer" app clipped>
       <v-list dense>
         <template v-for="(item, i) in items">
           <v-row v-if="item.heading" :key="i" align="center">
@@ -28,28 +28,34 @@
 
 <script>
 export default {
-  name: "DrawerMenu",
-  props: ["drawer"],
+  name: 'DrawerMenu',
+  props: ['drawer'],
   data() {
     return {
+      localDrawer: this.drawer,
       items: [
-        { icon: "lightbulb_outline", text: "Notes" },
-        { icon: "touch_app", text: "Reminders" },
+        { icon: 'lightbulb_outline', text: 'Notes' },
+        { icon: 'touch_app', text: 'Reminders' },
         { divider: true },
-        { heading: "Labels" },
-        { icon: "add", text: "Create new label" },
+        { heading: 'Labels' },
+        { icon: 'add', text: 'Create new label' },
         { divider: true },
-        { icon: "archive", text: "Archive" },
-        { icon: "delete", text: "Trash" },
+        { icon: 'archive', text: 'Archive' },
+        { icon: 'delete', text: 'Trash' },
         { divider: true },
-        { icon: "settings", text: "Settings" },
-        { icon: "chat_bubble", text: "Trash" },
-        { icon: "help", text: "Help" },
-        { icon: "phonelink", text: "App downloads" },
-        { icon: "keyboard", text: "Keyboard shortcuts" }
-      ]
+        { icon: 'settings', text: 'Settings' },
+        { icon: 'chat_bubble', text: 'Trash' },
+        { icon: 'help', text: 'Help' },
+        { icon: 'phonelink', text: 'App downloads' },
+        { icon: 'keyboard', text: 'Keyboard shortcuts' },
+      ],
     };
   },
-
+  watch: {
+    drawer(newVal, oldVal) {
+      if (this.localDrawer === newVal) this.localDrawer = oldVal;
+      else this.localDrawer = newVal;
+    },
+  },
 };
 </script>

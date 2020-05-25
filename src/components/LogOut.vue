@@ -5,11 +5,11 @@
 </template>
 <script>
 export default {
-  name: "LogOut",
+  name: 'LogOut',
   methods: {
     logoutUser() {
-      this.$store.dispatch("logOut");
-    }
-  }
+      this.$store.dispatch('logOut');
+    },
+  },
 };
 </script>
