@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <v-app>
+      <v-app id="keep">
         <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
         <drawer-menu-bar :drawer="drawer"></drawer-menu-bar>
         <v-content>
