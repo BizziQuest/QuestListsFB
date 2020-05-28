@@ -10,6 +10,22 @@
               <v-col class="shrink">
                 <div style="color: red">Drawer: {{ drawer }}</div>
                 <div style="color: red">User: {{ userInfo }}</div>
+                <div v-show="isUserUthenticated">
+                  <v-card class="mx-auto" max-width="400" tile>
+                    <v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-title>Single-line item</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+
+                    <v-list-item two-line>
+                      <v-list-item-content>
+                        <v-list-item-title>Two-line item</v-list-item-title>
+                        <v-list-item-subtitle>Secondary text</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-card>
+                </div>
               </v-col>
             </v-row>
           </v-container>
@@ -57,6 +73,14 @@ export default {
   computed: {
     userInfo() {
       return this.$store.getters.user;
+    },
+    isUserUthenticated() {
+      console.log(this.$store.getters.user);
+      return (
+        this.$store.getters.user !== undefined
+        && this.$store.getters.user !== null
+        && Object.keys(this.$store.getters.user).length !== 0
+      );
     },
   },
   methods: {},
