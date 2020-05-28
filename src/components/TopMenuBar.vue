@@ -28,7 +28,9 @@ export default {
   },
   computed: {
     isUserUthenticated() {
-      return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
+      console.log(this.$store.getters.user);
+      return (this.$store.getters.user !== undefined && this.$store.getters.user !== null
+      && Object.keys(this.$store.getters.user).length !== 0);
     },
   },
   methods: {
