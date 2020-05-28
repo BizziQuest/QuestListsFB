@@ -24,7 +24,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
-            <v-btn color="blue darken-1" text @click="loginOrSignUser">Log In</v-btn>
+            <v-btn color="blue darken-1" text @click="loginOrSignUser()">Log In</v-btn>
             <v-btn color="blue darken-1" text @click="loginOrSignUser(true)">Sign Up</v-btn>
           </v-card-actions>
         </v-card>
@@ -43,10 +43,10 @@ export default {
     };
   },
   methods: {
-    loginOrSignUser(signup=false) {
-      console.debug(arguments);
-      const action = signup ?  'signupUser' : 'loginUser';
+    loginOrSignUser(signup = false) {
+      const action = signup ? 'signupUser' : 'loginUser';
       if (this.$refs.form.validate()) {
+        console.debug(action);
         this.$store.dispatch(action, {
           email: this.email,
           password: this.password,

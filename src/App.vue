@@ -8,8 +8,8 @@
           <v-container fluid class="grey lighten-4 fill-height">
             <v-row justify="center" align="center">
               <v-col class="shrink">
-                <span style="color: red">{{ drawer }}</span>
-                <span style="color: red">{{ userInfo }}</span>
+                <div style="color: red">Drawer: {{ drawer }}</div>
+                <div style="color: red">User: {{ userInfo }}</div>
               </v-col>
             </v-row>
           </v-container>
@@ -28,10 +28,10 @@ export default {
 
   components: {
     'top-menu-bar': TopMenuBarVue,
-    'drawer-menu-bar': DrawerMenuVue
+    'drawer-menu-bar': DrawerMenuVue,
   },
   props: {
-    source: String
+    source: String,
   },
   data() {
     return {
@@ -50,15 +50,15 @@ export default {
         { icon: 'chat_bubble', text: 'Trash' },
         { icon: 'help', text: 'Help' },
         { icon: 'phonelink', text: 'App downloads' },
-        { icon: 'keyboard', text: 'Keyboard shortcuts' }
-      ]
+        { icon: 'keyboard', text: 'Keyboard shortcuts' },
+      ],
     };
   },
   computed: {
     userInfo() {
       return this.$store.getters.user;
-    }
+    },
   },
-  methods: {}
+  methods: {},
 };
 </script>

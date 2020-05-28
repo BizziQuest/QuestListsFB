@@ -16,9 +16,8 @@
   </v-app-bar>
 </template>
 <script>
- 
-import LogInorSignUp from './LogInorSignUp';
-import LogOut from './LogOut';
+import LogInorSignUp from './LogInorSignUp.vue';
+import LogOut from './LogOut.vue';
 
 export default {
   name: 'TopMenuBar',
@@ -28,12 +27,8 @@ export default {
     'logout-btn': LogOut,
   },
   computed: {
-
     isUserUthenticated() {
-      return (
-        this.$store.getters.user !== undefined
-        && this.$store.getters.user !== null
-      );
+      return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
     },
   },
   methods: {

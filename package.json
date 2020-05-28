@@ -11,6 +11,7 @@
     "deploy": "firebase deploy"
   },
   "dependencies": {
+    "@firebase/auth": "^0.14.6",
     "@mdi/font": "^5.1.45",
     "core-js": "^3.6.4",
     "dotenv": "^8.2.0",

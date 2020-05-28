@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { auth } from '../main';
+import { auth } from '../main'; // eslint-disable-line import/no-cycle
 
 Vue.use(Vuex);
 
@@ -14,10 +14,10 @@ export default new Vuex.Store({
   mutations: {
     setUser(state, payload) {
       // this one is thorwing an error
-      //  state.user =[...payload]
+      state.user = { ...payload };
 
       // the following one will have issue if obj includes objs?
-      state.user = JSON.parse(JSON.stringify(payload));
+      // state.user = JSON.parse(JSON.stringify(payload));
     },
   },
   actions: {

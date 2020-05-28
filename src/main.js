@@ -1,17 +1,16 @@
 import Vue from 'vue';
+import '@firebase/auth';
+import firebase from 'firebase/app';
 import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
-import store from './store';
+import store from './store';// eslint-disable-line import/no-cycle
 import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
-import firebase from 'firebase/app';
-import '@firebase/auth';
-
-require('dotenv').config();
 
 Vue.config.productionTip = false;
 
+require('dotenv').config();
 
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_API_KEY,
@@ -23,22 +22,20 @@ const firebaseConfig = {
   appId: process.env.appId,
 };
 
-firebase.initializeApp(firebaseConfig);
+export const FBApp = firebase.initializeApp(firebaseConfig);
 
-
-export const auth = firebase.auth();
-
-firebase.auth().onAuthStateChanged((user) => {
+export const auth = FBApp.auth();
+// user is looking at to the firebase.auth().currentUser
+// no need to redefine it
+auth.onAuthStateChanged((user) => {
   if (user) {
-    // User is signed in.
-    const user = firebase.auth().currentUser;
+    // User is signed in
     store.dispatch('autoSignIn', { email: user.email, id: user.uid });
   } else {
     // No user is signed in.
     console.log('user logged out');
   }
 });
-
 
 new Vue({
   router,
