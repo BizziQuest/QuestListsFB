@@ -2,8 +2,8 @@
   <div id="app">
     <v-app id="inspire">
       <v-app id="keep">
-        <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
-        <drawer-menu-bar :drawer="drawer"></drawer-menu-bar>
+        <top-menu-bar :drawer.sync="drawer" @updateDrawer="handleUpdate"></top-menu-bar>
+        <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
         <v-content>
           <v-container fluid class="grey lighten-4 fill-height">
             <v-row justify="center" align="center">
@@ -75,14 +75,17 @@ export default {
       return this.$store.getters.user;
     },
     isUserUthenticated() {
-      console.log(this.$store.getters.user);
       return (
         this.$store.getters.user !== undefined
         && this.$store.getters.user !== null
-        && Object.keys(this.$store.getters.user).length !== 0
       );
     },
   },
-  methods: {},
+  methods: {
+    handleUpdate(val) {
+      console.log('UPDATE', val);
+      this.drawer = val;
+    },
+  },
 };
 </script>

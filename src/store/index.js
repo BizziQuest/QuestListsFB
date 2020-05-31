@@ -7,9 +7,13 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: null,
+    itemStates: ['Done', 'Not Done'],
+    itemsList: [],
   },
   getters: {
     user: (state) => state.user,
+    itemStates: (state) => state.itemStates,
+    itemsList: (state) => state.itemsList,
   },
   mutations: {
     setUser(state, payload) {
@@ -17,11 +21,21 @@ export default new Vuex.Store({
       // state.user = { ...null} ==> state.user = {}
       if (payload) {
         state.user = { ...payload };
-      } else state.user = null;
-
-
+      } else {
+        state.user = null;
+      }
       // the following one will have issue if obj includes objs?
       // state.user = JSON.parse(JSON.stringify(payload));
+    },
+    addState(state, payload) {
+      if (payload) {
+        state.itemStates.push(payload);
+      }
+    },
+    addItem(state, payload) {
+      if (payload) {
+        state.itemsList.push(payload);
+      }
     },
   },
   actions: {
@@ -55,6 +69,12 @@ export default new Vuex.Store({
     },
     autoSignIn({ commit }, payload) {
       commit('setUser', payload);
+    },
+    addState({ commit }, payload) {
+      commit('addState', payload);
+    },
+    addItem({ commit }, payload) {
+      commit('addItem', payload);
     },
   },
 });
