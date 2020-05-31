@@ -28,10 +28,10 @@ export default {
 
   components: {
     'top-menu-bar': TopMenuBarVue,
-    'drawer-menu-bar': DrawerMenuVue
+    'drawer-menu-bar': DrawerMenuVue,
   },
   props: {
-    source: String
+    source: String,
   },
   data() {
     return {
@@ -50,15 +50,15 @@ export default {
         { icon: 'chat_bubble', text: 'Trash' },
         { icon: 'help', text: 'Help' },
         { icon: 'phonelink', text: 'App downloads' },
-        { icon: 'keyboard', text: 'Keyboard shortcuts' }
-      ]
+        { icon: 'keyboard', text: 'Keyboard shortcuts' },
+      ],
     };
   },
   computed: {
     userInfo() {
       return this.$store.getters.user;
-    }
+    },
   },
-  methods: {}
+  methods: {},
 };
 </script>
