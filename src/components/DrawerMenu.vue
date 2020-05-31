@@ -21,18 +21,23 @@
             </v-list-item-content>
           </v-list-item>
         </template>
+        <v-list-item> <create-a-list></create-a-list></v-list-item>
       </v-list>
     </v-navigation-drawer>
   </div>
 </template>
 
 <script>
+import CreateAListVue from './CreateAList.vue';
+
 export default {
   name: 'DrawerMenu',
   props: ['drawer'],
+  components: {
+    'create-a-list': CreateAListVue,
+  },
   data() {
     return {
-      localDrawer: this.drawer,
       items: [
         { icon: 'lightbulb_outline', text: 'Notes' },
         { icon: 'touch_app', text: 'Reminders' },
@@ -51,10 +56,14 @@ export default {
       ],
     };
   },
-  watch: {
-    drawer(newVal, oldVal) {
-      if (this.localDrawer === newVal) this.localDrawer = oldVal;
-      else this.localDrawer = newVal;
+  computed: {
+    localDrawer: {
+      get() {
+        return this.drawer;
+      },
+      set(val) {
+        this.$emit('update:drawer', val);
+      },
     },
   },
 };
