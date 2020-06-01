@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app clipped-left>
-    <v-app-bar-nav-icon v-on:click="openOrCloseDrawer(drawer)"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon v-on:click="$emit('update:drawer', !drawer)"></v-app-bar-nav-icon>
     <span class="title ml-3 mr-5">
       Quest
       <span class="font-weight-light">Lists</span>
@@ -28,22 +28,16 @@ export default {
   },
   computed: {
     isUserUthenticated() {
-      console.log(this.$store.getters.user);
-      return (this.$store.getters.user !== undefined && this.$store.getters.user !== null
-      && Object.keys(this.$store.getters.user).length !== 0);
+      return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
     },
-  },
-  methods: {
-    openOrCloseDrawer(drawerProp) {
-      // https://antenna.io/blog/2018/01/state-management-in-vue-js/
-      //  Avoid mutating a prop directly since the value will be overwritten whenever
-      //  the parent component re-renders issue
-      // using sync
-      // drawerProp = !drawerProp;
-      // alert(drawerProp);
-      // this.$emit("updrawer-status", drawerProp);
-      this.$emit('update:drawer', !drawerProp);
-    },
-  },
+    localDrawer: {
+      get() {
+        return this.drawer;
+      },
+      set(val) {
+        this.$emit('update:drawer', val);
+      }
+    }
+  }
 };
 </script>
