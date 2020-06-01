@@ -55,7 +55,6 @@
               <v-col cols="12" sm="5">
                 <v-autocomplete
                   :items="itemStates"
-                  :filter="customFilter"
                   label="States"
                   v-model="statesPicked"
                 ></v-autocomplete>
@@ -70,7 +69,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
+          <v-btn color="blue darken-1" text @click="CreateAList">Create</v-btn>
         </v-card-actions>
       </v-card>
       <div v-for="item in itemsList" :key="item.name">
@@ -115,13 +114,6 @@ export default {
         borderRadius: '4px',
         transition: 'border-radius 200ms ease-in-out',
       };
-    },
-    customFilter(item, queryText) {
-      const textOne = item.name.toLowerCase();
-      const textTwo = item.abbr.toLowerCase();
-      const searchText = queryText.toLowerCase();
-
-      return textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1;
     },
   },
   computed: {
