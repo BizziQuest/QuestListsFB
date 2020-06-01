@@ -36,8 +36,8 @@ export default {
       },
       set(val) {
         this.$emit('update:drawer', val);
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
