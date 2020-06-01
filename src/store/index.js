@@ -9,11 +9,13 @@ export default new Vuex.Store({
     user: null,
     itemStates: ['Done', 'Not Done'],
     itemsList: [],
+    lists: [],
   },
   getters: {
     user: (state) => state.user,
     itemStates: (state) => state.itemStates,
     itemsList: (state) => state.itemsList,
+    lists: (state) => state.lists,
   },
   mutations: {
     setUser(state, payload) {
@@ -35,6 +37,19 @@ export default new Vuex.Store({
     addItem(state, payload) {
       if (payload) {
         state.itemsList.push(payload);
+      }
+    },
+    setItemsList(state, payload) {
+      state.itemsList = payload;
+    },
+    createAList(state, payload) {
+      alert(JSON.stringify(payload));
+      if (payload) {
+        const list = {};
+        list.title = payload.title;
+        list.bgColor = payload.bgColor;
+        list.items = state.itemsList;
+        state.lists.push(list);
       }
     },
   },
@@ -75,6 +90,10 @@ export default new Vuex.Store({
     },
     addItem({ commit }, payload) {
       commit('addItem', payload);
+    },
+    createAList({ commit }, payload) {
+      commit('createAList', payload);
+      commit('setItemsList', []);
     },
   },
 });

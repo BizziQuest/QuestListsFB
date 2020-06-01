@@ -19,7 +19,7 @@
           <v-container>
             <v-row>
               <v-col cols="12" sm="5" md="4">
-                <v-text-field label="Title*" required></v-text-field>
+                <v-text-field label="Title*" v-model='title' required></v-text-field>
               </v-col>
               <v-col cols="12" sm="7" md="8">
                 <v-text-field label="Color*" v-model="color">
@@ -69,7 +69,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="CreateAList">Create</v-btn>
+          <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
         </v-card-actions>
       </v-card>
       <div v-for="item in itemsList" :key="item.name">
@@ -85,6 +85,7 @@ export default {
   data() {
     return {
       color: '#F0E9E9FF',
+      title: '',
       menu: false,
       dialog: false,
       newState: null,
@@ -104,6 +105,14 @@ export default {
       this.$store.dispatch('addItem', item);
       this.newItem = '';
       this.statesPicked = '';
+    },
+    createAList() {
+      const payload = {};
+      payload.title = this.title;
+      payload.bgColor = this.color;
+
+      this.$store.dispatch('createAList', payload);
+      this.dialog = false;
     },
     swatchStyle() {
       return {

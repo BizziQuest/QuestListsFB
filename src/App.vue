@@ -7,24 +7,19 @@
         <v-content>
           <v-container fluid class="grey lighten-4 fill-height">
             <v-row justify="center" align="center">
-              <v-col class="shrink">
+              <v-col col='12' md='12' class="">
                 <div style="color: red">Drawer: {{ drawer }}</div>
                 <div style="color: red">User: {{ userInfo }}</div>
                 <div v-show="isUserUthenticated">
-                  <v-card class="mx-auto" max-width="400" tile>
+                <div v-for="list in lists" :key="list.bgColor">
+                    <v-card class="mx-auto" max-width="880" tile :color="list.bgColor">
                     <v-list-item>
                       <v-list-item-content>
-                        <v-list-item-title>Single-line item</v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-
-                    <v-list-item two-line>
-                      <v-list-item-content>
-                        <v-list-item-title>Two-line item</v-list-item-title>
-                        <v-list-item-subtitle>Secondary text</v-list-item-subtitle>
+                        <v-list-item-title>{{list}}</v-list-item-title>
                       </v-list-item-content>
                     </v-list-item>
                   </v-card>
+                </div>
                 </div>
               </v-col>
             </v-row>
@@ -79,6 +74,9 @@ export default {
         this.$store.getters.user !== undefined
         && this.$store.getters.user !== null
       );
+    },
+    lists() {
+      return this.$store.getters.lists;
     },
   },
   methods: {
