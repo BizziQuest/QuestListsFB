@@ -23,10 +23,10 @@
               </v-col>
               <v-col cols="12" sm="7" md="8">
                 <v-text-field label="Color*" v-model="color">
-                  <template v-slot:append-outer>
+                  <template v-slot:append>
                     <v-menu>
                       <template v-slot:activator="{ on }">
-                        <div :style="swatchStyle" v-on="on" />
+                        <div :style="swatchStyle()" v-on="on" />
                       </template>
                       <v-card>
                         <v-card-text>
@@ -56,10 +56,15 @@
                 <v-text-field label="New Item*" v-model="newItem"></v-text-field>
               </v-col>
               <v-col cols="12" sm="5">
-                <v-autocomplete :items="itemStates" label="States" multiple v-model="statesPicked"></v-autocomplete>
+                <v-autocomplete
+                  :items="itemStates"
+                  :filter="customFilter"
+                  label="States"
+                  v-model="statesPicked"
+                ></v-autocomplete>
               </v-col>
               <v-col cols="12" sm="2">
-                <v-btn v-on:click="addNewItem" class="primary" >Add</v-btn>
+                <v-btn v-on:click="addNewItem" class="primary">Add</v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -108,14 +113,6 @@ export default {
       this.newItem = '';
       this.statesPicked = '';
     },
-  },
-  computed: {
-    itemStates() {
-      return this.$store.getters.itemStates;
-    },
-    itemsList() {
-      return this.$store.getters.itemsList;
-    },
     swatchStyle() {
       return {
         backgroundColor: this.color,
@@ -125,6 +122,21 @@ export default {
         borderRadius: '4px',
         transition: 'border-radius 200ms ease-in-out',
       };
+    },
+    customFilter(item, queryText) {
+      const textOne = item.name.toLowerCase();
+      const textTwo = item.abbr.toLowerCase();
+      const searchText = queryText.toLowerCase();
+
+      return textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1;
+    },
+  },
+  computed: {
+    itemStates() {
+      return this.$store.getters.itemStates;
+    },
+    itemsList() {
+      return this.$store.getters.itemsList;
     },
   },
 };
