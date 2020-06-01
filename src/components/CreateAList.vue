@@ -88,9 +88,7 @@ export default {
       color: '#F0E9E9FF',
       menu: false,
       dialog: false,
-      // states: ['Done', 'Not Done'],
       newState: null,
-      // itemsList: [],
       newItem: null,
       statesPicked: null,
     };
