@@ -49,9 +49,6 @@
                   </ul>
                 </div>
               </v-col>
-              <!--v-col cols="12" sm="6">
-                <v-autocomplete :items="states" label="States" multiple></v-autocomplete>
-              </v-col-->
               <v-col cols="12" sm="5">
                 <v-text-field label="New Item*" v-model="newItem"></v-text-field>
               </v-col>
