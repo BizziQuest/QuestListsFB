@@ -97,7 +97,6 @@ export default {
   },
   methods: {
     addState() {
-      // this.states.push(this.newState);
       this.$store.dispatch('addState', this.newState);
       this.newState = '';
     },
@@ -106,7 +105,6 @@ export default {
       item.name = this.newItem;
       item.states = this.statesPicked;
       this.$store.dispatch('addItem', item);
-      // this.itemsList.push(item);
       this.newItem = '';
       this.statesPicked = '';
     },
