@@ -1,33 +1,31 @@
 <template>
-  <div id="app">
-    <v-app id="inspire">
-      <v-app id="keep">
-        <top-menu-bar :drawer.sync="drawer" @updateDrawer="handleUpdate"></top-menu-bar>
-        <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
-        <v-content>
-          <v-container fluid class="grey lighten-4 fill-height">
-            <v-row justify="center" align="center">
-              <v-col col='12' md='12' class="">
-                <div style="color: red">Drawer: {{ drawer }}</div>
-                <div style="color: red">User: {{ userInfo }}</div>
-                <div v-show="isUserUthenticated">
-                <div v-for="list in lists" :key="list.bgColor">
-                    <v-card class="mx-auto" max-width="880" tile :color="list.bgColor">
-                    <v-list-item>
-                      <v-list-item-content>
-                        <v-list-item-title>{{list}}</v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-card>
-                </div>
-                </div>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-content>
-      </v-app>
-    </v-app>
-  </div>
+  <v-app id="keep">
+    <!-- @updateDrawer="handleUpdate" -->
+    <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
+    <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
+      <v-container fluid class="grey lighten-4  fill-height">
+        <v-row >
+          <v-col col='4' md='4' justify="center" align="center">
+            <div style="color: red">Drawer: {{ drawer }}</div>
+            <!--div style="color: red">User: {{ userInfo }}</div-->
+            <template v-show="isUserUthenticated">
+            <div v-for="list in lists" :key="list.bgColor">
+                <v-card class=" mx-auto" max-width="350" tile :color="list.bgColor">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Title: {{list.title}}</v-list-item-title>
+                    <ul v-for="item in list.items" :key="item.name">
+                      <li>Name: {{item.name}} | Status: {{item.state}}</li>
+                    </ul>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-card>
+            </div>
+            </template>
+          </v-col>
+        </v-row>
+      </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -80,10 +78,10 @@ export default {
     },
   },
   methods: {
-    handleUpdate(val) {
-      console.log('UPDATE', val);
-      this.drawer = val;
-    },
+    // handleUpdate(val) {
+    //   console.log('UPDATE', val);
+    //   this.drawer = val;
+    // },
   },
 };
 </script>
