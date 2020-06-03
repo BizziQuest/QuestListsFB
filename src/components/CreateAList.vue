@@ -16,13 +16,24 @@
           <span class="headline">Create A List</span>
         </v-card-title>
         <v-card-text>
+        <v-form ref="form">
           <v-container>
             <v-row>
               <v-col cols="12" sm="5" md="4">
-                <v-text-field label="Title*" v-model='title' required></v-text-field>
+                <v-text-field label="Title*"
+                :rules = "titleRules"
+                 v-model='title'
+                 required
+                 placeholder="Your Title"
+                 outlined></v-text-field>
               </v-col>
               <v-col cols="12" sm="7" md="8">
-                <v-text-field label="Color*" v-model="color">
+                <v-text-field
+                label="Color*"
+                :rules = "colorPickerRules"
+                 v-model="color"
+                 placeholder="#FFFFFF"
+                 outlined>
                   <template v-slot:append>
                     <v-menu>
                       <template v-slot:activator="{ on }">
@@ -38,7 +49,13 @@
                 </v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field label="New State*" v-model="newState"></v-text-field>
+                <v-text-field
+                label="New State*"
+                :rules = "newStateRules"
+                v-model="newState"
+                placeholder="Your Condition"
+                outlined>
+                </v-text-field>
                 <v-btn v-on:click="addState" class="primary">Add</v-btn>
               </v-col>
               <v-col cols="12" sm="6">
@@ -50,13 +67,21 @@
                 </div>
               </v-col>
               <v-col cols="12" sm="5">
-                <v-text-field label="New Item*" v-model="newItem"></v-text-field>
+                <v-text-field
+                label="New Item*"
+                v-model="newItem"
+                placeholder="Your Activity"
+                :rules = "activityRules"
+                outlined></v-text-field>
               </v-col>
               <v-col cols="12" sm="5">
                 <v-autocomplete
                   :items="itemStates"
                   label="States"
                   v-model="statesPicked"
+                  outlined
+                  placeholder="Your Condition"
+                  :rules = "stateCondition"
                 ></v-autocomplete>
               </v-col>
               <v-col cols="12" sm="2">
@@ -64,6 +89,7 @@
               </v-col>
             </v-row>
           </v-container>
+          </v-form>
           <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
@@ -85,9 +111,28 @@ export default {
       title: '',
       menu: false,
       dialog: false,
-      newState: null,
-      newItem: null,
-      statesPicked: null,
+      newState: '',
+      newItem: '',
+      statesPicked: '',
+      titleRules: [
+        (v) => !!v || 'Title is required',
+        (v) => v.length > 5 || 'Title must be longer than 5 characters',
+      ],
+      colorPickerRules: [
+        (v) => !!v || 'Color is required',
+        (v) => /^#[0-9A-F]{8}$/i.test(v) || 'Color Format Must be #FFFFFF',
+      ],
+      newStateRules: [
+        (v) => !!v || 'State is required',
+        (v) => v.length >= 5 || 'State must be at least 5 characters',
+      ],
+      activityRules: [
+        (v) => !!v || 'Activity is required',
+        (v) => v.length >= 5 || 'Activity must be at least 5 characters',
+      ],
+      stateCondition: [
+        (v) => !!v || 'Condition is required',
+      ],
     };
   },
   methods: {
@@ -104,12 +149,14 @@ export default {
       this.statesPicked = '';
     },
     createAList() {
-      const payload = {};
-      payload.title = this.title;
-      payload.bgColor = this.color;
+      if (this.$refs.form.validate()) {
+        const payload = {};
+        payload.title = this.title;
+        payload.bgColor = this.color;
 
-      this.$store.dispatch('createAList', payload);
-      this.dialog = false;
+        this.$store.dispatch('createAList', payload);
+        this.dialog = false;
+      }
     },
     swatchStyle() {
       return {
