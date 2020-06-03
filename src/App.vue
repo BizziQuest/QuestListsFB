@@ -57,9 +57,9 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style scoped>
 .theme--dark.v-application {
-    background: #b4c3c5;
+    background: #81b98b;
     color: #FFFFFF;
 }
 </style>
