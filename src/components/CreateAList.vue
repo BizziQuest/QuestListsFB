@@ -72,10 +72,7 @@
           <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
         </v-card-actions>
       </v-card>
-      <div v-for="item in itemsList" :key="item.name">
-        <span> {{ item.name }} </span> --- <span>{{ item.states }}</span>
-      </div>
-    </v-dialog>
+     </v-dialog>
   </v-row>
 </template>
 
@@ -84,7 +81,7 @@ export default {
   name: 'CreateAList',
   data() {
     return {
-      color: '#F0E9E9FF',
+      color: '#A0E9C9FF',
       title: '',
       menu: false,
       dialog: false,
@@ -101,7 +98,7 @@ export default {
     addNewItem() {
       const item = {};
       item.name = this.newItem;
-      item.states = this.statesPicked;
+      item.state = this.statesPicked;
       this.$store.dispatch('addItem', item);
       this.newItem = '';
       this.statesPicked = '';
