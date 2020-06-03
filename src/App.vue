@@ -14,7 +14,7 @@
           </v-alert>
         </v-col>
         <v-col v-else v-for="list in lists" :key="list.bgColor" col="12" md="4">
-            <v-card class=" mx-auto" min-height="250" max-width="350" tile :color="list.bgColor">
+            <v-card class=" mx-auto" min-height="200" max-width="350" tile :color="list.bgColor">
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>Title: {{ list.title }}</v-list-item-title>
