@@ -1,38 +1,19 @@
 <template>
   <!-- id="keep" has no effect ? -->
-  <v-app>
+  <v-app id="app">
     <!-- @updateDrawer="handleUpdate" -->
-    <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
-    <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
-    <v-container fluid class="grey lighten-4  fill-height">
-      <v-row>
-        <v-col v-if="lists.length < 1" col="12" md="12">
-          <!--div style="color: red">Drawer: {{ drawer }}</div>
-          <div style="color: red">User: {{ userInfo }}</div-->
-          <v-alert icon="mdi-emoticon-sad" type="info">
-            Please add some stuff
-          </v-alert>
-        </v-col>
-        <v-col v-else v-for="list in lists" :key="list.bgColor" col="12" md="4">
-            <v-card class=" mx-auto" min-height="200" max-width="350" tile :color="list.bgColor">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>Title: {{ list.title }}</v-list-item-title>
-                  <ul v-for="item in list.items" :key="item.name">
-                    <li>Name: {{ item.name }} | Status: {{ item.state }}</li>
-                  </ul>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+    <v-content>
+      <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
+      <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
+      <ShowingLists></ShowingLists>
+    </v-content>
   </v-app>
 </template>
 
 <script>
 import TopMenuBarVue from './components/TopMenuBar.vue';
 import DrawerMenuVue from './components/DrawerMenu.vue';
+import ShowingLists from './components/ShowingLists.vue';
 
 export default {
   name: 'App',
@@ -40,6 +21,7 @@ export default {
   components: {
     'top-menu-bar': TopMenuBarVue,
     'drawer-menu-bar': DrawerMenuVue,
+    ShowingLists,
   },
   props: {
     source: String,
@@ -65,21 +47,7 @@ export default {
       ],
     };
   },
-  computed: {
-    userInfo() {
-      return this.$store.getters.user;
-    },
-    isUserUthenticated() {
-      return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
-    },
-    lists() {
-      // if this.authenticated?
-      if (this.isUserUthenticated) {
-        return this.$store.getters.lists;
-      }
-      return [];
-    },
-  },
+
   methods: {
     // handleUpdate(val) {
     //   console.log('UPDATE', val);
@@ -88,3 +56,10 @@ export default {
   },
 };
 </script>
+
+<style lang="css">
+.theme--dark.v-application {
+    background: #b4c3c5;
+    color: #FFFFFF;
+}
+</style>
