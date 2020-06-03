@@ -49,45 +49,51 @@
                 </v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field
-                label="New State*"
-                :rules = "newStateRules"
-                v-model="newState"
-                placeholder="Your Condition"
-                outlined>
-                </v-text-field>
+                <v-form ref="addStateForm">
+                  <v-text-field
+                  label="New State*"
+                  :rules = "newStateRules"
+                  v-model="newState"
+                  placeholder="Your Condition"
+                  outlined>
+                  </v-text-field>
+                </v-form>
                 <v-btn v-on:click="addState" class="primary">Add</v-btn>
               </v-col>
               <v-col cols="12" sm="6">
                 <span>Availabe States</span>
-                <div>
+                <div id="availableListStates">
                   <ul v-for="item in itemStates" :key="item.state">
                     <li>{{ item }}</li>
                   </ul>
                 </div>
               </v-col>
-              <v-col cols="12" sm="5">
-                <v-text-field
-                label="New Item*"
-                v-model="newItem"
-                placeholder="Your Activity"
-                :rules = "activityRules"
-                outlined></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="5">
-                <v-autocomplete
-                  :items="itemStates"
-                  label="States"
-                  v-model="statesPicked"
-                  outlined
-                  placeholder="Your Condition"
-                  :rules = "stateCondition"
-                ></v-autocomplete>
-              </v-col>
-              <v-col cols="12" sm="2">
+            </v-row>
+            <v-form ref="addISForm">
+            <v-row>
+                <v-col cols="12" md="5" sm="5">
+                      <v-text-field
+                      label="New Item*"
+                      v-model="newItem"
+                      placeholder="Your Activity"
+                      :rules = "activityRules"
+                      outlined></v-text-field>
+                </v-col>
+                <v-col col="12" md="5" sm="5">
+                      <v-autocomplete
+                        :items="itemStates"
+                        label="States"
+                        v-model="statesPicked"
+                        outlined
+                        placeholder="Your Condition"
+                        :rules = "stateCondition"
+                      ></v-autocomplete>
+                </v-col>
+              <v-col col="12" md="2" sm="2">
                 <v-btn v-on:click="addNewItem" class="primary">Add</v-btn>
               </v-col>
             </v-row>
+            </v-form>
           </v-container>
           </v-form>
           <small>*indicates required field</small>
@@ -137,24 +143,33 @@ export default {
   },
   methods: {
     addState() {
-      this.$store.dispatch('addState', this.newState);
-      this.newState = '';
+      if (this.$refs.addStateForm.validate()) {
+        this.$store.dispatch('addState', this.newState);
+        // this.newState = '';
+        this.$refs.addStateForm.reset();
+      }
     },
     addNewItem() {
-      const item = {};
-      item.name = this.newItem;
-      item.state = this.statesPicked;
-      this.$store.dispatch('addItem', item);
-      this.newItem = '';
-      this.statesPicked = '';
+      if (this.$refs.addISForm.validate()) {
+        const item = {};
+        item.name = this.newItem;
+        item.state = this.statesPicked;
+        this.$store.dispatch('addItem', item);
+        this.$refs.addISForm.reset();
+      }
+      // this.newItem = '';
+      // this.statesPicked = '';
     },
     createAList() {
-      if (this.$refs.form.validate()) {
+      console.log(this.$refs.addStateForm.validate(), this.$refs.addISForm.validate());
+      if (this.$refs.form.validate()
+       && this.$refs.addISForm.validate()
+       && this.$refs.addStateForm.validate()) {
         const payload = {};
         payload.title = this.title;
         payload.bgColor = this.color;
-
         this.$store.dispatch('createAList', payload);
+        this.$refs.form.reset();
         this.dialog = false;
       }
     },
@@ -180,4 +195,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style   scoped>
+#availableListStates{
+   overflow: auto;
+}
+
+</style>
