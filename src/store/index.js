@@ -43,7 +43,6 @@ export default new Vuex.Store({
       state.itemsList = payload;
     },
     createAList(state, payload) {
-      alert(JSON.stringify(payload));
       if (payload) {
         const list = {};
         list.title = payload.title;
