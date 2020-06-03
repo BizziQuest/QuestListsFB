@@ -30,14 +30,14 @@ export default {
     isUserUthenticated() {
       return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
     },
-    localDrawer: {
-      get() {
-        return this.drawer;
-      },
-      set(val) {
-        this.$emit('update:drawer', val);
-      },
-    },
+    // localDrawer: {
+    //   get() {
+    //     return this.drawer;
+    //   },
+    //   set(val) {
+    //     this.$emit('update:drawer', val);
+    //   },
+    // },
   },
 };
 </script>
