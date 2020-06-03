@@ -1,5 +1,4 @@
 <template>
-  <div>
     <v-navigation-drawer v-model="localDrawer" app clipped>
       <v-list dense>
         <template v-for="(item, i) in items">
@@ -21,10 +20,11 @@
             </v-list-item-content>
           </v-list-item>
         </template>
-        <v-list-item> <CreateAList></CreateAList></v-list-item>
+        <v-list-item>
+          <CreateAList></CreateAList>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
-  </div>
 </template>
 
 <script>
