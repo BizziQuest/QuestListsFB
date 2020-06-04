@@ -55,8 +55,7 @@ export default new Vuex.Store({
   actions: {
     async signupUser({ commit }, payload) {
       try {
-        const cred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-        console.log(cred);
+        await auth.createUserWithEmailAndPassword(payload.email, payload.password);
         commit('setUser', payload);
       } catch (error) {
         console.log(error);
@@ -64,8 +63,7 @@ export default new Vuex.Store({
     },
     async loginUser({ commit }, payload) {
       try {
-        const cred = await auth.signInWithEmailAndPassword(payload.email, payload.password);
-        console.log(cred);
+        await auth.signInWithEmailAndPassword(payload.email, payload.password);
         commit('setUser', payload);
       } catch (error) {
         console.log(error);
