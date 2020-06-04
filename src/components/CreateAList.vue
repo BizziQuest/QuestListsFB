@@ -19,15 +19,16 @@
         <v-form ref="form">
           <v-container>
             <v-row>
-              <v-col cols="12" sm="5" md="4">
-                <v-text-field label="Title*"
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                label="Title*"
                 :rules = "titleRules"
                  v-model='title'
                  required
                  placeholder="Your Title"
                  outlined></v-text-field>
               </v-col>
-              <v-col cols="12" sm="7" md="8">
+              <v-col cols="12" sm="6" md="6">
                 <v-text-field
                 label="Color*"
                 :rules = "colorPickerRules"
@@ -57,8 +58,8 @@
                   placeholder="Your Condition"
                   outlined>
                   </v-text-field>
+                  <v-btn v-on:click="addState" class="primary">Add</v-btn>
                 </v-form>
-                <v-btn v-on:click="addState" class="primary">Add</v-btn>
               </v-col>
               <v-col cols="12" sm="6">
                 <span>Availabe States</span>
@@ -143,6 +144,7 @@ export default {
   },
   methods: {
     addState() {
+      console.log('new added state is ', this.newState);
       if (this.$refs.addStateForm.validate()) {
         this.$store.dispatch('addState', this.newState);
         // this.newState = '';
