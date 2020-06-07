@@ -47,13 +47,6 @@ export default {
       ],
     };
   },
-
-  methods: {
-    // handleUpdate(val) {
-    //   console.log('UPDATE', val);
-    //   this.drawer = val;
-    // },
-  },
 };
 </script>
 
