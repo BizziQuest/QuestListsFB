@@ -135,7 +135,6 @@ export default {
       newStateRules: [
         (v) => !!v || 'State is required',
         (v) => (v && v.length >= 5) || 'State must be at least 5 characters',
-        // (v) => v.length >= 5 || 'State must be at least 5 characters',
       ],
       activityRules: [
         (v) => !!v || 'Activity is required',
@@ -148,10 +147,9 @@ export default {
   },
   methods: {
     addState() {
-      console.log('new added state is ', this.$refs.addStateForm);
+      console.debug('new added state is ', this.$refs.addStateForm);
       if (this.$refs.addStateForm.validate()) {
-        this.$store.dispatch('addState', this.newState);
-        // this.newState = '';
+        this.$store.dispatch('addState', this.newState); 
         this.$refs.addStateForm.reset();
       }
     },
@@ -162,9 +160,7 @@ export default {
         item.state = this.statesPicked;
         this.$store.dispatch('addItem', item);
         this.$refs.addISForm.reset();
-      }
-      // this.newItem = '';
-      // this.statesPicked = '';
+      } 
     },
     createAList() {
       this.$refs.addStateForm.validate();
@@ -178,9 +174,7 @@ export default {
         this.$refs.addStateForm.reset();
         this.$refs.addISForm.reset();
         this.dialog = false;
-      }
-      //   }
-      // }
+      } 
     },
     swatchStyle() {
       return {
