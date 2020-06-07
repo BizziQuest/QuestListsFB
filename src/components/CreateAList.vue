@@ -206,6 +206,7 @@ export default {
 
 <style   scoped>
 #availableListStates{
+   max-height: 400px;
    overflow: auto;
 }
 
