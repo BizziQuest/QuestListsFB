@@ -16,8 +16,8 @@
           <span class="headline">Create A List</span>
         </v-card-title>
         <v-card-text>
-        <v-form ref="form">
-          <v-container>
+        <v-container>
+          <v-form ref="form" @submit.prevent="">
             <v-row>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
@@ -49,18 +49,22 @@
                   </template>
                 </v-text-field>
               </v-col>
-              <v-col cols="12" sm="6">
-                <v-form ref="addStateForm">
+            </v-row>
+            </v-form>
+            <v-row>
+              <v-form ref="addStateForm">
+                <v-col cols="12" sm="6">
                   <v-text-field
                   label="New State*"
                   :rules = "newStateRules"
+                  :lazy-validation="true"
                   v-model="newState"
                   placeholder="Your Condition"
                   outlined>
                   </v-text-field>
                   <v-btn v-on:click="addState" class="primary">Add</v-btn>
-                </v-form>
-              </v-col>
+                </v-col>
+              </v-form>
               <v-col cols="12" sm="6">
                 <span>Availabe States</span>
                 <div id="availableListStates">
@@ -96,7 +100,6 @@
             </v-row>
             </v-form>
           </v-container>
-          </v-form>
           <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
@@ -123,7 +126,7 @@ export default {
       statesPicked: '',
       titleRules: [
         (v) => !!v || 'Title is required',
-        (v) => v.length > 5 || 'Title must be longer than 5 characters',
+        (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
       ],
       colorPickerRules: [
         (v) => !!v || 'Color is required',
@@ -131,11 +134,12 @@ export default {
       ],
       newStateRules: [
         (v) => !!v || 'State is required',
-        (v) => v.length >= 5 || 'State must be at least 5 characters',
+        (v) => (v && v.length >= 5) || 'State must be at least 5 characters',
+        // (v) => v.length >= 5 || 'State must be at least 5 characters',
       ],
       activityRules: [
         (v) => !!v || 'Activity is required',
-        (v) => v.length >= 5 || 'Activity must be at least 5 characters',
+        (v) => (v && v.length >= 5) || 'Activity must be at least 5 characters',
       ],
       stateCondition: [
         (v) => !!v || 'Condition is required',
@@ -144,7 +148,7 @@ export default {
   },
   methods: {
     addState() {
-      console.log('new added state is ', this.newState);
+      console.log('new added state is ', this.$refs.addStateForm);
       if (this.$refs.addStateForm.validate()) {
         this.$store.dispatch('addState', this.newState);
         // this.newState = '';
@@ -163,17 +167,20 @@ export default {
       // this.statesPicked = '';
     },
     createAList() {
-      console.log(this.$refs.addStateForm.validate(), this.$refs.addISForm.validate());
-      if (this.$refs.form.validate()
-       && this.$refs.addISForm.validate()
-       && this.$refs.addStateForm.validate()) {
+      this.$refs.addStateForm.validate();
+      this.$refs.addISForm.validate();
+      if (this.$refs.form.validate()) {
         const payload = {};
         payload.title = this.title;
         payload.bgColor = this.color;
         this.$store.dispatch('createAList', payload);
         this.$refs.form.reset();
+        this.$refs.addStateForm.reset();
+        this.$refs.addISForm.reset();
         this.dialog = false;
       }
+      //   }
+      // }
     },
     swatchStyle() {
       return {
