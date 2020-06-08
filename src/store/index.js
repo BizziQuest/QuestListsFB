@@ -8,13 +8,11 @@ export default new Vuex.Store({
   state: {
     user: null,
     itemStates: ['Done', 'Not Done'],
-    itemsList: [],
     lists: [],
   },
   getters: {
     user: (state) => state.user,
     itemStates: (state) => state.itemStates,
-    itemsList: (state) => state.itemsList,
     lists: (state) => state.lists,
   },
   mutations: {
@@ -29,25 +27,19 @@ export default new Vuex.Store({
       // the following one will have issue if obj includes objs?
       // state.user = JSON.parse(JSON.stringify(payload));
     },
+    resetStates(state) {
+      state.itemStates = ['Done', 'Not Done'];
+    },
     addState(state, payload) {
       if (payload) {
         state.itemStates.push(payload);
       }
-    },
-    addItem(state, payload) {
-      if (payload) {
-        state.itemsList.push(payload);
-      }
-    },
-    setItemsList(state, payload) {
-      state.itemsList = payload;
     },
     createAList(state, payload) {
       if (payload) {
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.bgColor;
-        list.items = state.itemsList;
         state.lists.push(list);
       }
     },
@@ -85,12 +77,9 @@ export default new Vuex.Store({
     addState({ commit }, payload) {
       commit('addState', payload);
     },
-    addItem({ commit }, payload) {
-      commit('addItem', payload);
-    },
     createAList({ commit }, payload) {
       commit('createAList', payload);
-      commit('setItemsList', []);
+      commit('resetStates');
     },
   },
 });
