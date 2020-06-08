@@ -130,7 +130,6 @@ export default {
         this.$store.dispatch('createAList', payload);
         this.$refs.form.reset();
         this.$refs.addStateForm.reset();
-        this.$refs.addISForm.reset();
         this.dialog = false;
       }
     },
