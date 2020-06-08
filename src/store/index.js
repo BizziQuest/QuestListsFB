@@ -65,7 +65,7 @@ export default new Vuex.Store({
     async logOut({ commit }) {
       try {
         const cred = await auth.signOut();
-        console.log('logout store', cred);
+        console.debug('logout store', cred);
         commit('setUser', null);
       } catch (error) {
         console.log(error);
