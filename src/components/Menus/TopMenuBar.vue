@@ -8,14 +8,7 @@
     <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field>
     <v-spacer></v-spacer>
     <span v-if="isUserUthenticated">
-      <v-avatar
-          avatarStyle='Circle'
-          class="profile"
-          color="grey"
-          size="70"
-          >
-          <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
-          </v-avatar>
+      <AvatarMenu></AvatarMenu>
     </span>
     <span v-else>
       <login-or-signup-btn></login-or-signup-btn>
@@ -24,13 +17,14 @@
 </template>
 <script>
 import LogInorSignUp from '../LogInorSignUp.vue';
-// import LogOut from '../LogOut.vue';
+import AvatarMenu from './AvatarMenu.vue';
 
 export default {
   name: 'TopMenuBar',
   props: ['drawer'],
   components: {
     'login-or-signup-btn': LogInorSignUp,
+    AvatarMenu,
     // 'logout-btn': LogOut,
   },
   computed: {
