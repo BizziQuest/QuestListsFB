@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app clipped-left style="height: 69px">
     <v-app-bar-nav-icon  v-on:click="$emit('update:drawer', !drawer)"></v-app-bar-nav-icon>
-    <span class="title ml-3 mr-5">
+    <span class="title ml-3 mr-5" style="cursor: pointer" v-on:click="goToHome">
       Quest
       <span class="font-weight-light">Lists</span>
     </span>
@@ -29,6 +29,11 @@ export default {
   computed: {
     isUserUthenticated() {
       return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
+    },
+  },
+  methods: {
+    goToHome() {
+      this.$router.push('/');
     },
   },
 };
