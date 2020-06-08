@@ -74,31 +74,6 @@
                 </div>
               </v-col>
             </v-row>
-            <v-form ref="addISForm">
-            <v-row>
-                <v-col cols="12" md="5" sm="5">
-                      <v-text-field
-                      label="New Item*"
-                      v-model="newItem"
-                      placeholder="Your Activity"
-                      :rules = "activityRules"
-                      outlined></v-text-field>
-                </v-col>
-                <v-col col="12" md="5" sm="5">
-                      <v-autocomplete
-                        :items="itemStates"
-                        label="States"
-                        v-model="statesPicked"
-                        outlined
-                        placeholder="Your Condition"
-                        :rules = "stateCondition"
-                      ></v-autocomplete>
-                </v-col>
-              <v-col col="12" md="2" sm="2">
-                <v-btn v-on:click="addNewItem" class="primary">Add</v-btn>
-              </v-col>
-            </v-row>
-            </v-form>
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>
@@ -136,35 +111,18 @@ export default {
         (v) => !!v || 'State is required',
         (v) => (v && v.length >= 5) || 'State must be at least 5 characters',
       ],
-      activityRules: [
-        (v) => !!v || 'Activity is required',
-        (v) => (v && v.length >= 5) || 'Activity must be at least 5 characters',
-      ],
-      stateCondition: [
-        (v) => !!v || 'Condition is required',
-      ],
     };
   },
   methods: {
     addState() {
       console.debug('new added state is ', this.$refs.addStateForm);
       if (this.$refs.addStateForm.validate()) {
-        this.$store.dispatch('addState', this.newState); 
+        this.$store.dispatch('addState', this.newState);
         this.$refs.addStateForm.reset();
       }
     },
-    addNewItem() {
-      if (this.$refs.addISForm.validate()) {
-        const item = {};
-        item.name = this.newItem;
-        item.state = this.statesPicked;
-        this.$store.dispatch('addItem', item);
-        this.$refs.addISForm.reset();
-      } 
-    },
     createAList() {
       this.$refs.addStateForm.validate();
-      this.$refs.addISForm.validate();
       if (this.$refs.form.validate()) {
         const payload = {};
         payload.title = this.title;
@@ -174,7 +132,7 @@ export default {
         this.$refs.addStateForm.reset();
         this.$refs.addISForm.reset();
         this.dialog = false;
-      } 
+      }
     },
     swatchStyle() {
       return {
