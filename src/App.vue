@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import TopMenuBarVue from './components/TopMenuBar.vue';
-import DrawerMenuVue from './components/DrawerMenu.vue';
+import TopMenuBarVue from './components/Menus/TopMenuBar.vue';
+import DrawerMenuVue from './components/Menus/DrawerMenu.vue';
 import Lists from './components/Lists.vue';
 
 export default {

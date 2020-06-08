@@ -16,8 +16,8 @@
   </v-app-bar>
 </template>
 <script>
-import LogInorSignUp from './LogInorSignUp.vue';
-import LogOut from './LogOut.vue';
+import LogInorSignUp from '../LogInorSignUp.vue';
+import LogOut from '../LogOut.vue';
 
 export default {
   name: 'TopMenuBar',

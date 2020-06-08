@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import CreateAList from './CreateAList.vue';
+import CreateAList from '../CreateAList.vue';
 
 export default {
   name: 'DrawerMenu',
