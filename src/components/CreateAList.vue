@@ -137,6 +137,7 @@ export default {
       this.$refs.form.reset();
       this.$refs.addStateForm.reset();
       this.color = '#A0E9C9FF';
+      this.$store.dispatch('resetStates');
     },
     swatchStyle() {
       return {
@@ -153,16 +154,13 @@ export default {
     itemStates() {
       return this.$store.getters.itemStates;
     },
-    itemsList() {
-      return this.$store.getters.itemsList;
-    },
   },
 };
 </script>
 
 <style   scoped>
 #availableListStates{
-   max-height: 400px;
+   height: 100px;
    overflow: auto;
 }
 

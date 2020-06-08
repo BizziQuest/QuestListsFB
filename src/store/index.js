@@ -81,5 +81,8 @@ export default new Vuex.Store({
       commit('createAList', payload);
       commit('resetStates');
     },
+    resetStates({ commit }) {
+      commit('resetStates');
+    },
   },
 });
