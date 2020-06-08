@@ -52,8 +52,8 @@
             </v-row>
             </v-form>
             <v-row>
-              <v-form ref="addStateForm">
-                <v-col cols="12" sm="6">
+              <v-col cols="12" sm="6" md="6">
+                <v-form ref="addStateForm">
                   <v-text-field
                   label="New State*"
                   :rules = "newStateRules"
@@ -63,9 +63,9 @@
                   outlined>
                   </v-text-field>
                   <v-btn v-on:click="addState" class="primary">Add</v-btn>
+                  </v-form>
                 </v-col>
-              </v-form>
-              <v-col cols="12" sm="6">
+              <v-col cols="12" sm="6" md="6">
                 <span>Availabe States</span>
                 <div id="availableListStates">
                   <ul v-for="item in itemStates" :key="item.state">
