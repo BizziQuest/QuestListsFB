@@ -25,7 +25,6 @@ export default {
   components: {
     'login-or-signup-btn': LogInorSignUp,
     AvatarMenu,
-    // 'logout-btn': LogOut,
   },
   computed: {
     isUserUthenticated() {
