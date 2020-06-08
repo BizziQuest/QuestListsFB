@@ -26,7 +26,7 @@
 
 <script>
 export default {
-  name: 'ShowingLists',
+  name: 'Lists',
   computed: {
     userInfo() {
       return this.$store.getters.user;

@@ -5,7 +5,7 @@
     <v-content>
       <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
       <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
-      <ShowingLists></ShowingLists>
+      <Lists></Lists>
     </v-content>
   </v-app>
 </template>
@@ -13,7 +13,7 @@
 <script>
 import TopMenuBarVue from './components/TopMenuBar.vue';
 import DrawerMenuVue from './components/DrawerMenu.vue';
-import ShowingLists from './components/ShowingLists.vue';
+import Lists from './components/Lists.vue';
 
 export default {
   name: 'App',
@@ -21,7 +21,7 @@ export default {
   components: {
     'top-menu-bar': TopMenuBarVue,
     'drawer-menu-bar': DrawerMenuVue,
-    ShowingLists,
+    Lists,
   },
   props: {
     source: String,
