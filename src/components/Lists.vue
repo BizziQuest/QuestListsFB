@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
       <v-row no-gutters>
-        <v-col v-if="lists.length < 1" col="12" md="12">
+        <v-col v-if="lists.length < 1" col="12" md="12" class='mt-5'>
           <!--div style="color: red">Drawer: {{ drawer }}</div>
           <div style="color: red">User: {{ userInfo }}</div-->
           <v-alert icon="mdi-emoticon-sad" type="info">
@@ -45,6 +45,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 
 </style>
