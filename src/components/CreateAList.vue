@@ -79,7 +79,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="resetTheForms">Close</v-btn>
           <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
         </v-card-actions>
       </v-card>
@@ -115,7 +115,6 @@ export default {
   },
   methods: {
     addState() {
-      console.debug('new added state is ', this.$refs.addStateForm);
       if (this.$refs.addStateForm.validate()) {
         this.$store.dispatch('addState', this.newState);
         this.$refs.addStateForm.reset();
@@ -132,6 +131,11 @@ export default {
         this.$refs.addStateForm.reset();
         this.dialog = false;
       }
+    },
+    resetTheForms() {
+      this.dialog = false;
+      this.$refs.form.reset();
+      this.$refs.addStateForm.reset();
     },
     swatchStyle() {
       return {
