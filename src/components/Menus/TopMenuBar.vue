@@ -30,6 +30,7 @@ export default {
     isUserUthenticated() {
       return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
     },
+    // another way to manipulate props inside a child
     // localDrawer: {
     //   get() {
     //     return this.drawer;
