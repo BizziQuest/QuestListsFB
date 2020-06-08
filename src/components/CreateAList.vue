@@ -136,6 +136,7 @@ export default {
       this.dialog = false;
       this.$refs.form.reset();
       this.$refs.addStateForm.reset();
+      this.color = '#A0E9C9FF';
     },
     swatchStyle() {
       return {
