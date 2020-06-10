@@ -1,47 +1,49 @@
 <template>
     <div>
       <h1 class='d-flex justify-center align-center mt-10'>Edit Info</h1>
-      <v-card
-    max-width="500"
-    class="mx-auto"
-  >
-    <v-toolbar
-      color="indigo"
-      dark
-    >
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+     <v-form v-model="valid">
+    <v-container>
+      <v-row>
+        <v-col
+          cols="12"
+          md="4"
+        >
+          <v-text-field
+            v-model="firstname"
+            :rules="nameRules"
+            :counter="10"
+            label="First name"
+            required
+          ></v-text-field>
+        </v-col>
 
-      <v-toolbar-title>Inbox</v-toolbar-title>
+        <v-col
+          cols="12"
+          md="4"
+        >
+          <v-text-field
+            v-model="lastname"
+            :rules="nameRules"
+            :counter="10"
+            label="Last name"
+            required
+          ></v-text-field>
+        </v-col>
 
-      <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
-    </v-toolbar>
-    <v-list>
-      <v-list-item
-        v-for="item in items"
-        :key="item.title"
-      >
-        <v-list-item-icon>
-          <v-icon v-if="item.icon" color="pink">mdi-star</v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-content>
-          <v-list-item-title v-text="item.title"></v-list-item-title>
-        </v-list-item-content>
-
-        <v-list-item-avatar>
-          <v-img :src="item.avatar"></v-img>
-        </v-list-item-avatar>
-      </v-list-item>
-    </v-list>
-  </v-card>
+        <v-col
+          cols="12"
+          md="4"
+        >
+          <v-text-field
+            v-model="email"
+            :rules="emailRules"
+            label="E-mail"
+            required
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-form>
     </div>
 </template>
 
