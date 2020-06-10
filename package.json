@@ -8,11 +8,15 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "deploy": "firebase deploy"
+    "deploy": "firebase deploy",
+    "eslint": "./node_modules/.bin/eslint --fix"
   },
   "dependencies": {
+    "@firebase/auth": "^0.14.6",
     "@mdi/font": "^5.1.45",
     "core-js": "^3.6.4",
+    "dotenv": "^8.2.0",
+    "firebase": "^7.14.4",
     "material-design-icons-iconfont": "^5.0.1",
     "register-service-worker": "^1.7.1",
     "roboto-fontface": "*",
