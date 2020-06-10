@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">
-        <v-btn outlined class="primary z-depth-0 darken" v-on="on"> Log In / Sign up</v-btn>
+        <v-btn class="success" color="darken-1" elevation="2" large rounded text v-on="on"> Log In / Sign up</v-btn>
       </template>
       <v-form ref="form">
         <v-card>
