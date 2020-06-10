@@ -5,13 +5,7 @@
       <v-container>
         <v-row>
           <v-col cols="12" md="4">
-            <v-text-field
-              v-model="firstname"
-              :rules="nameRules"
-              label="First name"
-              clearable
-              required
-            ></v-text-field>
+            <v-text-field v-model="firstname" :rules="nameRules" label="First name" clearable required></v-text-field>
           </v-col>
 
           <v-col cols="12" md="4">
@@ -24,15 +18,16 @@
         </v-row>
         <v-row>
           <v-col class="d-flex align-center justify-center">
-            <v-btn class="success" color="darken-1" elevation="2" x-large rounded text>
+            <v-btn class="success" color="darken-1" elevation="2" x-large rounded text
+            v-on:click="editForm">
               Edit
             </v-btn>
           </v-col>
         </v-row>
         <v-row>
-            {{user}}
-            <br>
-            {{firebaseUser}}
+          {{ user }}
+          <br />
+          {{ firebaseUser }}
         </v-row>
       </v-container>
     </v-form>
@@ -51,13 +46,12 @@ export default {
       lastname: '',
       nameRules: [
         (v) => !!v || 'Name is required',
-        // (v) => v.length <= 10 || 'Name must be less than 10 characters',
       ],
       email: '',
     };
   },
-  created() {
-    this.email = this.user.email;
+  mounted() {
+    this.email = this.firebaseUser.email;
   },
   computed: {
     user() {
@@ -68,28 +62,15 @@ export default {
     },
   },
   methods: {
-    async submitEdit() {
-      if (this.$refs.editForm.vaildate()) {
-        // if (this.firstname.length !== 0) {
-        //   const response = await auth.currentUser.updateProfile({
-        //     displayName: this.firstname,
-        //   });
-        //   console.log('edit first name ', response);
-        // } else if (this.lastname.length !== 0) {
-        //   const response = await auth.currentUser.updateProfile({
-        //     displayName: this.lastname,
-        //   });
-        //   console.log('edit first name ', response);
-        // } else {
-        const response = await auth.currentUser.updateProfile({
-          displayName: this.fistname + this.lastname,
-        });
-        console.log('edit full name ', response);
+    async editForm() {
+      if (this.$refs.editForm.validate()) {
+        const response = await auth.currentUser
+          .updateProfile({
+            displayName: this.firstname + this.lastname,
+          });
+        console.log(response, auth.currentUser);
       }
     },
   },
-  // },
 };
 </script>
-
-<style lang="scss" scoped></style>
