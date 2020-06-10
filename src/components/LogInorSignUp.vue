@@ -23,9 +23,12 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
-            <v-btn color="blue darken-1" text @click="loginOrSignUser()">Log In</v-btn>
-            <v-btn color="blue darken-1" text @click="loginOrSignUser(true)">Sign Up</v-btn>
+            <v-btn class="success" color="darken-1" elevation="2" x-large rounded text @click="dialog = false">
+            Cancel</v-btn>
+            <v-btn class="success" color="darken-1"  elevation="2" x-large rounded text @click="loginOrSignUser()">
+            Log In</v-btn>
+            <v-btn class="success" color="darken-1" elevation="2" x-large rounded text
+            @click="loginOrSignUser(true)"> Sign Up</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
