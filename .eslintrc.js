@@ -15,7 +15,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     // if the line goes more than 120 , it will be an error
     'max-len': ['error', 120],
-    'no-tabs': 0,
+    // 'no-tabs': 0,
   },
   overrides: [
     {
