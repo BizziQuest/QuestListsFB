@@ -13,10 +13,11 @@
             <v-container>
               <v-row>
                 <v-col cols="12">
-                  <v-text-field v-model="email" label="Email*" required></v-text-field>
+                  <v-text-field v-model="email" outlined  label="Email*" required clearable></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field v-model="password" label="Password*" type="password" required></v-text-field>
+                  <v-text-field v-model="password" outlined label="Password*" type="password" required clearable>
+                  </v-text-field>
                 </v-col>
               </v-row>
             </v-container>
