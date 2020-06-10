@@ -25,14 +25,11 @@ const firebaseConfig = {
 export const FBApp = firebase.initializeApp(firebaseConfig);
 
 export const auth = FBApp.auth();
-// user is looking at to the firebase.auth().currentUser
-// no need to redefine it
+
 auth.onAuthStateChanged((user) => {
   if (user) {
-    // User is signed in
     store.dispatch('autoSignIn', { email: user.email, id: user.uid });
   } else {
-    // No user is signed in.
     console.log('user logged out');
   }
 });

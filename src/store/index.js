@@ -17,15 +17,11 @@ export default new Vuex.Store({
   },
   mutations: {
     setUser(state, payload) {
-      // this one is thorwing an error
-      // state.user = { ...null} ==> state.user = {}
       if (payload) {
         state.user = { ...payload };
       } else {
         state.user = null;
       }
-      // the following one will have issue if obj includes objs?
-      // state.user = JSON.parse(JSON.stringify(payload));
     },
     resetStates(state) {
       state.itemStates = ['Done', 'Not Done'];
