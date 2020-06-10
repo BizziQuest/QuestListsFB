@@ -12,6 +12,7 @@
         <v-list-item>
           <v-btn outlined class="primary z-depth-0 darken pl-2" v-on:click="goToEditInfo">Edit Info</v-btn>
         </v-list-item>
+        <v-divider light></v-divider>
         <v-list-item>
           <LogOut></LogOut>
         </v-list-item>
