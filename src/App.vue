@@ -16,7 +16,6 @@
 import TopMenuBarVue from './components/Menus/TopMenuBar.vue';
 import DrawerMenuVue from './components/Menus/DrawerMenu.vue';
 
-
 export default {
   name: 'App',
 
