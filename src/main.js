@@ -7,6 +7,7 @@ import router from './router';
 import store from './store';// eslint-disable-line import/no-cycle
 import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
+// import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 Vue.config.productionTip = false;
 
@@ -27,11 +28,13 @@ export const FBApp = firebase.initializeApp(firebaseConfig);
 export const auth = FBApp.auth();
 
 auth.onAuthStateChanged((user) => {
+  console.log('onAuthStateChngesd', user);
   if (user) {
     store.dispatch('authenticationChanged', {
-      email: user.email,
       id: user.uid,
+      email: user.email,
       displayName: user.displayName,
+      avatar: user.photoURL,
     });
   } else {
     console.log('user logged out');

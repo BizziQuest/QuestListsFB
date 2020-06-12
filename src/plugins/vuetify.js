@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 import { preset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
-import '@mdi/font/css/materialdesignicons.css'; // for the default material design icons
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 Vue.use(Vuetify);
