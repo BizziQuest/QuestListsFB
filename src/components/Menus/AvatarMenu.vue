@@ -9,8 +9,14 @@
         </v-btn>
       </template>
       <v-list>
-        <v-list-item>
-          <v-btn outlined class="primary z-depth-0 darken pl-2" v-on:click="goToEditInfo">Edit Info</v-btn>
+          <v-subheader class="d-flex justify-center">
+            <span style="font-size: 18px;">Profile Actions</span>
+          </v-subheader>
+        <v-divider light></v-divider>
+        <v-list-item class="d-flex justify-center">
+          <v-btn outlined class="primary--text z-depth-0 darken pl-2" v-on:click="goToEditInfo">
+            <v-icon>edit</v-icon>
+          </v-btn>
         </v-list-item>
         <v-divider light></v-divider>
         <v-list-item>
