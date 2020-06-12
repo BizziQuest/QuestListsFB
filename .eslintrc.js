@@ -11,10 +11,9 @@ module.exports = {
     parser: 'babel-eslint',
   },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? ['error', { allow: ['info', 'error', 'warn'] }] : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'max-len': ['error', 120],
-    'no-console': ['error', { allow: ['debug'] }]
   },
   overrides: [
     {

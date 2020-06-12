@@ -30,7 +30,7 @@ auth.onAuthStateChanged((user) => {
   if (user) {
     store.dispatch('autoSignIn', { email: user.email, id: user.uid });
   } else {
-    console.log('user logged out');
+    console.debug('user logged out');
   }
 });
 
