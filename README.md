@@ -87,4 +87,12 @@ You can set up your own firebase instance at https://firebase.google.com. From t
 
 ## Code Style Guide
 Having a style guide really helps code readability and lessens cognitive overhead when developing software. I am using the airbnb rules
-for eslint. A linter is run as part of the testing for each PR so PRs will not be merged that don't pass the tests _and_ linter.
+for eslint, with a few differences:
+
+1. line length is 120 characters. the 80 char limit has not been applicable for more than 20 years.
+1. You ARE allowed to use `console.[error, info, warn]` in production code. The team will be looking at these
+    to determine whether they are used correctly and are necessary. You are not allowed to just `console.log`,
+    as that usually measn you are not thinking about **why** you need to print to the browser console.
+
+NOTE: `eslint` is run as part of the testing for each PR so PRs will not be merged that don't pass the 
+       tests _and_ linter. If you want to run the linter yourself, you can run `yarn check`.
