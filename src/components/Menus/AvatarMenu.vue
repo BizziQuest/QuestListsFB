@@ -14,12 +14,21 @@
           </v-subheader>
         <v-divider light></v-divider>
         <v-list-item class="d-flex justify-center">
-          <v-btn outlined class="primary--text z-depth-0 darken pl-2" v-on:click="goToEditInfo">
-            <v-icon>edit</v-icon>
-          </v-btn>
+          <v-tooltip left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="primary--text"
+                text
+                v-bind="attrs"
+                v-on="on"
+                v-on:click="goToEditInfo"
+              ><v-icon>edit</v-icon></v-btn>
+            </template>
+            <span>Edit Profile</span>
+          </v-tooltip>
         </v-list-item>
         <v-divider light></v-divider>
-        <v-list-item>
+        <v-list-item class="d-flex justify-center">
           <LogOut></LogOut>
         </v-list-item>
       </v-list>
