@@ -14,7 +14,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-text-field v-model="avatar" clearable label="Avatar"></v-text-field>
+                <v-textarea v-model="avatar" clearable label="Avatar"></v-textarea>
               </v-col>
             </v-row>
             <v-row>
