@@ -10,7 +10,6 @@ const defaultState = {
   lists: [],
 };
 
-
 export default new Vuex.Store({
   state: { ...defaultState },
   getters: {
