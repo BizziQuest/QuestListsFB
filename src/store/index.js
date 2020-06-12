@@ -20,6 +20,7 @@ export default new Vuex.Store({
   },
   mutations: {
     setUser(state, payload) {
+      console.debug('Set User Payload', payload);
       if (payload) {
         state.user = { ...payload };
       }
@@ -97,14 +98,18 @@ export default new Vuex.Store({
       commit('setUser', payload);
     },
     async saveProfile({ commit }, payload) {
-      const response = await auth.currentUser.updateProfile({
-        displayName: payload.displayName,
-        photoURL: payload.avatar,
-      });
-      console.log(response, auth.currentUser);
-      // eslint-disable-next-line no-alert
-      alert(`${payload.email} and ${payload.displayName} Was edited`);
-      commit('setUser', payload);
+      try {
+        const response = await auth.currentUser.updateProfile({
+          displayName: payload.displayName,
+          photoURL: payload.avatar,
+        });
+        console.log(response, auth.currentUser);
+        // eslint-disable-next-line no-alert
+        alert(`${payload.email} and ${payload.displayName} Was edited`);
+        commit('setUser', payload);
+      } catch (error) {
+        console.log('saveProfile', error);
+      }
     },
   },
 });

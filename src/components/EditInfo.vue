@@ -63,7 +63,7 @@ export default {
         }
         this.displayName = state.user.displayName;
         this.email = state.user.email;
-        this.avatar = state.user.photoURL;
+        this.avatar = state.user.avatar;
         return state.user;
       },
     }),
@@ -71,9 +71,10 @@ export default {
   methods: {
     editForm() {
       const userInfo = {
+        id: this.user.id,
         email: this.email,
         displayName: this.displayName,
-        photoURL: this.avatar,
+        avatar: this.avatar,
       };
       this.$store.dispatch('saveProfile', userInfo);
     },
