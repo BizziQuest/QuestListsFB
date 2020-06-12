@@ -12,8 +12,8 @@ export default new Vuetify({
       customProperties: true,
     },
     icons: {
-      // iconfont: 'mdi', // default - only for display purposes
-      iconfont: 'md', // default - only for display purposes
+      iconfont: 'mdi', // default - only for display purposes
+      // iconfont: 'md', // default - only for display purposes
     },
     themes: {
       light: {
