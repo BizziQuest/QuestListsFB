@@ -61,7 +61,7 @@ harsh on the rest.
   message should read like a command, not a summary of what you did. (This is a hard one to follow, as you can 
   tell from my commit messages, but it really does help new-comers get an understanding of what's going on.)
   6. Make sure ALL tests run successfully by running `yarn check`. This is to ensure you do not bug the application.
-  Automated tests run for every PR and merge, and any code will not be merged without passing tests.
+  Automated tests run for every PR and merge, and any code will not be merged without passing tests and linter checks.
   7. Create a new pull request against the develop branch once you are happy with your code
   8. Wait for the team to review and merge the changes. Merges cannot happen without review.
 
@@ -71,41 +71,20 @@ You can [install nvm](https://github.com/nvm-sh/nvm) to manage local versions of
 
 ```
 nvm use
+npm install -g yarn
 yarn
 yarn serve
 ```
 
 ## Running Questlists for Development
 
-Just run the `bin/start` script from the repo's directory.
+Just run `yarn dev` or `yarn serve` from the repo's directory. Running the dev command will start a local firebase emulator for you to connect 
+for testing and local development. 
 
 ## Deploying Questlists
 
-You can deploy to your own repo's github page by running the `bin/deploy` script from the repo's directory.
+You can set up your own firebase instance at https://firebase.google.com. From there, you can configure `.firebaserc` with your project's name.
 
 ## Code Style Guide
-Having a style guide really helps code readability and lessens cognitive overhead when developing software. I will use the style guidelines set forth in the [Polymer Guide](https://www.polymer-project.org/2.0/docs/devguide/feature-overview)'s section on [Documenting your elements](https://www.polymer-project.org/2.0/docs/tools/documentation), with the following addendums:
-
-1. Method Names
-  1. Public methods are camel-case
-  2. private methods should be snake-case and start with an underscore
-  3. Special Cases: Public methods that may not be part of a public API should be snake-case. This includes alias or router methods. You should say why in the comments.
-2. HTML Element Attributes
-  If your element decalaration is very long, and uses a lot of attributes, do the following:
-  1. Put the id attribute first, on the same line as the element declaration.
-  2. Put any boolean attributes on a line of their own
-  3. Put the rest of the attributes each on a line of their own.
-  4. the closing bracket aligns with the opening bracket, and the closing tag aligns with the opening tag.
-
-  Example:
-  ```HTML
-    <my-element id="my_elem"
-      isCool hasFoo isBar reallyNeat
-      message="this is a text thing"
-      config="{some: {js: {'obj'}}}"
-    >
-      <p>
-        Here is a test element!
-      </p>
-    </my-element>
-  ```
+Having a style guide really helps code readability and lessens cognitive overhead when developing software. I am using the airbnb rules
+for eslint. A linter is run as part of the testing for each PR so PRs will not be merged that don't pass the tests _and_ linter.
