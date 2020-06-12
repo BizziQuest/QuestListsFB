@@ -7,7 +7,7 @@
     </span>
     <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field>
     <v-spacer></v-spacer>
-    <span v-if="isUserUthenticated">
+    <span v-if="isUserAuthenticated">
       <AvatarMenu></AvatarMenu>
     </span>
     <span v-else>
@@ -27,8 +27,8 @@ export default {
     AvatarMenu,
   },
   computed: {
-    isUserUthenticated() {
-      return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
+    isUserAuthenticated() {
+      return this.$store.getters.user && this.$store.getters.user.id;
     },
   },
   methods: {
