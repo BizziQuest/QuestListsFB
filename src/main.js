@@ -28,7 +28,11 @@ export const auth = FBApp.auth();
 
 auth.onAuthStateChanged((user) => {
   if (user) {
-    store.dispatch('autoSignIn', { email: user.email, id: user.uid });
+    store.dispatch('authenticationChanged', {
+      email: user.email,
+      id: user.uid,
+      displayName: user.displayName,
+    });
   } else {
     console.log('user logged out');
   }
