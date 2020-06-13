@@ -7,20 +7,19 @@ import router from './router';
 import store from './store';// eslint-disable-line import/no-cycle
 import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
-import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 Vue.config.productionTip = false;
 
 require('dotenv').config();
 
 const firebaseConfig = {
-  apiKey: process.env.VUE_APP_API_KEY,
-  authDomain: process.env.authDomain,
-  databaseURL: process.env.VUE_APP_DATABASE_URL,
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
   projectId: 'questlists',
-  storageBucket: process.env.VUE_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.messagingSenderId,
-  appId: process.env.appId,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
 };
 
 export const FBApp = firebase.initializeApp(firebaseConfig);
@@ -28,7 +27,6 @@ export const FBApp = firebase.initializeApp(firebaseConfig);
 export const auth = FBApp.auth();
 
 auth.onAuthStateChanged((user) => {
-  console.log('onAuthStateChngesd', user);
   if (user) {
     store.dispatch('authenticationChanged', {
       id: user.uid,
