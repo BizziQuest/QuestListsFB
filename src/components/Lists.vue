@@ -4,7 +4,7 @@
         <v-col v-if="lists.length < 1" col="12" md="12" class='mt-5'>
           <!--div style="color: red">Drawer: {{ drawer }}</div>
           <div style="color: red">User: {{ userInfo }}</div-->
-          <v-alert  icon="sentiment_very_dissatisfied" type="info">
+          <v-alert prominent icon="mdi-emoticon-sad" type="info">
             Please add some stuff
           </v-alert>
         </v-col>
