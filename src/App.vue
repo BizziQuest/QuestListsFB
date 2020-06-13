@@ -6,9 +6,9 @@
         <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
         <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
     </div>
-    <v-content>
+    <v-main>
       <router-view></router-view>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
