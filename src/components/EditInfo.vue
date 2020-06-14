@@ -88,8 +88,8 @@ export default {
       const userInfo = {
         id: this.user.id,
         email: this.email,
-        displayName: this.displayName,
-        avatar: this.avatar,
+        displayName: this.displayName || 'Guest',
+        avatar: this.avatar || 'https://i.ya-webdesign.com/images/default-avatar-png.png',
       };
       this.$store.dispatch('saveProfile', userInfo);
     },
