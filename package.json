@@ -11,9 +11,10 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "ci": "yarn lint && yarn test",
-    "deploy": "firebase deploy",
-    "emulate": "firebase emulators:start --only database",
-    "ui": "vue ui"
+    "ui": "vue ui",
+    "fb:deploy": "firebase deploy",
+    "fb:emulate": "firebase emulators:start --only database",
+    "fb:login": "firebase login --no-localhost"
   },
   "dependencies": {
     "@firebase/auth": "^0.14.6",
