@@ -8,14 +8,27 @@
         <v-form ref="editForm">
           <v-container>
             <v-row>
-              <v-col cols="12" md="12">
-                <v-text-field v-model="displayName" label="Display Name" clearable required></v-text-field>
-              </v-col>
+                <v-checkbox
+                  v-model="enabledDisplayname"
+                  class="shrink mr-2 mt-0"
+                ></v-checkbox>
+                <v-text-field
+                 :disabled="!enabledDisplayname"
+                 v-model="displayName"
+                 label="Display Name"
+                 clearable
+                 required></v-text-field>
             </v-row>
             <v-row>
-              <v-col>
-                <v-textarea v-model="avatar" clearable label="Avatar"></v-textarea>
-              </v-col>
+                <v-checkbox
+                  v-model="enabledAvatar"
+                  class="shrink mr-2 mt-0"
+                ></v-checkbox>
+                <v-textarea
+                  :disabled="!enabledAvatar"
+                  v-model="avatar"
+                  clearable
+                  label="Avatar"></v-textarea>
             </v-row>
             <v-row>
               <v-col cols="12" md="12">
@@ -50,6 +63,8 @@ export default {
   name: 'EditInfo',
   data() {
     return {
+      enabledDisplayname: false,
+      enabledAvatar: false,
       displayName: '',
       avatar: '',
       email: '',
