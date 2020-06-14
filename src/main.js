@@ -13,15 +13,15 @@ Vue.config.productionTip = false;
 require('dotenv').config();
 
 const firebaseConfig = {
-  apiKey: process.env.VUE_APP_API_KEY,
-  authDomain: process.env.authDomain,
-  databaseURL: process.env.VUE_APP_DATABASE_URL,
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
   projectId: 'questlists',
-  storageBucket: process.env.VUE_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.messagingSenderId,
-  appId: process.env.appId,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
 };
-
+console.debug(process.env, firebaseConfig);
 export const FBApp = firebase.initializeApp(firebaseConfig);
 
 export const auth = FBApp.auth();
