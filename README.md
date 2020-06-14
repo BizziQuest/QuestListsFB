@@ -83,7 +83,20 @@ for testing and local development.
 
 ## Deploying Questlists
 
-You can set up your own firebase instance at https://firebase.google.com. From there, you can configure `.firebaserc` with your project's name.
+You can set up your own firebase instance at https://firebase.google.com. From there, you can configure 
+`firebaseConfig` in `main.js` with your project's name. You need to have the following environment 
+variables for deploying to your firebase instance. You can put these in a `.env` file, or copy the
+`.env.example` file.
+
+```
+VUE_APP_FIREBASE_API_KEY
+VUE_APP_FIREBASE_AUTH_DOMAIN
+VUE_APP_FIREBASE_DATABASE_URL
+VUE_APP_FIREBASE_STORAGE_BUCKET
+VUE_APP_FIREBASE_MESSAGING_SENDER_ID
+VUE_APP_FIREBASE_APP_ID
+```
+
 
 ## Code Style Guide
 Having a style guide really helps code readability and lessens cognitive overhead when developing software. I am using the airbnb rules
