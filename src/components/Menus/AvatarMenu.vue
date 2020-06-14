@@ -4,7 +4,7 @@
       <template v-slot:activator="{ on }">
         <v-btn dark icon v-on="on">
           <v-avatar avatarStyle="Transparent" class="profile" color="grey" size="60">
-            <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+            <v-img :src="getAvatar"></v-img>
           </v-avatar>
         </v-btn>
       </template>
@@ -46,6 +46,11 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    getAvatar() {
+      return this.$store.state.user.avatar;
+    },
   },
   methods: {
     goToEditInfo() {
