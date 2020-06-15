@@ -86,7 +86,7 @@ export default {
   methods: {
     editForm() {
       if (this.enabledDisplayname === false && this.user.displayName.length === 0) {
-        this.displayName = 'Guest';
+        this.displayName = 'New Memeber';
       }
       if (this.enabledAvatar === false && this.user.avatar.length === 0) {
         this.avatar = 'https://i.ya-webdesign.com/images/default-avatar-png.png';
@@ -94,7 +94,7 @@ export default {
       const userInfo = {
         id: this.user.id,
         email: this.email,
-        displayName: this.displayName || 'Guest',
+        displayName: this.displayName || 'New Memeber',
         avatar: this.avatar || 'https://i.ya-webdesign.com/images/default-avatar-png.png',
       };
       this.$store.dispatch('saveProfile', userInfo);
