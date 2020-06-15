@@ -85,6 +85,12 @@ export default {
   },
   methods: {
     editForm() {
+      if (this.enabledDisplayname === false && this.user.displayName.length === 0) {
+        this.displayName = 'Guest';
+      }
+      if (this.enabledAvatar === false && this.user.avatar.length === 0) {
+        this.avatar = 'https://i.ya-webdesign.com/images/default-avatar-png.png';
+      }
       const userInfo = {
         id: this.user.id,
         email: this.email,
