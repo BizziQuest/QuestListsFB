@@ -42,18 +42,48 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async signupUser({ commit }, payload) {
+    async signupUser(_, payload) {
       try {
         const cred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
         console.log('cred info', cred);
-        const userCred = {
-          id: cred.user.uid,
-          email: payload.email,
-        };
-        commit('setUser', userCred);
+        // cred.data.user
+        // const user = auth.currentUser;
+        // if (user) {
+        //   const updateInfo = await user.updateProfile({
+        //     displayName: 'Guest',
+        //     photoURL: 'https://i.ya-webdesign.com/images/default-avatar-png.png',
+        //   });
+        //   console.debug('updateInfo', updateInfo);
+        // }
+
+        // const newUser = {
+        //   id: cred.user.uid,
+        //   email: payload.email,
+        //   displayName: user.displayName,
+        //   avatar: user.photoURL,
+        // };
+        // commit('setUser', newUser);
       } catch (error) {
         console.log(error);
       }
+      // auth.createUserWithEmailAndPassword(payload.email, payload.password)
+      //   .then((dataCred) => {
+      //     dataCred.user.updateProfile({
+      //       displayName: 'Guest',
+      //       photoURL: 'https://i.ya-webdesign.com/images/default-avatar-png.png',
+      //     });
+      //     return dataCred;
+      //   }).then((dataCred) => {
+      //     const newUser = {
+      //       id: dataCred.user.uid,
+      //       email: payload.email,
+      //       displayName: dataCred.user.displayName,
+      //       avatar: dataCred.user.photoURL,
+      //     };
+      //     commit('setUser', newUser);
+      //   }).catch((error) => {
+      //     console.log(error);
+      //   });
     },
     // underscore is a placeholder for a variable that should be there, but is not used
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]

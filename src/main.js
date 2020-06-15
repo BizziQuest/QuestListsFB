@@ -31,8 +31,8 @@ auth.onAuthStateChanged((user) => {
     store.dispatch('authenticationChanged', {
       id: user.uid,
       email: user.email,
-      displayName: user.displayName,
-      avatar: user.photoURL,
+      displayName: 'New Memeber',
+      avatar: 'https://i.ya-webdesign.com/images/default-avatar-png.png',
     });
   } else {
     console.log('user logged out');
