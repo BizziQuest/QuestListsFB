@@ -24,11 +24,11 @@
                   v-model="enabledAvatar"
                   class="shrink mr-2 mt-0"
                 ></v-checkbox>
-                <v-textarea
+                <v-text-field
                   :disabled="!enabledAvatar"
                   v-model="avatar"
                   clearable
-                  label="Avatar"></v-textarea>
+                  label="Avatar"></v-text-field>
             </v-row>
             <v-row>
               <v-col cols="12" md="12">
