@@ -8,8 +8,8 @@
             Please add some stuff
           </v-alert>
         </v-col>
-        <v-col v-else v-for="list in lists" :key="list.bgColor" col="12" md="4">
-            <v-card class=" mx-auto" min-height="200" max-width="350" tile :color="list.bgColor">
+        <v-col v-else v-for="(list, idx) in lists" :key="list.title" :col="idx===0 ? 12 : 6">
+            <v-card min-height="200" :color="list.bgColor" col="12">
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>Title: {{ list.title }}</v-list-item-title>
