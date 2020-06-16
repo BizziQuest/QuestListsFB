@@ -4,11 +4,56 @@ import { auth } from '../main'; // eslint-disable-line import/no-cycle
 
 Vue.use(Vuex);
 
+const testLists = [
+  {
+    title: 'Test One',
+    bgColor: '#ff00ff',
+    listItems: [
+      {
+        text: 'Item 1',
+        state: 'Done',
+      },
+      {
+        text: 'Item 2',
+        state: 'Not Done',
+      },
+    ],
+  },
+  {
+    title: 'Test Two',
+    bgColor: '#ff0000',
+    listItems: [
+      {
+        text: 'Item 1',
+        state: 'Done',
+      },
+      {
+        text: 'Item 2',
+        state: 'Not Done',
+      },
+    ],
+  },
+  {
+    title: 'Test Three',
+    bgColor: '#ffff00',
+    listItems: [
+      {
+        text: 'Item 1',
+        state: 'Done',
+      },
+      {
+        text: 'Item 2',
+        state: 'Not Done',
+      },
+    ],
+  },
+];
+
 export default new Vuex.Store({
   state: {
     user: null,
     itemStates: ['Done', 'Not Done'],
-    lists: [],
+    lists: testLists,
   },
   getters: {
     user: (state) => state.user,
