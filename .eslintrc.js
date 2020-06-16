@@ -11,11 +11,9 @@ module.exports = {
     parser: 'babel-eslint',
   },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    // if the line goes more than 120 , it will be an error
+    'no-console': process.env.NODE_ENV === 'production' ? ['error', { allow: ['info', 'error', 'warn'] }] : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'max-len': ['error', 120],
-    // 'no-tabs': 0,
   },
   overrides: [
     {
