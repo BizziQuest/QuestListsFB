@@ -24,7 +24,9 @@
             <v-col>
               <v-list-item>
                 <v-list-item-content style="color: black;">
-                  <v-list-item-title>Title: {{ list.title }}</v-list-item-title>
+                  <v-list-item-title  class="headline mb-1">{{ list.title }}</v-list-item-title>
+                  <v-list-item-subtitle style="color: #4567ac;">
+                  Greyhound divisely hello coldly fonwderfully</v-list-item-subtitle>
                   <ul v-for="item in [
                     { name: 'List Item 1', state: 'Done' },
                     { name: 'List Item 2', state: 'Not Done'}]" :key="item.name">
