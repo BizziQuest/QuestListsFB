@@ -12,25 +12,34 @@
         <v-card
           min-height="200"
           :color="list.bgColor"
-          style="margin-bottom: 20px; margin-right: 5px; border-radius: 25px; "
+          style="margin-bottom: 20px; margin-right: 5px; border-radius: 25px;"
+          hover= true
         >
           <v-row>
             <v-col md="6">
-              <v-avatar class="ml-1" size="200px" tile>
+              <v-avatar class="ml-1" size="200px"  tile>
                 <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
                        style="border-radius: 25px;"></v-img> </v-avatar
             ></v-col>
             <v-col>
               <v-list-item>
-                <v-list-item-content>
+                <v-list-item-content style="color: black;">
                   <v-list-item-title>Title: {{ list.title }}</v-list-item-title>
                   <ul v-for="item in [
                     { name: 'List Item 1', state: 'Done' },
                     { name: 'List Item 2', state: 'Not Done'}]" :key="item.name">
-                    <li>Name: {{ item.name }} | Status: {{ item.state }}</li>
+                    <li> [{{ item.state }}] {{ item.name }} </li>
                   </ul>
                 </v-list-item-content>
               </v-list-item>
+                  <v-card-actions class="ml-4">
+                    <v-btn fab >
+                      <v-icon>edit</v-icon>
+                    </v-btn>
+                    <v-btn fab>
+                      <v-icon> pageview </v-icon>
+                    </v-btn>
+                  </v-card-actions>
             </v-col>
           </v-row>
         </v-card>
@@ -60,4 +69,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+ul {
+  list-style-type: none;
+}
+</style>
