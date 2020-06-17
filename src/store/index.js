@@ -47,6 +47,20 @@ const testLists = [
       },
     ],
   },
+  {
+    title: 'Test Four',
+    bgColor: '#ff00ab',
+    listItems: [
+      {
+        text: 'Item 1',
+        state: 'Done',
+      },
+      {
+        text: 'Item 2',
+        state: 'Not Done',
+      },
+    ],
+  },
 ];
 
 export default new Vuex.Store({
