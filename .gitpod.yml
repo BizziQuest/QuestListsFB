@@ -1,10 +1,9 @@
 tasks:
-  - before: nvm install 10 && nvm use --default 10 && npm install -g yarn firebase-tools @vue/cli
-  - init: yarn install
-  - command: firebase serve && yarn serve
-image:
-  file: .gitpod.Dockerfile
-
+  - before: nvm install 10 && nvm use --default 10 && npm install -g yarn
+  - init: yarn
+  - command: yarn serve
+# image:
+#   file: .gitpod.Dockerfile
 vscode:
   extensions:
     - octref.vetur@0.24.0:aselSn+QoeM1P6qPDDZJXg==
@@ -15,3 +14,4 @@ vscode:
     - CoenraadS.bracket-pair-colorizer@1.0.61:fqPT1sJEqaEdrfXeYbdW+A==
     - Metatype.copilot-vscode@1.3.0:s16G4ML43Vzj0I5ko5Qv6A==
     - antfu.i18n-ally@2.1.6:kexij0pxswJjDrcTQ1uJsw==
+    - dbaeumer.vscode-eslint@2.1.5:9Wg0Glx/TwD8ElFBg+FKcQ==

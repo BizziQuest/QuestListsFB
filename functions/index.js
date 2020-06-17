@@ -9,7 +9,7 @@ const functions = require('firebase-functions');
 
 /**
  * This function keeps a running count of all the lists.
- * 
+ *
  * WARNING: this function is gonna take an insanely long time after a few hundred
  *  lists are created. This is run every time a list config is updated, changed, or removed.
  *  Hopefully, we will have some sort of monetary support by then, so we can actually
@@ -22,13 +22,13 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 exports.countLists = functions.database.ref('/list_configs')
-    .onWrite(event => {
-      const lists = event.data.val();
-      let count_path = event.data.ref.parent.child('list_count');
+  .onWrite((event) => {
+    const lists = event.data.val();
+    const countPath = event.data.ref.parent.child('list_count');
 
-      count = Object.keys(lists).length;
-      console.log('Updating counts:', count)
-      // TODO: update counts for all users!
+    count = Object.keys(lists).length;
+    console.debug('Updating counts:', count);
+    // TODO: update counts for all users!
 
-      return count_path.set(count);
-    });
+    return count_path.set(count);
+  });

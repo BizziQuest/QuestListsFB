@@ -21,7 +21,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.VUE_APP_FIREBASE_APP_ID,
 };
-
+console.debug(process.env, firebaseConfig);
 export const FBApp = firebase.initializeApp(firebaseConfig);
 
 export const auth = FBApp.auth();
@@ -35,7 +35,7 @@ auth.onAuthStateChanged((user) => {
       avatar: 'https://i.ya-webdesign.com/images/default-avatar-png.png',
     });
   } else {
-    console.log('user logged out');
+    console.debug('user logged out');
   }
 });
 
