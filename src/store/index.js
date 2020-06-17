@@ -49,7 +49,7 @@ const testLists = [
   },
   {
     title: 'Test Four',
-    bgColor: '#ff00ab',
+    bgColor: '#465362',
     listItems: [
       {
         text: 'Item 1',
