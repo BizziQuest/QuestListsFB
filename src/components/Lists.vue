@@ -13,14 +13,14 @@
           min-height="200"
           :color="list.bgColor"
           style="margin-bottom: 20px; margin-right: 5px; border-radius: 25px;"
-          hover= true
         >
           <v-row>
             <v-col md="6">
-              <v-avatar class="ml-1" :size="idx === 0 ? '400px' : '200px'"  tile>
+              <!--v-avatar max-width="300000px" class="ml-1" :size="idx === 0 ? '400px' : '200px'"  tile -->
                 <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-                       style="border-radius: 25px;"></v-img></v-avatar
-            ></v-col>
+                       style="border-radius: 25px; margin-left: 5px"
+                       :style="idx === 0 ? 'max-width:450px' : 'max-width:425px' "></v-img>
+                </v-col>
             <v-col>
               <v-list-item>
                 <v-list-item-content style="color: black;">
