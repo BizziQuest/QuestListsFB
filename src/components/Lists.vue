@@ -17,9 +17,9 @@
         >
           <v-row>
             <v-col md="6">
-              <v-avatar class="ml-1" size="200px"  tile>
+              <v-avatar class="ml-1" :size="idx === 0 ? '400px' : '200px'"  tile>
                 <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-                       style="border-radius: 25px;"></v-img> </v-avatar
+                       style="border-radius: 25px;"></v-img></v-avatar
             ></v-col>
             <v-col>
               <v-list-item>
