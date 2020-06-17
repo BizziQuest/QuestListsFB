@@ -8,8 +8,11 @@
             Please add some stuff
           </v-alert>
         </v-col>
-        <v-col v-else v-for="(list, idx) in lists" :key="list.title" :cols="idx === 0 ? 12 : 6">
-            <v-card min-height="200" :color="list.bgColor" >
+        <v-col v-else v-for="(list, idx) in lists"
+               :key="list.title"
+               :cols="idx === 0 ? 12 : 6" >
+            <v-card min-height="200" :color="list.bgColor"
+                   style="margin-bottom: 20px; margin-right: 5px; border-radius: 25px; ">
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>Title: {{ list.title }}</v-list-item-title>
