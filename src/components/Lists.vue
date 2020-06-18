@@ -35,7 +35,7 @@
               <v-row>
                 <v-list-item>
                   <v-list-item-content style="color: black;">
-                    <v-card id="list" color="#37d7eb" shaped max-width="400">
+                    <v-card class="list" color="#37d7eb" shaped max-width="400">
                       <ul
                         v-for="item in [
                           { name: 'List Item 1', state: 'Done' },
@@ -104,7 +104,7 @@ ul {
   list-style-type: none;
 }
 
-#list {
+.list {
   height: 150px;
   overflow: auto;
 }
