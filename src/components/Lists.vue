@@ -16,7 +16,6 @@
         >
           <v-row>
             <v-col cols="6">
-              <!--v-avatar max-width="300000px" class="ml-1" :size="idx === 0 ? '400px' : '200px'"  tile -->
               <v-img
                 src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
                 style=""
