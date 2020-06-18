@@ -47,6 +47,7 @@
                       >
                         <li>[{{ item.state }}] {{ item.name }}</li>
                       </ul>
+                      <span class="ma-5">more...</span>
                     </v-card>
                   </v-list-item-content>
                 </v-list-item>
