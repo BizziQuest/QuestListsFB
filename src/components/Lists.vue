@@ -42,12 +42,6 @@
                           { name: 'List Item 2', state: 'Not Done' },
                           { name: 'List Item 3', state: 'Running' },
                           { name: 'List Item 4', state: 'Hugging' },
-                          { name: 'List Item 5', state: 'Walking' },
-                          { name: 'List Item 6', state: 'Done' },
-                          { name: 'List Item 7', state: 'Not Done' },
-                          { name: 'List Item 8', state: 'Running' },
-                          { name: 'List Item 9', state: 'Hugging' },
-                          { name: 'List Item 10', state: 'Walking' }
                         ]"
                         :key="item.name"
                       >
