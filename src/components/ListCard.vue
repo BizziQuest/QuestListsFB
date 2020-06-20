@@ -9,7 +9,7 @@
       :class="large ? 'large-image' : 'small-image'"
       src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
       ></v-img-->
-      <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"></v-img>
+      <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"  max-width="50%"></v-img>
       <v-list-item-content>
         <div class="overline mb-4">{{list.title}}</div>
         <v-list-item-title class="headline mb-1">{{list.description}}</v-list-item-title>
