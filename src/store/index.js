@@ -7,6 +7,7 @@ Vue.use(Vuex);
 const testLists = [
   {
     title: 'Test One',
+    description: 'Some random description.',
     bgColor: '#ff00ff',
     listItems: [
       {
@@ -21,6 +22,7 @@ const testLists = [
   },
   {
     title: 'Test Two',
+    description: 'Some random description.',
     bgColor: '#ff0000',
     listItems: [
       {
@@ -35,6 +37,7 @@ const testLists = [
   },
   {
     title: 'Test Three',
+    description: 'Some random description.',
     bgColor: '#ffff00',
     listItems: [
       {
@@ -49,6 +52,7 @@ const testLists = [
   },
   {
     title: 'Test Four',
+    description: 'Some random description.',
     bgColor: '#465362',
     listItems: [
       {
@@ -72,7 +76,7 @@ export default new Vuex.Store({
   getters: {
     user: (state) => state.user,
     itemStates: (state) => state.itemStates,
-    lists: (state) => state.lists,
+    lists: (state) => (state.user && state.user.id ? state.lists : []),
   },
   mutations: {
     setUser(state, payload) {
