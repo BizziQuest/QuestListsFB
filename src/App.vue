@@ -1,26 +1,24 @@
 <template>
-  <!-- id="keep" has no effect ? -->
   <v-app id="app">
-    <!-- @updateDrawer="handleUpdate" -->
     <v-content>
       <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
-      <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
-      <Lists></Lists>
+      <drawer-menu :drawer.sync="drawer"></drawer-menu>
+      <lists></lists>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import TopMenuBarVue from './components/Menus/TopMenuBar.vue';
-import DrawerMenuVue from './components/Menus/DrawerMenu.vue';
+import TopMenuBar from './components/Menus/TopMenuBar.vue';
+import DrawerMenu from './components/Menus/DrawerMenu.vue';
 import Lists from './components/Lists.vue';
 
 export default {
   name: 'App',
 
   components: {
-    'top-menu-bar': TopMenuBarVue,
-    'drawer-menu-bar': DrawerMenuVue,
+    TopMenuBar,
+    DrawerMenu,
     Lists,
   },
   props: {
@@ -29,22 +27,6 @@ export default {
   data() {
     return {
       drawer: false,
-      items: [
-        { icon: 'lightbulb_outline', text: 'Notes' },
-        { icon: 'touch_app', text: 'Reminders' },
-        { divider: true },
-        { heading: 'Labels' },
-        { icon: 'add', text: 'Create new label' },
-        { divider: true },
-        { icon: 'archive', text: 'Archive' },
-        { icon: 'delete', text: 'Trash' },
-        { divider: true },
-        { icon: 'settings', text: 'Settings' },
-        { icon: 'chat_bubble', text: 'Trash' },
-        { icon: 'help', text: 'Help' },
-        { icon: 'phonelink', text: 'App downloads' },
-        { icon: 'keyboard', text: 'Keyboard shortcuts' },
-      ],
     };
   },
 };
