@@ -4,9 +4,7 @@
       <v-col v-if="lists.length < 1" col="12" xs="12" md="12">
         <v-alert icon="mdi-emoticon-sad" type="info">Please add some stuff</v-alert>
       </v-col>
-      <!--v-col v-else v-for="(list, idx) in lists" :key="list.title" :cols="idx % 2 !== 0 ? 12 : 6"-->
       <v-col v-else v-for="list in lists" :key="list.title" cols="12" xs="12" sm="6" md="4">
-        <!--ListCard :list="list" :large="idx % 2 !== 0"></ListCard-->
         <ListCard :list="list"></ListCard>
       </v-col>
     </v-row>
