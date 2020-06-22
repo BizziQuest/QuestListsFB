@@ -43,12 +43,4 @@ ul {
   height: 99px;
   overflow: auto;
 }
-// .v-responsive__content {
-//   margin-left: 20px;
-//   height: 50px;
-// }
-.v-image {
-  margin-left: 10px;
-  border-radius: 25px;
-  }
 </style>
