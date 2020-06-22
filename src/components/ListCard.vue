@@ -5,10 +5,6 @@
     style="margin-bottom: 20px; margin-right: 0px; border-radius: 25px;"
   >
     <v-list-item>
-      <!--v-img
-      :class="large ? 'large-image' : 'small-image'"
-      src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-      ></v-img-->
       <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"  max-width="50%"></v-img>
       <v-list-item-content>
         <div class="overline mb-4">{{list.title}}</div>
@@ -66,13 +62,9 @@ ul {
   padding: 0px;
   align-items: stretch;
 }
-// .v-responsive__content {
-//   margin-left: 20px;
-//   height: 50px;
-// }
+
 .v-image {
   border-radius: 25px;
   width: 100px;
-  // height: 100%;
 }
 </style>
