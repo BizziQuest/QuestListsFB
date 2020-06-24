@@ -28,7 +28,12 @@ export const auth = FBApp.auth();
 
 auth.onAuthStateChanged((user) => {
   if (user) {
-    store.dispatch('autoSignIn', { email: user.email, id: user.uid });
+    store.dispatch('authenticationChanged', {
+      id: user.uid,
+      email: user.email,
+      displayName: 'New Memeber',
+      avatar: 'https://i.ya-webdesign.com/images/default-avatar-png.png',
+    });
   } else {
     console.debug('user logged out');
   }

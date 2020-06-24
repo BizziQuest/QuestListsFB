@@ -2,18 +2,19 @@
   <!-- id="keep" has no effect ? -->
   <v-app id="app">
     <!-- @updateDrawer="handleUpdate" -->
-    <v-content>
-      <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
-      <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
-      <Lists></Lists>
-    </v-content>
+    <div id="nav">
+        <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
+        <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
+    </div>
+    <v-main>
+      <router-view></router-view>
+    </v-main>
   </v-app>
 </template>
 
 <script>
 import TopMenuBarVue from './components/Menus/TopMenuBar.vue';
 import DrawerMenuVue from './components/Menus/DrawerMenu.vue';
-import Lists from './components/Lists.vue';
 
 export default {
   name: 'App',
@@ -21,7 +22,6 @@ export default {
   components: {
     'top-menu-bar': TopMenuBarVue,
     'drawer-menu-bar': DrawerMenuVue,
-    Lists,
   },
   props: {
     source: String,

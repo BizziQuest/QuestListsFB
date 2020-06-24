@@ -1,14 +1,14 @@
 <template>
-  <v-app-bar app clipped-left>
-    <v-app-bar-nav-icon v-on:click="$emit('update:drawer', !drawer)"></v-app-bar-nav-icon>
-    <span class="title ml-3 mr-5">
+  <v-app-bar app clipped-left style="height: 69px">
+    <v-app-bar-nav-icon  v-on:click="$emit('update:drawer', !drawer)"></v-app-bar-nav-icon>
+    <span class="title ml-3 mr-5" style="cursor: pointer" v-on:click="goToHome">
       Quest
       <span class="font-weight-light">Lists</span>
     </span>
     <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field>
     <v-spacer></v-spacer>
-    <span v-if="isUserUthenticated">
-      <logout-btn></logout-btn>
+    <span v-if="isUserAuthenticated">
+      <AvatarMenu></AvatarMenu>
     </span>
     <span v-else>
       <login-or-signup-btn></login-or-signup-btn>
@@ -17,19 +17,29 @@
 </template>
 <script>
 import LogInorSignUp from '../LogInorSignUp.vue';
-import LogOut from '../LogOut.vue';
+import AvatarMenu from './AvatarMenu.vue';
 
 export default {
   name: 'TopMenuBar',
   props: ['drawer'],
   components: {
     'login-or-signup-btn': LogInorSignUp,
-    'logout-btn': LogOut,
+    AvatarMenu,
   },
   computed: {
-    isUserUthenticated() {
-      return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
+    isUserAuthenticated() {
+      return this.$store.getters.user && this.$store.getters.user.id;
+    },
+  },
+  methods: {
+    goToHome() {
+      this.$router.push('/');
     },
   },
 };
 </script>
+<style lang="css" scoped>
+ .v-toolbar__content{
+   height: 69px !important;
+ }
+</style>

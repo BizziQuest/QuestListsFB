@@ -80,10 +80,9 @@ export default new Vuex.Store({
   },
   mutations: {
     setUser(state, payload) {
+      console.debug('Set User Payload', payload);
       if (payload) {
         state.user = { ...payload };
-      } else {
-        state.user = null;
       }
     },
     resetStates(state) {
@@ -104,33 +103,35 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async signupUser({ commit }, payload) {
+    async signupUser(_, payload) {
       try {
-        await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-        commit('setUser', payload);
+        const cred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
+        console.log('cred info', cred);
       } catch (error) {
         console.log(error);
       }
     },
-    async loginUser({ commit }, payload) {
+    // underscore is a placeholder for a variable that should be there, but is not used
+    // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
+    async loginUser(_, payload) {
       try {
         await auth.signInWithEmailAndPassword(payload.email, payload.password);
-        commit('setUser', payload);
       } catch (error) {
-        console.log(error);
+        console.debug(error);
       }
     },
 
     async logOut({ commit }) {
       try {
-        const cred = await auth.signOut();
-        console.debug('logout store', cred);
-        commit('setUser', null);
+        // const cred =
+        await auth.signOut();
+        // console.debug('logout store', cred);
+        commit('setUser', { ...defaultState.user });
       } catch (error) {
         console.log(error);
       }
     },
-    autoSignIn({ commit }, payload) {
+    authenticationChanged({ commit }, payload) {
       commit('setUser', payload);
     },
     addState({ commit }, payload) {
@@ -142,6 +143,33 @@ export default new Vuex.Store({
     },
     resetStates({ commit }) {
       commit('resetStates');
+    },
+    updateUserInfo({ commit }, payload) {
+      commit('updateUserInfo', payload);
+    },
+    async editForm({ commit }, payload) {
+      const response = await auth.currentUser.updateProfile({
+        displayName: payload.displayName,
+        photoURL: payload.avatar,
+      });
+      console.log(response, auth.currentUser);
+      // eslint-disable-next-line no-alert
+      alert(`${payload.email} and ${payload.displayName} Was edited`);
+      commit('setUser', payload);
+    },
+    async saveProfile({ commit }, payload) {
+      try {
+        const response = await auth.currentUser.updateProfile({
+          displayName: payload.displayName,
+          photoURL: payload.avatar,
+        });
+        console.log(response, auth.currentUser);
+        // eslint-disable-next-line no-alert
+        alert(`${payload.email} and ${payload.displayName} Was edited`);
+        commit('setUser', payload);
+      } catch (error) {
+        console.log('saveProfile', error);
+      }
     },
   },
 });
