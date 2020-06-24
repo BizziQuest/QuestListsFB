@@ -25,26 +25,38 @@
 </template>
 
 <script>
+import ListCard from './ListCard.vue';
+
 export default {
   name: 'Lists',
+  components: {
+    ListCard,
+  },
   computed: {
     userInfo() {
       return this.$store.getters.user;
     },
-    isUserUthenticated() {
-      return this.$store.getters.user !== undefined && this.$store.getters.user !== null;
-    },
     lists() {
-      // if this.authenticated?
-      if (this.isUserUthenticated) {
-        return this.$store.getters.lists;
-      }
-      return [];
+      return this.$store.getters.lists;
     },
   },
 };
 </script>
 
+<<<<<<< HEAD
 <style lang="css" scoped>
 
+=======
+<style lang="scss" scoped>
+ul {
+  list-style-type: none;
+  li {
+    line-height: 30px;
+  }
+}
+.list {
+  height: 99px;
+  overflow: auto;
+}
+>>>>>>> master
 </style>

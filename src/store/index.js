@@ -4,18 +4,79 @@ import { auth } from '../main'; // eslint-disable-line import/no-cycle
 
 Vue.use(Vuex);
 
-const defaultState = {
-  user: null,
-  itemStates: ['Done', 'Not Done'],
-  lists: [],
-};
+const testLists = [
+  {
+    title: 'Test One',
+    description: 'Some random description.',
+    bgColor: '#ff00ff',
+    listItems: [
+      {
+        text: 'Item 1',
+        state: 'Done',
+      },
+      {
+        text: 'Item 2',
+        state: 'Not Done',
+      },
+    ],
+  },
+  {
+    title: 'Test Two',
+    description: 'Some random description.',
+    bgColor: '#ff0000',
+    listItems: [
+      {
+        text: 'Item 1',
+        state: 'Done',
+      },
+      {
+        text: 'Item 2',
+        state: 'Not Done',
+      },
+    ],
+  },
+  {
+    title: 'Test Three',
+    description: 'Some random description.',
+    bgColor: '#ffff00',
+    listItems: [
+      {
+        text: 'Item 1',
+        state: 'Done',
+      },
+      {
+        text: 'Item 2',
+        state: 'Not Done',
+      },
+    ],
+  },
+  {
+    title: 'Test Four',
+    description: 'Some random description.',
+    bgColor: '#465362',
+    listItems: [
+      {
+        text: 'Item 1',
+        state: 'Done',
+      },
+      {
+        text: 'Item 2',
+        state: 'Not Done',
+      },
+    ],
+  },
+];
 
 export default new Vuex.Store({
-  state: { ...defaultState },
+  state: {
+    user: null,
+    itemStates: ['Done', 'Not Done'],
+    lists: testLists,
+  },
   getters: {
     user: (state) => state.user,
     itemStates: (state) => state.itemStates,
-    lists: (state) => state.lists,
+    lists: (state) => (state.user && state.user.id ? state.lists : []),
   },
   mutations: {
     setUser(state, payload) {
