@@ -67,6 +67,16 @@ const testLists = [
   },
 ];
 
+const defaultState = {
+  user: {
+    avatar: '',
+    displayName: '',
+    email: '',
+  },
+  itemStates: ['Done', 'Not Done'],
+  lists: testLists,
+}
+
 export default new Vuex.Store({
   state: {
     user: null,
