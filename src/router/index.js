@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import EditInfo from '../components/EditInfo.vue';
 
-import Lists from '../components/Lists.vue';
+import Lists from '../views/Lists.vue';
 
 Vue.use(VueRouter);
 
