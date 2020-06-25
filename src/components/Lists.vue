@@ -9,16 +9,7 @@
           </v-alert>
         </v-col>
         <v-col v-else v-for="list in lists" :key="list.bgColor" col="12" md="4">
-            <v-card class=" mx-auto" min-height="200" max-width="350" tile :color="list.bgColor">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>Title: {{ list.title }}</v-list-item-title>
-                  <ul v-for="item in list.items" :key="item.name">
-                    <li>Name: {{ item.name }} | Status: {{ item.state }}</li>
-                  </ul>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
+          <ListCard :list = "list"></ListCard>
         </v-col>
       </v-row>
     </v-container>
@@ -43,10 +34,6 @@ export default {
 };
 </script>
 
-<<<<<<< HEAD
-<style lang="css" scoped>
-
-=======
 <style lang="scss" scoped>
 ul {
   list-style-type: none;
@@ -58,5 +45,4 @@ ul {
   height: 99px;
   overflow: auto;
 }
->>>>>>> master
 </style>
