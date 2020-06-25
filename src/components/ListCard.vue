@@ -19,7 +19,7 @@
           <v-btn fab>
             <v-icon>edit</v-icon>
           </v-btn>
-          <v-btn fab>
+          <v-btn fab v-bind:to="'/Lists/' + list.title">
             <v-icon>pageview</v-icon>
           </v-btn>
         </v-card-actions>
