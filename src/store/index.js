@@ -87,7 +87,7 @@ export default new Vuex.Store({
     user: (state) => state.user,
     itemStates: (state) => state.itemStates,
     lists: (state) => (state.user && state.user.id ? state.lists : []),
-    list: (state) => (title) => (state.lists.find( list => list.title === title))
+    list: (state) => (title) => (state.lists.find((list) => list.title === title)),
   },
   mutations: {
     setUser(state, payload) {
