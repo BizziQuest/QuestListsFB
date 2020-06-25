@@ -7,7 +7,9 @@
     <v-list-item>
       <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"  max-width="50%"></v-img>
       <v-list-item-content>
-        <div class="overline mb-4">{{list.title}}</div>
+        <v-btn text v-bind:to="'/Lists/' + list.title"  class="justify-start mb-4">
+          {{list.title}}
+        </v-btn>
         <v-list-item-title class="headline mb-1">{{list.description}}</v-list-item-title>
         <v-list-item-subtitle>Greyhound divisely hello coldly fonwderfully</v-list-item-subtitle>
         <ul>
@@ -67,4 +69,5 @@ ul {
   border-radius: 25px;
   width: 100px;
 }
+
 </style>
