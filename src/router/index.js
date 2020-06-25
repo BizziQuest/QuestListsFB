@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import EditInfo from '../components/EditInfo.vue';
 
 import Lists from '../views/Lists.vue';
+import List from '../views/List.vue';
 
 Vue.use(VueRouter);
 
@@ -11,6 +12,12 @@ const routes = [
     path: '/',
     name: 'Lists',
     component: Lists,
+  },
+  {
+    path: '/Lists/:title',
+    props: true,
+    name: 'List',
+    component: List,
   },
   {
     path: '/about',
