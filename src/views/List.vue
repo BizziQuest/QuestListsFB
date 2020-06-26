@@ -8,7 +8,7 @@
       :items="list.listItems"
       :items-per-page="5"
       class="elevation-1"
-    ></v-data-table> 
+    ></v-data-table>
   </div>
 </template>
 <script>
@@ -24,10 +24,13 @@ export default {
           sortable: true,
           value: 'text',
         },
-        { text: 'state', value: 'state' },
+        {
+          text: 'state',
+          value: 'state',
+        },
       ],
     };
-  }, 
+  },
   computed: {
     list() {
       return this.$store.getters.list(this.title);
