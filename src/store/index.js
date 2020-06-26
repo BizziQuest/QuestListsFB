@@ -67,6 +67,16 @@ const testLists = [
   },
 ];
 
+const defaultState = {
+  user: {
+    avatar: '',
+    displayName: '',
+    email: '',
+  },
+  itemStates: ['Done', 'Not Done'],
+  lists: testLists,
+};
+
 export default new Vuex.Store({
   state: {
     user: null,
@@ -77,6 +87,7 @@ export default new Vuex.Store({
     user: (state) => state.user,
     itemStates: (state) => state.itemStates,
     lists: (state) => (state.user && state.user.id ? state.lists : []),
+    list: (state) => (title) => (state.lists.find((list) => list.title === title)),
   },
   mutations: {
     setUser(state, payload) {
