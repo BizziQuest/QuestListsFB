@@ -10,7 +10,7 @@
               <v-btn small text>edit</v-btn>
             </v-col>
           </v-row>
-          <v-divider v-else-if="item.divider" :key="i" dark class="my-4"></v-divider>
+          <v-divider v-else-if="item.divider" :key="i" class="my-4"></v-divider>
           <v-list-item v-else :key="i" link>
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
