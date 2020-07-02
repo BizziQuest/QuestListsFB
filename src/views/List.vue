@@ -1,35 +1,42 @@
 <template>
   <div>
+    <br>
     <h1>List</h1>
     <p>{{list}}</p>
     <p>{{list.listItems}}</p>
-    <v-list>
-      <v-list-item v-for="item in listItems" :key="item.text">
-        <v-row>
-          <v-col col="6">
-            <div contenteditable>{{item.text}}</div>
-          </v-col>
-          <v-col col="6" v-on:click="enabled" >
-            <v-select ref="me" :disabled="disabled" :items="allItemsStates" :label="item.state" outlined></v-select>
-          </v-col>
-        </v-row>
-      </v-list-item>
-    </v-list>
+    <ol style="list-style-type:none;">
+      <li v-for="(item,i) in listItems" :key="`${item.text}${i}`">
+        <list-item :listItem="item"/>
+      </li>
+    </ol>
   </div>
 </template>
 <script>
+import ListItem from '../components/ListItem.vue';
+
 export default {
   name: 'List',
   props: ['title'],
+  components: {
+    ListItem,
+  },
   data() {
     return {
       disabled: false,
+      someObj: { text: 'Dima' },
     };
   },
   methods: {
-    enabled() {
-      console.log(this.$refs.me);
-      this.$refs.me.disabled = !this.disabled;
+    loseFocus(ref) {
+      this.$refs[ref][0].outlined = false;
+    },
+    setFocus(ref) {
+      console.log(this.$refs[ref]);
+      this.$refs[ref][0].outlined = true;
+    },
+    itemChanged($event) {
+      console.log('itemChanged -> $event', $event);
+      this.saveToServer(this.items);
     },
   },
   computed: {
