@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { auth } from '../main'; // eslint-disable-line import/no-cycle
+import { auth } from '../firebase';
 
 Vue.use(Vuex);
 
