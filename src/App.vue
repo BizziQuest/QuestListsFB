@@ -1,10 +1,10 @@
 <template>
   <!-- id="keep" has no effect ? -->
-  <v-app id="app">
+  <v-app id="app" color="primary" class="primary">
     <!-- @updateDrawer="handleUpdate" -->
     <div id="nav">
-        <top-menu-bar :drawer.sync="drawer"></top-menu-bar>
-        <drawer-menu-bar :drawer.sync="drawer"></drawer-menu-bar>
+        <top-menu-bar :drawer.sync="drawer" color="primary"></top-menu-bar>
+        <drawer-menu-bar :drawer.sync="drawer" color="primary"></drawer-menu-bar>
     </div>
     <v-main>
       <router-view></router-view>

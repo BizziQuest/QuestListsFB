@@ -1,11 +1,18 @@
 <template>
-  <v-app-bar app clipped-left style="height: 69px">
+  <v-app-bar color="primary" app clipped-left style="height: 69px">
     <v-app-bar-nav-icon  v-on:click="$emit('update:drawer', !drawer)"></v-app-bar-nav-icon>
     <span class="title ml-3 mr-5" style="cursor: pointer" v-on:click="goToHome">
       Quest
       <span class="font-weight-light">Lists</span>
     </span>
-    <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field>
+    <v-text-field
+      solo-inverted
+      class="primary darken-1"
+      flat
+      hide-details
+      label="Search"
+      prepend-inner-icon="search"
+    ></v-text-field>
     <v-spacer></v-spacer>
     <span v-if="isUserAuthenticated">
       <AvatarMenu></AvatarMenu>

@@ -12,7 +12,7 @@ module.exports = {
     themeColor: '#ab47bc',
     msTileColor: '#ab47bc',
     manifestOptions: {
-      background_color: '#fff176'
-    }
-  }
+      background_color: '#fff176',
+    },
+  },
 };

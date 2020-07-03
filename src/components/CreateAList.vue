@@ -4,10 +4,10 @@
       <template v-slot:activator="{ on }">
         <v-list-item link v-on="on">
           <v-list-item-action>
-            <v-icon>add</v-icon>
+            <v-icon color="secondary">add</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title class="grey--text">create a list</v-list-item-title>
+            <v-list-item-title color="secondary">create a list</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </template>

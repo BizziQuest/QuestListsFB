@@ -15879,10 +15879,10 @@ vue-cli-plugin-apollo@^0.21.3:
     subscriptions-transport-ws "^0.9.16"
     ts-node "^8.4.1"
 
-vue-cli-plugin-vuetify-preset-rally@^1.0.4:
+vue-cli-plugin-vuetify-preset-reply@^1.0.4:
   version "1.0.4"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify-preset-rally/-/vue-cli-plugin-vuetify-preset-rally-1.0.4.tgz#d2dc553f11391e4f59cab9460a4cd42a8d0b733c"
-  integrity sha512-0l+8Nokn1TgBgw4MYwfwDj9D1ZSEWIC5RkZahCWikRANwt3mxP5RwOBfGF/e8QL8CZQigx6Qf6VqWlmu1AufVg==
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify-preset-reply/-/vue-cli-plugin-vuetify-preset-reply-1.0.4.tgz#32025e0a54dee9452e88331ee4366cdcfb75c5e8"
+  integrity sha512-4d1Sdad6kAcRc2MPWyY9LESsD3rTz2xNmZDVDizczRmSfeRf2V4p4UpFOnAd0AAGYL1tA4OBm0+UfteH0o55+Q==
   dependencies:
     "@vuetify/cli-plugin-utils" "^0.0.7"
 
