@@ -17,7 +17,7 @@
           <v-col col="12" md="6">
             <v-select
               style="margin-bottom:20px;"
-              :items="allItemsStates"
+              :items="states"
               :label="listItem.state"
               @change = "listItem.state = $event"
               :outlined="isOutlined"
@@ -39,6 +39,11 @@ export default {
       default: () => ({}),
       description: 'The list item',
     },
+    states: {
+      type: Array,
+      default: () => (['Done', 'Not Done']),
+      description: 'The list of states that this item should have.',
+    }
   },
   data: () => ({
     isOutlined: false,
@@ -68,11 +73,6 @@ export default {
     //   const localItem = { text: $event.target.value };
     //   this.$emit('myInput', localItem);
     // },
-  },
-  computed: {
-    allItemsStates() {
-      return this.$store.getters.itemStates;
-    },
   },
 };
 </script>
