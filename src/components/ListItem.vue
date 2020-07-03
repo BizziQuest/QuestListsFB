@@ -56,18 +56,6 @@ export default {
       console.log('changeInputTF', e);
       this.listItem.text = e;
     },
-    // changeText($event) {
-    //   console.log('changeText -> $event', $event.target.value);
-    //   // this.item.text = $event.target.value; // Not allowed toi change property or sub props
-    //   // this.item = { text: $event.target.value }; // Bad practeice
-    //   // Avoid mutating a prop directly since the value will be overwritten
-    //   // whenever the parent component re-renders. Instead, use a data or computed property
-    //   //  based on the prop's value. Prop being mutated: "item"
-
-    //   // correct way
-    //   const localItem = { text: $event.target.value };
-    //   this.$emit('myInput', localItem);
-    // },
   },
   computed: {
     allItemsStates() {
