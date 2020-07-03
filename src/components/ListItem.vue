@@ -46,7 +46,6 @@ export default {
   methods: {
     handleBlur(e) {
       this.isOutlined = false;
-      console.log('blur', e.target);
     },
     outline(e) {
       this.isOutlined = true;
