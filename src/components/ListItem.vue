@@ -47,9 +47,6 @@ export default {
       description: 'The list of states that this item should have.',
     },
   },
-  mounted() {
-    console.log(this.$store);
-  },
   data: () => ({
     isOutlined: false,
   }),
