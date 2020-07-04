@@ -22,7 +22,7 @@
               @change = "listItem.state = $event"
               :outlined="isOutlined"
               @click="outline"
-              @blur="handleBlur"
+              @blur="removeOutline"
             ></v-select>
           </v-col>
         </v-row>
@@ -44,7 +44,7 @@ export default {
     isOutlined: false,
   }),
   methods: {
-    handleBlur() {
+    removeOutline() {
       this.isOutlined = false;
     },
     outline() {
