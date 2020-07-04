@@ -50,9 +50,6 @@ export default {
     outline() {
       this.isOutlined = true;
     },
-    changeInputTextField(e) {
-      this.listItem.text = e;
-    },
   },
   computed: {
     allItemsStates() {
