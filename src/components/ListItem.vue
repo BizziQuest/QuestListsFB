@@ -17,7 +17,7 @@
           <v-col col="12" md="6">
             <v-select
               style="margin-bottom:20px;"
-              :items="allItemsStates"
+              :items="itemStates"
               :label="listItem.state"
               @change = "listItem.state = $event"
               :outlined="isOutlined"
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   props: {
     listItem: {
@@ -52,9 +54,9 @@ export default {
     },
   },
   computed: {
-    allItemsStates() {
-      return this.$store.getters.itemStates;
-    },
+    ...mapGetters([
+      'itemStates',
+    ]),
   },
 };
 </script>
