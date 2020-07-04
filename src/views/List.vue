@@ -34,9 +34,10 @@ export default {
       console.log(this.$refs[ref]);
       this.$refs[ref][0].outlined = true;
     },
-    itemChanged($event) {
-      this.saveToServer(this.items);
-    },
+    // not usage in this branch
+    // itemChanged($event) {
+    //   this.saveToServer(this.items);
+    // },
   },
   computed: {
     listItems() {
