@@ -10,7 +10,7 @@
               @change="listItem.text = $event"
               :outlined="isOutlined"
               @click="outline"
-              @blur="handleBlur"
+              @blur="removeOutline"
               >{{ listItem.text }}</v-text-field
             >
           </v-col>
@@ -41,6 +41,9 @@ export default {
       default: () => ({}),
       description: 'The list item',
     },
+  },
+  mounted() {
+    console.log(this.$store);
   },
   data: () => ({
     isOutlined: false,
