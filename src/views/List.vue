@@ -35,7 +35,6 @@ export default {
       this.$refs[ref][0].outlined = true;
     },
     itemChanged($event) {
-      console.log('itemChanged -> $event', $event);
       this.saveToServer(this.items);
     },
   },
