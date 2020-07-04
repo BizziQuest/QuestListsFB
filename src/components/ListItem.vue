@@ -44,15 +44,13 @@ export default {
     isOutlined: false,
   }),
   methods: {
-    handleBlur(e) {
+    handleBlur() {
       this.isOutlined = false;
     },
-    outline(e) {
+    outline() {
       this.isOutlined = true;
-      console.log('outline', e.target);
     },
     changeInputTextField(e) {
-      console.log('changeInputTF', e);
       this.listItem.text = e;
     },
   },
