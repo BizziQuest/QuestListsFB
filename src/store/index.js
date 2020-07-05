@@ -80,12 +80,10 @@ const defaultState = {
 export default new Vuex.Store({
   state: {
     user: null,
-    itemStates: ['Done', 'Not Done'],
     lists: testLists,
   },
   getters: {
     user: (state) => state.user,
-    itemStates: (state) => state.itemStates,
     lists: (state) => (state.user && state.user.id ? state.lists : []),
     list: (state) => (title) => (state.lists.find((list) => list.title === title)),
   },
@@ -104,6 +102,7 @@ export default new Vuex.Store({
         state.itemStates.push(payload);
       }
     },
+    // this should create all parts in firebase.
     createAList(state, payload) {
       if (payload) {
         const list = {};

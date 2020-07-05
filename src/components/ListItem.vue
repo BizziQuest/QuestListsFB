@@ -17,7 +17,7 @@
           <v-col col="12" md="6">
             <v-select
               style="margin-bottom:20px;"
-              :items="itemStates"
+              :items="states"
               :label="listItem.state"
               @change = "listItem.state = $event"
               :outlined="isOutlined"
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+// import { mapGetters } from 'vuex';
 
 export default {
   props: {
@@ -40,6 +40,11 @@ export default {
       type: Object,
       default: () => ({}),
       description: 'The list item',
+    },
+    states: {
+      type: Array,
+      default: () => (['Done', 'Not Done']),
+      description: 'The list of states that this item should have.',
     },
   },
   mounted() {
@@ -55,11 +60,6 @@ export default {
     outline() {
       this.isOutlined = true;
     },
-  },
-  computed: {
-    ...mapGetters([
-      'itemStates',
-    ]),
   },
 };
 </script>
