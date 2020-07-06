@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { auth } from '../firebase';
+import { auth, globalPreferences, listsCollection } from '../firebase';
 
 Vue.use(Vuex);
 
@@ -77,27 +77,30 @@ const defaultState = {
   lists: testLists,
 };
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
-    user: null,
-    itemStates: ['Done', 'Not Done'],
-    lists: testLists,
+    currentUser: null,
+    lists: null,
+    globalPreferences: [],
   },
   getters: {
-    user: (state) => state.user,
-    itemStates: (state) => state.itemStates,
-    lists: (state) => (state.user && state.user.id ? state.lists : []),
-    list: (state) => (title) => (state.lists.find((list) => list.title === title)),
+    user: (state) => state.currentUser,
+    lists: (state) => state.lists,
+    globalPreferences: (state) => state.globalPreferences,
   },
   mutations: {
     setUser(state, payload) {
-      console.debug('Set User Payload', payload);
       if (payload) {
-        state.user = { ...payload };
+        state.currentUser = { ...payload };
       }
     },
-    resetStates(state) {
-      state.itemStates = ['Done', 'Not Done'];
+    setLists(state, payload) {
+      if (payload) {
+        state.lists = payload;
+      }
+    },
+    setGlobalPreferences(state, prefs) {
+      state.globalPreferences = { ...prefs };
     },
     addState(state, payload) {
       if (payload) {
@@ -168,6 +171,16 @@ export default new Vuex.Store({
       alert(`${payload.email} and ${payload.displayName} Was edited`);
       commit('setUser', payload);
     },
+    async getLists({ commit }) {
+      const lists = [];
+      const fbLists = await listsCollection.limit(10).get();
+      fbLists.forEach(async (doc) => {
+        const list = doc.data();
+        lists.push(list);
+      });
+      commit('setLists', lists);
+      // commit('setLists', []);
+    },
     async saveProfile({ commit }, payload) {
       try {
         const response = await auth.currentUser.updateProfile({
@@ -184,3 +197,21 @@ export default new Vuex.Store({
     },
   },
 });
+
+// this is how to create a reactive firebase collection.
+globalPreferences.onSnapshot(async (snapshot) => {
+  const prefs = [];
+  snapshot.forEach((doc) => {
+    const pref = doc.data();
+    pref.id = doc.id;
+
+    prefs.push(pref);
+  });
+  const state = await prefs[0].defaultState.get();
+  const { stateOrder, states } = state.data();
+  const pref = { defaultColor: prefs[0].defaultColor, defaultState: states[stateOrder[0]] };
+
+  store.commit('setGlobalPreferences', pref);
+});
+
+export default store;
