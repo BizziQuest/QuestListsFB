@@ -14,7 +14,7 @@ auth.onAuthStateChanged((user) => {
     store.dispatch('authenticationChanged', {
       id: user.uid,
       email: user.email,
-      displayName: 'New Memeber',
+      displayName: 'New Member',
       avatar: '/img/unknown_user.svg',
     });
   } else {
