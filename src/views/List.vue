@@ -2,8 +2,8 @@
   <div>
     <br>
     <h1>List</h1>
-    <p>{{list}}</p>
-    <p>{{list.listItems}}</p>
+    <p>{{list(title)}}</p>
+    <p>{{list(title).listItems}}</p>
     <ol style="list-style-type:none;">
       <li v-for="(item,i) in listItems" :key="`${item.text}${i}`">
         <list-item :listItem="item"/>
@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-
+import { mapGetters } from 'vuex';
 import ListItem from '../components/ListItem.vue';
 
 export default {
@@ -41,12 +41,13 @@ export default {
     // },
   },
   computed: {
+    ...mapGetters(['list']),
     listItems() {
       return this.list.listItems;
     },
-    list() {
-      return this.$store.getters.list(this.title);
-    },
+    // list() {
+    //   return this.$store.getters.list(this.title);
+    // },
     allItemsStates() {
       return this.$store.getters.itemStates;
     },
