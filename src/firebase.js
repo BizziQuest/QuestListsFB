@@ -26,6 +26,11 @@ const { currentUser } = auth;
 // firebase settings go here
 const settings = {};
 
+if (process.env.NODE_ENV === 'development') {
+  settings.host = process.env.VUE_APP_FIREBASE_DATABASE_URL;
+  settings.ssl = false;
+}
+console.debug('FIREBASE CONFIG: ', firebaseConfig);
 db.settings(settings);
 
 // firebase collections
@@ -33,6 +38,7 @@ const globalPreferences = db.collection('globalPreferences');
 const listsCollection = db.collection('lists');
 const listItemsCollection = db.collection('listItems');
 const statesCollection = db.collection('states');
+const usersCollection = db.collection('users');
 const userStatesCollection = db.collection('userListItemStates');
 
 export {
@@ -45,5 +51,6 @@ export {
   listsCollection,
   listItemsCollection,
   statesCollection,
+  usersCollection,
   userStatesCollection,
 };
