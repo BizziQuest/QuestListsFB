@@ -1,9 +1,5 @@
 <template>
   <div>
-<<<<<<< HEAD
-    <br />
-=======
->>>>>>> view-fullpage-list-inline-edit
     <h1>List</h1>
     <p>{{theList}}</p>
     <p>{{theList.listItems}}</p>
