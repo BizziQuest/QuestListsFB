@@ -27,15 +27,6 @@ export default {
       someObj: { text: 'Dima' },
     };
   },
-  methods: {
-    loseFocus(ref) {
-      this.$refs[ref][0].outlined = false;
-    },
-    setFocus(ref) {
-      console.log(this.$refs[ref]);
-      this.$refs[ref][0].outlined = true;
-    },
-  },
   computed: {
     ...mapGetters(['list']),
     theList() {
