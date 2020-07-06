@@ -1,6 +1,5 @@
 <template>
   <div>
-    <br>
     <h1>List</h1>
     <p>{{theList}}</p>
     <p>{{theList.listItems}}</p>
@@ -36,3 +35,8 @@ export default {
   },
 };
 </script>
+<style lang='scss' scoped>
+  h1 {
+    margin-top: 10px;
+  }
+</style>
