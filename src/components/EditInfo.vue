@@ -8,27 +8,18 @@
         <v-form ref="editForm">
           <v-container>
             <v-row>
-                <v-checkbox
-                  v-model="enabledDisplayname"
-                  class="shrink mr-2 mt-0"
-                ></v-checkbox>
                 <v-text-field
-                 :disabled="!enabledDisplayname"
                  v-model="displayName"
                  label="Display Name"
                  clearable
+                 color="secondary"
                  required></v-text-field>
             </v-row>
             <v-row>
-                <v-checkbox
-                  v-model="enabledAvatar"
-                  class="shrink mr-2 mt-0"
-                ></v-checkbox>
-                <v-text-field
-                  :disabled="!enabledAvatar"
-                  v-model="avatar"
-                  clearable
-                  label="Avatar"></v-text-field>
+              <v-text-field
+                v-model="avatar"
+                clearable
+                label="Avatar" color="secondary"></v-text-field>
             </v-row>
             <v-row>
               <v-col cols="12" md="12">
@@ -48,7 +39,6 @@
                 >Edit</v-btn>
               </v-col>
             </v-row>
-            <v-row>{{ user }}</v-row>
           </v-container>
         </v-form>
       </v-card-actions>
@@ -63,39 +53,39 @@ export default {
   name: 'EditInfo',
   data() {
     return {
-      enabledDisplayname: false,
-      enabledAvatar: false,
-      displayName: '',
-      avatar: '',
-      email: '',
+      userId: null,
+      displayName: null,
+      avatar: null,
+      email: null,
     };
   },
   computed: {
     ...mapState({
-      user(state) {
-        if (!state.user) {
-          return state.user;
+      currentUser(state) {
+        const {
+          displayName,
+          email,
+          avatar,
+          id,
+        } = state.currentUser;
+        console.log('USER: ', state.currentUser);
+        if (id) {
+          this.userId = id;
+          this.displayName = displayName || this.displayName;
+          this.email = email;
+          this.avatar = avatar || this.avatar;
         }
-        this.displayName = state.user.displayName;
-        this.email = state.user.email;
-        this.avatar = state.user.avatar;
-        return state.user;
+        return state.currentUser;
       },
     }),
   },
   methods: {
     editForm() {
-      if (this.enabledDisplayname === false && this.user.displayName.length === 0) {
-        this.displayName = 'New Memeber';
-      }
-      if (this.enabledAvatar === false && this.user.avatar.length === 0) {
-        this.avatar = 'https://i.ya-webdesign.com/images/default-avatar-png.png';
-      }
       const userInfo = {
-        id: this.user.id,
+        id: this.currentUser.id,
         email: this.email,
-        displayName: this.displayName || 'New Memeber',
-        avatar: this.avatar || 'https://i.ya-webdesign.com/images/default-avatar-png.png',
+        displayName: this.displayName || 'New Member',
+        avatar: this.avatar || '/img/unknown_user.svg',
       };
       this.$store.dispatch('saveProfile', userInfo);
     },
