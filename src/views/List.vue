@@ -1,12 +1,15 @@
 <template>
   <div>
+<<<<<<< HEAD
     <br />
+=======
+>>>>>>> view-fullpage-list-inline-edit
     <h1>List</h1>
-    <p>{{list}}</p>
-    <p>{{list.listItems}}</p>
+    <p>{{theList}}</p>
+    <p>{{theList.listItems}}</p>
     <ol style="list-style-type:none;">
-      <li v-for="(item,i) in listItems" :key="`${item.text}${i}`">
-        <list-item :listItem="item" :states="item.states" />
+      <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
+        <list-item :listItem="item"/>
       </li>
       <!-- <li>
         // you should make sure your list-item handles cases where the text is not defined,
@@ -38,8 +41,8 @@
   </div>
 </template>
 <script>
-
-import ListItem from '../components/ListItem.vue';
+import { mapGetters } from 'vuex';
+import ListItem from '@/components/ListItem.vue';
 
 export default {
   name: 'List',
@@ -49,6 +52,7 @@ export default {
   },
   data() {
     return {
+<<<<<<< HEAD
       entry: '',
       disabled: false,
       isOutlined: false,
@@ -77,16 +81,30 @@ export default {
       this.saveToServer(this.items);
     }
   },
+=======
+    };
+  },
+>>>>>>> view-fullpage-list-inline-edit
   computed: {
-    listItems() {
-      return this.list.listItems;
+    ...mapGetters(['list']),
+    theList() {
+      return this.list(this.title);
     },
-    list() {
-      return this.$store.getters.list(this.title);
-    },
+<<<<<<< HEAD
     allItemsStates() {
       return this.$store.getters.itemStates;
     }
   }
+=======
+    listItems() {
+      return this.theList.listItems;
+    },
+  },
+>>>>>>> view-fullpage-list-inline-edit
 };
 </script>
+<style lang='scss' scoped>
+  h1 {
+    margin-top: 10px;
+  }
+</style>
