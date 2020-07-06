@@ -45,14 +45,14 @@ export default {
   name: 'List',
   props: ['title'],
   components: {
-    ListItem,
+    ListItem
   },
   data() {
     return {
       entry: '',
       disabled: false,
       isOutlined: false,
-      stateShow: false,
+      stateShow: false
     };
   },
   methods: {
@@ -75,7 +75,7 @@ export default {
     itemChanged($event) {
       console.log('itemChanged -> $event', $event);
       this.saveToServer(this.items);
-    },
+    }
   },
   computed: {
     listItems() {
@@ -86,7 +86,7 @@ export default {
     },
     allItemsStates() {
       return this.$store.getters.itemStates;
-    },
-  },
+    }
+  }
 };
 </script>
