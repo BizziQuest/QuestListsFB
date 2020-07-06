@@ -1,20 +1,22 @@
 <template>
   <v-card
     max-height="auto"
-    :color="list.bgColor"
+    :color="list.color"
     style="margin-bottom: 20px; margin-right: 0px; border-radius: 25px;"
   >
     <v-list-item>
-      <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"  max-width="50%"></v-img>
+      <v-img :src="list.image"  max-width="50%"></v-img>
       <v-list-item-content>
         <v-btn text v-bind:to="'/Lists/' + list.title"  class="justify-start mb-4">
           {{list.title}}
         </v-btn>
         <v-list-item-title class="headline mb-1">{{list.description}}</v-list-item-title>
-        <v-list-item-subtitle>Greyhound divisely hello coldly fonwderfully</v-list-item-subtitle>
+        <v-list-item-subtitle>{{list.description}}</v-list-item-subtitle>
         <ul>
-          <li v-for="item in list.listItems" :key="item.text">[{{ item.state }}] {{ item.text }}</li>
-          <li>more...</li>
+          <li v-for="item in listItems" :color="defaultState.color" :key="item.order">
+            <v-icon :title="defaultState.text">{{defaultState.icon}}</v-icon>
+            {{ item.title }}
+          </li>
         </ul>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -31,9 +33,29 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'ListCard',
   props: ['list', 'large'],
+  data: () => ({
+    listItems: [],
+    defaultState: {
+      icon: 'mdi-checkbox-blank-outline',
+      color: '',
+      text: 'Done',
+      value: '0',
+    },
+  }),
+  computed: {
+    ...mapState(['globalPreferences']),
+  },
+  async mounted() {
+    const items = await this.list.listItems.get();
+    const listItems = [];
+    items.data().items.forEach((item) => listItems.push(item));
+    this.listItems = listItems;
+  },
 };
 </script>
 
