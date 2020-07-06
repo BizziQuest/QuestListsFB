@@ -1,10 +1,37 @@
+// Note: operations are:
+//       read == [get, list]
+//       write == [create, update, delete]
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId}{
-      allow write: if request.auth.token.email_verified && request.auth.uid != null && request.auth.uid == userId;
-      allow read: if request.auth.uid != null && request.auth.uid == userId;
-      allow delete: if request.auth.token.is_admin;
+    function verifiedUser() {
+      return request.auth != null && request.auth.uid != null && request.auth.token.email_verified;
+    }
+    match /globalPreferences/{preferenceId=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth.uid == userId;
+    }
+    match /userListItemStates/{userId=**}{
+      allow read, write: if verifiedUser() && request.auth.uid == userId;
+    }
+    match /lists/{listId=**} {
+      allow create, update: if verifiedUser();
+      allow read: if true; // anyone can read
+      allow delete: if false;  // users can't delete anything.
+    }
+    match /listItems/{listItemId=**} {
+      allow create, update: if verifiedUser();
+      allow read: if true;
+      allow delete: if false;
+    }
+    match /states/{stateId=**} {
+      allow create, update: if verifiedUser();
+      allow read: if true;
+      allow update: if false;
     }
   }
 }
