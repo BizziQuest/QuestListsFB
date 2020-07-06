@@ -25,8 +25,6 @@
             placeholder="List Item"
             autofocus
             counter
-            ref="newTextField"
-            @change="lengthTextField"
           ></v-text-field>
         </v-col>
         <v-col col="12" md="6" v-show="entry.length > 0">
@@ -48,6 +46,7 @@ export default {
   },
   data() {
     return {
+      entry: '',
     };
   },
   computed: {
