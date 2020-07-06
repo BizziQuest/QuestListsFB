@@ -44,59 +44,21 @@ export default {
   name: 'List',
   props: ['title'],
   components: {
-    ListItem
+    ListItem,
   },
   data() {
     return {
-<<<<<<< HEAD
-      entry: '',
-      disabled: false,
-      isOutlined: false,
-      stateShow: false
     };
   },
-  methods: {
-    lengthTextField() {
-      console.log(this.entry);
-      if (this.entry !== 0) {
-        this.stateShow = true;
-        // this.listItems.push({ text: 'text', state: 'not done' });
-      } else {
-        this.stateShow = false;
-      }
-    },
-    loseFocus(ref) {
-      this.$refs[ref][0].outlined = false;
-    },
-    setFocus(ref) {
-      console.log(this.$refs[ref]);
-      this.$refs[ref][0].outlined = true;
-    },
-    itemChanged($event) {
-      console.log('itemChanged -> $event', $event);
-      this.saveToServer(this.items);
-    }
-  },
-=======
-    };
-  },
->>>>>>> view-fullpage-list-inline-edit
   computed: {
     ...mapGetters(['list']),
     theList() {
       return this.list(this.title);
     },
-<<<<<<< HEAD
-    allItemsStates() {
-      return this.$store.getters.itemStates;
-    }
-  }
-=======
     listItems() {
       return this.theList.listItems;
     },
   },
->>>>>>> view-fullpage-list-inline-edit
 };
 </script>
 <style lang='scss' scoped>
