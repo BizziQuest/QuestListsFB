@@ -5,7 +5,7 @@
     <p>{{theList}}</p>
     <p>{{theList.listItems}}</p>
     <ol style="list-style-type:none;">
-      <li v-for="(item,i) in theList.listItems" :key="`${item.text}${i}`">
+      <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
         <list-item :listItem="item"/>
       </li>
     </ol>
@@ -13,7 +13,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import ListItem from '../components/ListItem.vue';
+import ListItem from '@/components/ListItem.vue';
 
 export default {
   name: 'List',
@@ -22,7 +22,7 @@ export default {
     ListItem,
   },
   data() {
-    return {  
+    return {
     };
   },
   computed: {
