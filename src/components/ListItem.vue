@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="list-item-view">
     <template>
       <v-container>
         <v-row>
