@@ -22,9 +22,7 @@ export default {
     ListItem,
   },
   data() {
-    return {
-      disabled: false,
-      someObj: { text: 'Dima' },
+    return {  
     };
   },
   computed: {
