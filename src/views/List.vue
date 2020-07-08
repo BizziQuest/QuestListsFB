@@ -18,10 +18,6 @@ export default {
   components: {
     ListItem,
   },
-  data() {
-    return {
-    };
-  },
   computed: {
     ...mapGetters(['list']),
     theList() {
