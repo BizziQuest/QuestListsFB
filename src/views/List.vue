@@ -1,8 +1,6 @@
 <template>
   <div>
     <h1>List</h1>
-    <p>{{theList}}</p>
-    <p>{{theList.listItems}}</p>
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
         <list-item :listItem="item"/>
