@@ -40,7 +40,13 @@ import ListItem from '@/components/ListItem.vue';
 
 export default {
   name: 'List',
-  props: ['title'],
+  props: {
+  title: {
+    type: String,  // vue check to see if the type you passed is the expected type
+    default: "New List",  //the default value. if the type is Object, this MUST use a function
+    description: 'The title of the list you are displaying. Defaults to "New List".'
+    }
+  },
   components: {
     ListItem,
   },
