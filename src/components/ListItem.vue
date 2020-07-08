@@ -10,7 +10,7 @@
               @change="listItem.text = $event"
               :outlined="isActive"
               @click="activate"
-              @blur="deactivate "
+              @blur="deactivate"
               >{{ listItem.text }}</v-text-field
             >
           </v-col>
@@ -22,7 +22,7 @@
               @change = "listItem.state = $event"
               :outlined="isActive"
               @click="activate"
-              @blur="deactivate "
+              @blur="deactivate"
             ></v-select>
           </v-col>
         </v-row>
@@ -52,11 +52,11 @@ export default {
     isActive: false,
   }),
   methods: {
-    deactivate () {
-      this.isOutlined = false;
+    deactivate() {
+      this.isActive = false;
     },
     activate() {
-      this.isOutlined = true;
+      this.isActive = true;
     },
   },
 };
