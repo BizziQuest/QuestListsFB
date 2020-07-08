@@ -1,40 +1,42 @@
 <template>
   <div>
     <h1>List</h1>
-    <p>{{list}}</p>
-    <p>{{list.listItems}}</p>
-    <v-data-table
-      :headers="headers"
-      :items="list.listItems"
-      :items-per-page="5"
-      class="elevation-1"
-    ></v-data-table>
+    <ol style="list-style-type:none;">
+      <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
+        <list-item :listItem="item"/>
+      </li>
+    </ol>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
+import ListItem from '@/components/ListItem.vue';
+
 export default {
   name: 'List',
-  props: ['title'],
-  data() {
-    return {
-      headers: [
-        {
-          text: 'item',
-          align: 'start',
-          sortable: true,
-          value: 'text',
-        },
-        {
-          text: 'state',
-          value: 'state',
-        },
-      ],
-    };
+  props: {
+  title: {
+    type: String,  // vue check to see if the type you passed is the expected type
+    default: "New List",  //the default value. if the type is Object, this MUST use a function
+    description: 'The title of the list you are displaying. Defaults to "New List".'
+    }
+  },
+  components: {
+    ListItem,
   },
   computed: {
-    list() {
-      return this.$store.getters.list(this.title);
+    ...mapGetters(['list']),
+    theList() {
+      return this.list(this.title);
+    },
+    listItems() {
+      return this.theList.listItems;
     },
   },
 };
 </script>
+<style lang='scss' scoped>
+  h1 {
+    margin-top: 10px;
+  }
+</style>
