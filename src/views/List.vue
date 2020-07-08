@@ -23,12 +23,14 @@
             style="margin-bottom:20px;"
             :prepend-icon="entry.length < 1 ? 'add' : 'mdi-checkbox'"
             placeholder="List Item"
-            autofocus
             counter
+            @input= "addNewToListItems"
           ></v-text-field>
         </v-col>
         <v-col col="12" md="6" v-show="entry.length > 0">
-          <v-select style="margin-bottom:20px;"></v-select>
+          <v-select style="margin-bottom:20px;"
+                    :items="['Done', 'No Done']">
+          </v-select>
         </v-col>
       </v-row>
     </v-container>
@@ -56,6 +58,14 @@ export default {
     },
     listItems() {
       return this.theList.listItems;
+    },
+  },
+  methods: {
+    addNewToListItems() {
+      // console.log(this.entry);
+      // if (this.entry.length !== 0) {
+      this.listItems.push({ text: this.entry, state: 'Not Done' });
+      // }
     },
   },
 };
