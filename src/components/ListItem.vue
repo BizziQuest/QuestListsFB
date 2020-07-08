@@ -43,9 +43,6 @@ export default {
       'objects which each obj includes text and state key values',
     },
   },
-  mounted() {
-    console.log(this.$store);
-  },
   data: () => ({
     isActive: false,
   }),
