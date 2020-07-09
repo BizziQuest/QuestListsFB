@@ -154,8 +154,8 @@ export default {
   },
   computed: {
     itemStates() {
-      // return this.$store.getters.itemStates;
-      return ['done', 'mdi-progress'];
+      return this.$store.getters.itemStates;
+      // return ['done', 'cached', 'started'];
     },
   },
 };
