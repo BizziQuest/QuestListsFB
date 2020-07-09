@@ -2,7 +2,7 @@
   <div class="list-item-view">
     <template>
       <v-container>
-        <v-row>
+         <v-row>
           <v-col col="12" md="6">
             <v-text-field
               style="margin-bottom:20px;"
@@ -15,7 +15,7 @@
             >
           </v-col>
           <v-col col="12" md="6">
-            <v-select
+            <!--v-select
               style="margin-bottom:20px;"
               :items="itemStates"
               :label="listItem.state"
@@ -23,8 +23,16 @@
               :outlined="isActive"
               @click="activate"
               @blur="deactivate "
-            ></v-select>
+            ></v-select-->
+            <v-icon
+               style="margin-bottom:20px;"
+              :outlined="isActive"
+              @click="activate"
+              @blur="deactivate ">
+              {{listItem.state}}
+            </v-icon>
           </v-col>
+          {{listStates[index]}}--{{index}}
         </v-row>
       </v-container>
     </template>
@@ -42,6 +50,14 @@ export default {
       description: 'The list item was passed from List with more info like array of'
       + 'objects which each obj includes text and state key values',
     },
+    index: {
+      type: Number,
+      description: 'it is the index of list item',
+    },
+    listStates: {
+      type: Array,
+      description: 'all the item and states',
+    },
   },
   data: () => ({
     isActive: false,
@@ -51,7 +67,9 @@ export default {
       this.isOutlined = false;
     },
     activate() {
-      this.isOutlined = true;
+      // this.isOutlined = true;
+      console.log('I am clicked', this.listStates[this.index + 1]);
+      this.listItem.state = this.listStates[this.index + 1].state;
     },
   },
   computed: {
