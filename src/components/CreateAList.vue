@@ -69,7 +69,9 @@
                 <span>Availabe States</span>
                 <div id="availableListStates">
                   <ul v-for="item in itemStates" :key="item.state">
-                    <li>{{ item }}</li>
+                    <li>
+                      <v-icon>{{ item }}</v-icon>
+                    </li>
                   </ul>
                 </div>
               </v-col>
@@ -109,7 +111,7 @@ export default {
       ],
       newStateRules: [
         (v) => !!v || 'State is required',
-        (v) => (v && v.length >= 5) || 'State must be at least 5 characters',
+        (v) => (v && v.length >= 4) || 'State must be at least 4 characters',
       ],
     };
   },
@@ -152,7 +154,8 @@ export default {
   },
   computed: {
     itemStates() {
-      return this.$store.getters.itemStates;
+      // return this.$store.getters.itemStates;
+      return ['done', 'mdi-progress'];
     },
   },
 };
