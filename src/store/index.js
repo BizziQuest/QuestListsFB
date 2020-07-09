@@ -27,11 +27,11 @@ const testLists = [
     listItems: [
       {
         text: 'Item 1',
-        state: 'Done',
+        state: 'done',
       },
       {
         text: 'Item 2',
-        state: 'Not Done',
+        state: 'face',
       },
     ],
   },
@@ -42,11 +42,11 @@ const testLists = [
     listItems: [
       {
         text: 'Item 1',
-        state: 'Done',
+        state: 'done',
       },
       {
         text: 'Item 2',
-        state: 'Not Done',
+        state: 'face',
       },
     ],
   },
@@ -57,11 +57,11 @@ const testLists = [
     listItems: [
       {
         text: 'Item 1',
-        state: 'Done',
+        state: 'done',
       },
       {
         text: 'Item 2',
-        state: 'Not Done',
+        state: 'face',
       },
     ],
   },
@@ -80,7 +80,7 @@ const defaultState = {
 export default new Vuex.Store({
   state: {
     user: null,
-    itemStates: ['Done', 'Not Done'],
+    itemStates: ['done', 'face'],
     lists: testLists,
   },
   getters: {
@@ -97,7 +97,7 @@ export default new Vuex.Store({
       }
     },
     resetStates(state) {
-      state.itemStates = ['Done', 'Not Done'];
+      state.itemStates = ['done', 'face'];
     },
     addState(state, payload) {
       if (payload) {
@@ -109,6 +109,7 @@ export default new Vuex.Store({
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.bgColor;
+        list.listItems = [{ text: '', state: 'done' }];
         state.lists.push(list);
       }
     },
