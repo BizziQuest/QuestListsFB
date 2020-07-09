@@ -37,6 +37,6 @@ export default {
 </script>
 <style lang='scss' scoped>
   h1 {
-    margin-top: 10px;
+    margin-top: 20px;
   }
 </style>
