@@ -39,15 +39,15 @@ export default {
     listItem: {
       type: Object,
       default: () => ({}),
-      description: 'The list item was passed from List with more info like array of'+
-      'objects which each obj includes text and state key values',
+      description: 'The list item was passed from List with more info like array of'
+      + 'objects which each obj includes text and state key values',
     },
   },
   data: () => ({
     isActive: false,
   }),
   methods: {
-    deactivate () {
+    deactivate() {
       this.isOutlined = false;
     },
     activate() {
