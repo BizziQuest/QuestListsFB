@@ -13,7 +13,9 @@
         <v-list-item-title class="headline mb-1">{{list.description}}</v-list-item-title>
         <v-list-item-subtitle>Greyhound divisely hello coldly fonwderfully</v-list-item-subtitle>
         <ul>
-          <li v-for="item in list.listItems" :key="item.text">[{{ item.state }}] {{ item.text }}</li>
+          <li v-for="item in list.listItems.slice(0,4)" :key="item.text">
+            [{{ item.state }}] {{ item.text }}
+          </li>
           <li>more...</li>
         </ul>
         <v-card-actions>
