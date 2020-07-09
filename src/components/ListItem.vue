@@ -19,7 +19,6 @@
               style="margin-bottom:20px;"
               :items="states"
               :label="listItem.state"
-              @change="updateItem($event)"
               :outlined="isActive"
               @click="activate"
               @blur="deactivate"
