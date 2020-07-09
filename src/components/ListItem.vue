@@ -7,7 +7,7 @@
             <v-text-field
               style="margin-bottom:20px;"
               :value="listItem.text"
-              @change="listItem.text = $event"
+              @change="updateItem($event)"
               :outlined="isActive"
               @click="activate"
               @blur="deactivate"
@@ -19,7 +19,7 @@
               style="margin-bottom:20px;"
               :items="states"
               :label="listItem.state"
-              @change = "listItem.state = $event"
+              @change="updateItem($event)"
               :outlined="isActive"
               @click="activate"
               @blur="deactivate"
@@ -57,6 +57,11 @@ export default {
     },
     activate() {
       this.isActive = true;
+    },
+    updateItem(text) {
+      this.listItem.text = text;
+      console.log('updating item from listitem', text);
+      this.$emit('add-empty-obj', { text: '', state: 'Not Done' });
     },
   },
 };
