@@ -117,7 +117,6 @@ export default {
   methods: {
     addState() {
       if (this.$refs.addStateForm.validate()) {
-        // this.$store.dispatch('addState', this.newState);
         this.states.push(this.newState);
         this.$refs.addStateForm.reset();
       }
