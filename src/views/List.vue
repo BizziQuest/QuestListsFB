@@ -3,7 +3,7 @@
     <h1>List</h1>
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
-        <list-item :listItem="item" @add-empty-obj="addEmptyItem"/>
+        <list-item :listItem="item" @update:listItem="ensureNewItem(index, $event)"/>
       </li>
      </ol>
   </div>
@@ -33,7 +33,7 @@ export default {
     ...mapGetters(['list']),
     theList() {
       const wantedList = this.list(this.title);
-      const listItemsLength = wantedList.listItems.length;      
+      const listItemsLength = wantedList.listItems.length;
       const theLastItem = wantedList.listItems[listItemsLength - 1];
       if (theLastItem.text.length !== 0) {
         wantedList.listItems.push({ text: '', state: 'Not Done' });
@@ -45,11 +45,11 @@ export default {
     },
   },
   methods: {
-    addEmptyItem(item) {
-      const listItemsLength = this.theList.listItems.length;
-      const theLastItem = this.theList.listItems[listItemsLength - 1];
-      if (theLastItem.text.length !== 0) {
-        this.theList.listItems.push(item);
+    ensureNewItem(index, item) {
+      const lastItemIndex = this.theList.listItems.length - 1;
+      if (index < lastItemIndex) return;
+      if (item.text.length !== 0) {
+        this.theList.listItems.push({ text: '', state: 'Not Done' });
       }
     },
   },
