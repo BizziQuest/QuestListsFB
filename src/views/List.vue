@@ -33,9 +33,7 @@ export default {
     ...mapGetters(['list']),
     theList() {
       const wantedList = this.list(this.title);
-      console.log('wantedList', wantedList);
-      const listItemsLength = wantedList.listItems.length;
-      console.log('this is the last item of the List', wantedList.listItems[listItemsLength - 1]);
+      const listItemsLength = wantedList.listItems.length;      
       const theLastItem = wantedList.listItems[listItemsLength - 1];
       if (theLastItem.text.length !== 0) {
         wantedList.listItems.push({ text: '', state: 'Not Done' });
