@@ -102,7 +102,6 @@ export default new Vuex.Store({
         state.itemStates.push(payload);
       }
     },
-    // this should create all parts in firebase.
     createAList(state, payload) {
       if (payload) {
         const list = {};
