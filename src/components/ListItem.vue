@@ -58,7 +58,6 @@ export default {
     },
     updateItem(text) {
       this.listItem.text = text;
-      console.log('updating item from listitem', text);
       this.$emit('add-empty-obj', { text: '', state: 'Not Done' });
     },
   },
