@@ -137,7 +137,6 @@ export default {
       this.$refs.form.reset();
       this.$refs.addStateForm.reset();
       this.color = '#A0E9C9FF';
-      this.$store.dispatch('resetStates');
     },
     swatchStyle() {
       return {
