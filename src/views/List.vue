@@ -5,35 +5,7 @@
       <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
         <list-item :listItem="item" @add-empty-obj="addEmptyItem"/>
       </li>
-      <!-- <li>
-        // you should make sure your list-item handles cases where the text is not defined,
-        // so it will be a New Item list item.
-        // That means instead of duplicating your effort everywhere this new item is needed,
-        // we can just use the list-item component.
-        <list-item :listItem="{ text: '', state: '' }" />
-      </li>-->
-    </ol>
-    <!--
-    <v-container>
-      <v-row>
-        <v-col col="12" md="6">
-          <v-text-field
-            :value="entry"
-            style="margin-bottom:20px;"
-            :prepend-icon="entry.length < 1 ? 'add' : 'mdi-checkbox'"
-            placeholder="List Item"
-            counter
-            @change="addNewToListItems($event)"
-          ></v-text-field>
-        </v-col>
-        <v-col col="12" md="6" v-show="entry.length > 0">
-          <v-select style="margin-bottom:20px;"
-                    :items="['Done', 'No Done']">
-          </v-select>
-        </v-col>
-      </v-row>
-    </v-container>
-    -->
+     </ol>
   </div>
 </template>
 <script>
