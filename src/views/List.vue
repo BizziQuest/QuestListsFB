@@ -46,9 +46,7 @@ export default {
   },
   methods: {
     addEmptyItem(item) {
-      console.log('"this is updateItem"', item);
       const listItemsLength = this.theList.listItems.length;
-      console.log('this is the last item of the List', this.theList.listItems[listItemsLength - 1]);
       const theLastItem = this.theList.listItems[listItemsLength - 1];
       if (theLastItem.text.length !== 0) {
         this.theList.listItems.push(item);
