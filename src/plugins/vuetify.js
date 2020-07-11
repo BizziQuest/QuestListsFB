@@ -8,20 +8,20 @@ Vue.use(Vuetify);
 export default new Vuetify({
   preset,
   theme: {
-    // default: 'light',
+    // default: 'dark',
     options: {
       customProperties: true,
     },
     themes: {
-      light: {
-        primary: '#FFF176',
-        secondary: '#AB47BC',
-        accent: '#CABF45',
-        error: '#FF5252',
-        info: '#2196F3',
-        success: '#4CAF50',
-        warning: '#FFC107',
-      },
+      // light: {
+      //   primary: '#FFF176',
+      //   secondary: '#AB47BC',
+      //   accent: '#CABF45',
+      //   error: '#FF5252',
+      //   info: '#2196F3',
+      //   success: '#4CAF50',
+      //   warning: '#FFC107',
+      // },
     },
   },
 });
