@@ -2,10 +2,11 @@
   <v-card
     max-height="auto"
     :color="list.color"
+    class="list-card"
     style="margin-bottom: 20px; margin-right: 0px; border-radius: 25px;"
   >
     <v-list-item>
-      <v-img :src="list.image"  max-width="50%"></v-img>
+      <v-img :src="list.image" class="list-image"></v-img>
       <v-list-item-content>
         <v-btn text v-bind:to="'/Lists/' + list.title"  class="justify-start mb-4">
           {{list.title}}
@@ -37,7 +38,19 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'ListCard',
-  props: ['list', 'large'],
+  props: {
+    list: {
+      type: Object,
+      default: () => ({}),
+      description: 'The list that is to be shown. Should contain listItems, title, description, and image',
+    },
+    large: {
+      type: Boolean,
+      default: false,
+      description: 'Whether to use a layout suitable for larger cards, where The image '
+                    + 'is on top and more items are shown.',
+    },
+  },
   data: () => ({
     listItems: [],
     defaultState: {
@@ -82,14 +95,13 @@ ul {
   overflow: auto;
 }
 .v-list-item {
-   display:flex;
+  display:flex;
   padding: 0px;
   align-items: stretch;
 }
 
-.v-image {
-  border-radius: 25px;
+.list-image {
+  border-radius: 10px;
   width: 100px;
 }
-
 </style>
