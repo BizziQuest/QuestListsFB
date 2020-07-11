@@ -207,9 +207,14 @@ globalPreferences.onSnapshot(async (snapshot) => {
 
     prefs.push(pref);
   });
+  if (prefs.length < 1) return;
+
   const state = await prefs[0].defaultState.get();
   const { stateOrder, states } = state.data();
-  const pref = { defaultColor: prefs[0].defaultColor, defaultState: states[stateOrder[0]] };
+  const pref = {
+    defaultColor: prefs[0].defaultColor,
+    defaultState: (stateOrder && stateOrder.length < 1) ? null : states[stateOrder[0]],
+  };
 
   store.commit('setGlobalPreferences', pref);
 });
