@@ -18,6 +18,7 @@
             <v-icon :title="defaultState.text">{{defaultState.icon}}</v-icon>
             {{ item.title }}
           </li>
+          <li>more...</li>
         </ul>
         <v-card-actions>
           <v-spacer></v-spacer>

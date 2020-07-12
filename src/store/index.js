@@ -112,6 +112,7 @@ const store = new Vuex.Store({
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.bgColor;
+        list.listItems = [{ text: '', state: 'Not Done' }];
         state.lists.push(list);
       }
     },
