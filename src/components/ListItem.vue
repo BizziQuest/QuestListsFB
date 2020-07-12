@@ -8,21 +8,21 @@
               style="margin-bottom:20px;"
               :value="listItem.text"
               @change="listItem.text = $event"
+              @input="updateText($event)"
               :outlined="isActive"
               @click="activate"
-              @blur="deactivate "
+              @blur="deactivate"
               >{{ listItem.text }}</v-text-field
             >
           </v-col>
           <v-col col="12" md="6">
             <v-select
               style="margin-bottom:20px;"
-              :items="itemStates"
+              :items="states"
               :label="listItem.state"
-              @change = "listItem.state = $event"
               :outlined="isActive"
               @click="activate"
-              @blur="deactivate "
+              @blur="deactivate"
             ></v-select>
           </v-col>
         </v-row>
@@ -32,32 +32,33 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 
 export default {
   props: {
     listItem: {
       type: Object,
       default: () => ({}),
-      description: 'The list item was passed from List with more info like array of'+
-      'objects which each obj includes text and state key values',
+      description: 'List Item is an object includes text and state key values'
+    },
+    states: {
+      type: Array,
+      default: () => (['Done', 'Not Done']),
+      description: 'The list of states that this item should have.',
     },
   },
   data: () => ({
     isActive: false,
   }),
   methods: {
-    deactivate () {
-      this.isOutlined = false;
+    deactivate() {
+      this.isActive = false;
     },
     activate() {
-      this.isOutlined = true;
+      this.isActive = true;
     },
-  },
-  computed: {
-    ...mapGetters([
-      'itemStates',
-    ]),
+    updateText(text) {
+      this.$emit('update:listItem', { text, state: this.listItem.state });
+    },
   },
 };
 </script>

@@ -80,12 +80,10 @@ const defaultState = {
 export default new Vuex.Store({
   state: {
     user: null,
-    itemStates: ['Done', 'Not Done'],
     lists: testLists,
   },
   getters: {
     user: (state) => state.user,
-    itemStates: (state) => state.itemStates,
     lists: (state) => (state.user && state.user.id ? state.lists : []),
     list: (state) => (title) => (state.lists.find((list) => list.title === title)),
   },
@@ -109,6 +107,7 @@ export default new Vuex.Store({
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.bgColor;
+        list.listItems = [{ text: '', state: 'Not Done' }];
         state.lists.push(list);
       }
     },
@@ -149,8 +148,8 @@ export default new Vuex.Store({
       commit('addState', payload);
     },
     createAList({ commit }, payload) {
-      commit('createAList', payload);
       commit('resetStates');
+      commit('createAList', payload);
     },
     resetStates({ commit }) {
       commit('resetStates');
