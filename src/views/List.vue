@@ -30,9 +30,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['list']),
+    ...mapGetters({ listGetter: 'list' }),
     theList() {
-      const wantedList = this.list(this.title);
+      const wantedList = this.listGetter(this.title);
       const listItemsLength = wantedList.listItems.length;
       const theLastItem = wantedList.listItems[listItemsLength - 1];
       if (theLastItem.text.length !== 0) {
