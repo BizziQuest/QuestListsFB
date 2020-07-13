@@ -54,9 +54,10 @@ export default {
     activate() {
       this.isOutlined = true;
       const currentState = this.listItem.state;
+      const itemStatesLength = this.itemStates.length - 1;
       let stateIndex = this.itemStates.findIndex((state) => state === currentState);
-      if (stateIndex === this.itemStates.length - 1) {
-        this.listItem.state = this.itemStates[stateIndex - (this.itemStates.length - 1)];
+      if (stateIndex === itemStatesLength) {
+        this.listItem.state = this.itemStates[stateIndex - (itemStatesLength)];
         stateIndex -= 1;
       } else {
         this.listItem.state = this.itemStates[stateIndex + 1];
