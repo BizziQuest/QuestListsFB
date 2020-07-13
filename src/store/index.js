@@ -153,7 +153,7 @@ export default new Vuex.Store({
     createAList({ commit }, payload) {
       // check how we can sure that a list  states item can be reset before new one
       // is being created
-      // commit('resetStates'); 
+      // commit('resetStates');
       commit('createAList', payload);
     },
     resetStates({ commit }) {
