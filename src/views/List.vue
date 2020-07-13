@@ -6,7 +6,7 @@
     {{listItems}}
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
-        <list-item :listItem="item" :index="index" :listStates="theList.listItems"/>
+        <list-item :listItem="item" :listStates="theList.listItems"/>
       </li>
     </ol>
   </div>
