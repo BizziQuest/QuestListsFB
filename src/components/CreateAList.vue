@@ -128,6 +128,7 @@ export default {
         const payload = {};
         payload.title = this.title;
         payload.bgColor = this.color;
+        // payload.itemStates = this.$store.getters.itemStates;
         this.$store.dispatch('createAList', payload);
         this.$refs.form.reset();
         this.$refs.addStateForm.reset();
