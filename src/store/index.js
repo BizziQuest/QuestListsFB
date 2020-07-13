@@ -73,7 +73,7 @@ const defaultState = {
     displayName: '',
     email: '',
   },
-  itemStates: ['Done', 'Not Done'],
+  itemStates: ['done', 'face'],
   lists: testLists,
 };
 
@@ -109,7 +109,8 @@ export default new Vuex.Store({
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.bgColor;
-        list.listItems = [{ text: '', state: 'done' }];
+        // list.itemStates = payload.itemStates;
+        list.listItems = [{ text: '', state: state.itemStates[0] }];
         state.lists.push(list);
       }
     },
@@ -150,8 +151,10 @@ export default new Vuex.Store({
       commit('addState', payload);
     },
     createAList({ commit }, payload) {
+      // check how we can sure that a list  states item can be reset before new one
+      // is being created
+      // commit('resetStates'); 
       commit('createAList', payload);
-      commit('resetStates');
     },
     resetStates({ commit }) {
       commit('resetStates');
