@@ -10,6 +10,7 @@
               :outlined="isActive"
               @click="cycleIcon"
               @blur="deactivate"
+              v-model="iconState"
             >{{listItem.state}}</v-icon>
             <v-text-field
               class="listitem-text"
@@ -45,6 +46,7 @@ export default {
   data() {
     return {
       isActive: false,
+      iconState: '',
     };
   },
   methods: {
@@ -53,6 +55,10 @@ export default {
     },
     activate() {
       this.isActive = true;
+    },
+    updateText(text) {
+      console.log('updateText', text);
+      this.$emit('update:listItem', { text, state: this.iconState });
     },
     cycleIcon() {
       this.activate();
