@@ -109,7 +109,6 @@ export default new Vuex.Store({
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.bgColor;
-        // list.itemStates = payload.itemStates;
         list.listItems = [{ text: '', state: state.itemStates[0] }];
         state.lists.push(list);
       }
