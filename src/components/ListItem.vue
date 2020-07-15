@@ -57,7 +57,6 @@ export default {
       this.isActive = true;
     },
     updateText(text) {
-      console.log('updateText', text);
       this.$emit('update:listItem', { text, state: this.iconState });
     },
     cycleIcon() {
