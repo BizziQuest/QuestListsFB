@@ -4,22 +4,21 @@
       <v-container>
         <v-row>
           <v-col col="12" md="6">
+            <v-icon
+              large
+              class="listitem-icon"
+              :outlined="isActive"
+              @click="cycleIcon"
+              @blur="deactivate"
+            >{{listItem.state}}</v-icon>
             <v-text-field
-              style="margin-bottom:20px;"
+              class="listitem-text"
               :value="listItem.text"
               @change="listItem.text = $event"
               :outlined="isActive"
               @click="activate"
-              @blur="deactivate "
-            >{{ listItem.text }}</v-text-field>
-          </v-col>
-          <v-col col="12" md="6">
-            <v-icon
-              style="margin-bottom:20px;"
-              :outlined="isActive"
-              @click="activate"
               @blur="deactivate"
-            >{{listItem.state}}</v-icon>
+            >{{ listItem.text }}</v-text-field>
           </v-col>
         </v-row>
       </v-container>
@@ -49,15 +48,18 @@ export default {
   },
   methods: {
     deactivate() {
-      this.isOutlined = false;
+      this.isActive = false;
     },
     activate() {
-      this.isOutlined = true;
+      this.isActive = true;
+    },
+    cycleIcon() {
+      this.activate();
       const currentState = this.listItem.state;
       const itemStatesLength = this.itemStates.length - 1;
       let stateIndex = this.itemStates.findIndex((state) => state === currentState);
       if (stateIndex === itemStatesLength) {
-        this.listItem.state = this.itemStates[stateIndex - (itemStatesLength)];
+        this.listItem.state = this.itemStates[stateIndex - itemStatesLength];
         stateIndex -= 1;
       } else {
         this.listItem.state = this.itemStates[stateIndex + 1];
@@ -71,4 +73,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.listitem-icon {
+  display: inline-flex;
+  margin-right: 10px;
+}
+.listitem-text {
+  display: inline-block;
+}
+</style>
