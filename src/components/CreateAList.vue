@@ -69,7 +69,7 @@
                 <span>Availabe States</span>
                 <div id="availableListStates">
                   <ul v-for="item in states" :key="item.state">
-                    <li>{{ item }}</li>
+                    <v-icon>{{ item }}</v-icon>
                   </ul>
                 </div>
               </v-col>
@@ -97,7 +97,7 @@ export default {
       menu: false,
       dialog: false,
       newState: '',
-      states: ['Not Done', 'Done'],
+      states: ['done', 'face'],
       newItem: '',
       statesPicked: '',
       titleRules: [
@@ -118,6 +118,7 @@ export default {
     addState() {
       if (this.$refs.addStateForm.validate()) {
         this.states.push(this.newState);
+        this.$store.dispatch('addState', this.states);
         this.$refs.addStateForm.reset();
       }
     },
@@ -127,7 +128,6 @@ export default {
         const payload = {};
         payload.title = this.title;
         payload.bgColor = this.color;
-        // payload.itemStates = this.$store.getters.itemStates;
         this.$store.dispatch('createAList', payload);
         this.$refs.form.reset();
         this.$refs.addStateForm.reset();
