@@ -15,6 +15,7 @@
               class="listitem-text"
               :value="listItem.text"
               @change="listItem.text = $event"
+              @input="updateText($event)"
               :outlined="isActive"
               @click="activate"
               @blur="deactivate"

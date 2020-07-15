@@ -12,11 +12,11 @@ const testLists = [
     listItems: [
       {
         text: 'Item 1',
-        state: 'Done',
+        state: 'done',
       },
       {
         text: 'Item 2',
-        state: 'Not Done',
+        state: 'people',
       },
     ],
   },
@@ -151,8 +151,6 @@ export default new Vuex.Store({
       commit('addState', payload);
     },
     createAList({ commit }, payload) {
-      // check how we can sure that a list  states item can be reset before new one
-      // is being created
       // commit('resetStates');
       commit('createAList', payload);
     },

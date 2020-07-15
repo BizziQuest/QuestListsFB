@@ -6,9 +6,9 @@
     {{listItems}}
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
-        <list-item :listItem="item" :listStates="theList.listItems"/>
+        <list-item :listItem="item" @update:listItem="ensureNewItem(index, $event)"/>
       </li>
-    </ol>
+     </ol>
   </div>
 </template>
 <script>
@@ -27,13 +27,33 @@ export default {
   components: {
     ListItem,
   },
+  data() {
+    return {
+      entry: '',
+    };
+  },
   computed: {
-    ...mapGetters(['list']),
+    ...mapGetters({ listGetter: 'list' }),
     theList() {
-      return this.list(this.title);
+      const wantedList = this.listGetter(this.title);
+      const listItemsLength = wantedList.listItems.length;
+      const theLastItem = wantedList.listItems[listItemsLength - 1];
+      if (theLastItem.text.length !== 0) {
+        wantedList.listItems.push({ text: '', state: 'Not Done' });
+      }
+      return wantedList;
     },
     listItems() {
       return this.theList.listItems;
+    },
+  },
+  methods: {
+    ensureNewItem(index, item) {
+      const lastItemIndex = this.theList.listItems.length - 1;
+      if (index < lastItemIndex) return;
+      if (item.text.length !== 0) {
+        this.theList.listItems.push({ text: '', state: 'Not Done' });
+      }
     },
   },
 };
