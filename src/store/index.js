@@ -15,13 +15,12 @@ import { auth, globalPreferences, listsCollection } from '../firebase';
 Vue.use(Vuex);
 
 const defaultState = {
-  user: {
+  currentUser: {
     avatar: '',
     displayName: '',
     email: '',
   },
-  itemStates: ['Done', 'Not Done'],
-  lists: testLists,
+  lists: [],
 };
 
 const store = new Vuex.Store({
@@ -121,11 +120,12 @@ const store = new Vuex.Store({
       alert(`${payload.email} and ${payload.displayName} Was edited`);
       commit('setUser', payload);
     },
-    async getLists({ commit }) {
+    async fetchLists({ commit }, { limit = 10 } = {}) {
       const lists = [];
-      const fbLists = await listsCollection.limit(10).get();
+      const fbLists = await listsCollection.limit(limit).get();
       fbLists.forEach(async (doc) => {
         const list = doc.data();
+        list.id = doc.id;
         lists.push(list);
       });
       commit('setLists', lists);

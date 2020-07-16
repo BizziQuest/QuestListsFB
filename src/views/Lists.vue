@@ -28,13 +28,13 @@ export default {
     ListCard,
   },
   methods: {
-    ...mapActions(['getLists']),
+    ...mapActions(['fetchLists']),
   },
   computed: {
     ...mapState(['lists']),
   },
   mounted() {
-    this.getLists();
+    this.fetchLists();
   },
 };
 </script>
