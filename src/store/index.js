@@ -1,3 +1,13 @@
+/** This file should follow the guidelines outlined at
+ * https://docs.vuestorefront.io/guide/vuex/vuex-conventions.html
+ *
+ * With the following exceptions:
+ * 1. mutations should be camel-cased, not upper-cased. (they aren't constants like in other Flux implementations.)
+ * 2. to reset a state to it's default value, use the mutation name: reset<state>
+ * 3. Since we are a list management application, we can use "list," but it must refer to an actual List object.
+ *    likewise, "lists" must refer to an orderable list of List objects.
+ */
+
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { auth, globalPreferences, listsCollection } from '../firebase';
@@ -81,12 +91,14 @@ const store = new Vuex.Store({
   state: {
     currentUser: null,
     lists: null,
+    currentList: null,
     globalPreferences: [],
   },
   getters: {
-    user: (state) => state.currentUser,
-    lists: (state) => state.lists,
-    globalPreferences: (state) => state.globalPreferences,
+    getCurrentUser: (state) => state.currentUser,
+    getCurrentList: (state) => state.currentList,
+    getAllLists: (state) => state.lists,
+    getGlobalPreferences: (state) => state.globalPreferences,
   },
   mutations: {
     setUser(state, payload) {
@@ -107,7 +119,7 @@ const store = new Vuex.Store({
         state.itemStates.push(payload);
       }
     },
-    createAList(state, payload) {
+    addList(state, payload) {
       if (payload) {
         const list = {};
         list.title = payload.title;
@@ -152,8 +164,8 @@ const store = new Vuex.Store({
     addState({ commit }, payload) {
       commit('addState', payload);
     },
-    createAList({ commit }, payload) {
-      commit('createAList', payload);
+    createList({ commit }, payload) {
+      commit('addList', payload);
       commit('resetStates');
     },
     resetStates({ commit }) {
