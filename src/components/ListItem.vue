@@ -6,13 +6,13 @@
           <v-col col="12" md="6">
             <v-text-field
               style="margin-bottom:20px;"
-              :value="listItem.text"
-              @change="listItem.text = $event"
+              :value="listItem.title"
+              @change="listItem.title = $event"
               @input="updateText($event)"
               :outlined="isActive"
-              @click="activate"
+              @click.prevent="activate"
               @blur="deactivate"
-              >{{ listItem.text }}</v-text-field
+              >{{ listItem.title }}</v-text-field
             >
           </v-col>
           <v-col col="12" md="6">
@@ -21,7 +21,7 @@
               :items="states"
               :label="listItem.state"
               :outlined="isActive"
-              @click="activate"
+              @click.prevent="activate"
               @blur="deactivate"
             ></v-select>
           </v-col>
@@ -38,7 +38,7 @@ export default {
     listItem: {
       type: Object,
       default: () => ({}),
-      description: 'List Item is an object includes text and state key values'
+      description: 'List Item is an object in the form: {title, order}',
     },
     states: {
       type: Array,
