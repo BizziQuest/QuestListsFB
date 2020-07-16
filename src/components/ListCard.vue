@@ -3,32 +3,25 @@
     max-height="auto"
     :color="list.color"
     class="list-card"
-    style="margin-bottom: 20px; margin-right: 0px; border-radius: 25px;"
+    style="margin-bottom: 20px; margin-right: 0px; border-radius: 10px;"
   >
-    <v-list-item>
-      <v-img :src="list.image" class="list-image"></v-img>
+    <v-list-item :to="{ name: 'List', params: { listId: list.id }}">
+      <v-img :src="list.image || 'https://picsum.photos/200/300'" max-width="100"></v-img>
       <v-list-item-content>
-        <v-btn text v-bind:to="'/Lists/' + list.title"  class="justify-start mb-4">
+        <v-btn text class="justify-start mb-4">
           {{list.title}}
         </v-btn>
         <v-list-item-title class="headline mb-1">{{list.description}}</v-list-item-title>
         <v-list-item-subtitle>{{list.description}}</v-list-item-subtitle>
         <ul>
+          <li>Preview: </li>
           <li v-for="item in listItems" :color="defaultState.color" :key="item.order">
-            <v-icon :title="defaultState.text">{{defaultState.icon}}</v-icon>
-            {{ item.title }}
+            <list-item :list-item="item" :states="states || globalPreferences.defaultStates" @click.prevent="null">
+            <!-- <v-icon :title="defaultState.text">{{defaultState.icon}}</v-icon>
+            {{ item.title }} -->
+          </list-item>
           </li>
-          <li>more...</li>
         </ul>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn fab>
-            <v-icon>edit</v-icon>
-          </v-btn>
-          <v-btn fab v-bind:to="'/Lists/' + list.title">
-            <v-icon>pageview</v-icon>
-          </v-btn>
-        </v-card-actions>
       </v-list-item-content>
     </v-list-item>
   </v-card>
@@ -36,9 +29,13 @@
 
 <script>
 import { mapState } from 'vuex';
+import ListItem from './ListItem.vue';
 
 export default {
   name: 'ListCard',
+  components: {
+    ListItem,
+  },
   props: {
     list: {
       type: Object,
@@ -54,6 +51,7 @@ export default {
   },
   data: () => ({
     listItems: [],
+    states: [],
     defaultState: {
       icon: 'mdi-checkbox-blank-outline',
       color: '',
@@ -64,11 +62,31 @@ export default {
   computed: {
     ...mapState(['globalPreferences']),
   },
-  async mounted() {
-    const items = await this.list.listItems.get();
-    const listItems = [];
-    items.data().items.forEach((item) => listItems.push(item));
-    this.listItems = listItems;
+  methods: {
+    // This is a method becaue it only needs to be done once
+    async getListItems() {
+      let items = await this.list.listItems.get();
+      if (!items) return;
+
+      items = items.data();
+      if (!Object.prototype.hasOwnProperty.call(items, 'items')) return;
+
+      items = items.items;
+      items = items.map((item) => item); // items doesn't pass the Array.isArray test, so we make it
+      this.listItems = items.sort((a, b) => a.order < b.order);
+    },
+    async getListStates() {
+      let state = await this.list.states.get();
+      if (!state) return;
+      state = state.data();
+      const states = [];
+      state.order.forEach((stateName) => states.push(state.states[stateName]));
+      this.states = states;
+    },
+  },
+  mounted() {
+    this.getListItems();
+    this.getListStates();
   },
 };
 </script>
@@ -77,13 +95,21 @@ export default {
 * {
   color: black;
 }
+ul {
+  margin-left: 0px;
+  padding-left: 0px;
+  li {
+    padding-left: 0px;
+    margin-left: 0px;
+  }
+}
 .large-image {
   max-height: 100%;
   max-width: 50%;
 }
 .small-image {
-  max-width: 100%;
-  max-height: 50%;
+  max-width: 30%;
+  max-height: 100%;
 }
 ul {
   list-style-type: none;
@@ -103,6 +129,6 @@ ul {
 
 .list-image {
   border-radius: 10px;
-  width: 100px;
+  width: 30%;
 }
 </style>
