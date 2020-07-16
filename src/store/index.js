@@ -14,69 +14,6 @@ import { auth, globalPreferences, listsCollection } from '../firebase';
 
 Vue.use(Vuex);
 
-const testLists = [
-  {
-    title: 'Test One',
-    description: 'Some random description.',
-    bgColor: '#ff00ff',
-    listItems: [
-      {
-        text: 'Item 1',
-        state: 'Done',
-      },
-      {
-        text: 'Item 2',
-        state: 'Not Done',
-      },
-    ],
-  },
-  {
-    title: 'Test Two',
-    description: 'Some random description.',
-    bgColor: '#ff0000',
-    listItems: [
-      {
-        text: 'Item 1',
-        state: 'Done',
-      },
-      {
-        text: 'Item 2',
-        state: 'Not Done',
-      },
-    ],
-  },
-  {
-    title: 'Test Three',
-    description: 'Some random description.',
-    bgColor: '#ffff00',
-    listItems: [
-      {
-        text: 'Item 1',
-        state: 'Done',
-      },
-      {
-        text: 'Item 2',
-        state: 'Not Done',
-      },
-    ],
-  },
-  {
-    title: 'Test Four',
-    description: 'Some random description.',
-    bgColor: '#465362',
-    listItems: [
-      {
-        text: 'Item 1',
-        state: 'Done',
-      },
-      {
-        text: 'Item 2',
-        state: 'Not Done',
-      },
-    ],
-  },
-];
-
 const defaultState = {
   user: {
     avatar: '',
