@@ -80,7 +80,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="resetTheForms">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
+          <v-btn color="blue darken-1" text @click="createList">Create</v-btn>
         </v-card-actions>
       </v-card>
      </v-dialog>
@@ -121,14 +121,14 @@ export default {
         this.$refs.addStateForm.reset();
       }
     },
-    createAList() {
+    createList() {
       this.$refs.addStateForm.validate();
       if (this.$refs.form.validate()) {
         const payload = {};
         payload.title = this.title;
         payload.bgColor = this.color;
         payload.states = this.states;
-        this.$store.dispatch('createAList', payload);
+        this.$store.dispatch('createList', payload);
         this.$refs.form.reset();
         this.$refs.addStateForm.reset();
         this.dialog = false;
@@ -159,7 +159,7 @@ export default {
 };
 </script>
 
-<style   scoped>
+<style scoped>
 #availableListStates{
    height: 100px;
    overflow: auto;
