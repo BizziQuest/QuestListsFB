@@ -6,7 +6,7 @@
     {{listItems}}
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
-        <list-item :listItem="item" @update:listItem="ensureNewItem(index, $event)"/>
+        <list-item :listItem="item" @update:text="ensureNewItem(index, $event)"/>
       </li>
      </ol>
   </div>
