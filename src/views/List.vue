@@ -1,9 +1,12 @@
 <template>
   <div>
     <h1>List</h1>
+    {{theList}}
+    <br>
+    {{listItems}}
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
-        <list-item :listItem="item" @update:listItem="ensureNewItem(index, $event)"/>
+        <list-item :listItem="item" @update:text="ensureNewItem(index, $event)"/>
       </li>
      </ol>
   </div>
@@ -36,7 +39,7 @@ export default {
       const listItemsLength = wantedList.listItems.length;
       const theLastItem = wantedList.listItems[listItemsLength - 1];
       if (theLastItem.text.length !== 0) {
-        wantedList.listItems.push({ text: '', state: 'Not Done' });
+        wantedList.listItems.push({ text: '', state: 'face' });
       }
       return wantedList;
     },
@@ -49,14 +52,14 @@ export default {
       const lastItemIndex = this.theList.listItems.length - 1;
       if (index < lastItemIndex) return;
       if (item.text.length !== 0) {
-        this.theList.listItems.push({ text: '', state: 'Not Done' });
+        this.theList.listItems.push({ text: '', state: 'face' });
       }
     },
   },
 };
 </script>
 <style lang='scss' scoped>
-h1 {
-  margin-top: 10px;
-}
+  h1 {
+    margin-top: 20px;
+  }
 </style>

@@ -12,11 +12,11 @@ const testLists = [
     listItems: [
       {
         text: 'Item 1',
-        state: 'Done',
+        state: 'done',
       },
       {
         text: 'Item 2',
-        state: 'Not Done',
+        state: 'people',
       },
     ],
   },
@@ -27,11 +27,11 @@ const testLists = [
     listItems: [
       {
         text: 'Item 1',
-        state: 'Done',
+        state: 'done',
       },
       {
         text: 'Item 2',
-        state: 'Not Done',
+        state: 'face',
       },
     ],
   },
@@ -42,11 +42,11 @@ const testLists = [
     listItems: [
       {
         text: 'Item 1',
-        state: 'Done',
+        state: 'done',
       },
       {
         text: 'Item 2',
-        state: 'Not Done',
+        state: 'face',
       },
     ],
   },
@@ -57,11 +57,11 @@ const testLists = [
     listItems: [
       {
         text: 'Item 1',
-        state: 'Done',
+        state: 'done',
       },
       {
         text: 'Item 2',
-        state: 'Not Done',
+        state: 'face',
       },
     ],
   },
@@ -73,17 +73,19 @@ const defaultState = {
     displayName: '',
     email: '',
   },
-  itemStates: ['Done', 'Not Done'],
+  itemStates: ['done', 'face'],
   lists: testLists,
 };
 
 export default new Vuex.Store({
   state: {
     user: null,
+    itemStates: ['done', 'face'],
     lists: testLists,
   },
   getters: {
     user: (state) => state.user,
+    itemStates: (state) => state.itemStates,
     lists: (state) => (state.user && state.user.id ? state.lists : []),
     list: (state) => (title) => (state.lists.find((list) => list.title === title)),
   },
@@ -95,7 +97,7 @@ export default new Vuex.Store({
       }
     },
     resetStates(state) {
-      state.itemStates = ['Done', 'Not Done'];
+      state.itemStates = ['done', 'face'];
     },
     addState(state, payload) {
       if (payload) {
@@ -107,7 +109,7 @@ export default new Vuex.Store({
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.bgColor;
-        list.listItems = [{ text: '', state: 'Not Done' }];
+        list.listItems = [{ text: '', state: state.itemStates[0] }];
         state.lists.push(list);
       }
     },
@@ -148,7 +150,6 @@ export default new Vuex.Store({
       commit('addState', payload);
     },
     createAList({ commit }, payload) {
-      commit('resetStates');
       commit('createAList', payload);
     },
     resetStates({ commit }) {
