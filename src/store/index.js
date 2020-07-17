@@ -150,7 +150,6 @@ export default new Vuex.Store({
       commit('addState', payload);
     },
     createAList({ commit }, payload) {
-      // commit('resetStates');
       commit('createAList', payload);
     },
     resetStates({ commit }) {
