@@ -57,8 +57,8 @@ export default {
       this.isActive = true;
     },
     updateText(text) {
-      //why obj needs to be passed when we just need text and index will
-      //be provided by List v-for loop when the emit is received?
+      // why obj needs to be passed when we just need text and index will
+      // be provided by List v-for loop when the emit is received?
       this.$emit('update:listItem', { text, state: this.iconState });
     },
     cycleIcon() {
