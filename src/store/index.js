@@ -10,7 +10,11 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { auth, globalPreferences, listsCollection } from '../firebase';
+import {
+  auth,
+  globalPreferences,
+  listsCollection,
+} from '../firebase';
 
 Vue.use(Vuex);
 
@@ -27,8 +31,8 @@ const store = new Vuex.Store({
   state: {
     currentUser: null,
     lists: null,
-    currentList: null,
-    globalPreferences: [],
+    currentList: { },
+    globalPreferences: {},
   },
   getters: {
     getCurrentUser: (state) => state.currentUser,
@@ -76,9 +80,9 @@ const store = new Vuex.Store({
     },
     // underscore is a placeholder for a variable that should be there, but is not used
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
-    async loginUser(_, payload) {
+    async loginUser(_, { email = '', password = '' } = {}) {
       try {
-        await auth.signInWithEmailAndPassword(payload.email, payload.password);
+        await auth.signInWithEmailAndPassword(email, password);
       } catch (error) {
         console.debug(error);
       }
@@ -86,9 +90,7 @@ const store = new Vuex.Store({
 
     async logOut({ commit }) {
       try {
-        // const cred =
         await auth.signOut();
-        // console.debug('logout store', cred);
         commit('setUser', { ...defaultState.user });
       } catch (error) {
         console.log(error);
@@ -111,13 +113,10 @@ const store = new Vuex.Store({
       commit('updateUserInfo', payload);
     },
     async editForm({ commit }, payload) {
-      const response = await auth.currentUser.updateProfile({
+      await auth.currentUser.updateProfile({
         displayName: payload.displayName,
         photoURL: payload.avatar,
       });
-      console.log(response, auth.currentUser);
-      // eslint-disable-next-line no-alert
-      alert(`${payload.email} and ${payload.displayName} Was edited`);
       commit('setUser', payload);
     },
     async fetchLists({ commit }, { limit = 10 } = {}) {
@@ -129,7 +128,6 @@ const store = new Vuex.Store({
         lists.push(list);
       });
       commit('setLists', lists);
-      // commit('setLists', []);
     },
     async saveProfile({ commit }, payload) {
       try {
@@ -161,10 +159,10 @@ globalPreferences.onSnapshot(async (snapshot) => {
 
   const state = await prefs[0].defaultState.get();
   const { order, states } = state.data();
-  console.log('DEFAULT STATE: ', state.data());
   const pref = {
     defaultColor: prefs[0].defaultColor,
     defaultState: (order && order.length < 1) ? null : states[order[0]],
+    defaultStates: states,
   };
 
   store.commit('setGlobalPreferences', pref);
