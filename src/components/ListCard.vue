@@ -65,7 +65,7 @@ export default {
   methods: {
     // This is a method becaue it only needs to be done once
     async getListItems() {
-      let items = await this.list.listItems.get();
+      let items = await this.list.listItems.limit(4).get();
       if (!items) return;
 
       items = items.data();
