@@ -41,6 +41,26 @@ const statesCollection = db.collection('states');
 const usersCollection = db.collection('users');
 const userStatesCollection = db.collection('userListItemStates');
 
+async function getListItems(fbList) {
+  const itemsDoc = await fbList.listItems.get();
+  if (!itemsDoc) return [];
+
+  const itemsData = itemsDoc.data();
+  if (!Object.prototype.hasOwnProperty.call(itemsData, 'items')) return [];
+
+  const items = itemsData.items.map((item) => item); // items doesn't pass the Array.isArray test, so we make it
+  return items.sort((a, b) => a.order < b.order);
+}
+
+async function getListStates(fbList) {
+  const fbStatesDoc = await fbList.states.get();
+  if (!fbStatesDoc) return [];
+  const statesDoc = fbStatesDoc.data();
+  const states = [];
+  statesDoc.order.forEach((stateName) => states.push(statesDoc.states[stateName]));
+  return states;
+}
+
 export {
   fbApp,
   fbAnalytics,
@@ -53,4 +73,6 @@ export {
   statesCollection,
   usersCollection,
   userStatesCollection,
+  getListItems,
+  getListStates,
 };
