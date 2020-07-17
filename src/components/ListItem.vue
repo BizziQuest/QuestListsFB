@@ -19,7 +19,7 @@
             <v-select
               style="margin-bottom:20px;"
               :items="states"
-              :label="listItem.state"
+              :label="listItem.state || states[0].text"
               :outlined="isActive"
               @click.prevent="activate"
               @blur="deactivate"
@@ -40,9 +40,10 @@ export default {
       default: () => ({}),
       description: 'List Item is an object in the form: {title, order}',
     },
+    // NOTE: we are assuming globalPreferences has been resolved by the time this component is laoded.
     states: {
       type: Array,
-      default: () => (['Done', 'Not Done']),
+      default: async () => this.$store.state.globalPreferences,
       description: 'The list of states that this item should have.',
     },
   },
