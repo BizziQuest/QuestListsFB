@@ -73,7 +73,7 @@ const defaultState = {
     displayName: '',
     email: '',
   },
-  itemStates: ['done', 'face'],
+  itemStates: ['done', 'face', 'add'],
   lists: testLists,
 };
 

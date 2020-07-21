@@ -16,64 +16,53 @@
           <span class="headline">Create A List</span>
         </v-card-title>
         <v-card-text>
-        <v-container>
-          <v-form ref="form" @submit.prevent="">
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                label="Title*"
-                :rules = "titleRules"
-                 v-model='title'
-                 required
-                 placeholder="Your Title"
-                 outlined></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                label="Color*"
-                :rules = "colorPickerRules"
-                 v-model="color"
-                 placeholder="#FFFFFF"
-                 outlined>
-                  <template v-slot:append>
-                    <v-menu>
-                      <template v-slot:activator="{ on }">
-                        <div :style="swatchStyle()" v-on="on" />
-                      </template>
-                      <v-card>
-                        <v-card-text>
-                          <v-color-picker v-model="color" flat />
-                        </v-card-text>
-                      </v-card>
-                    </v-menu>
-                  </template>
-                </v-text-field>
-              </v-col>
-            </v-row>
-            </v-form>
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-form ref="addStateForm">
+          <v-container>
+            <v-form ref="form" @submit.prevent>
+              <v-row>
+                <v-col cols="12" sm="6" md="6">
                   <v-text-field
-                  label="New State*"
-                  :rules = "newStateRules"
-                  :lazy-validation="true"
-                  v-model="newState"
-                  placeholder="Your Condition"
-                  outlined>
-                  </v-text-field>
-                  <v-btn v-on:click="addState" class="primary">Add</v-btn>
-                  </v-form>
+                    label="Title*"
+                    :rules="titleRules"
+                    v-model="title"
+                    required
+                    placeholder="Your Title"
+                    outlined
+                  ></v-text-field>
                 </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <span>Availabe States</span>
-                <div id="availableListStates">
-                  <ul v-for="item in states" :key="item.state">
-                    <v-icon>{{ item }}</v-icon>
-                  </ul>
-                </div>
-              </v-col>
-            </v-row>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field
+                    label="Color*"
+                    :rules="colorPickerRules"
+                    v-model="color"
+                    placeholder="#FFFFFF"
+                    outlined
+                  >
+                    <template v-slot:append>
+                      <v-menu>
+                        <template v-slot:activator="{ on }">
+                          <div :style="swatchStyle()" v-on="on" />
+                        </template>
+                        <v-card>
+                          <v-card-text>
+                            <v-color-picker v-model="color" flat />
+                          </v-card-text>
+                        </v-card>
+                      </v-menu>
+                    </template>
+                  </v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+            <v-container fluid>
+            <span>Possible Item States:</span>
+            <!-- <v-row>
+              <v-checkbox hide-details></v-checkbox>
+              <v-text-field label :value="Done"></v-text-field>
+            </v-row> -->
+            <span v-for="item in states" :key="item.state">
+              <list-state :item="item"></list-state>
+            </span>
+            </v-container>
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>
@@ -83,13 +72,18 @@
           <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
         </v-card-actions>
       </v-card>
-     </v-dialog>
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
+import ListState from './ListState.vue';
+
 export default {
   name: 'CreateAList',
+  components: {
+    ListState,
+  },
   data() {
     return {
       color: '#A0E9C9FF',
@@ -115,13 +109,6 @@ export default {
     };
   },
   methods: {
-    addState() {
-      if (this.$refs.addStateForm.validate()) {
-        this.states.push(this.newState);
-        this.$store.dispatch('addState', this.states);
-        this.$refs.addStateForm.reset();
-      }
-    },
     createAList() {
       this.$refs.addStateForm.validate();
       if (this.$refs.form.validate()) {
@@ -159,11 +146,16 @@ export default {
   },
 };
 </script>
-
-<style   scoped>
-#availableListStates{
-   height: 100px;
-   overflow: auto;
+<style lang="css" scoped>
+/* .row{
+    display: flex;
+    flex-wrap: wrap;
+    flex: 0 0 auto;
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
+.v-input#stateInput{
+  max-width: 50%;
+} */
 </style>
