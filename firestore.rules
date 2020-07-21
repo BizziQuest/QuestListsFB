@@ -45,7 +45,7 @@ service cloud.firestore {
         request.resource.data.title is string && // the title of this list
         request.resource.data.description is string && // a description for this list
         request.resource.data.color is string &&  // the background color of the list card, or window color for the list view
-        request.resource.data.stateGroup is path;  // a group of states used for each list item in this list
+        request.resource.data.states is path;  // a group of states used for each list item in this list
       // the listIitems subcolection holds all of a list's items.
       match /listItems/{listItemId} {
         allow read;
@@ -55,16 +55,16 @@ service cloud.firestore {
           request.resource.data.description is string; //the description of the list item
       }
     }
-    // the stateGroup collection holds all the possible states for list items. This is the core
+    // the states collection holds all the possible states for list items. This is the core
     // feature of Questlists. A listitem can have multiple states, so this is the overall
     // colelction for those states. The states can be shared across all lists, to aid in the 
     // time needed to develop new lists, especially for wiki-style lists.
-    match /stateGroups/{stateId} {
+    match /states/{stateId} {
       allow read;
       allow create: if verifiedUser() &&
         request.resource.data.name is string && // the name is the name by which this state group is mentioned
         request.resource.data.description is string; // the description for this group
-      match /states/{stateItemId} {  // the actual states for this group
+      match /stateItems/{stateItemId} {  // the actual states for this group
         allow create: if verifiedUser() &&
           request.resource.data.color is string && // the color of the item for this state. Could be for background or foreground, depending on context and UI implementation
           request.resource.data.icon is string && // the icon you want to use for this state. Should be a material icon name or `mdi-` name
