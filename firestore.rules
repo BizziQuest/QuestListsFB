@@ -4,34 +4,75 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // only users who have verified emails can edit lists and store data
     function verifiedUser() {
-      return request.auth != null && request.auth.uid != null && request.auth.token.email_verified;
+      return request.auth != null &&
+             request.auth.uid != null &&
+             request.auth.token.email_verified;
     }
+
+    // this collection stores all the global defaults for the app.
+    // only admins should have write privileges for this collection, so it should
+    // be done in the cloud console.
     match /globalPreferences/{preferenceId=**} {
-      allow read: if true;
-      allow write: if false;
+      allow read;
     }
+
+    // these documents should be created when a user first logs in after verifying their email
+    // the userchanged method should check for this and create the user doc.
     match /users/{userId} {
-      allow read: if true;
-      allow write: if request.auth.uid == userId;
+      allow read;
+      allow create, update: if request.auth.uid == userId;
+
+      // this subcollection holds list data, including additions to other lists, and
+      // state changes for all lists. The listId should correspond to the list.id
+      // of the collection it modifies. This data should be deep merged into the list data
+      // when a user requests a list.
+      match /lists/{listId=**} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId && verifiedUser();
+      }
     }
-    match /userListItemStates/{userId=**}{
-      allow read, write: if verifiedUser() && request.auth.uid == userId;
+
+    // this collection holds all the lists and list data. Soce this is a crowd-sourced app,
+    // any verified user should be able to modify any list, and any visitor to the site
+    // should be able to view any list.
+    match /lists/{listId} {
+      allow read; // anyone can read
+      // allow delete: if false;  // users can't delete anything.
+      allow create, update: if verifiedUser() &&
+        request.resource.data.title is string && // the title of this list
+        request.resource.data.description is string && // a description for this list
+        request.resource.data.color is string &&  // the background color of the list card, or window color for the list view
+        request.resource.data.stateGroup is path;  // a group of states used for each list item in this list
+      // the listIitems subcolection holds all of a list's items.
+      match /listItems/{listItemId} {
+        allow read;
+        allow create: if verifiedUser() &&
+          request.resource.data.title is string && // the text of the list item
+          request.resource.data.order is number && // the order of the item in the list
+          request.resource.data.description is string; //the description of the list item
+      }
     }
-    match /lists/{listId=**} {
-      allow create, update: if verifiedUser();
-      allow read: if true; // anyone can read
-      allow delete: if false;  // users can't delete anything.
-    }
-    match /listItems/{listItemId=**} {
-      allow create, update: if verifiedUser();
-      allow read: if true;
-      allow delete: if false;
-    }
-    match /states/{stateId=**} {
-      allow create, update: if verifiedUser();
-      allow read: if true;
-      allow update: if false;
+    // the stateGroup collection holds all the possible states for list items. This is the core
+    // feature of Questlists. A listitem can have multiple states, so this is the overall
+    // colelction for those states. The states can be shared across all lists, to aid in the 
+    // time needed to develop new lists, especially for wiki-style lists.
+    match /stateGroups/{stateId} {
+      allow read;
+      allow create: if verifiedUser() &&
+        request.resource.data.name is string && // the name is the name by which this state group is mentioned
+        request.resource.data.description is string; // the description for this group
+      match /states/{stateItemId} {  // the actual states for this group
+        allow create: if verifiedUser() &&
+          request.resource.data.color is string && // the color of the item for this state. Could be for background or foreground, depending on context and UI implementation
+          request.resource.data.icon is string && // the icon you want to use for this state. Should be a material icon name or `mdi-` name
+          request.resource.data.order is number && // the order in the click-cycle this icon appears. 
+          request.resource.data.shortName is string && // a shortName will be used when the user data is stored. Should defauilt to camel-case version of the text
+          request.resource.data.text is string && // some displayed value for this state. should be fairly short, like "Not Implemented" or "Started Late"
+          request.resource.data.value is string; // the value for this item. used in calculations for prerequisites
+      }
     }
   }
 }
