@@ -55,12 +55,8 @@
             </v-form>
             <v-container fluid>
             <span>Possible Item States:</span>
-            <!-- <v-row>
-              <v-checkbox hide-details></v-checkbox>
-              <v-text-field label :value="Done"></v-text-field>
-            </v-row> -->
-            <span v-for="item in states" :key="item.state">
-              <list-state :item="item"></list-state>
+            <span v-for="(item,index) in itemStates" :key="item.state">
+              <list-state :item="item" @update:item="ensureNewState(index,$event)"></list-state>
             </span>
             </v-container>
           </v-container>
@@ -77,6 +73,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import ListState from './ListState.vue';
 
 export default {
@@ -91,7 +88,6 @@ export default {
       menu: false,
       dialog: false,
       newState: '',
-      states: ['done', 'face'],
       newItem: '',
       statesPicked: '',
       titleRules: [
@@ -138,24 +134,18 @@ export default {
         transition: 'border-radius 200ms ease-in-out',
       };
     },
-  },
-  computed: {
-    itemStates() {
-      return this.$store.getters.itemStates;
+    ensureNewState(index, state) {
+      const lastStateIndex = this.itemStates.length - 1;
+      if (index === lastStateIndex) {
+        if (state.length !== 0) {
+          this.itemStates.push({ icon: 'mdi-plus', text: 'New Item' });
+        }
+      }
     },
   },
+  computed: {
+    ...mapGetters(['itemStates']),
+  },
+
 };
 </script>
-<style lang="css" scoped>
-/* .row{
-    display: flex;
-    flex-wrap: wrap;
-    flex: 0 0 auto;
-    margin-right: 0px;
-    margin-left: 0px;
-}
-
-.v-input#stateInput{
-  max-width: 50%;
-} */
-</style>
