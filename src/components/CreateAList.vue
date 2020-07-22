@@ -98,29 +98,22 @@ export default {
         (v) => !!v || 'Color is required',
         (v) => /^#[0-9A-F]{8}$/i.test(v) || 'Color Format Must be #FFFFFF',
       ],
-      newStateRules: [
-        (v) => !!v || 'State is required',
-        (v) => (v && v.length >= 4) || 'State must be at least 4 characters',
-      ],
     };
   },
   methods: {
     createAList() {
-      this.$refs.addStateForm.validate();
       if (this.$refs.form.validate()) {
         const payload = {};
         payload.title = this.title;
         payload.bgColor = this.color;
         this.$store.dispatch('createAList', payload);
         this.$refs.form.reset();
-        this.$refs.addStateForm.reset();
         this.dialog = false;
       }
     },
     resetTheForms() {
       this.dialog = false;
       this.$refs.form.reset();
-      this.$refs.addStateForm.reset();
       this.color = '#A0E9C9FF';
       this.$store.dispatch('resetStates');
     },
