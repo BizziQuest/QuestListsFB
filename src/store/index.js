@@ -73,14 +73,31 @@ const defaultState = {
     displayName: '',
     email: '',
   },
-  itemStates: ['done', 'face', 'add'],
+  itemStates: [
+    {
+      icon: 'mdi-check-box-outline',
+      text: 'Finished',
+    },
+    {
+      icon: 'mdi-checkbox-blank-outline',
+      text: 'Not Started',
+    },
+    {
+      icon: 'mdi-minus-box-outline',
+      text: 'In Progress',
+    },
+    {
+      icon: 'mdi-plus',
+      text: 'New Item',
+    },
+  ],
   lists: testLists,
 };
 
 export default new Vuex.Store({
   state: {
     user: null,
-    itemStates: ['done', 'face'],
+    itemStates: defaultState.itemStates,
     lists: testLists,
   },
   getters: {
