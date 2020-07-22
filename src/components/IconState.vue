@@ -10,7 +10,9 @@
             https://material.io/resources/icons/ or https://cdn.materialdesignicons.com/5.3.45/.
           </v-row>
           <v-row>
-            <v-icon>{{localIcon}}</v-icon>
+            <div id="local-icon">
+              <v-icon>{{localIcon}}</v-icon>
+            </div>
             <v-text-field v-model="localIcon"></v-text-field>
           </v-row>
         </v-card-text>
@@ -45,3 +47,11 @@ export default {
   },
 };
 </script>
+<style lang='scss' scoped>
+#local-icon {
+width: 28px;
+    border: 1px solid green;
+    margin: 5px;
+    align-self: center;
+}
+</style>
