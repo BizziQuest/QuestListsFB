@@ -1,8 +1,10 @@
 <template>
   <v-row class="justify-start align-center">
     <v-icon>drag_indicator</v-icon>
-    <icon-state :item="item" class="mr-2 ml-2"></icon-state>
-    <v-text-field :value="item"></v-text-field>
+    <div id="icon-state">
+      <icon-state :passedIcon="item.icon" @update:icon="choosenIcon($event)" class="mr-2 ml-2"></icon-state>
+    </div>
+    <v-text-field :value="item.text" @input="isChanging($event)"></v-text-field>
   </v-row>
 </template>
 <script>
@@ -13,17 +15,36 @@ export default {
   components: {
     IconState,
   },
+  data() {
+    return {
+      icon: this.item,
+    };
+  },
+  methods: {
+    isChanging() {
+      this.$emit('update:item', { icon: this.item.icon, text: this.item.text });
+    },
+    choosenIcon(newIcon) {
+      console.log('chosen icon is', newIcon);
+      this.icon = newIcon;
+    },
+  },
+  computed: {
+    // icon() {
+    //   return this.item;
+    // },
+  },
 };
 </script>
 <style lang="css">
 .list-state {
   align-items: center;
 }
-/*#this_row{
-    display: flex;
-    flex-wrap: wrap;
-    flex: none;
-    margin-right: 0px;
-    margin-left: 0px;
-}*/
+#icon-state {
+  width: 42px;;
+  border: 1px solid green;
+  margin: 2px;
+}
+
+
 </style>
