@@ -1,5 +1,7 @@
 <template>
-  <v-row class="justify-start align-center">
+  <v-row draggable="true"
+     @dragstart='startDrag($event, item)'
+     class="justify-start align-center">
     <v-icon>drag_indicator</v-icon>
     <div id="icon-state">
       <icon-state :passedIcon="item.icon" @update:icon="choosenIcon($event)" class="mr-2 ml-2"></icon-state>
@@ -27,6 +29,10 @@ export default {
     choosenIcon(newIcon) {
       console.log('chosen icon is', newIcon);
       this.icon = newIcon;
+    },
+    startDrag($event, item) {
+      console.log('I am in drag start');
+      console.log('dragStart', item, $event);
     },
   },
   computed: {
