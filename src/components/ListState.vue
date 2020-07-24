@@ -1,6 +1,6 @@
 <template>
   <v-row draggable="true"
-     @dragstart='startDrag($event, item)'
+     @dragstart.prevent='startDrag($event, item)'
      class="justify-start align-center">
     <v-icon>drag_indicator</v-icon>
     <div id="icon-state">
@@ -34,11 +34,6 @@ export default {
       console.log('I am in drag start');
       console.log('dragStart', item, $event);
     },
-  },
-  computed: {
-    // icon() {
-    //   return this.item;
-    // },
   },
 };
 </script>
