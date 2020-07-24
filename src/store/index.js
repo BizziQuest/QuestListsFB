@@ -12,11 +12,11 @@ const testLists = [
     listItems: [
       {
         text: 'Item 1',
-        state: 'done',
+        state: { icon: 'mdi-check-box-outline', text: 'done' },
       },
       {
         text: 'Item 2',
-        state: 'people',
+        state: { icon: 'mdi-checkbox-blank-outline', text: ' not done' },
       },
     ],
   },
@@ -126,7 +126,7 @@ export default new Vuex.Store({
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.bgColor;
-        list.listItems = [{ text: '', state: state.itemStates[0] }];
+        list.listItems = [{ text: '', state: { icon: 'mdi-plus', text: 'New Item' } }];
         state.lists.push(list);
       }
     },
