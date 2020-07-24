@@ -10,16 +10,16 @@
               :outlined="isActive"
               @click="cycleIcon"
               @blur="deactivate"
-            >{{listItem.state}}</v-icon>
+            >{{listItem.state.icon}}</v-icon>
             <v-text-field
               class="listitem-text"
-              :value="listItem.text"
-              @change="listItem.text = $event"
+              :value="listItem.state.text"
+              @change="listItem.state.text = $event"
               @input="updateText($event)"
               :outlined="isActive"
               @click="activate"
               @blur="deactivate"
-            >{{ listItem.text }}</v-text-field>
+            >{{ listItem.state.text }}</v-text-field>
           </v-col>
         </v-row>
       </v-container>
@@ -55,19 +55,19 @@ export default {
       this.isActive = true;
     },
     updateText(text) {
-      this.$emit('update:listItem', text);
+      this.$emit('update:text', text);
     },
     cycleIcon() {
       this.activate();
-      const currentState = this.listItem.state;
+      const currentStateIcon = this.listItem.state.icon;
       const itemStatesLength = this.itemStates.length - 1;
-      let stateIndex = this.itemStates.findIndex((state) => state === currentState);
-      if (stateIndex === itemStatesLength) {
-        this.listItem.state = this.itemStates[stateIndex - itemStatesLength];
-        stateIndex -= 1;
+      let stateIconIndex = this.itemStates.findIndex((state) => state.icon === currentStateIcon);
+      if (stateIconIndex === itemStatesLength) {
+        this.listItem.state.icon = this.itemStates[stateIconIndex - itemStatesLength].icon;
+        stateIconIndex -= 1;
       } else {
-        this.listItem.state = this.itemStates[stateIndex + 1];
-        this.localIndex += 1;
+        this.listItem.state.icon = this.itemStates[stateIconIndex + 1].icon;
+        stateIconIndex += 1;
       }
     },
   },
