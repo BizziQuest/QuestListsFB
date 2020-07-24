@@ -55,8 +55,11 @@
             </v-form>
             <v-container fluid>
             <span>Possible Item States:</span>
-            <span v-for="(item,index) in itemStates" :key="item.state">
-              <list-state :item="item" @update:item="ensureNewState(index,$event)"></list-state>
+            <span v-for="(item,index) in itemStates"
+                  :key="item.state"
+                  >
+              <list-state :item="item"
+                          @update:item="ensureNewState(index,$event)"></list-state>
             </span>
             </v-container>
           </v-container>
