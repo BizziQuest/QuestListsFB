@@ -1,9 +1,6 @@
 <template>
   <div>
-    <h1>List</h1>
-    {{theList}}
-    <br>
-    {{listItems}}
+    <h1 style="margin-left: 20px;">{{theList.title}} List</h1>
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
         <list-item :listItem="item" @update:text="ensureNewItem(index, $event)"/>
@@ -39,7 +36,7 @@ export default {
       const listItemsLength = wantedList.listItems.length;
       const theLastItem = wantedList.listItems[listItemsLength - 1];
       if (theLastItem.text.length !== 0) {
-        wantedList.listItems.push({ text: '', state: 'face' });
+        wantedList.listItems.push({ text: '', state: { icon: 'mdi-plus', text: 'New Item' } });
       }
       return wantedList;
     },
@@ -51,8 +48,8 @@ export default {
     ensureNewItem(index, item) {
       const lastItemIndex = this.theList.listItems.length - 1;
       if (index < lastItemIndex) return;
-      if (item.text.length !== 0) {
-        this.theList.listItems.push({ text: '', state: 'face' });
+      if (item.length !== 0) {
+        this.theList.listItems.push({ text: '', state: { icon: 'mdi-plus', text: 'New Item' } });
       }
     },
   },
