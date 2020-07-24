@@ -33,16 +33,18 @@ export default {
     return {
       localIcon: this.passedIcon,
       dialog: false,
+      previousIcon: this.passedIcon,
     };
   },
   methods: {
     chooseIcon() {
       this.$emit('update:icon', this.localIcon);
+      this.previousIcon = this.localIcon;
       this.dialog = false;
     },
     close() {
+      this.localIcon = this.previousIcon;
       this.dialog = false;
-      this.localIcon = this.passedIcon;
     },
   },
 };
