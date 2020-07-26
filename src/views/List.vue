@@ -3,7 +3,12 @@
     <h1>{{list.title}}</h1>
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in listItems" :key="`${item.text}${index}`">
-        <list-item :listItem="item" :states="states" @update:listItem="ensureNewItem(index, $event)"/>
+        <list-item
+          :listItem="item"
+          :states="states"
+          @blur="saveItem"
+          @update:listItem="ensureNewItem(index, $event)"
+        />
       </li>
      </ol>
   </div>
@@ -49,6 +54,12 @@ export default {
       this.list = list;
       this.listItems = listItems;
       this.states = states;
+    },
+    saveItem(item) {
+      this.list.listItems.set({
+        items: this.listItems,
+      });
+      console.debug('UPDATING ITEM: ', this.listItems, item);
     },
     ensureNewItem(index, item) {
       const lastItemIndex = this.listItems.length - 1;
