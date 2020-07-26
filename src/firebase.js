@@ -36,29 +36,45 @@ db.settings(settings);
 // firebase collections
 const globalPreferences = db.collection('globalPreferences');
 const listsCollection = db.collection('lists');
-const listItemsCollection = db.collection('listItems');
-const statesCollection = db.collection('states');
+// const listItemsCollection = db.collection('listItems');
+const stateGroupsCollection = db.collection('states');
 const usersCollection = db.collection('users');
 const userStatesCollection = db.collection('userListItemStates');
 
 async function getListItems(fbList) {
-  const itemsDoc = await fbList.listItems.get();
-  if (!itemsDoc) return [];
+  const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
+  const listItems = [];
+  debugger;
+  const items = await listItemsCollection.get();
+  items.forEach(async (doc) => {
+    const item = doc.data();
+    item.id = doc.id;
+    listItems.push(item);
+  });
+  return listItems.sort((a, b) => a.order < b.order);
+}
 
-  const itemsData = itemsDoc.data();
-  if (!Object.prototype.hasOwnProperty.call(itemsData, 'items')) return [];
-
-  const items = itemsData.items.map((item) => item); // items doesn't pass the Array.isArray test, so we make it
-  return items.sort((a, b) => a.order < b.order);
+/** Returns all items in a collection as an ordered list.
+ * All items must have an `order` field.
+*/
+async function getOrderedCollectionAsList(collectionPath) {
+  debugger;
+  const collection = await db.collection(collectionPath).get();
+  const list = [];
+  const items = await collection.get();
+  items.forEach(async (doc) => {
+    const item = doc.data();
+    item.id = doc.id;
+    list.push(item);
+  });
+  return list.sort((a, b) => a.order < b.order);
 }
 
 async function getListStates(fbList) {
-  const fbStatesDoc = await fbList.states.get();
+  const fbStatesDoc = await fbList.stateGroup.get();
   if (!fbStatesDoc) return [];
   const statesDoc = fbStatesDoc.data();
-  const states = [];
-  statesDoc.order.forEach((stateName) => states.push(statesDoc.states[stateName]));
-  return states;
+  return statesDoc.states.sort((state) => state.order);
 }
 
 export {
@@ -69,10 +85,11 @@ export {
   currentUser,
   globalPreferences,
   listsCollection,
-  listItemsCollection,
-  statesCollection,
+  // listItemsCollection,
+  stateGroupsCollection,
   usersCollection,
   userStatesCollection,
   getListItems,
   getListStates,
+  getOrderedCollectionAsList,
 };
