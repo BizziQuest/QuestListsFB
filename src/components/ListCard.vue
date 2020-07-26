@@ -8,18 +8,16 @@
     <v-list-item :to="{ name: 'List', params: { listId: list.id }}">
       <v-img :src="list.image || 'https://picsum.photos/200/300'" max-width="100"></v-img>
       <v-list-item-content>
-        <v-btn text class="justify-start mb-4">
-          {{list.title}}
-        </v-btn>
-        <v-list-item-title class="headline mb-1">{{list.description}}</v-list-item-title>
+        <v-list-item-title class="headline mb-1">{{list.title}}</v-list-item-title>
         <v-list-item-subtitle>{{list.description}}</v-list-item-subtitle>
         <ul>
-          <li>Preview: </li>
-          <li v-for="item in listItems" :color="defaultState.color" :key="item.order">
-            <list-item :list-item="item" :states="states || globalPreferences.defaultStates" @click.prevent="null">
-            <!-- <v-icon :title="defaultState.text">{{defaultState.icon}}</v-icon>
-            {{ item.title }} -->
-          </list-item>
+          <li>Next Items:</li>
+          <li v-for="item in list.nextItems" :color="globalPreferences.defaultStateGroup.color" :key="item.order">
+            <list-item
+              :list-item="item"
+              :states="states || globalPreferences.defaultStateGroup.states"
+              @click.prevent="null"
+            />
           </li>
         </ul>
       </v-list-item-content>
@@ -29,6 +27,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { getListStates } from '../firebase';
 import ListItem from './ListItem.vue';
 
 export default {
@@ -50,43 +49,13 @@ export default {
     },
   },
   data: () => ({
-    listItems: [],
     states: [],
-    defaultState: {
-      icon: 'mdi-checkbox-blank-outline',
-      color: '',
-      text: 'Done',
-      value: '0',
-    },
   }),
   computed: {
     ...mapState(['globalPreferences']),
   },
-  methods: {
-    // This is a method becaue it only needs to be done once
-    async getListItems() {
-      let items = await this.list.listItems.limit(4).get();
-      if (!items) return;
-
-      items = items.data();
-      if (!Object.prototype.hasOwnProperty.call(items, 'items')) return;
-
-      items = items.items;
-      items = items.map((item) => item); // items doesn't pass the Array.isArray test, so we make it
-      this.listItems = items.sort((a, b) => a.order < b.order);
-    },
-    async getListStates() {
-      let state = await this.list.states.get();
-      if (!state) return;
-      state = state.data();
-      const states = [];
-      state.order.forEach((stateName) => states.push(state.states[stateName]));
-      this.states = states;
-    },
-  },
-  mounted() {
-    this.getListItems();
-    this.getListStates();
+  async mounted() {
+    this.states = await getListStates(this.list);
   },
 };
 </script>
