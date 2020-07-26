@@ -14,6 +14,7 @@ import {
   auth,
   globalPreferences,
   listsCollection,
+  stateGroupsCollection,
 } from '../firebase';
 
 Vue.use(Vuex);
@@ -32,7 +33,29 @@ const store = new Vuex.Store({
     currentUser: null,
     lists: null,
     currentList: { },
-    globalPreferences: {},
+    globalPreferences: {
+      defaultColor: '#000000',
+      defaultStateGroup: {
+        name: 'Default State',
+        description: 'NOTE: the default state has not loaded from the server yet.',
+        states: [
+          {
+            color: '#00ff00',
+            icon: 'mdi-checkbox-blank-outline',
+            name: 'Not Done',
+            shortName: 'notDone',
+            value: '0',
+            order: 0,
+          }, {
+            color: '#00ff00',
+            icon: 'mdi-checkbox-marked-outline',
+            name: 'Done',
+            shortName: 'done',
+            value: '1',
+            order: 1,
+          }],
+      },
+    },
   },
   getters: {
     getCurrentUser: (state) => state.currentUser,
@@ -99,25 +122,18 @@ const store = new Vuex.Store({
     authenticationChanged({ commit }, payload) {
       commit('setUser', payload);
     },
-    addState({ commit }, payload) {
-      commit('addState', payload);
+    async addStateGroup({ commit }, stateGroupData) {
+      // TODO: check for groups that have the current values and use that one instead.
+      const stateGroupRef = await stateGroupsCollection.add(stateGroupData);
+      commit('addState', stateGroupData);
+      return stateGroupRef;
     },
-    createList({ commit }, payload) {
-      commit('addList', payload);
-      commit('resetStates');
-    },
-    resetStates({ commit }) {
-      commit('resetStates');
+    async createList({ dispatch }, listData) {
+      const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
+      listsCollection.add({ ...listData, stateGroup: stateGroupRef });
     },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);
-    },
-    async editForm({ commit }, payload) {
-      await auth.currentUser.updateProfile({
-        displayName: payload.displayName,
-        photoURL: payload.avatar,
-      });
-      commit('setUser', payload);
     },
     async fetchLists({ commit }, { limit = 10 } = {}) {
       const lists = [];
@@ -136,8 +152,6 @@ const store = new Vuex.Store({
           photoURL: payload.avatar,
         });
         console.log(response, auth.currentUser);
-        // eslint-disable-next-line no-alert
-        alert(`${payload.email} and ${payload.displayName} Was edited`);
         commit('setUser', payload);
       } catch (error) {
         console.log('saveProfile', error);
@@ -157,15 +171,13 @@ globalPreferences.onSnapshot(async (snapshot) => {
   });
   if (prefs.length < 1) return;
 
-  const state = await prefs[0].defaultState.get();
-  const { order, states } = state.data();
-  const pref = {
-    defaultColor: prefs[0].defaultColor,
-    defaultState: (order && order.length < 1) ? null : states[order[0]],
-    defaultStates: states,
-  };
+  const { defaultColor, defaultStateGroup } = prefs[0];
 
-  store.commit('setGlobalPreferences', pref);
+  const stateGroup = await defaultStateGroup.get();
+  store.commit('setGlobalPreferences', {
+    defaultColor,
+    defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },
+  });
 });
 
 export default store;
