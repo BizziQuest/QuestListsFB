@@ -17,7 +17,7 @@
         </v-card-title>
         <v-card-text>
         <v-container>
-          <v-form ref="form" @submit.prevent="">
+          <v-form ref="listForm" @submit.prevent="">
             <v-row>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
@@ -50,6 +50,16 @@
                 </v-text-field>
               </v-col>
             </v-row>
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                label="Description"
+                 v-model='description'
+                 required
+                 placeholder="Describe your list purpose."
+                 outlined></v-text-field>
+              </v-col>
+              </v-row>
             </v-form>
             <v-row>
               <v-col cols="12" sm="6" md="6">
@@ -79,7 +89,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="resetTheForms">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="reset">Close</v-btn>
           <v-btn color="blue darken-1" text @click="createList">Create</v-btn>
         </v-card-actions>
       </v-card>
@@ -100,6 +110,7 @@ export default {
       states: ['Not Done', 'Done'],
       newItem: '',
       statesPicked: '',
+      description: '',
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
@@ -123,18 +134,24 @@ export default {
     },
     createList() {
       this.$refs.addStateForm.validate();
-      if (this.$refs.form.validate()) {
-        const payload = {};
-        payload.title = this.title;
-        payload.bgColor = this.color;
-        payload.states = this.states;
+      if (this.$refs.listForm.validate()) {
+        const payload = {
+          title: this.title,
+          color: this.color,
+          stateGroup: {
+            title: this.states.map((s) => s).join(', '),
+            description: '',
+            states: this.states,
+          },
+          description: this.description,
+        };
         this.$store.dispatch('createList', payload);
-        this.$refs.form.reset();
+        this.$refs.listForm.reset();
         this.$refs.addStateForm.reset();
         this.dialog = false;
       }
     },
-    resetTheForms() {
+    reset() {
       this.dialog = false;
       this.$refs.form.reset();
       this.$refs.addStateForm.reset();
