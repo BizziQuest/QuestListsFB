@@ -45,7 +45,7 @@ service cloud.firestore {
         request.resource.data.title is string && // the title of this list
         request.resource.data.description is string && // a description for this list
         request.resource.data.color is string &&  // the background color of the list card, or window color for the list view
-        request.resource.data.states is path;  // a group of states used for each list item in this list
+        request.resource.data.stateGroup is path;  // a group of states used for each list item in this list
       // the listIitems subcolection holds all of a list's items.
       match /listItems/{listItemId} {
         allow read;
@@ -55,24 +55,26 @@ service cloud.firestore {
           request.resource.data.description is string; //the description of the list item
       }
     }
-    // the states collection holds all the possible states for list items. This is the core
+    // the stateGroups collection holds all the possible states for list items. This is the core
     // feature of Questlists. A listitem can have multiple states, so this is the overall
     // colelction for those states. The states can be shared across all lists, to aid in the 
     // time needed to develop new lists, especially for wiki-style lists.
-    match /states/{stateId} {
+    match /stateGroups/{stateGroupId} {
       allow read;
       allow create: if verifiedUser() &&
         request.resource.data.name is string && // the name is the name by which this state group is mentioned
-        request.resource.data.description is string; // the description for this group
-      match /stateItems/{stateItemId} {  // the actual states for this group
-        allow create: if verifiedUser() &&
-          request.resource.data.color is string && // the color of the item for this state. Could be for background or foreground, depending on context and UI implementation
-          request.resource.data.icon is string && // the icon you want to use for this state. Should be a material icon name or `mdi-` name
-          request.resource.data.order is number && // the order in the click-cycle this icon appears. 
-          request.resource.data.shortName is string && // a shortName will be used when the user data is stored. Should defauilt to camel-case version of the text
-          request.resource.data.text is string && // some displayed value for this state. should be fairly short, like "Not Implemented" or "Started Late"
-          request.resource.data.value is string; // the value for this item. used in calculations for prerequisites
-      }
+        request.resource.data.description is string && // the description for this group
+        request.resource.data.states is list;
+      // match /stateItems/{stateItemId} {  // the actual states for this group
+      //   allow read;
+      //   allow create: if verifiedUser() &&
+      //     request.resource.data.color is string && // the color of the item for this state. Could be for background or foreground, depending on context and UI implementation
+      //     request.resource.data.icon is string && // the icon you want to use for this state. Should be a material icon name or `mdi-` name
+      //     request.resource.data.order is number && // the order in the click-cycle this icon appears. 
+      //     request.resource.data.shortName is string && // a shortName will be used when the user data is stored. Should defauilt to camel-case version of the text
+      //     request.resource.data.text is string && // some displayed value for this state. should be fairly short, like "Not Implemented" or "Started Late"
+      //     request.resource.data.value is string; // the value for this item. used in calculations for prerequisites
+      // }
     }
   }
 }
