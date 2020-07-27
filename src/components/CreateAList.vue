@@ -53,20 +53,7 @@
                 </v-col>
               </v-row>
             </v-form>
-            <v-container fluid>
-            <span>Possible Item States:</span>
-            <span v-for="(item,index) in itemStates"
-                  :key="item.state"
-                  @dragstart="startDrag($event, item)"
-                  @drop="onDrop($event, item)"
-                  @dragover="allowDrop($event)"
-                  >
-              <list-state :id="index"
-                          :item="item"
-                          draggable="true"
-                          @update:item="ensureNewState(index, $event)"/>
-            </span>
-            </v-container>
+            <states-editor :stateItems="itemStates"/>
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>
@@ -82,12 +69,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import ListState from './ListState.vue';
+import StatesEditor from './StatesEditor.vue';
 
 export default {
   name: 'CreateAList',
   components: {
-    ListState,
+    StatesEditor,
   },
   data() {
     return {
@@ -142,28 +129,6 @@ export default {
           this.itemStates.push({ icon: 'mdi-plus', text: 'New Item' });
         }
       }
-    },
-    startDrag($event, item) {
-      console.log('I am in drag start');
-      console.log('dragStart', item, $event.target.id);
-      $event.dataTransfer.setData('number', $event.target.id);
-    },
-    onDrop($event) {
-      console.log('I am on drop', $event);
-      const data = $event.dataTransfer.getData('number');
-      console.log(data);
-      // const item = this.itemStates.find((i) => i.id === data);
-      // console.log(item);
-      // console.log('node', node);
-      const node = document.getElementById(data);
-      $event.target.appendChild(node);
-      node.textContent = '';
-      node.appenedChild('hello');
-      $event.preventDefault();
-    },
-    allowDrop($event) {
-      console.log('allow drop', $event);
-      $event.preventDefault();
     },
   },
   computed: {
