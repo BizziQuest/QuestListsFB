@@ -17,7 +17,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-form ref="form" @submit.prevent>
+            <v-form ref="addTitleAndColorForm" @submit.prevent>
               <v-row>
                 <v-col cols="12" sm="6" md="6">
                   <v-text-field
@@ -59,7 +59,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="resetTheForms">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="resetTitleAndColorForm">Close</v-btn>
           <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
         </v-card-actions>
       </v-card>
@@ -97,20 +97,19 @@ export default {
   },
   methods: {
     createAList() {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.addTitleAndColorForm.validate()) {
         const payload = {};
         payload.title = this.title;
         payload.bgColor = this.color;
         this.$store.dispatch('createAList', payload);
-        this.$refs.form.reset();
+        this.$refs.addTitleAndColorForm.reset();
         this.dialog = false;
       }
     },
-    resetTheForms() {
+    resetTitleAndColorForm() {
       this.dialog = false;
-      this.$refs.form.reset();
+      this.$refs.addTitleAndColorForm.reset();
       this.color = '#A0E9C9FF';
-      this.$store.dispatch('resetStates');
     },
     swatchStyle() {
       return {
