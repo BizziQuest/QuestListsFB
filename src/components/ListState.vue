@@ -25,7 +25,6 @@ export default {
       this.$emit('update:item', { icon: this.item.icon, text: this.item.text });
     },
     choosenIcon(newIcon) {
-      console.log('chosen icon is', newIcon);
       this.icon = newIcon;
     },
   },
