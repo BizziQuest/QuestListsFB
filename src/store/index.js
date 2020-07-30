@@ -33,6 +33,7 @@ const store = new Vuex.Store({
     currentUser: null,
     lists: null,
     currentList: { },
+    stateGroups: [],
     globalPreferences: {
       defaultColor: '#000000',
       defaultStateGroup: {
@@ -79,14 +80,14 @@ const store = new Vuex.Store({
     },
     addState(state, payload) {
       if (payload) {
-        state.itemStates.push(payload);
+        state.stateGroups.push(payload);
       }
     },
     addList(state, payload) {
       if (payload) {
         const list = {};
         list.title = payload.title;
-        list.bgColor = payload.bgColor;
+        list.bgColor = payload.color;
         list.listItems = [{ text: '', state: 'Not Done' }];
         state.lists.push(list);
       }
@@ -122,9 +123,14 @@ const store = new Vuex.Store({
     authenticationChanged({ commit }, payload) {
       commit('setUser', payload);
     },
-    async addStateGroup({ commit }, stateGroupData) {
+    async addStateGroup({ commit, state }, stateGroupData) {
       // TODO: check for groups that have the current values and use that one instead.
-      const stateGroupRef = await stateGroupsCollection.add(stateGroupData);
+      const stateSkeleton = state.globalPreferences.defaultStateGroup.states[0];
+      // TODO: refactor this to handle actual states
+      const states = stateGroupData.states.map((stateName) => ({ ...stateSkeleton, name: stateName }));
+      const payload = { ...stateGroupData, states };
+      const stateGroupRef = await stateGroupsCollection.add(payload);
+
       commit('addState', stateGroupData);
       return stateGroupRef;
     },

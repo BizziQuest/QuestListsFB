@@ -133,13 +133,12 @@ export default {
       }
     },
     createList() {
-      this.$refs.addStateForm.validate();
       if (this.$refs.listForm.validate()) {
         const payload = {
           title: this.title,
           color: this.color,
           stateGroup: {
-            title: this.states.map((s) => s).join(', '),
+            name: this.states.map((s) => s).join(', '),
             description: '',
             states: this.states,
           },
