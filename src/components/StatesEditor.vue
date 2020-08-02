@@ -1,19 +1,18 @@
 <template>
   <v-container fluid>
     <span>Possible Item States:</span>
-    <div @drop="onDrop"
+    <div class="drop-zone"
+         @drop="onDrop"
          @dragover="allowDrop($event)">
-         <span
-          v-for="(item,index) in items"
-          :key="`${item.text}${index}`"
-          :data-index="index"
-          @dragstart="startDrag($event, $event.target.id)"
-        >
-          <list-state
-            :item="item"
-            draggable="true"
-            @update:item="ensureNewState(index, $event)"
-          />
+      <span
+        v-for="(item,index) in items"
+        :key="`${item.text}${index}`"
+        :data-index="index"
+        @dragstart="startDrag"
+      >
+        <list-state :item="item"
+                    draggable="true"
+                    @update:item="ensureNewState(index, $event)" />
       </span>
     </div>
   </v-container>
@@ -40,7 +39,6 @@ export default {
   },
   methods: {
     ensureNewState(index, state) {
-      debugger;
       const lastStateIndex = this.items.length - 1;
       if (index === lastStateIndex) {
         if (state.text.length !== 0) {
@@ -48,21 +46,17 @@ export default {
         }
       }
     },
-    startDrag: (evt, sourceIndex) => {
-      // debugger;
-      // console.log('currentTarget', evt.currentTarget);
-      // note for sam
-      // event.target returns the node that was targeted by the function
-      // index is too confusing cuz during drag and drop will be changed.
-      console.log('eve traget', evt.target.id);
-      console.log('start darg event', evt, sourceIndex);
-      const event = evt;
+    startDrag: ($event) => {
+      const sourceIndex = parseInt($event.target
+        .closest('[data-index]')
+        .getAttribute('data-index'), 10);
+      console.log('evt index vs source index', $event, sourceIndex);
+      const event = $event;
       event.dataTransfer.dropEffect = 'move';
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('sourceIndex', sourceIndex);
     },
     onDrop($event) {
-      // debugger;
       // DEFINE: a pivot is a point at which a list is broken up. This method
       //         has 2 pivots: the index for the item we are moving and the target index
       // a,c,d,b,e,f => a,b,c,d,e,f
@@ -76,51 +70,52 @@ export default {
       //   // check each item to see if the insertion is needed and insert it.
       // });
 
-      console.log('event target', $event.target);
-      console.log('event dataTransefer data', $event.dataTransfer);
-      const sourceIndex = $event.dataTransfer.getData('sourceIndex');
+      const array = [...this.items];
+      const sourceIndex = parseInt($event.dataTransfer.getData('sourceIndex'), 10);
+      console.log('type of sourceIndex', sourceIndex);
       console.log('element is', document.getElementById(sourceIndex));
-      // console.log('drop target event parent elem is', $event.target.parentNode);
-      const targetParentId = $event.target.closest('[data-index]').getAttribute('data-index');
-      console.log('sourceIndex', sourceIndex);
-      console.log('targetIndex', targetParentId);
-      console.log('start', this.stateItems[sourceIndex], this.stateItems[targetParentId]);
-      // const newStateItems = [...this.items];
-      // const temp = newStateItems[sourceIndex];
-      // newStateItems[sourceIndex] = newStateItems[targetParentId];
-      // newStateItems[targetParentId] = temp;
-      // console.log('result', newStateItems);
-      // this.items = newStateItems;
-      // $event.target.appendChild(document.getElementById(sourceIndex));
-      // move the IDs
-      // debugger;
-      let array = [...this.stateItems];
-      const itemsAfterSource = array.slice(sourceIndex + 1, array.length);
-      console.log('itemsAfterSouce', itemsAfterSource);
+      const targetIndex = parseInt($event.target
+        .closest('[data-index]')
+        .getAttribute('data-index'), 10);
+      console.log('Source Item (dragged item): ', sourceIndex, array[sourceIndex]);
+      console.log('Target Item (dropped onto): ', targetIndex, array[targetIndex]);
 
-      const itemsTargetToSource = array.slice(targetParentId, sourceIndex);
-      console.log('itemsTargetToSource', itemsTargetToSource);
+      // console.log('type of sourceIndex', typeof sourceIndex);
+      // console.log('type of targetIndex', typeof targetIndex);
+      // console.log('sourceIndex === targetIndex + 1', sourceIndex === targetIndex + 1);
+      if (sourceIndex === targetIndex || sourceIndex === targetIndex + 1) {
+        console.log('No motion:', array);
+        $event.preventDefault();
+        return;
+      }
+      if (sourceIndex > targetIndex) {
+        const itemsBeforeAndIncludingTarget = array.slice(0, targetIndex + 1);
+        // console.log('itemsBeforeAndIncludingTarget', itemsBeforeAndIncludingTarget, 0, targetIndex + 1);
 
-      // if souceIndex is bigger than targetIndex
-      array = array.slice(0, targetParentId)
-       + array[sourceIndex]
-       + itemsTargetToSource
-       + itemsAfterSource;
-      this.items = array;
-      // const itemsUntilSourceIndex = newArray.slice(0, sourceIndex);
-      // const itemsBetweenSourceAndTarget = newArray.slice(sourceIndex, targetIndex);
-      // const sourceItem = [newArray[sourceIndex]];
-      // const rest = newArray.slice(targetIndex);
+        const itemsTargetToSourceNotIncludingSource = array.slice(targetIndex + 1, sourceIndex);
+        // console.log('itemsTargetToSourceNotIncludingSource', itemsTargetToSourceNotIncludingSource);
 
-      // const resultArray = itemsUntilSourceIndex.concat(itemsBetweenSourceAndTarget, sourceItem, rest);
-      // console.log('NEW ARRY: ', JSON.stringify(resultArray));
-      // this.items = resultArray;
-      // const node = document.createElement('span');
-      // const child = document.getElementById(sourceIndex);
-      // console.log('child is', child);
-      // node.appendChild(child);
-      // document.getElementById('box').appendChild(node);
-      // document.getElementById(targetParentId).appendChild(node);
+        const itemsAfterSource = array.slice(sourceIndex + 1);
+        this.items = itemsBeforeAndIncludingTarget.concat(
+          array[sourceIndex],
+          itemsTargetToSourceNotIncludingSource,
+          itemsAfterSource,
+        );
+      } else {
+        const itemsBeforeAndNOTIncludingSource = array.slice(0, sourceIndex);
+        console.log('itemsBeforeAndNOTIncludingSource', itemsBeforeAndNOTIncludingSource, 0, sourceIndex);
+
+        const itemsAfterSourceToTargetIncludingTarget = array.slice(sourceIndex + 1, targetIndex + 1);
+        console.log('itemsAfterSourceToTargetIncludingTarget', itemsAfterSourceToTargetIncludingTarget);
+
+        const itemsAfterTarget = array.slice(targetIndex + 1);
+        console.log('itemsAfterTarget', itemsAfterTarget);
+        this.items = itemsBeforeAndNOTIncludingSource.concat(
+          itemsAfterSourceToTargetIncludingTarget,
+          array[sourceIndex],
+          itemsAfterTarget,
+        );
+      }
 
       $event.preventDefault();
     },
