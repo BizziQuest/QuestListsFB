@@ -41,7 +41,7 @@ service cloud.firestore {
     match /lists/{listId} {
       allow read; // anyone can read
       allow list: if request.query.limit <= 12;
-      // allow delete: if false;  // users can't delete anything.
+      // allow delete: if false;  // users can't delete anything. This line isn't necessary, though.
       allow create, update: if verifiedUser() &&
         request.resource.data.title is string && // the title of this list
         request.resource.data.description is string && // a description for this list
@@ -50,10 +50,11 @@ service cloud.firestore {
       // the listIitems subcolection holds all of a list's items.
       match /listItems/{listItemId} {
         allow read;
-        allow create, update: if verifiedUser() &&
-          request.resource.data.title is string && // the text of the list item
-          request.resource.data.order is number && // the order of the item in the list
-          request.resource.data.description is string; //the description of the list item
+        allow create, update: if verifiedUser(); // &&
+        // TODO: make sure we validate the array items
+        //   request.resource.data.title is string && // the text of the list item
+        //   request.resource.data.order is number && // the order of the item in the list
+        //   request.resource.data.description is string; //the description of the list item
       }
     }
     // the stateGroups collection holds all the possible states for list items. This is the core
@@ -63,19 +64,10 @@ service cloud.firestore {
     match /stateGroups/{stateGroupId} {
       allow read;
       allow create, update: if debug(verifiedUser()) &&
-        debug(debug(request.resource.data.name) is string) && // the name is the name by which this state group is mentioned
-        debug(debug(request.resource.data.description) is string) && // the description for this group
-        debug(debug(request.resource.data.states.toSet().size()) > 0);
-      // match /stateItems/{stateItemId} {  // the actual states for this group
-      //   allow read;
-      //   allow create: if verifiedUser() &&
-      //     request.resource.data.color is string && // the color of the item for this state. Could be for background or foreground, depending on context and UI implementation
-      //     request.resource.data.icon is string && // the icon you want to use for this state. Should be a material icon name or `mdi-` name
-      //     request.resource.data.order is number && // the order in the click-cycle this icon appears. 
-      //     request.resource.data.shortName is string && // a shortName will be used when the user data is stored. Should defauilt to camel-case version of the text
-      //     request.resource.data.text is string && // some displayed value for this state. should be fairly short, like "Not Implemented" or "Started Late"
-      //     request.resource.data.value is string; // the value for this item. used in calculations for prerequisites
-      // }
+        request.resource.data.name is string && // the name is the name by which this state group is mentioned
+        request.resource.data.description is string && // the description for this group
+        request.resource.data.states.toSet().size() > 0;
+        // TODO: validate array items for states
     }
   }
 }
