@@ -42,7 +42,7 @@ export default {
     },
     states: {
       type: Array,
-      default: async () => [],
+      default: () => [],
       description: 'The list of states that this item should have.',
     },
   },
