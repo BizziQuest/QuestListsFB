@@ -17,8 +17,6 @@ auth.onAuthStateChanged((user) => {
       displayName: 'New Member',
       avatar: '/img/unknown_user.svg',
     });
-  } else {
-    console.debug('user logged out');
   }
 });
 

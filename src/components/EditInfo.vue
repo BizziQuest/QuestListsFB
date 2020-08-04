@@ -68,7 +68,6 @@ export default {
           avatar,
           id,
         } = state.currentUser;
-        console.log('USER: ', state.currentUser);
         if (id) {
           this.userId = id;
           this.displayName = displayName || this.displayName;

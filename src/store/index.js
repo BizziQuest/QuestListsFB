@@ -97,9 +97,8 @@ const store = new Vuex.Store({
     async signupUser(_, payload) {
       try {
         const cred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-        console.log('cred info', cred);
       } catch (error) {
-        console.log(error);
+        console.warn(error);
       }
     },
     // underscore is a placeholder for a variable that should be there, but is not used
@@ -108,7 +107,7 @@ const store = new Vuex.Store({
       try {
         await auth.signInWithEmailAndPassword(email, password);
       } catch (error) {
-        console.debug(error);
+        console.warn(error);
       }
     },
 
@@ -117,7 +116,7 @@ const store = new Vuex.Store({
         await auth.signOut();
         commit('setUser', { ...defaultState.user });
       } catch (error) {
-        console.log(error);
+        console.warn(error);
       }
     },
     authenticationChanged({ commit }, payload) {
@@ -153,14 +152,13 @@ const store = new Vuex.Store({
     },
     async saveProfile({ commit }, payload) {
       try {
-        const response = await auth.currentUser.updateProfile({
+        await auth.currentUser.updateProfile({
           displayName: payload.displayName,
           photoURL: payload.avatar,
         });
-        console.log(response, auth.currentUser);
         commit('setUser', payload);
       } catch (error) {
-        console.log('saveProfile', error);
+        console.warn('saveProfile', error);
       }
     },
   },

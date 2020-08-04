@@ -50,7 +50,6 @@ export default {
     loginOrSignUser(signup = false) {
       const action = signup ? 'signupUser' : 'loginUser';
       if (this.$refs.form.validate()) {
-        console.debug(action);
         this.$store.dispatch(action, {
           email: this.email,
           password: this.password,
