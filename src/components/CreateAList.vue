@@ -76,10 +76,10 @@
                   </v-form>
                 </v-col>
               <v-col cols="12" sm="6" md="6">
-                <span>Availabe States</span>
+                <span>Possible States</span>
                 <div id="availableListStates">
                   <ul v-for="item in states" :key="item.state">
-                    <li>{{ item }}</li>
+                    <li><v-icon>{{ item }}</v-icon></li>
                   </ul>
                 </div>
               </v-col>
@@ -107,7 +107,7 @@ export default {
       menu: false,
       dialog: false,
       newState: '',
-      states: ['Not Done', 'Done'],
+      states: ['done', 'face'],
       newItem: '',
       statesPicked: '',
       description: '',
@@ -152,7 +152,7 @@ export default {
     },
     reset() {
       this.dialog = false;
-      this.$refs.form.reset();
+      this.$refs.listForm.reset();
       this.$refs.addStateForm.reset();
       this.color = '#A0E9C9FF';
     },

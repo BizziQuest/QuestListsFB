@@ -60,7 +60,7 @@ export default {
       this.listItems = listItems;
       this.states = states;
     },
-    saveItem(item) {
+    saveItem() {
       saveListItems(this.list, this.listItems);
     },
     ensureNewItem(index, item) {

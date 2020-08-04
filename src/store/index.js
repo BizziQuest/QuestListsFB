@@ -88,7 +88,6 @@ const store = new Vuex.Store({
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.color;
-        list.listItems = [{ text: '', state: state.itemStates[0] }];
         state.lists.push(list);
       }
     },
@@ -96,7 +95,7 @@ const store = new Vuex.Store({
   actions: {
     async signupUser(_, payload) {
       try {
-        const cred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
+        await auth.createUserWithEmailAndPassword(payload.email, payload.password);
       } catch (error) {
         console.warn(error);
       }
