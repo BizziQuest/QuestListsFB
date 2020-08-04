@@ -121,7 +121,7 @@ export default {
       ],
       newStateRules: [
         (v) => !!v || 'State is required',
-        (v) => (v && v.length >= 5) || 'State must be at least 5 characters',
+        (v) => (v && v.length >= 4) || 'State must be at least 4 characters',
       ],
     };
   },
