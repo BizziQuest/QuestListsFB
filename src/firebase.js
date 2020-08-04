@@ -41,15 +41,29 @@ const userStatesCollection = db.collection('userListItemStates');
 
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
-  const listItems = [];
-  debugger;
+  let listItems = [];
   const items = await listItemsCollection.get();
   items.forEach(async (doc) => {
     const item = doc.data();
     item.id = doc.id;
-    listItems.push(item);
+    if (Object.hasOwnProperty.call(item, 'data')) {
+      listItems = listItems.concat(item.data);
+    }
   });
   return listItems.sort((a, b) => a.order < b.order);
+}
+async function saveListItems(fbList, listItems) {
+  const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
+  const listItemDocs = await listItemsCollection.limit(1).get();
+  // TODO: see if size is over 900Kb and create as many docs as necessary
+  const listItemJSON = JSON.parse(JSON.stringify(listItems)); // convert vue observer objects to js objects
+  if (listItemDocs.empty) {
+    await listItemsCollection.add({ data: listItemJSON });
+  } else {
+    let docID = null;
+    listItemDocs.forEach(async (doc) => { docID = doc.id; });
+    await listItemsCollection.doc(docID).set({ data: listItemJSON });
+  }
 }
 
 /** Returns all items in a collection as an ordered list.
@@ -89,4 +103,5 @@ export {
   getListItems,
   getListStates,
   getOrderedCollectionAsList,
+  saveListItems,
 };
