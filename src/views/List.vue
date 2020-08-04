@@ -15,7 +15,12 @@
 </template>
 <script>
 import ListItem from '@/components/ListItem.vue';
-import { getListItems, getListStates, listsCollection } from '../firebase';
+import {
+  getListItems,
+  getListStates,
+  listsCollection,
+  saveListItems,
+} from '../firebase';
 
 export default {
   name: 'List',
@@ -48,7 +53,7 @@ export default {
       const states = await getListStates(list);
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
-      if (theLastItem && theLastItem.title.length !== 0) {
+      if (!theLastItem || theLastItem.title.length !== 0) {
         listItems.push({ title: '', state: states[0].text });
       }
       this.list = list;
@@ -56,10 +61,7 @@ export default {
       this.states = states;
     },
     saveItem(item) {
-      this.list.listItems.set({
-        items: this.listItems,
-      });
-      console.debug('UPDATING ITEM: ', this.listItems, item);
+      saveListItems(this.list, this.listItems);
     },
     ensureNewItem(index, item) {
       const lastItemIndex = this.listItems.length - 1;
