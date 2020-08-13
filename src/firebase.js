@@ -18,7 +18,7 @@ const firebaseConfig = {
 
 // firebase utils
 const fbApp = firebase.initializeApp(firebaseConfig);
-const fbAnalytics = firebase.analytics();
+const fbAnalytics = process.env.NODE_ENV !== 'test' ? firebase.analytics() : null;
 const auth = fbApp.auth();
 const db = fbApp.firestore();
 const { currentUser } = auth;
