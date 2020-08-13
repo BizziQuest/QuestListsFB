@@ -9,7 +9,7 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint --mode production",
-    "ci": "yarn lint && yarn test",
+    "ci": "firebase emulators:exec --only firestore 'yarn test'",
     "dev": "yarn fb:emulate; yarn serve --open",
     "fb:deploy": "firebase deploy",
     "fb:dev": "firebase emulators:exec --only firestore 'yarn serve --open'",
