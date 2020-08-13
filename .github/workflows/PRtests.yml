@@ -27,4 +27,4 @@ jobs:
     - run: npm install -g yarn @vue/cli
     - run: yarn
     - run: yarn lint
-    - run: yarn ci
+    - run: CI=true yarn ci
