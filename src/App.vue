@@ -23,9 +23,6 @@ export default {
     'top-menu-bar': TopMenuBarVue,
     'drawer-menu-bar': DrawerMenuVue,
   },
-  props: {
-    source: String,
-  },
   data() {
     return {
       drawer: false,
