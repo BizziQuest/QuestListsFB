@@ -61,13 +61,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-#drop-zone { 
+#drop-zone {
   min-height: 300px;
   min-width: 200px;
   width: 275px;
   height: auto;
   margin: 0;
-  padding: 0; 
+  padding: 0;
 }
 .start-drag {
   opacity: 0.1;
