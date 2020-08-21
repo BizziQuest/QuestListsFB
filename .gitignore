@@ -27,3 +27,5 @@ yarn-error.log*
 *.cache
 
 *.orig
+
+/izak-js-practice
