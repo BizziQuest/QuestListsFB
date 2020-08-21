@@ -51,13 +51,8 @@ export default {
       console.log('touch start', $event);
       this.$_initialY = evt.touches[0].clientY;
       console.warn('Initial Y: ', this.$_initialY);
-
-      // The Touch.clientY read-only property returns the Y coordinate of
-      // the touch point relative to the browser's viewport, not including
-      // any scroll offset.
       const row = $event.currentTarget.closest('[data-index]');
       this.$_rowOffset = Math.round(this.$_initialY - row.getBoundingClientRect().y);
-      // position absolute will take the element out of the normal flow. which is not good?
     },
     moveTouch(evt) {
       const $event = evt;
@@ -88,11 +83,12 @@ export default {
         console.log('No motion:', array);
         return false;
       }
+      let sortedList = [];
       if (sourceIndex > targetIndex) {
         const itemsBeforeAndIncludingTarget = array.slice(0, targetIndex + 1);
         const itemsTargetToSourceNotIncludingSource = array.slice(targetIndex + 1, sourceIndex);
         const itemsAfterSource = array.slice(sourceIndex + 1);
-        return itemsBeforeAndIncludingTarget.concat(
+        sortedList = itemsBeforeAndIncludingTarget.concat(
           array[sourceIndex],
           itemsTargetToSourceNotIncludingSource,
           itemsAfterSource,
@@ -101,12 +97,13 @@ export default {
         const itemsBeforeAndNOTIncludingSource = array.slice(0, sourceIndex);
         const itemsAfterSourceToTargetIncludingTarget = array.slice(sourceIndex + 1, targetIndex + 1);
         const itemsAfterTarget = array.slice(targetIndex + 1);
-        return itemsBeforeAndNOTIncludingSource.concat(
+        sortedList = itemsBeforeAndNOTIncludingSource.concat(
           itemsAfterSourceToTargetIncludingTarget,
           array[sourceIndex],
           itemsAfterTarget,
         );
       }
+      return sortedList;
     },
     endTouch($event) {
       if (!$event.target.className.includes('drag-handle')) return;
@@ -133,7 +130,9 @@ export default {
         const targetIndex = moveToElem.getAttribute('data-index');
         console.log(sourceIndex, targetIndex);
 
-        const orderedArray = this.$_ql_reorder(array, parseInt(sourceIndex), parseInt(targetIndex));
+        const orderedArray = this.$_ql_reorder(array,
+          parseInt(sourceIndex, 10),
+          parseInt(targetIndex, 10));
 
         if (orderedArray === false) {
           this.numForceRedraws += 1;
