@@ -1,6 +1,6 @@
 <template>
   <v-row class="justify-start align-center">
-    <v-icon>drag_indicator</v-icon>
+    <v-icon class="drag-handel">drag_indicator</v-icon>
     <div id="icon-state">
       <icon-state :passedIcon="item.icon" @update:icon="choosenIcon($event)" class="mr-2 ml-2"></icon-state>
     </div>
@@ -30,7 +30,7 @@ export default {
   },
 };
 </script>
-<style lang="css">
+<style scoped lang="scss">
 .list-state {
   align-items: center;
 }
@@ -39,5 +39,9 @@ export default {
   border: 1px solid green;
   margin: 2px;
 }
-
+.drag-handel {
+  border: 1px solid blanchedalmond;
+  padding: 10px;
+  margin: 10px;
+}
 </style>
