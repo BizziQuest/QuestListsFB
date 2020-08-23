@@ -1,6 +1,6 @@
 <template>
   <v-row class="justify-start align-center">
-    <v-icon class="drag-handel">drag_indicator</v-icon>
+    <v-icon class="drag-handle">drag_indicator</v-icon>
     <div id="icon-state">
       <icon-state :passedIcon="item.icon" @update:icon="choosenIcon($event)" class="mr-2 ml-2"></icon-state>
     </div>
@@ -39,9 +39,10 @@ export default {
   border: 1px solid green;
   margin: 2px;
 }
-.drag-handel {
+.drag-handle {
   border: 1px solid blanchedalmond;
   padding: 10px;
   margin: 10px;
 }
+
 </style>
