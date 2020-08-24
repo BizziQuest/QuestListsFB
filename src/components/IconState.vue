@@ -28,12 +28,12 @@
 
 <script>
 export default {
-  props: ['passedIcon'],
+  props: ['icon'],
   data() {
     return {
-      localIcon: this.passedIcon,
+      localIcon: this.icon,
       dialog: false,
-      previousIcon: this.passedIcon,
+      previousIcon: this.icon,
     };
   },
   methods: {
