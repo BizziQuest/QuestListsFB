@@ -7,7 +7,18 @@
         <v-card-text>
           <v-row>
             Please enter the name of icon you wish to use for this state. You can get the icon names from
-            https://material.io/resources/icons/ or https://cdn.materialdesignicons.com/5.3.45/.
+                  <v-chip
+                    class="mr-2"
+                    @click="openMaterial"
+                  >
+                    Material
+                  </v-chip>
+                  <v-chip
+                    class="mr-2"
+                    rounded
+                    @click="openMaterialDesign">
+                      Material desgin
+                  </v-chip>
           </v-row>
           <v-row>
             <div id="local-icon">
@@ -45,6 +56,13 @@ export default {
     close() {
       this.localIcon = this.previousIcon;
       this.dialog = false;
+    },
+    openMaterial() {
+      window.open('https://material.io/resources/icons/', '_blank');
+    },
+    openMaterialDesign() {
+      // yet it was mentioned either to use window.location.replace or window.location.assign
+      window.open('https://cdn.materialdesignicons.com/5.3.45/', '_blank');
     },
   },
 };
