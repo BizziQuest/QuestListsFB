@@ -11,14 +11,14 @@
                     class="mr-2"
                     @click="openMaterial"
                   >
-                    <!-- could not find a apporprite icon. up to you -->
+                    <!-- could not find a apporprite icon.-->
                     Material
                   </v-chip>
                   <v-chip
                     class="mr-2"
                     rounded
                     @click="openMaterialDesign">
-                      <!-- could not find a apporprite icon. up to you -->
+                      <!-- could not find a apporprite icon.-->
                       Material desgin
                   </v-chip>
           </v-row>
