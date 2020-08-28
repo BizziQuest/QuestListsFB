@@ -3,44 +3,63 @@ export default {
   data() {
     return {
       numForceRedraws: 0, // used to redraw the rows when there is no changes
+      updatedRows: [null, null],
       $_initialY: null,
       $_rowOffset: 0,
       $_dragging: false,
+      $_leftDragArea: false,
     };
   },
   methods: {
-    startDrag: ($event) => {
-      const sourceIndex = parseInt($event.target
-        .closest('[data-index]')
-        .getAttribute('data-index'), 10);
+    startDrag($event) {
+      const sourceRow = $event.target.closest('[data-index]');
+      const sourceIndex = parseInt(sourceRow.getAttribute('data-index'), 10);
       const event = $event;
       $event.target.classList.add('start-drag');
+      requestAnimationFrame(() => {
+        $event.target.classList.add('hide-drag');
+      });
       event.dataTransfer.dropEffect = 'move';
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('sourceIndex', sourceIndex);
     },
+    mouseLeave() {
+      this.$_leftDragArea = true;
+    },
+    mouseEnter() {
+      this.$_leftDragArea = false;
+    },
+    endDrag() {
+      if (this.$_leftDragArea) this.numForceRedraws += 1;
+    },
     onDrop($event) {
       const event = $event;
-      const droppedItem = event.target
-        .closest('.row');
-      this.$nextTick(() => {
-        droppedItem.classList.remove('start-drag');
-        droppedItem.classList.add('end-drag');
-      });
       const array = [...this.items];
       const sourceIndex = parseInt($event.dataTransfer
         .getData('sourceIndex'), 10);
       const targetIndex = parseInt($event.target
         .closest('[data-index]')
         .getAttribute('data-index'), 10);
+      const droppedItem = event.target
+        .closest('#drop-zone')
+        .querySelector(`[data-index="${sourceIndex}"]`);
+      droppedItem.classList.remove('start-drag');
+      droppedItem.classList.remove('hide-drag');
+      droppedItem.classList.add('end-drag');
+      const sourceKey = droppedItem.closest('[data-key]').getAttribute('data-key');
+      const targetKey = $event.target.closest('[data-key]').getAttribute('data-key');
+      this.updatedRows = [sourceKey, targetKey];
 
       const orderedArray = this.$_ql_reorder(array, sourceIndex, targetIndex);
       if (orderedArray === false) {
         console.log('No motion:', array);
         $event.preventDefault();
+        $event.stopPropagation();
         return;
       }
       this.items = orderedArray;
+      $event.preventDefault();
+      $event.stopPropagation();
     },
     allowDrop($event) {
       $event.preventDefault();
@@ -48,9 +67,7 @@ export default {
     startTouch($event) {
       const evt = $event;
       if (!$event.target.className.includes('drag-handle')) return;
-      console.log('touch start', $event);
       this.$_initialY = evt.touches[0].clientY;
-      console.warn('Initial Y: ', this.$_initialY);
       const row = $event.currentTarget.closest('[data-index]');
       this.$_rowOffset = Math.round(this.$_initialY - row.getBoundingClientRect().y);
     },
@@ -63,17 +80,13 @@ export default {
         const moveY = $event.changedTouches[0].clientY - this.$_initialY;
         const dropZone = document.getElementById('drop-zone');
         let limiter;
-        console.log('current point', $event.changedTouches[0].clientY);
-        if ($event.changedTouches[0].clientY < dropZone.getBoundingClientRect().y) {
-          limiter = 0;
-        } else if ($event.changedTouches[0].clientY > dropZone.getBoundingClientRect().bottom) {
+        const cYBiggerThany = $event.changedTouches[0].clientY < dropZone.getBoundingClientRect().y;
+        const cYSmallerThany = $event.changedTouches[0].clientY > dropZone.getBoundingClientRect().bottom;
+        if (cYBiggerThany || cYSmallerThany) {
           limiter = 0;
         } else {
           limiter = moveY;
         }
-        console.log('moveY, rowOffset', moveY, this.$_rowOffset);
-        console.error('dropzone dimenstion y', dropZone.getBoundingClientRect().y);
-        console.warn('LIMITER', limiter);
         row.style.cssText = `position:relative;left:0px;top:${limiter}px;`;
         this.$_dragging = true;
       }
@@ -113,7 +126,6 @@ export default {
         const draggedRowY = draggedRow.getBoundingClientRect().y;
 
         const elementsBefore = this.$refs.row.filter((elem) => {
-          console.log('elem === draggedRow', elem, draggedRow, elem === draggedRow);
           if (elem === draggedRow) {
             return false;
           }
@@ -128,8 +140,7 @@ export default {
         const array = [...this.items];
         const sourceIndex = draggedRow.getAttribute('data-index');
         const targetIndex = moveToElem.getAttribute('data-index');
-        console.log(sourceIndex, targetIndex);
-
+        
         const orderedArray = this.$_ql_reorder(array,
           parseInt(sourceIndex, 10),
           parseInt(targetIndex, 10));
