@@ -7,19 +7,34 @@
       @dragover="allowDrop"
       @touchmove="moveTouch"
       @touchend="endTouch"
+      @dragleave="mouseLeave"
+      @dragenter="mouseEnter"
     >
       <span
         v-for="(item,index) in items"
         :key="`${item.text}${index}${numForceRedraws}`"
         :data-index="index"
         :id="index"
+        @drop="onDrop"
         @dragstart="startDrag"
+        @dragend="endDrag"
         @touchstart="startTouch"
         class="item-row"
+        ref = "row"
+        :data-key="`${item.text}${index}${numForceRedraws}`"
       >
         <list-state :item="item"
                     draggable="true"
-                    @update:item="ensureNewState(index, $event)" />
+                    @update:item="ensureNewState(index, $event)"
+                    :class="{
+                      changed: updatedRows.find(
+                        (e) => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
+                      endDrag: updatedRows[0] &&
+                        updatedRows[0].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
+                      startDrag: updatedRows[1] &&
+                        updatedRows[1].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
+                    }"
+                    />
       </span>
     </div>
   </v-container>
@@ -64,17 +79,33 @@ export default {
 #drop-zone {
   min-height: 300px;
   min-width: 200px;
-  width: 275px;
+  width: 100%;
   height: auto;
-  margin: 0;
+  margin: 0px;
   padding: 0;
+  border: 1px solid #ff00ff;
+  .row {
+    margin: 0px;
+  }
+}
+.hide-drag {
+  transform:translateX(-9999px);
 }
 .start-drag {
-  opacity: 0.1;
-  border: 11px solid red;
+  // opacity: 0.8;
+  border: 1px dashed red;
+}
+.changed {
+  background-color: #222;
+}
+.startDrag {
+  border: 5px solid #00ffff;
+}
+.endDrag {
+  border: 5px solid #00ff00;
 }
 .end-drag {
   opacity: 1;
-  border: 11px solid blue;
+  border: 1px solid blue;
 }
 </style>
