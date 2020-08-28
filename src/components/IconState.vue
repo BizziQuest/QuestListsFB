@@ -6,19 +6,21 @@
         <v-card-title class="headline">Please choose your Icon?</v-card-title>
         <v-card-text>
           <v-row>
-            Please enter the name of icon you wish to use for this state. You can get the icon names from
+            <span class='pa-5 mb-5 rounded-tl-xl' style='background-color: grey;'>
+              Please enter the name of icon you wish to use for this state. You can get the icon names from
+            </span>
             <v-chip
               class="mr-2"
               @click="openMaterial"
             >
-              <v-icon>mdi-vector-square</v-icon>
+              <v-icon class='mr-2'>mdi-vector-square</v-icon>
               Material
             </v-chip>
             <v-chip
               class="mr-2"
               rounded
               @click="openMaterialDesign">
-                <!-- could not find a apporprite icon.-->
+                <v-icon class='mr-2'>mdi-material-design</v-icon>
                 Material desgin
             </v-chip>
           </v-row>
