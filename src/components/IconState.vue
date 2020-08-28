@@ -11,7 +11,7 @@
               class="mr-2"
               @click="openMaterial"
             >
-              <!-- could not find a apporprite icon.-->
+              <v-icon>mdi-vector-square</v-icon>
               Material
             </v-chip>
             <v-chip
