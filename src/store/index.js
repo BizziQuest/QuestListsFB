@@ -121,12 +121,17 @@ export default new Vuex.Store({
         state.itemStates.push(payload);
       }
     },
+    setItemStates(state, payload) {
+      if (payload) {
+        state.itemStates = payload;
+      }
+    },
     createAList(state, payload) {
       if (payload) {
         const list = {};
         list.title = payload.title;
         list.bgColor = payload.bgColor;
-        list.listItems = [{ text: '', state: { icon: 'mdi-plus', text: 'New Item' } }];
+        list.listItems = [];
         state.lists.push(list);
       }
     },
