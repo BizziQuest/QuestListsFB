@@ -1,31 +1,36 @@
 <template>
   <v-row class="justify-start align-center">
-    <v-icon class="drag-handle">drag_indicator</v-icon>
-    <div id="icon-state">
-      <icon-state :icon.sync="item.icon" @update:icon="choosenIcon($event)" class="mr-2 ml-2"></icon-state>
+    <v-icon
+    v-if="isDraggable"
+    class="drag-handle">drag_indicator</v-icon>
+    <div class="icon-state">
+      <icon-state :icon.sync="item.icon"></icon-state>
     </div>
-    <v-text-field :value="item.text" @input="isChanging($event)"></v-text-field>
+    <v-text-field :value.sync="item.text"
+                  @input="isChanging($event)"
+                  @blur="updateText">
+    </v-text-field>
   </v-row>
 </template>
 <script>
 import IconState from './IconState.vue';
 
 export default {
-  props: ['item'],
+  props: ['item', 'isDraggable'],
   components: {
     IconState,
   },
   data() {
     return {
-      icon: this.item,
+      text: this.item.text,
     };
   },
   methods: {
-    isChanging() {
-      this.$emit('update:item', { icon: this.item.icon, text: this.item.text });
+    updateText($event) {
+      this.$emit('blur', { icon: this.item.icon, text: $event.target.value });
     },
-    choosenIcon(newIcon) {
-      this.icon = newIcon;
+    isChanging(evt) {
+      this.$emit('update:item', { icon: this.item.icon, text: evt });
     },
   },
 };
@@ -34,15 +39,12 @@ export default {
 .list-state {
   align-items: center;
 }
-#icon-state {
-  width: 42px;;
-  border: 1px solid green;
-  margin: 2px;
+.icon-state {
+  width: 30px;
+  margin-right: 10px;
 }
 .drag-handle {
-  border: 1px solid blanchedalmond;
-  padding: 10px;
-  margin: 10px;
+  padding-right: 10px;
 }
 
 </style>

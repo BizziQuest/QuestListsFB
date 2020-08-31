@@ -24,8 +24,10 @@
         :data-key="`${item.text}${index}${numForceRedraws}`"
       >
         <list-state :item="item"
-                    draggable="true"
+                    :draggable="index !== items.length - 1"
+                    :isDraggable="index !== items.length - 1"
                     @update:item="ensureNewState(index, $event)"
+                    @blur="updateItem(index, $event)"
                     :class="{
                       changed: updatedRows.find(
                         (e) => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
@@ -64,6 +66,10 @@ export default {
   },
 
   methods: {
+    updateItem(index, state) {
+      this.items[index].text = state.text;
+      this.$emit('list:updated', this.items.slice(0, -1));
+    },
     ensureNewState(index, state) {
       const lastStateIndex = this.items.length - 1;
       if (index === lastStateIndex) {
@@ -83,7 +89,6 @@ export default {
   height: auto;
   margin: 0px;
   padding: 0;
-  border: 1px solid #ff00ff;
   .row {
     margin: 0px;
   }
