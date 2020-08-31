@@ -43,10 +43,13 @@ export default {
       const droppedItem = event.target
         .closest('#drop-zone')
         .querySelector(`[data-index="${sourceIndex}"]`);
+      if (!droppedItem) return;
       droppedItem.classList.remove('start-drag');
       droppedItem.classList.remove('hide-drag');
       droppedItem.classList.add('end-drag');
-      const sourceKey = droppedItem.closest('[data-key]').getAttribute('data-key');
+      const sourceKey = droppedItem
+        .closest('[data-key]')
+        .getAttribute('data-key');
       const targetKey = $event.target.closest('[data-key]').getAttribute('data-key');
       this.updatedRows = [sourceKey, targetKey];
 
@@ -58,6 +61,7 @@ export default {
         return;
       }
       this.items = orderedArray;
+      this.$emit('list:updated', this.items.slice(0, -1));
       $event.preventDefault();
       $event.stopPropagation();
     },
@@ -92,28 +96,32 @@ export default {
       }
     },
     $_ql_reorder(array, sourceIndex, targetIndex) {
-      if (sourceIndex === targetIndex || sourceIndex === targetIndex + 1) {
-        console.log('No motion:', array);
+      const arrayExcludingLast = array.slice(0, array.length - 1);
+      const lastItem = array.slice(array.length - 1);
+      if (targetIndex > array.length - 2 || sourceIndex === targetIndex || sourceIndex === targetIndex + 1) {
+        console.log('No motion:', arrayExcludingLast);
         return false;
       }
       let sortedList = [];
       if (sourceIndex > targetIndex) {
-        const itemsBeforeAndIncludingTarget = array.slice(0, targetIndex + 1);
-        const itemsTargetToSourceNotIncludingSource = array.slice(targetIndex + 1, sourceIndex);
-        const itemsAfterSource = array.slice(sourceIndex + 1);
+        const itemsBeforeAndIncludingTarget = arrayExcludingLast.slice(0, targetIndex + 1);
+        const itemsTargetToSourceNotIncludingSource = arrayExcludingLast.slice(targetIndex + 1, sourceIndex);
+        const itemsAfterSource = arrayExcludingLast.slice(sourceIndex + 1);
         sortedList = itemsBeforeAndIncludingTarget.concat(
-          array[sourceIndex],
+          arrayExcludingLast[sourceIndex],
           itemsTargetToSourceNotIncludingSource,
           itemsAfterSource,
+          lastItem,
         );
       } else {
-        const itemsBeforeAndNOTIncludingSource = array.slice(0, sourceIndex);
-        const itemsAfterSourceToTargetIncludingTarget = array.slice(sourceIndex + 1, targetIndex + 1);
-        const itemsAfterTarget = array.slice(targetIndex + 1);
+        const itemsBeforeAndNOTIncludingSource = arrayExcludingLast.slice(0, sourceIndex);
+        const itemsAfterSourceToTargetIncludingTarget = arrayExcludingLast.slice(sourceIndex + 1, targetIndex + 1);
+        const itemsAfterTarget = arrayExcludingLast.slice(targetIndex + 1);
         sortedList = itemsBeforeAndNOTIncludingSource.concat(
           itemsAfterSourceToTargetIncludingTarget,
-          array[sourceIndex],
+          arrayExcludingLast[sourceIndex],
           itemsAfterTarget,
+          lastItem,
         );
       }
       return sortedList;
@@ -140,7 +148,6 @@ export default {
         const array = [...this.items];
         const sourceIndex = draggedRow.getAttribute('data-index');
         const targetIndex = moveToElem.getAttribute('data-index');
-        
         const orderedArray = this.$_ql_reorder(array,
           parseInt(sourceIndex, 10),
           parseInt(targetIndex, 10));
