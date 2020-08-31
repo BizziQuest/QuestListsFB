@@ -53,7 +53,9 @@
                 </v-col>
               </v-row>
             </v-form>
-            <states-editor :stateItems="itemStates"/>
+            <states-editor :stateItems="itemStates"
+                           @list:updated="listUpdated"
+            />
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>
@@ -68,7 +70,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
 
 export default {
@@ -85,6 +87,7 @@ export default {
       newState: '',
       newItem: '',
       statesPicked: '',
+      updatedListStatesItems: [],
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
@@ -96,11 +99,16 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(['setItemStates']),
+    listUpdated($event) {
+      this.updatedListStatesItems = $event;
+    },
     createAList() {
       if (this.$refs.addTitleAndColorForm.validate()) {
         const payload = {};
         payload.title = this.title;
         payload.bgColor = this.color;
+        this.setItemStates(this.updatedListStatesItems);
         this.$store.dispatch('createAList', payload);
         this.$refs.addTitleAndColorForm.reset();
         this.dialog = false;
