@@ -62,7 +62,7 @@ ul {
   overflow: auto;
 }
 .v-list-item {
-   display:flex;
+  display:flex;
   padding: 0px;
   align-items: stretch;
 }
