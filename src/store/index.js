@@ -6,6 +6,7 @@ Vue.use(Vuex);
 
 const testLists = [
   {
+    id: 0,
     title: 'Test One',
     description: 'Some random description.',
     bgColor: '#ff00ff',
@@ -21,47 +22,50 @@ const testLists = [
     ],
   },
   {
+    id: 1,
     title: 'Test Two',
     description: 'Some random description.',
     bgColor: '#ff0000',
     listItems: [
       {
         text: 'Item 1',
-        state: 'done',
+        state: { icon: 'mdi-check-box-outline', text: 'done' },
       },
       {
         text: 'Item 2',
-        state: 'face',
+        state: { icon: 'mdi-checkbox-blank-outline', text: ' not done' },
       },
     ],
   },
   {
+    id: 2,
     title: 'Test Three',
     description: 'Some random description.',
     bgColor: '#ffff00',
     listItems: [
       {
         text: 'Item 1',
-        state: 'done',
+        state: { icon: 'mdi-check-box-outline', text: 'done' },
       },
       {
         text: 'Item 2',
-        state: 'face',
+        state: { icon: 'mdi-checkbox-blank-outline', text: ' not done' },
       },
     ],
   },
   {
+    id: 3,
     title: 'Test Four',
     description: 'Some random description.',
     bgColor: '#465362',
     listItems: [
       {
         text: 'Item 1',
-        state: 'done',
+        state: { icon: 'mdi-check-box-outline', text: 'done' },
       },
       {
         text: 'Item 2',
-        state: 'face',
+        state: { icon: 'mdi-checkbox-blank-outline', text: ' not done' },
       },
     ],
   },
@@ -76,15 +80,11 @@ const defaultState = {
   itemStates: [
     {
       icon: 'mdi-check-box-outline',
-      text: 'Finished',
+      text: 'done',
     },
     {
       icon: 'mdi-checkbox-blank-outline',
-      text: 'Not Started',
-    },
-    {
-      icon: 'mdi-minus-box-outline',
-      text: 'In Progress',
+      text: 'not done',
     },
     {
       icon: 'mdi-plus',
@@ -108,13 +108,12 @@ export default new Vuex.Store({
   },
   mutations: {
     setUser(state, payload) {
-      console.debug('Set User Payload', payload);
       if (payload) {
         state.user = { ...payload };
       }
     },
-    resetStates(state) {
-      state.itemStates = ['done', 'face'];
+    setList(state, payload) {
+      state.lists[payload.id] = payload;
     },
     addState(state, payload) {
       if (payload) {
@@ -129,10 +128,12 @@ export default new Vuex.Store({
     createAList(state, payload) {
       if (payload) {
         const list = {};
+        list.id = state.list.length; // This works for now because we don't delete anything.
         list.title = payload.title;
         list.bgColor = payload.bgColor;
         list.listItems = [];
         state.lists.push(list);
+        state.itemStates = payload.itemStates;
       }
     },
   },
