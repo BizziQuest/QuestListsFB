@@ -3,13 +3,15 @@
     <h1 style="margin-left: 20px;">{{theList.title}} List</h1>
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
-        <list-item :listItem="item" @update:text="ensureNewItem(index, $event)"/>
+        <list-item :listItem="item"
+         :isNewItem="index === theList.listItems.length-1"
+         @update:text="addNewItem(index, $event)"/>
       </li>
      </ol>
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 
 export default {
@@ -27,29 +29,47 @@ export default {
   data() {
     return {
       entry: '',
+      theList: [],
     };
   },
   computed: {
-    ...mapGetters({ listGetter: 'list' }),
-    theList() {
+    ...mapGetters({ listGetter: 'list', itemStates: 'itemStates' }),
+    theList2() {
       const wantedList = this.listGetter(this.title);
-      const listItemsLength = wantedList.listItems.length;
-      const theLastItem = wantedList.listItems[listItemsLength - 1];
-      if (theLastItem.text.length !== 0) {
-        wantedList.listItems.push({ text: '', state: { icon: 'mdi-plus', text: 'New Item' } });
-      }
+      // const listItemsLength = wantedList.listItems.length;
+      // const theLastItem = wantedList.listItems[listItemsLength - 1];
+      // if (!theLastItem) {
+      wantedList.listItems.push({
+        text: '',
+        state: { icon: 'mdi-plus', text: 'New Item' },
+      });
+      // }
       return wantedList;
     },
     listItems() {
       return this.theList.listItems;
     },
   },
+  mounted() {
+    this.theList = this.listGetter(this.title);
+    this.theList.listItems.push({
+      text: 'New Item',
+      state: { icon: 'mdi-plus', text: 'New Item' },
+    });
+  },
   methods: {
-    ensureNewItem(index, item) {
+    ...mapMutations(['setItemStates']),
+    addNewItem(index, item) {
       const lastItemIndex = this.theList.listItems.length - 1;
+      // this.setItemStates(this.theList);
       if (index < lastItemIndex) return;
       if (item.length !== 0) {
-        this.theList.listItems.push({ text: '', state: { icon: 'mdi-plus', text: 'New Item' } });
+        const lastItem = this.theList.listItems[lastItemIndex];
+        lastItem.state.icon = this.itemStates[0].icon;
+        this.theList.listItems.push({
+          text: 'New Item',
+          state: { icon: 'mdi-plus', text: 'New Item' },
+        });
       }
     },
   },
