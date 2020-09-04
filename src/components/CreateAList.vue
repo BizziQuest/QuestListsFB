@@ -108,7 +108,8 @@ export default {
         const payload = {};
         payload.title = this.title;
         payload.bgColor = this.color;
-        this.setItemStates(this.updatedListStatesItems);
+        payload.itemStates = this.updatedListStatesItems.length !== 0
+          ? this.updatedListStatesItems.slice(0, -1) : this.itemStates.slice(0, -1);
         this.$store.dispatch('createAList', payload);
         this.$refs.addTitleAndColorForm.reset();
         this.dialog = false;
