@@ -10,16 +10,17 @@
               :outlined="isActive"
               @click="cycleIcon"
               @blur="deactivate"
+              :title="listItem.state.text"
             >{{listItem.state.icon}}</v-icon>
             <v-text-field
               class="listitem-text"
-              :value="listItem.state.text"
-              @change="listItem.state.text = $event"
+              :value="listItem.text"
+              @change="listItem.text = $event"
               @input="updateText($event)"
               :outlined="isActive"
               @click="activate"
               @blur="deactivate"
-            >{{ listItem.state.text }}</v-text-field>
+            >{{ listItem.text }}</v-text-field>
           </v-col>
         </v-row>
       </v-container>
@@ -41,6 +42,10 @@ export default {
       type: Array,
       description: 'all the item and states',
     },
+    isNewItem: {
+      type: Boolean,
+      description: 'it is new item entry',
+    },
   },
   data() {
     return {
@@ -61,13 +66,16 @@ export default {
       this.activate();
       const currentStateIcon = this.listItem.state.icon;
       const itemStatesLength = this.itemStates.length - 1;
-      let stateIconIndex = this.itemStates.findIndex((state) => state.icon === currentStateIcon);
-      if (stateIconIndex === itemStatesLength) {
-        this.listItem.state.icon = this.itemStates[stateIconIndex - itemStatesLength].icon;
-        stateIconIndex -= 1;
-      } else {
-        this.listItem.state.icon = this.itemStates[stateIconIndex + 1].icon;
-        stateIconIndex += 1;
+      let stateIconIndex = this.itemStates
+        .findIndex((state) => state.icon === currentStateIcon);
+      if (!this.isNewItem) {
+        if (stateIconIndex === itemStatesLength) {
+          this.listItem.state.icon = this.itemStates[stateIconIndex - itemStatesLength].icon;
+          stateIconIndex -= 1;
+        } else {
+          this.listItem.state.icon = this.itemStates[stateIconIndex + 1].icon;
+          stateIconIndex += 1;
+        }
       }
     },
   },
