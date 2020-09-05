@@ -34,18 +34,6 @@ export default {
   },
   computed: {
     ...mapGetters({ listGetter: 'list', itemStates: 'itemStates' }),
-    theList2() {
-      const wantedList = this.listGetter(this.title);
-      // const listItemsLength = wantedList.listItems.length;
-      // const theLastItem = wantedList.listItems[listItemsLength - 1];
-      // if (!theLastItem) {
-      wantedList.listItems.push({
-        text: '',
-        state: { icon: 'mdi-plus', text: 'New Item' },
-      });
-      // }
-      return wantedList;
-    },
     listItems() {
       return this.theList.listItems;
     },
@@ -61,7 +49,6 @@ export default {
     ...mapMutations(['setItemStates']),
     addNewItem(index, item) {
       const lastItemIndex = this.theList.listItems.length - 1;
-      // this.setItemStates(this.theList);
       if (index < lastItemIndex) return;
       if (item.length !== 0) {
         const lastItem = this.theList.listItems[lastItemIndex];
