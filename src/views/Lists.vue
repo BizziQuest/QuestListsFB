@@ -3,7 +3,7 @@
       <v-row no-gutters>
         <v-col v-if="lists && lists.length < 1" col="12" md="6" class='mt-5'>
           <v-alert prominent icon="mdi-emoticon-sad" type="info">
-            There are no lists yet. Please add a list.
+            Please add some stuff
           </v-alert>
         </v-col>
         <v-col v-if="lists === null" col="12" md="12" class='mt-5'>

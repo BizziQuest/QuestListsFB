@@ -7,13 +7,15 @@
           :listItem="item"
           :states="states"
           @blur="saveItem"
-          @update:listItem="ensureNewItem(index, $event)"
+          :isNewItem="index === theList.listItems.length-1"
+          @update:listItem="addNewItem(index, $event)"
         />
       </li>
      </ol>
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import {
   getListItems,

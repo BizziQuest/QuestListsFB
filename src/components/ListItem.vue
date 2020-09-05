@@ -10,7 +10,8 @@
               :outlined="isActive"
               @click="cycleIcon"
               @blur="deactivate"
-            >{{listItem.state}}</v-icon>
+              :title="listItem.state.text"
+            >{{listItem.state.icon}}</v-icon>
             <v-text-field
               style="margin-bottom:20px;"
               :value="listItem.title"
@@ -43,6 +44,10 @@ export default {
       default: () => [],
       description: 'The list of states that this item should have.',
     },
+    isNewItem: {
+      type: Boolean,
+      description: 'it is new item entry',
+    },
   },
   data: () => ({
     isActive: false,
@@ -56,19 +61,22 @@ export default {
       this.isActive = true;
     },
     updateText(text) {
-      this.$emit('update:listItem', text);
+      this.$emit('update:text', text);
     },
     cycleIcon() {
       this.activate();
-      const currentState = this.listItem.state;
+      const currentStateIcon = this.listItem.state.icon;
       const itemStatesLength = this.itemStates.length - 1;
-      let stateIndex = this.itemStates.findIndex((state) => state === currentState);
-      if (stateIndex === itemStatesLength) {
-        this.listItem.state = this.itemStates[stateIndex - itemStatesLength];
-        stateIndex -= 1;
-      } else {
-        this.listItem.state = this.itemStates[stateIndex + 1];
-        this.localIndex += 1;
+      let stateIconIndex = this.itemStates
+        .findIndex((state) => state.icon === currentStateIcon);
+      if (!this.isNewItem) {
+        if (stateIconIndex === itemStatesLength) {
+          this.listItem.state.icon = this.itemStates[stateIconIndex - itemStatesLength].icon;
+          stateIconIndex -= 1;
+        } else {
+          this.listItem.state.icon = this.itemStates[stateIconIndex + 1].icon;
+          stateIconIndex += 1;
+        }
       }
     },
   },
