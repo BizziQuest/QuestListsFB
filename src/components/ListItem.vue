@@ -8,10 +8,10 @@
               large
               class="listitem-icon"
               :outlined="isActive"
-              @click="cycleIcon"
+              @click.prevent="cycleIcon"
               @blur="deactivate"
-              :title="listItem.state.text"
-            >{{listItem.state.icon}}</v-icon>
+              :title="states[currentStateIdx].name"
+            >{{states[currentStateIdx].icon}}</v-icon>
             <v-text-field
               style="margin-bottom:20px;"
               :value="listItem.title"
@@ -51,6 +51,7 @@ export default {
   },
   data: () => ({
     isActive: false,
+    currentStateIdx: 0,
   }),
   methods: {
     deactivate() {
@@ -64,20 +65,24 @@ export default {
       this.$emit('update:text', text);
     },
     cycleIcon() {
+      if (this.isNewItem) return;
       this.activate();
-      const currentStateIcon = this.listItem.state.icon;
-      const itemStatesLength = this.itemStates.length - 1;
-      let stateIconIndex = this.itemStates
-        .findIndex((state) => state.icon === currentStateIcon);
-      if (!this.isNewItem) {
-        if (stateIconIndex === itemStatesLength) {
-          this.listItem.state.icon = this.itemStates[stateIconIndex - itemStatesLength].icon;
-          stateIconIndex -= 1;
-        } else {
-          this.listItem.state.icon = this.itemStates[stateIconIndex + 1].icon;
-          stateIconIndex += 1;
-        }
-      }
+      let nextIdx = this.currentStateIdx + 1;
+      if (nextIdx > this.states.length - 1) nextIdx = 0;
+
+      this.currentStateIdx = nextIdx;
+
+      // const currentStateIcon = this.currentState.icon;
+      // const itemStatesLength = this.states.length - 1;
+      // let stateIconIndex = this.itemStates
+      //   .findIndex((state) => state.icon === currentStateIcon);
+      // if (stateIconIndex === itemStatesLength) {
+      //   this.listItem.state.icon = this.itemStates[stateIconIndex - itemStatesLength].icon;
+      //   stateIconIndex -= 1;
+      // } else {
+      //   this.listItem.state.icon = this.itemStates[stateIconIndex + 1].icon;
+      //   stateIconIndex += 1;
+      // }
     },
   },
   computed: {

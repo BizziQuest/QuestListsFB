@@ -53,7 +53,17 @@
                 </v-col>
               </v-row>
             </v-form>
-            <states-editor :stateItems="itemStates"
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                label="Description"
+                 v-model='description'
+                 required
+                 placeholder="Describe your list purpose."
+                 outlined></v-text-field>
+              </v-col>
+            </v-row>
+            <states-editor :stateItems="getGlobalPreferences.defaultStateGroup"
                            @list:updated="listUpdated"
             />
           </v-container>
@@ -88,6 +98,7 @@ export default {
       newItem: '',
       statesPicked: '',
       updatedListStatesItems: [],
+      description: '',
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
@@ -105,12 +116,19 @@ export default {
     },
     createAList() {
       if (this.$refs.addTitleAndColorForm.validate()) {
-        const payload = {};
-        payload.title = this.title;
-        payload.bgColor = this.color;
-        payload.itemStates = this.updatedListStatesItems.length !== 0
-          ? this.updatedListStatesItems.slice(0, -1) : this.itemStates.slice(0, -1);
-        this.$store.dispatch('createAList', payload);
+        const payload = {
+          title: this.title,
+          color: this.color,
+          stateGroup: {
+            name: this.states.map((s) => s).join(', '),
+            description: '',
+            states: this.states,
+          },
+          description: this.description,
+        };
+        // payload.itemStates = this.updatedListStatesItems.length !== 0
+        //   ? this.updatedListStatesItems.slice(0, -1) : this.itemStates.slice(0, -1);
+        this.$store.dispatch('createList', payload);
         this.$refs.addTitleAndColorForm.reset();
         this.dialog = false;
       }
@@ -140,8 +158,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['itemStates']),
+    ...mapGetters(['getGlobalPreferences']),
   },
 
 };
 </script>
+<style scoped>
+#availableListStates{
+  height: 100px;
+  overflow: auto;
+}
+</style>
