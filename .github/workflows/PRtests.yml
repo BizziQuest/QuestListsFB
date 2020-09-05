@@ -44,7 +44,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
     - run: yarn
-    - run: CI=true yarn test:unit
+    - run: CI=true yarn ci:unit
 
   end2end-tests:
 
@@ -62,4 +62,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
     - run: yarn
-    - run: CI=true yarn test:e2e --headless
+    - run: CI=true yarn ci:e2e1
