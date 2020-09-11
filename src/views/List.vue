@@ -5,17 +5,17 @@
       <li v-for="(item,index) in listItems" :key="`${item.text}${index}`">
         <list-item
           :listItem="item"
-          :states="states"
+          :states="states || globalPreferences.defaultStateGroup.states"
           @blur="saveItem"
-          :isNewItem="index === theList.listItems.length-1"
-          @update:listItem="addNewItem(index, $event)"
+          :isNewItem="index === listItems.length-1"
+          @update:text="addNewItem(index, $event)"
         />
       </li>
      </ol>
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+// import { mapGetters, mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import {
   getListItems,
@@ -65,11 +65,16 @@ export default {
     saveItem() {
       saveListItems(this.list, this.listItems);
     },
-    ensureNewItem(index, item) {
+    addNewItem(index, item) {
       const lastItemIndex = this.listItems.length - 1;
       if (index < lastItemIndex) return;
-      if (item.text.length !== 0) {
-        this.listItems.push({ title: '', state: this.states[0].text });
+      if (item.length !== 0) {
+        const lastItem = this.listItems[lastItemIndex];
+        lastItem.state.icon = this.states[0].icon;
+        this.listItems.push({
+          text: 'New Item',
+          state: { icon: 'mdi-plus', text: 'New Item' },
+        });
       }
     },
   },

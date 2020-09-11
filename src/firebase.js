@@ -55,7 +55,7 @@ async function getListItems(fbList) {
 async function saveListItems(fbList, listItems) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
   const listItemDocs = await listItemsCollection.limit(1).get();
-  // TODO: see if size is over 900Kb and create as many docs as necessary
+  // TODO: see if size is over 900Kb and create as many docs as neccessary
   const listItemJSON = JSON.parse(JSON.stringify(listItems)); // convert vue observer objects to js objects
   if (listItemDocs.empty) {
     await listItemsCollection.add({ data: listItemJSON });

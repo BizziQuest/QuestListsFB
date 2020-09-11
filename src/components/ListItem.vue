@@ -10,8 +10,8 @@
               :outlined="isActive"
               @click.prevent="cycleIcon"
               @blur="deactivate"
-              :title="states[currentStateIdx].name"
-            >{{states[currentStateIdx].icon}}</v-icon>
+              :title="states[currentStateIdx] && states[currentStateIdx].name"
+            >{{states[currentStateIdx] && states[currentStateIdx].icon}}</v-icon>
             <v-text-field
               style="margin-bottom:20px;"
               :value="listItem.title"
@@ -53,6 +53,9 @@ export default {
     isActive: false,
     currentStateIdx: 0,
   }),
+  mounted() {
+    // debugger;
+  },
   methods: {
     deactivate() {
       this.isActive = false;
