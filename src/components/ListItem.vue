@@ -10,8 +10,8 @@
               :outlined="isActive"
               @click.prevent="cycleIcon"
               @blur="deactivate"
-              :title="states[currentStateIdx] && states[currentStateIdx].name"
-            >{{states[currentStateIdx] && states[currentStateIdx].icon}}</v-icon>
+              :title="iconTitle"
+            >{{icon}}</v-icon>
             <v-text-field
               style="margin-bottom:20px;"
               :value="listItem.title"
@@ -20,7 +20,8 @@
               :outlined="isActive"
               @click.prevent="activate"
               @blur="deactivate"
-              >{{ listItem.title }}</v-text-field
+              :placeholder="placeholder"
+              >{{ listItem.isNewItem ? '' : listItem.title }}</v-text-field
             >
           </v-col>
         </v-row>
@@ -90,6 +91,16 @@ export default {
   },
   computed: {
     ...mapGetters(['itemStates']),
+    icon() {
+      if (this.isNewItem) return 'mdi-plus';
+      return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].icon;
+    },
+    iconTitle() {
+      return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].name;
+    },
+    placeholder() {
+      return this.listItem.isNewItem ? 'New Item' : '';
+    },
   },
 };
 </script>

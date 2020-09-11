@@ -52,15 +52,15 @@ export default {
     ListState,
   },
   props: {
-    stateItems: {
-      type: Array,
-      default: () => [],
+    stateGroup: {
+      type: Object,
+      default: () => ({}),
       description: 'The list of states we want to manage.',
     },
   },
   data() {
     return {
-      items: this.stateItems,
+      items: [...this.stateGroup.states, { name: 'New State', icon: 'mdi-plus' }],
       rowItems: [],
     };
   },
@@ -72,9 +72,10 @@ export default {
     },
     ensureNewState(index, state) {
       const lastStateIndex = this.items.length - 1;
+      this.items[lastStateIndex].icon = 'mdi-checkbox-blank-outline';
       if (index === lastStateIndex) {
         if (state.text.length !== 0) {
-          this.items.push({ icon: 'mdi-plus', text: 'New Item' });
+          this.items.push({ icon: 'mdi-plus', name: 'New Item' });
         }
       }
     },

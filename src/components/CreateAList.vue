@@ -63,7 +63,7 @@
                  outlined></v-text-field>
               </v-col>
             </v-row>
-            <states-editor :stateItems="getGlobalPreferences.defaultStateGroup"
+            <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup"
                            @list:updated="listUpdated"
             />
           </v-container>
@@ -116,13 +116,15 @@ export default {
     },
     createAList() {
       if (this.$refs.addTitleAndColorForm.validate()) {
+        // TODO: add an input for the name and description for this stateGroup
+        const defaultName = this.updatedListStatesItems.map((s) => s.name).join(', ');
         const payload = {
           title: this.title,
           color: this.color,
           stateGroup: {
-            name: this.states.map((s) => s).join(', '),
+            name: defaultName,
             description: '',
-            states: this.states,
+            states: this.updatedListStatesItems,
           },
           description: this.description,
         };
