@@ -105,7 +105,7 @@ export default {
       ],
       colorPickerRules: [
         (v) => !!v || 'Color is required',
-        (v) => /^#[0-9A-F]{8}$/i.test(v) || 'Color Format Must be #FFFFFF',
+        (v) => /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
       ],
     };
   },
@@ -117,15 +117,18 @@ export default {
     createAList() {
       if (this.$refs.addTitleAndColorForm.validate()) {
         // TODO: add an input for the name and description for this stateGroup
-        const defaultName = this.updatedListStatesItems.map((s) => s.name).join(', ');
+        let stateGroup = this.getGlobalPreferences.defaultStateGroup;
+        if (this.updatedListStatesItems.length > 0) {
+          stateGroup = {
+            name: this.updatedListStatesItems.map((s) => s.name).join(', '),
+            description: '',
+            states: this.updatedListStatesItems,
+          };
+        }
         const payload = {
           title: this.title,
           color: this.color,
-          stateGroup: {
-            name: defaultName,
-            description: '',
-            states: this.updatedListStatesItems,
-          },
+          stateGroup,
           description: this.description,
         };
         // payload.itemStates = this.updatedListStatesItems.length !== 0

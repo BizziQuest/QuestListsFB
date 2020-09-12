@@ -14,6 +14,7 @@
         v-for="(item,index) in items"
         :key="`${item.text}${index}${numForceRedraws}`"
         :data-index="index"
+
         :id="index"
         @drop="onDrop"
         @dragstart="startDrag"

@@ -125,7 +125,7 @@ const store = new Vuex.Store({
       // TODO: check for groups that have the current values and use that one instead.
       const stateSkeleton = state.globalPreferences.defaultStateGroup.states[0];
       // TODO: refactor this to handle actual states
-      const states = stateGroupData.states.map((stateName) => ({ ...stateSkeleton, name: stateName }));
+      const states = stateGroupData.states.map((stateBody) => ({ ...stateSkeleton, ...stateBody }));
       const payload = { ...stateGroupData, states };
       const stateGroupRef = await stateGroupsCollection.add(payload);
 

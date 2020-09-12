@@ -54,9 +54,6 @@ export default {
     isActive: false,
     currentStateIdx: 0,
   }),
-  mounted() {
-    // debugger;
-  },
   methods: {
     deactivate() {
       this.isActive = false;
