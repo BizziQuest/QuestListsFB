@@ -14,6 +14,7 @@
           <li>Next Items:</li>
           <li v-for="item in list.nextItems" :color="globalPreferences.defaultStateGroup.color" :key="item.order">
             <list-item
+              v-if="item"
               :list-item="item"
               :states="states || globalPreferences.defaultStateGroup.states"
               @click.prevent="null"

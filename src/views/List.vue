@@ -5,15 +5,17 @@
       <li v-for="(item,index) in listItems" :key="`${item.text}${index}`">
         <list-item
           :listItem="item"
-          :states="states"
+          :states="states || globalPreferences.defaultStateGroup.states"
           @blur="saveItem"
-          @update:listItem="ensureNewItem(index, $event)"
+          :isNewItem="item.isNewItem"
+          @update:text="addNewItem(index, $event)"
         />
       </li>
      </ol>
   </div>
 </template>
 <script>
+// import { mapGetters, mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import {
   getListItems,
@@ -53,21 +55,27 @@ export default {
       const states = await getListStates(list);
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
-      if (!theLastItem || theLastItem.title.length !== 0) {
-        listItems.push({ title: '', state: states[0].text });
+      if (!theLastItem || !theLastItem.isNewItem) {
+        listItems.push({ title: 'New Item', isNewItem: true });
       }
       this.list = list;
       this.listItems = listItems;
       this.states = states;
     },
     saveItem() {
-      saveListItems(this.list, this.listItems);
+      const items = this.listItems.slice(0, -1);
+      saveListItems(this.list.id, items);
     },
-    ensureNewItem(index, item) {
+    addNewItem(index, item) {
       const lastItemIndex = this.listItems.length - 1;
       if (index < lastItemIndex) return;
-      if (item.text.length !== 0) {
-        this.listItems.push({ title: '', state: this.states[0].text });
+      if (item.length !== 0) {
+        const lastItem = this.listItems[lastItemIndex];
+        lastItem.isNewItem = undefined;
+        this.listItems.push({
+          text: 'New Item',
+          isNewItem: true,
+        });
       }
     },
   },
