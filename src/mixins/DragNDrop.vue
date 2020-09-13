@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      numForceRedraws: 0, // used to redraw the rows when there is no changes
+      numForceRedraws: 0, // used to redraw the rows when there are no changes
       updatedRows: [null, null],
       $_initialY: null,
       $_rowOffset: 0,

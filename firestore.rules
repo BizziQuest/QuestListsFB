@@ -50,7 +50,7 @@ service cloud.firestore {
       // the listIitems subcolection holds all of a list's items.
       match /listItems/{listItemId} {
         allow read;
-        allow create, update: if true; // verifiedUser(); // &&
+        allow create, update: if verifiedUser();
         // TODO: make sure we validate the array items
         //   request.resource.data.title is string && // the text of the list item
         //   request.resource.data.order is number && // the order of the item in the list

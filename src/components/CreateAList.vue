@@ -131,8 +131,6 @@ export default {
           stateGroup,
           description: this.description,
         };
-        // payload.itemStates = this.updatedListStatesItems.length !== 0
-        //   ? this.updatedListStatesItems.slice(0, -1) : this.itemStates.slice(0, -1);
         this.$store.dispatch('createList', payload);
         this.$refs.addTitleAndColorForm.reset();
         this.dialog = false;

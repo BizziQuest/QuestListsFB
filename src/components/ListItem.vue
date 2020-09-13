@@ -70,20 +70,7 @@ export default {
       this.activate();
       let nextIdx = this.currentStateIdx + 1;
       if (nextIdx > this.states.length - 1) nextIdx = 0;
-
       this.currentStateIdx = nextIdx;
-
-      // const currentStateIcon = this.currentState.icon;
-      // const itemStatesLength = this.states.length - 1;
-      // let stateIconIndex = this.itemStates
-      //   .findIndex((state) => state.icon === currentStateIcon);
-      // if (stateIconIndex === itemStatesLength) {
-      //   this.listItem.state.icon = this.itemStates[stateIconIndex - itemStatesLength].icon;
-      //   stateIconIndex -= 1;
-      // } else {
-      //   this.listItem.state.icon = this.itemStates[stateIconIndex + 1].icon;
-      //   stateIconIndex += 1;
-      // }
     },
   },
   computed: {
