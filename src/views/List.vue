@@ -1,19 +1,28 @@
 <template>
   <div>
-    <h1>List</h1>
-    {{theList}}
-    <br>
-    {{listItems}}
+    <h1>{{list.title}}</h1>
     <ol style="list-style-type:none;">
-      <li v-for="(item,index) in theList.listItems" :key="`${item.text}${index}`">
-        <list-item :listItem="item" @update:text="ensureNewItem(index, $event)"/>
+      <li v-for="(item,index) in listItems" :key="`${item.text}${index}`">
+        <list-item
+          :listItem="item"
+          :states="states || globalPreferences.defaultStateGroup.states"
+          @blur="saveItem"
+          :isNewItem="item.isNewItem"
+          @update:text="addNewItem(index, $event)"
+        />
       </li>
      </ol>
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+// import { mapGetters, mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
+import {
+  getListItems,
+  getListStates,
+  listsCollection,
+  saveListItems,
+} from '../firebase';
 
 export default {
   name: 'List',
@@ -29,37 +38,54 @@ export default {
   },
   data() {
     return {
-      entry: '',
+      list: {
+        title: 'Loading...',
+      },
+      listItems: [],
+      states: [],
     };
   },
-  computed: {
-    ...mapGetters({ listGetter: 'list' }),
-    theList() {
-      const wantedList = this.listGetter(this.title);
-      const listItemsLength = wantedList.listItems.length;
-      const theLastItem = wantedList.listItems[listItemsLength - 1];
-      if (theLastItem.text.length !== 0) {
-        wantedList.listItems.push({ text: '', state: 'face' });
+  methods: {
+    async fetchList({ listId }) {
+      // ? Should we check in $state.lists for the list, or trust firebase to get it without a network call?
+      const doc = await listsCollection.doc(listId).get();
+      const list = doc.data();
+      list.id = doc.id;
+      const listItems = await getListItems(list);
+      const states = await getListStates(list);
+      const listItemsLength = listItems.length;
+      const theLastItem = listItems[listItemsLength - 1];
+      if (!theLastItem || !theLastItem.isNewItem) {
+        listItems.push({ title: 'New Item', isNewItem: true });
       }
-      return wantedList;
+      this.list = list;
+      this.listItems = listItems;
+      this.states = states;
     },
-    listItems() {
-      return this.theList.listItems;
+    saveItem() {
+      const items = this.listItems.slice(0, -1);
+      saveListItems(this.list.id, items);
+    },
+    addNewItem(index, item) {
+      const lastItemIndex = this.listItems.length - 1;
+      if (index < lastItemIndex) return;
+      if (item.length !== 0) {
+        const lastItem = this.listItems[lastItemIndex];
+        lastItem.isNewItem = undefined;
+        this.listItems.push({
+          text: 'New Item',
+          isNewItem: true,
+        });
+      }
     },
   },
-  methods: {
-    ensureNewItem(index, item) {
-      const lastItemIndex = this.theList.listItems.length - 1;
-      if (index < lastItemIndex) return;
-      if (item.text.length !== 0) {
-        this.theList.listItems.push({ text: '', state: 'face' });
-      }
-    },
+  mounted() {
+    this.fetchList({ listId: this.$route.params.listId });
   },
 };
 </script>
 <style lang='scss' scoped>
-  h1 {
-    margin-top: 20px;
-  }
+h1 {
+  margin-top: 10px;
+}
 </style>

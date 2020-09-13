@@ -8,18 +8,21 @@
               large
               class="listitem-icon"
               :outlined="isActive"
-              @click="cycleIcon"
+              @click.prevent="cycleIcon"
               @blur="deactivate"
-            >{{listItem.state}}</v-icon>
+              :title="iconTitle"
+            >{{icon}}</v-icon>
             <v-text-field
-              class="listitem-text"
-              :value="listItem.text"
-              @change="listItem.text = $event"
+              style="margin-bottom:20px;"
+              :value="listItem.title"
+              @change="listItem.title = $event"
               @input="updateText($event)"
               :outlined="isActive"
-              @click="activate"
+              @click.prevent="activate"
               @blur="deactivate"
-            >{{ listItem.text }}</v-text-field>
+              :placeholder="placeholder"
+              >{{ listItem.isNewItem ? '' : listItem.title }}</v-text-field
+            >
           </v-col>
         </v-row>
       </v-container>
@@ -35,44 +38,53 @@ export default {
     listItem: {
       type: Object,
       default: () => ({}),
-      description: 'an obj includes text and state key values',
+      description: 'List Item is an object in the form: {title, state}',
     },
-    listStates: {
+    states: {
       type: Array,
-      description: 'all the item and states',
+      default: () => [],
+      description: 'The list of states that this item should have.',
+    },
+    isNewItem: {
+      type: Boolean,
+      description: 'it is new item entry',
     },
   },
-  data() {
-    return {
-      isActive: false,
-    };
-  },
+  data: () => ({
+    isActive: false,
+    currentStateIdx: 0,
+  }),
   methods: {
     deactivate() {
       this.isActive = false;
+      this.$emit('blur', this.listItem);
     },
     activate() {
       this.isActive = true;
     },
     updateText(text) {
-      this.$emit('update:listItem', text);
+      this.$emit('update:text', text);
     },
     cycleIcon() {
+      if (this.isNewItem) return;
       this.activate();
-      const currentState = this.listItem.state;
-      const itemStatesLength = this.itemStates.length - 1;
-      let stateIndex = this.itemStates.findIndex((state) => state === currentState);
-      if (stateIndex === itemStatesLength) {
-        this.listItem.state = this.itemStates[stateIndex - itemStatesLength];
-        stateIndex -= 1;
-      } else {
-        this.listItem.state = this.itemStates[stateIndex + 1];
-        this.localIndex += 1;
-      }
+      let nextIdx = this.currentStateIdx + 1;
+      if (nextIdx > this.states.length - 1) nextIdx = 0;
+      this.currentStateIdx = nextIdx;
     },
   },
   computed: {
     ...mapGetters(['itemStates']),
+    icon() {
+      if (this.isNewItem) return 'mdi-plus';
+      return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].icon;
+    },
+    iconTitle() {
+      return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].name;
+    },
+    placeholder() {
+      return this.listItem.isNewItem ? 'New Item' : '';
+    },
   },
 };
 </script>

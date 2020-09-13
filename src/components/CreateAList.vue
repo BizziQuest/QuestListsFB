@@ -4,10 +4,10 @@
       <template v-slot:activator="{ on }">
         <v-list-item link v-on="on">
           <v-list-item-action>
-            <v-icon>add</v-icon>
+            <v-icon color="secondary">add</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title class="grey--text">create a list</v-list-item-title>
+            <v-list-item-title color="secondary">create a list</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -16,80 +16,78 @@
           <span class="headline">Create A List</span>
         </v-card-title>
         <v-card-text>
-        <v-container>
-          <v-form ref="form" @submit.prevent="">
-            <v-row>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                label="Title*"
-                :rules = "titleRules"
-                 v-model='title'
-                 required
-                 placeholder="Your Title"
-                 outlined></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                label="Color*"
-                :rules = "colorPickerRules"
-                 v-model="color"
-                 placeholder="#FFFFFF"
-                 outlined>
-                  <template v-slot:append>
-                    <v-menu>
-                      <template v-slot:activator="{ on }">
-                        <div :style="swatchStyle()" v-on="on" />
-                      </template>
-                      <v-card>
-                        <v-card-text>
-                          <v-color-picker v-model="color" flat />
-                        </v-card-text>
-                      </v-card>
-                    </v-menu>
-                  </template>
-                </v-text-field>
-              </v-col>
-            </v-row>
+          <v-container>
+            <v-form ref="addTitleAndColorForm" @submit.prevent>
+              <v-row>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field
+                    label="List Title*"
+                    :rules="titleRules"
+                    v-model="title"
+                    required
+                    placeholder="Your Title"
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="6">
+                  <v-text-field
+                    label="Color*"
+                    :rules="colorPickerRules"
+                    v-model="color"
+                    placeholder="#FFFFFF"
+                    outlined
+                  >
+                    <template v-slot:append>
+                      <v-menu>
+                        <template v-slot:activator="{ on }">
+                          <div :style="swatchStyle()" v-on="on" />
+                        </template>
+                        <v-card>
+                          <v-card-text>
+                            <v-color-picker v-model="color" flat />
+                          </v-card-text>
+                        </v-card>
+                      </v-menu>
+                    </template>
+                  </v-text-field>
+                </v-col>
+              </v-row>
             </v-form>
             <v-row>
               <v-col cols="12" sm="6" md="6">
-                <v-form ref="addStateForm">
-                  <v-text-field
-                  label="New State*"
-                  :rules = "newStateRules"
-                  :lazy-validation="true"
-                  v-model="newState"
-                  placeholder="Your Condition"
-                  outlined>
-                  </v-text-field>
-                  <v-btn v-on:click="addState" class="primary">Add</v-btn>
-                  </v-form>
-                </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <span>Availabe States</span>
-                <div id="availableListStates">
-                  <ul v-for="item in states" :key="item.state">
-                    <v-icon>{{ item }}</v-icon>
-                  </ul>
-                </div>
+                <v-text-field
+                label="Description"
+                 v-model='description'
+                 required
+                 placeholder="Describe your list purpose."
+                 outlined></v-text-field>
               </v-col>
             </v-row>
+            <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup"
+                           @list:updated="listUpdated"
+            />
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="resetTheForms">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="resetTitleAndColorForm">Close</v-btn>
           <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
         </v-card-actions>
       </v-card>
-     </v-dialog>
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
+import StatesEditor from './StatesEditor.vue';
+
 export default {
   name: 'CreateAList',
+  components: {
+    StatesEditor,
+  },
   data() {
     return {
       color: '#A0E9C9FF',
@@ -97,49 +95,51 @@ export default {
       menu: false,
       dialog: false,
       newState: '',
-      states: ['done', 'face'],
       newItem: '',
       statesPicked: '',
+      updatedListStatesItems: [],
+      description: '',
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
       ],
       colorPickerRules: [
         (v) => !!v || 'Color is required',
-        (v) => /^#[0-9A-F]{8}$/i.test(v) || 'Color Format Must be #FFFFFF',
-      ],
-      newStateRules: [
-        (v) => !!v || 'State is required',
-        (v) => (v && v.length >= 4) || 'State must be at least 4 characters',
+        (v) => /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
       ],
     };
   },
   methods: {
-    addState() {
-      if (this.$refs.addStateForm.validate()) {
-        this.states.push(this.newState);
-        this.$store.dispatch('addState', this.states);
-        this.$refs.addStateForm.reset();
-      }
+    ...mapMutations(['setItemStates']),
+    listUpdated($event) {
+      this.updatedListStatesItems = $event;
     },
     createAList() {
-      this.$refs.addStateForm.validate();
-      if (this.$refs.form.validate()) {
-        const payload = {};
-        payload.title = this.title;
-        payload.bgColor = this.color;
-        this.$store.dispatch('createAList', payload);
-        this.$refs.form.reset();
-        this.$refs.addStateForm.reset();
+      if (this.$refs.addTitleAndColorForm.validate()) {
+        // TODO: add an input for the name and description for this stateGroup
+        let stateGroup = this.getGlobalPreferences.defaultStateGroup;
+        if (this.updatedListStatesItems.length > 0) {
+          stateGroup = {
+            name: this.updatedListStatesItems.map((s) => s.name).join(', '),
+            description: '',
+            states: this.updatedListStatesItems,
+          };
+        }
+        const payload = {
+          title: this.title,
+          color: this.color,
+          stateGroup,
+          description: this.description,
+        };
+        this.$store.dispatch('createList', payload);
+        this.$refs.addTitleAndColorForm.reset();
         this.dialog = false;
       }
     },
-    resetTheForms() {
+    resetTitleAndColorForm() {
       this.dialog = false;
-      this.$refs.form.reset();
-      this.$refs.addStateForm.reset();
+      this.$refs.addTitleAndColorForm.reset();
       this.color = '#A0E9C9FF';
-      this.$store.dispatch('resetStates');
     },
     swatchStyle() {
       return {
@@ -151,19 +151,24 @@ export default {
         transition: 'border-radius 200ms ease-in-out',
       };
     },
-  },
-  computed: {
-    itemStates() {
-      return this.$store.getters.itemStates;
+    ensureNewState(index, state) {
+      const lastStateIndex = this.itemStates.length - 1;
+      if (index === lastStateIndex) {
+        if (state.length !== 0) {
+          this.itemStates.push({ icon: 'mdi-plus', text: 'New Item' });
+        }
+      }
     },
   },
+  computed: {
+    ...mapGetters(['getGlobalPreferences']),
+  },
+
 };
 </script>
-
-<style   scoped>
+<style scoped>
 #availableListStates{
-   height: 100px;
-   overflow: auto;
+  height: 100px;
+  overflow: auto;
 }
-
 </style>
