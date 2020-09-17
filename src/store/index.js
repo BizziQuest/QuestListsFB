@@ -94,10 +94,14 @@ const store = new Vuex.Store({
   },
   actions: {
     async signupUser(_, payload) {
-      try {
-        await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-      } catch (error) {
-        console.warn(error);
+      await auth.createUserWithEmailAndPassword(payload.email, payload.password);
+      if (auth.currentUser) {
+        await auth.currentUser.sendEmailVerification();
+        if (auth.currentUser.emailVerified) {
+          console.info('Email sent!');
+        } else {
+          console.warn('Email NOT sent!');
+        }
       }
     },
     // underscore is a placeholder for a variable that should be there, but is not used
@@ -141,13 +145,14 @@ const store = new Vuex.Store({
     },
     async fetchLists({ commit }, { limit = 10 } = {}) {
       const lists = [];
-      const fbLists = await listsCollection.limit(limit).get();
-      fbLists.forEach(async (doc) => {
-        const list = doc.data();
-        list.id = doc.id;
-        lists.push(list);
+      listsCollection.limit(limit).onSnapshot((fbLists) => {
+        fbLists.forEach(async (doc) => {
+          const list = doc.data();
+          list.id = doc.id;
+          lists.push(list);
+        });
+        commit('setLists', lists);
       });
-      commit('setLists', lists);
     },
     async saveProfile({ commit }, payload) {
       try {

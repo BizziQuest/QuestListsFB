@@ -33,7 +33,7 @@
   },
   "emulators": {
     "hub": {
-      "port": 4500
+      "port": 4000
     },
     "functions": {
       "port": 5001
