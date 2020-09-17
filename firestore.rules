@@ -63,7 +63,7 @@ service cloud.firestore {
     // time needed to develop new lists, especially for wiki-style lists.
     match /stateGroups/{stateGroupId} {
       allow read;
-      allow create, update: if debug(verifiedUser()) &&
+      allow create, update: if verifiedUser() && 
         request.resource.data.name is string && // the name is the name by which this state group is mentioned
         request.resource.data.description is string && // the description for this group
         request.resource.data.states.toSet().size() > 0;
