@@ -1,27 +1,30 @@
 <template>
-    <v-navigation-drawer v-model="localDrawer" app clipped color="primary">
+    <v-navigation-drawer bottom expand-on-hover v-model="localDrawer" app dark clipped>
       <v-list dense>
+        <v-app-bar-nav-icon @click="$emit('update:drawer', !drawer)">
+          <v-icon color="secondary">mdi-shield-check-outline</v-icon>
+        </v-app-bar-nav-icon>
         <template v-for="(item, i) in items">
           <v-row v-if="item.heading" :key="i" align="center">
             <v-col cols="6">
-              <v-subheader style="accent darken-4" v-if="item.heading">{{ item.heading }}</v-subheader>
+              <v-subheader v-if="item.heading">{{ item.heading }}</v-subheader>
             </v-col>
             <v-col cols="6" class="text-right">
-              <v-btn small text style="accent darken-4" >edit</v-btn>
+              <v-btn small text>edit</v-btn>
             </v-col>
           </v-row>
-          <v-divider v-else-if="item.divider" :key="i" class="my-4" style="accent lighten-2"></v-divider>
-          <v-list-item color="accent" v-else :key="i" link>
+          <v-divider v-else-if="item.divider" :key="i" class="my-4"></v-divider>
+          <v-list-item v-else :key="i" link>
             <v-list-item-action>
-              <v-icon color="secondary">{{ item.icon }}</v-icon>
+              <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title color="secondary">{{ item.text }}</v-list-item-title>
+              <v-list-item-title>{{ item.text }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </template>
         <v-list-item>
-          <CreateAList color="secondary"></CreateAList>
+          <CreateAList color="secondary--text"></CreateAList>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>

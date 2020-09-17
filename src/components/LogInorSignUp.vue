@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">
-        <v-btn class="success" color="darken-1" elevation="2" large rounded text v-on="on"> Log In / Sign up</v-btn>
+        <v-btn color="secondary" elevation="2" large rounded text v-on="on"> Log In / Sign up</v-btn>
       </template>
       <v-form ref="form">
         <v-card>
@@ -24,11 +24,11 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="success" color="darken-1" elevation="2" x-large rounded text @click="dialog = false">
+            <v-btn color="primary" elevation="2" x-large rounded text @click="dialog = false">
             Cancel</v-btn>
-            <v-btn class="success" color="darken-1"  elevation="2" x-large rounded text @click="loginOrSignUser()">
+            <v-btn color="primary"  elevation="2" x-large rounded text @click="loginOrSignUser()">
             Log In</v-btn>
-            <v-btn class="success" color="darken-1" elevation="2" x-large rounded text
+            <v-btn color="primary" elevation="2" x-large rounded text
             @click="loginOrSignUser(true)"> Sign Up</v-btn>
           </v-card-actions>
         </v-card>

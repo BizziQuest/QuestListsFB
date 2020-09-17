@@ -1,10 +1,8 @@
 <template>
-  <!-- id="keep" has no effect ? -->
-  <v-app id="app" dark color="primary" class="primary">
-    <!-- @updateDrawer="handleUpdate" -->
+  <v-app id="app" color="primary" class="primary">
     <div id="nav">
-        <top-menu-bar :drawer.sync="drawer" color="primary"></top-menu-bar>
-        <drawer-menu-bar :drawer.sync="drawer" color="primary"></drawer-menu-bar>
+        <!--<top-menu-bar :drawer.sync="drawer" color="primary"></top-menu-bar>-->
+        <drawer-menu :drawer.sync="drawer" color="primary"></drawer-menu>
     </div>
     <v-main>
       <router-view></router-view>
@@ -13,19 +11,20 @@
 </template>
 
 <script>
-import TopMenuBarVue from './components/Menus/TopMenuBar.vue';
-import DrawerMenuVue from './components/Menus/DrawerMenu.vue';
+// import TopMenuBar from './components/Menus/TopMenuBar.vue';
+import DrawerMenu from './components/Menus/DrawerMenu.vue';
 
 export default {
   name: 'App',
 
   components: {
-    'top-menu-bar': TopMenuBarVue,
-    'drawer-menu-bar': DrawerMenuVue,
+    DrawerMenu,
+    // 'top-menu-bar': TopMenuBarVue,
+    // 'drawer-menu-bar': DrawerMenuVue,
   },
   data() {
     return {
-      drawer: false,
+      drawer: true,
       items: [
         { icon: 'lightbulb_outline', text: 'Notes' },
         { icon: 'touch_app', text: 'Reminders' },
