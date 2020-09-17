@@ -4,7 +4,8 @@ import './registerServiceWorker';
 import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
-import 'roboto-fontface/css/roboto/roboto-fontface.css';
+// we can use this if we need, but the reply theme preset uses a different font
+// import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import { auth } from './firebase';
 
 Vue.config.productionTip = false;
