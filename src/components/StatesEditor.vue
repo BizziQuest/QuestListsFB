@@ -1,4 +1,4 @@
-  <template>
+<template>
   <v-container fluid>
     <span>Possible Item States:</span>
     <div
@@ -11,37 +11,35 @@
       @dragenter="mouseEnter"
     >
       <span
-        v-for="(item,index) in items"
+        v-for="(item, index) in items"
         :key="`${item.text}${index}${numForceRedraws}`"
         :data-index="index"
-
         :id="index"
         @drop="onDrop"
         @dragstart="startDrag"
         @dragend="endDrag"
         @touchstart="startTouch"
         class="item-row"
-        ref = "row"
+        ref="row"
         :data-key="`${item.text}${index}${numForceRedraws}`"
       >
-        <list-state :item="item"
-                    :draggable="index !== items.length - 1"
-                    :isDraggable="index !== items.length - 1"
-                    @update:item="ensureNewState(index, $event)"
-                    @blur="updateItem(index, $event)"
-                    :class="{
-                      changed: updatedRows.find(
-                        (e) => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
-                      endDrag: updatedRows[0] &&
-                        updatedRows[0].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
-                      startDrag: updatedRows[1] &&
-                        updatedRows[1].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
-                    }"
-                    />
+        <list-state
+          :item="item"
+          :draggable="index !== items.length - 1"
+          :isDraggable="index !== items.length - 1"
+          @update:item="ensureNewState(index, $event)"
+          @blur="updateItem(index, $event)"
+          :class="{
+            changed: updatedRows.find(e => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
+            endDrag: updatedRows[0] && updatedRows[0].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
+            startDrag: updatedRows[1] && updatedRows[1].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0
+          }"
+        />
       </span>
     </div>
   </v-container>
 </template>
+
 <script>
 import ListState from './ListState.vue';
 import DragNDrop from '../mixins/DragNDrop.vue';
@@ -61,7 +59,13 @@ export default {
   },
   data() {
     return {
-      items: [...this.stateGroup.states, { name: 'New State', icon: 'mdi-plus' }],
+      items: [
+        ...this.stateGroup.states,
+        {
+          name: 'New State',
+          icon: 'mdi-plus',
+        },
+      ],
       rowItems: [],
     };
   },
@@ -76,13 +80,17 @@ export default {
       this.items[lastStateIndex].icon = 'mdi-checkbox-blank-outline';
       if (index === lastStateIndex) {
         if (state.text.length !== 0) {
-          this.items.push({ icon: 'mdi-plus', name: 'New Item' });
+          this.items.push({
+            icon: 'mdi-plus',
+            name: 'New Item',
+          });
         }
       }
     },
   },
 };
 </script>
+
 <style lang="scss" scoped>
 #drop-zone {
   min-height: 300px;
@@ -91,26 +99,33 @@ export default {
   height: auto;
   margin: 0px;
   padding: 0;
+
   .row {
     margin: 0px;
   }
 }
+
 .hide-drag {
-  transform:translateX(-9999px);
+  transform: translateX(-9999px);
 }
+
 .start-drag {
   // opacity: 0.8;
   border: 1px dashed red;
 }
+
 .changed {
   background-color: #222;
 }
+
 .startDrag {
   border: 5px solid #00ffff;
 }
+
 .endDrag {
   border: 5px solid #00ff00;
 }
+
 .end-drag {
   opacity: 1;
   border: 1px solid blue;
