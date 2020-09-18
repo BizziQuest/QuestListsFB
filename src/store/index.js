@@ -144,8 +144,8 @@ const store = new Vuex.Store({
       commit('updateUserInfo', payload);
     },
     async fetchLists({ commit }, { limit = 10 } = {}) {
-      const lists = [];
       listsCollection.limit(limit).onSnapshot((fbLists) => {
+        const lists = [];
         fbLists.forEach(async (doc) => {
           const list = doc.data();
           list.id = doc.id;
