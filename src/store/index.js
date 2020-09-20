@@ -97,11 +97,6 @@ const store = new Vuex.Store({
       await auth.createUserWithEmailAndPassword(payload.email, payload.password);
       if (auth.currentUser) {
         await auth.currentUser.sendEmailVerification();
-        if (auth.currentUser.emailVerified) {
-          console.info('Email sent!');
-        } else {
-          console.warn('Email NOT sent!');
-        }
       }
     },
     // underscore is a placeholder for a variable that should be there, but is not used
