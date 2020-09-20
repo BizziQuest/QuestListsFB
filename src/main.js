@@ -12,9 +12,9 @@ Vue.config.productionTip = false;
 auth.onAuthStateChanged((user) => {
   if (user) {
     if (user.emailVerified) {
-      console.log('Email is verified');
+      console.log('Email is verified. Yay!');
     } else {
-      console.log('Email is not verified');
+      console.log('Email is not verified. :(');
     }
     store.dispatch('authenticationChanged', {
       id: user.uid,
