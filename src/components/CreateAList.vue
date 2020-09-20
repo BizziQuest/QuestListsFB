@@ -90,7 +90,7 @@ export default {
   },
   data() {
     return {
-      color: '#A0E9C9FF',
+      color: '#A0E9C9',
       title: '',
       menu: false,
       dialog: false,
