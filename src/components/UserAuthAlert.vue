@@ -5,7 +5,6 @@
   </v-alert>
 </template>
 <script>
-// import userAuthMixin from '../mixins/UserAuth.vue';
 import { mapState } from 'vuex';
 
 export default {
