@@ -24,6 +24,7 @@ const defaultState = {
     avatar: '',
     displayName: '',
     email: '',
+    emailVerified: false,
   },
   lists: [],
 };
@@ -65,9 +66,15 @@ const store = new Vuex.Store({
     getGlobalPreferences: (state) => state.globalPreferences,
   },
   mutations: {
-    setUser(state, payload) {
-      if (payload) {
-        state.currentUser = { ...payload };
+    setUser(state, user) {
+      if (user) {
+        state.currentUser = {
+          id: user.uid,
+          email: user.email,
+          displayName: 'New Member',
+          avatar: '/img/unknown_user.svg',
+          emailVerified: user.emailVerified,
+        };
       }
     },
     setLists(state, payload) {
@@ -97,11 +104,6 @@ const store = new Vuex.Store({
       await auth.createUserWithEmailAndPassword(payload.email, payload.password);
       if (auth.currentUser) {
         await auth.currentUser.sendEmailVerification();
-        if (auth.currentUser.emailVerified) {
-          console.info('Email sent!');
-        } else {
-          console.warn('Email NOT sent!');
-        }
       }
     },
     // underscore is a placeholder for a variable that should be there, but is not used
@@ -117,6 +119,7 @@ const store = new Vuex.Store({
     async logOut({ commit }) {
       try {
         await auth.signOut();
+        await auth.currentUser.reload();
         commit('setUser', { ...defaultState.user });
       } catch (error) {
         console.warn(error);
