@@ -17,6 +17,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
+            <user-auth-alert/>
             <v-form ref="addTitleAndColorForm" @submit.prevent>
               <v-row>
                 <v-col cols="12" sm="6" md="6">
@@ -82,17 +83,20 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
+import UserAuthAlert from './UserAuthAlert.vue';
+import userAuthMixin from '../mixins/UserAuth.vue';
 
 export default {
   name: 'CreateAList',
+  mixins: [userAuthMixin],
   components: {
     StatesEditor,
+    UserAuthAlert,
   },
   data() {
     return {
       color: '#A0E9C9',
       title: '',
-      menu: false,
       dialog: false,
       newState: '',
       newItem: '',
@@ -163,7 +167,11 @@ export default {
   computed: {
     ...mapGetters(['getGlobalPreferences']),
   },
-
+  watch: {
+    dialog() {
+      this.verifyUser();
+    },
+  },
 };
 </script>
 <style scoped>

@@ -24,6 +24,7 @@ const defaultState = {
     avatar: '',
     displayName: '',
     email: '',
+    emailVerified: false,
   },
   lists: [],
 };
@@ -65,9 +66,15 @@ const store = new Vuex.Store({
     getGlobalPreferences: (state) => state.globalPreferences,
   },
   mutations: {
-    setUser(state, payload) {
-      if (payload) {
-        state.currentUser = { ...payload };
+    setUser(state, user) {
+      if (user) {
+        state.currentUser = {
+          id: user.uid,
+          email: user.email,
+          displayName: 'New Member',
+          avatar: '/img/unknown_user.svg',
+          emailVerified: user.emailVerified,
+        };
       }
     },
     setLists(state, payload) {
@@ -112,6 +119,7 @@ const store = new Vuex.Store({
     async logOut({ commit }) {
       try {
         await auth.signOut();
+        await auth.currentUser.reload();
         commit('setUser', { ...defaultState.user });
       } catch (error) {
         console.warn(error);
