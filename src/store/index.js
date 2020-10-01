@@ -75,6 +75,7 @@ const store = new Vuex.Store({
           avatar: '/img/unknown_user.svg',
           emailVerified: user.emailVerified,
         };
+        // console.log(user);
       }
     },
     setLists(state, payload) {

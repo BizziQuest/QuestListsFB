@@ -71,6 +71,7 @@ export default {
       let nextIdx = this.currentStateIdx + 1;
       if (nextIdx > this.states.length - 1) nextIdx = 0;
       this.currentStateIdx = nextIdx;
+      this.$emit('update:icon', this.currentStateIdx);
     },
   },
   computed: {

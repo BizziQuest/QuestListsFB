@@ -9,13 +9,14 @@
           @blur="saveItem"
           :isNewItem="item.isNewItem"
           @update:text="addNewItem(index, $event)"
+          @update:icon="updateUserState(index, $event)"
         />
       </li>
      </ol>
   </div>
 </template>
 <script>
-// import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import {
   getListItems,
@@ -44,6 +45,11 @@ export default {
       listItems: [],
       states: [],
     };
+  },
+  computed: {
+    ...mapGetters([
+      'currentUser',
+    ]),
   },
   methods: {
     async fetchList({ listId }) {
@@ -77,6 +83,15 @@ export default {
           isNewItem: true,
         });
       }
+    },
+    // updateUserState(itemIndex, stateIndex) {
+    updateUserState() {
+      // const currentUserId = this.currentUser.id;
+      // QUESTION: should this be in /user/ or /userListItemStates/ ?
+      // const path = `/userListItemStates/${currentUserId}/listItems/${list.id}/states`
+      // 1. upsert (find or create) the userListItemState doc with the current user ID
+      // 2. upsert the listItem collection doc with the list id
+      // 3. create the item in the list for the doc
     },
   },
   mounted() {
