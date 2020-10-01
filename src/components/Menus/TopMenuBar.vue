@@ -9,7 +9,6 @@
     </span>
     <v-text-field
       clearable
-      dark
       hide-details
       label="Search"
       prepend-icon="search"

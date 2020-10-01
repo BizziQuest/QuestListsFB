@@ -1,82 +1,80 @@
 <template>
-  <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="600px" class="primary">
-      <template v-slot:activator="{ on }">
-        <v-list-item link v-on="on">
-          <v-list-item-action>
-            <v-icon color="secondary">add</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title color="secondary">create a list</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </template>
-      <v-card>
-        <v-card-title>
-          <span class="headline">Create A List</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="addTitleAndColorForm" @submit.prevent>
-              <v-row>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field
-                    label="List Title*"
-                    :rules="titleRules"
-                    v-model="title"
-                    required
-                    placeholder="Your Title"
-                    outlined
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  <v-text-field
-                    label="Color*"
-                    :rules="colorPickerRules"
-                    v-model="color"
-                    placeholder="#FFFFFF"
-                    outlined
-                  >
-                    <template v-slot:append>
-                      <v-menu>
-                        <template v-slot:activator="{ on }">
-                          <div :style="swatchStyle()" v-on="on" />
-                        </template>
-                        <v-card>
-                          <v-card-text>
-                            <v-color-picker v-model="color" flat />
-                          </v-card-text>
-                        </v-card>
-                      </v-menu>
-                    </template>
-                  </v-text-field>
-                </v-col>
-              </v-row>
-            </v-form>
+  <v-dialog v-model="dialog" persistent max-width="600px" class="primary">
+    <template v-slot:activator="{ on }">
+      <v-list-item link v-on="on"  :color="highlightColor" :dark="dark" :light="light" title="Create A New Quest">
+        <v-list-item-action>
+          <v-icon :color="highlightColor">add</v-icon>
+        </v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title :class="`${highlightColor}--text`">New Quest</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </template>
+    <v-card>
+      <v-card-title>
+        <span class="headline">Create A List</span>
+      </v-card-title>
+      <v-card-text>
+        <v-container>
+          <v-form ref="addTitleAndColorForm" @submit.prevent>
             <v-row>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                label="Description"
-                 v-model='description'
-                 required
-                 placeholder="Describe your list purpose."
-                 outlined></v-text-field>
+                  label="List Title*"
+                  :rules="titleRules"
+                  v-model="title"
+                  required
+                  placeholder="Your Title"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  label="Color*"
+                  :rules="colorPickerRules"
+                  v-model="listColor"
+                  placeholder="#FFFFFF"
+                  outlined
+                >
+                  <template v-slot:append>
+                    <v-menu>
+                      <template v-slot:activator="{ on }">
+                        <div :style="swatchStyle()" v-on="on" />
+                      </template>
+                      <v-card>
+                        <v-card-text>
+                          <v-color-picker v-model="listColor" flat />
+                        </v-card-text>
+                      </v-card>
+                    </v-menu>
+                  </template>
+                </v-text-field>
               </v-col>
             </v-row>
-            <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup"
-                           @list:updated="listUpdated"
-            />
-          </v-container>
-          <small>*indicates required field</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="resetTitleAndColorForm">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
+          </v-form>
+          <v-row>
+            <v-col cols="12" sm="6" md="6">
+              <v-text-field
+              label="Description"
+                v-model='description'
+                required
+                placeholder="Describe your list purpose."
+                outlined></v-text-field>
+            </v-col>
+          </v-row>
+          <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup"
+                          @list:updated="listUpdated"
+          />
+        </v-container>
+        <small>*indicates required field</small>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="blue darken-1" text @click="resetTitleAndColorForm">Close</v-btn>
+        <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -90,7 +88,7 @@ export default {
   },
   data() {
     return {
-      color: '#A0E9C9FF',
+      listColor: '#A0E9C9FF',
       title: '',
       menu: false,
       dialog: false,
@@ -109,6 +107,7 @@ export default {
       ],
     };
   },
+  props: ['highlightColor', 'dark', 'light'],
   methods: {
     ...mapMutations(['setItemStates']),
     listUpdated($event) {
@@ -127,7 +126,7 @@ export default {
         }
         const payload = {
           title: this.title,
-          color: this.color,
+          color: this.listColor,
           stateGroup,
           description: this.description,
         };
@@ -139,11 +138,11 @@ export default {
     resetTitleAndColorForm() {
       this.dialog = false;
       this.$refs.addTitleAndColorForm.reset();
-      this.color = '#A0E9C9FF';
+      this.listColor = '#A0E9C9';
     },
     swatchStyle() {
       return {
-        backgroundColor: this.color,
+        backgroundColor: this.listColor,
         cursor: 'pointer',
         height: '30px',
         width: '30px',
@@ -163,6 +162,24 @@ export default {
   computed: {
     ...mapGetters(['getGlobalPreferences']),
   },
+  mounted() {
+    if (this.$route.query?.newQuest) {
+      console.log('SHOW LOGIN');
+      this.dialog = true;
+    }
+  },
+  watch: {
+    dialog(val) {
+      const newQuery = { ...this.$route.query };
+      if (Object.prototype.hasOwnProperty.call(newQuery, 'newQuest') && newQuery.newQuest === val) return;
+      if (!val) {
+        delete newQuery.newQuest;
+      } else {
+        newQuery.newQuest = true;
+      }
+      this.$router.push({ query: newQuery });
+    },
+  },
 
 };
 </script>
@@ -171,4 +188,11 @@ export default {
   height: 100px;
   overflow: auto;
 }
+.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+  color: #ffffff !important;
+}
+.theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+  color: #ffffff !important;
+}
+
 </style>
