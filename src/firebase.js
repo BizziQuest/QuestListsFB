@@ -37,7 +37,6 @@ const globalPreferences = db.collection('globalPreferences');
 const listsCollection = db.collection('lists');
 const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
-const userStatesCollection = db.collection('userListItemStates');
 
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
@@ -64,6 +63,18 @@ async function saveListItems(fbListId, listItems) {
     listItemDocs.forEach(async (doc) => { docID = doc.id; });
     await listItemsCollection.doc(docID).set({ data: listItemJSON });
   }
+}
+
+async function getUserItemStates(fbUserId, listId) {
+  const userListsCollection = db.collection(`users/${fbUserId}/lists`);
+  const states = await userListsCollection.get(listId);
+  return states;
+}
+
+async function setUserItemStates(fbUserId, listId, newStates) {
+  const userListsCollection = db.collection(`users/${fbUserId}/lists`);
+  const states = await userListsCollection.set(listId, newStates);
+  return states;
 }
 
 /** Returns all items in a collection as an ordered list.
@@ -99,9 +110,10 @@ export {
   // listItemsCollection,
   stateGroupsCollection,
   usersCollection,
-  userStatesCollection,
   getListItems,
   getListStates,
+  getUserItemStates,
   getOrderedCollectionAsList,
   saveListItems,
+  setUserItemStates,
 };

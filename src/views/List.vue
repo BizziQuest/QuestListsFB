@@ -16,13 +16,17 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
+
 import {
   getListItems,
+  getUserItemStates,
   getListStates,
   listsCollection,
   saveListItems,
+  setUserItemStates,
+  auth,
 } from '../firebase';
 
 export default {
@@ -44,16 +48,22 @@ export default {
       },
       listItems: [],
       states: [],
+      userStates: [],
     };
   },
   computed: {
-    ...mapGetters([
-      'currentUser',
-    ]),
+    // ...mapGetter(['getCurrentUser']),
+    ...mapState({
+      currentUser(state) {
+        console.info('Current User @getCurrentUser: ', state.currentUser, auth);
+        this.userStates = getUserItemStates(auth.currentUser.uid, this.list.id);
+      },
+    }),
   },
   methods: {
     async fetchList({ listId }) {
       // ? Should we check in $state.lists for the list, or trust firebase to get it without a network call?
+      console.info('Current User @fetchList: ', this.getCurrentUser, auth.currentUser);
       const doc = await listsCollection.doc(listId).get();
       const list = doc.data();
       list.id = doc.id;
@@ -84,18 +94,14 @@ export default {
         });
       }
     },
-    // updateUserState(itemIndex, stateIndex) {
-    updateUserState() {
-      // const currentUserId = this.currentUser.id;
-      // QUESTION: should this be in /user/ or /userListItemStates/ ?
-      // const path = `/userListItemStates/${currentUserId}/listItems/${list.id}/states`
-      // 1. upsert (find or create) the userListItemState doc with the current user ID
-      // 2. upsert the listItem collection doc with the list id
-      // 3. create the item in the list for the doc
+    updateUserState(listItemIndex, iconIndex) {
+      this.userStates[listItemIndex] = iconIndex;
+      setUserItemStates(this.getCurrentUser.id, this.list.id, this.userStates);
     },
   },
   mounted() {
     this.fetchList({ listId: this.$route.params.listId });
+    console.info('Current User @mounted: ', this.getCurrentUser, auth.currentUser);
   },
 };
 </script>

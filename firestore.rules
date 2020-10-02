@@ -9,7 +9,7 @@ service cloud.firestore {
     function verifiedUser() {
       return debug(request.auth) != null &&
              debug(request.auth.uid) != null &&
-             debug(request.auth.token.email_verified);
+             debug(debug(request.auth).token['email_verified']);
     }
 
     // this collection stores all the global defaults for the app.
@@ -50,7 +50,7 @@ service cloud.firestore {
       // the listIitems subcolection holds all of a list's items.
       match /listItems/{listItemId} {
         allow read;
-        allow create, update: if verifiedUser();
+        allow create, update: if debug(verifiedUser());
         // TODO: make sure we validate the array items
         //   request.resource.data.title is string && // the text of the list item
         //   request.resource.data.order is number && // the order of the item in the list
