@@ -132,7 +132,6 @@ const store = new Vuex.Store({
     async logOut({ commit }) {
       try {
         await auth.signOut();
-        await auth.currentUser.reload();
         commit('setUser', { ...defaultState.user });
       } catch (error) {
         console.warn(error);
