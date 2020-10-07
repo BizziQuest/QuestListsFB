@@ -39,6 +39,9 @@ const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
 const userStatesCollection = db.collection('userListItemStates');
 
+// firebase oAuth login
+const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
+
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
   let listItems = [];
@@ -104,4 +107,6 @@ export {
   getListStates,
   getOrderedCollectionAsList,
   saveListItems,
+  // oAuthloginProvider
+  googleOAuthLogin,
 };

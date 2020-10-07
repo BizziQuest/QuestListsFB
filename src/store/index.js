@@ -15,6 +15,7 @@ import {
   globalPreferences,
   listsCollection,
   stateGroupsCollection,
+  googleOAuthLogin,
 } from '../firebase';
 
 Vue.use(Vuex);
@@ -111,6 +112,18 @@ const store = new Vuex.Store({
     async loginUser(_, { email = '', password = '' } = {}) {
       try {
         await auth.signInWithEmailAndPassword(email, password);
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+
+    async googleSigninoAuth() {
+      try {
+        const result = await auth.signInWithPopup(googleOAuthLogin);
+        const token = result.credential.accessToken;
+        const { user } = result;
+        console.log(token);
+        console.log(user);
       } catch (error) {
         console.warn(error);
       }
