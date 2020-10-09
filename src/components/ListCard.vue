@@ -28,7 +28,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { getListStates } from '../firebase';
+import { getListPossibleStates } from '../firebase';
 import ListItem from './ListItem.vue';
 
 export default {
@@ -56,7 +56,7 @@ export default {
     ...mapState(['globalPreferences']),
   },
   async mounted() {
-    this.states = await getListStates(this.list);
+    this.states = await getListPossibleStates(this.list);
   },
 };
 </script>

@@ -1,10 +1,12 @@
 <template>
   <div>
     <h1>{{list.title}}</h1>
+    <div v-if="currentUser != null">Loading User Information</div>
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in listItems" :key="`${item.text}${index}`">
         <list-item
           :listItem="item"
+          :currentState="'whatever'"
           :states="states || globalPreferences.defaultStateGroup.states"
           @blur="saveItem"
           :isNewItem="item.isNewItem"
@@ -22,7 +24,7 @@ import ListItem from '@/components/ListItem.vue';
 import {
   getListItems,
   getUserItemStates,
-  getListStates,
+  getListPossibleStates,
   listsCollection,
   saveListItems,
   setUserItemStates,
@@ -55,20 +57,24 @@ export default {
     // ...mapGetter(['getCurrentUser']),
     ...mapState({
       currentUser(state) {
+        if (!auth.currentUser) return null;
         console.info('Current User @getCurrentUser: ', state.currentUser, auth);
         this.userStates = getUserItemStates(auth.currentUser.uid, this.list.id);
+        return state.currentUser;
       },
     }),
   },
   methods: {
     async fetchList({ listId }) {
       // ? Should we check in $state.lists for the list, or trust firebase to get it without a network call?
-      console.info('Current User @fetchList: ', this.getCurrentUser, auth.currentUser);
+      console.info('Current User @fetchList: ', this.currentUser, auth.currentUser);
       const doc = await listsCollection.doc(listId).get();
       const list = doc.data();
       list.id = doc.id;
       const listItems = await getListItems(list);
-      const states = await getListStates(list);
+      const states = await getListPossibleStates(list);
+      // get all user states
+      this.userStates = getUserItemStates(list.id);
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
       if (!theLastItem || !theLastItem.isNewItem) {
@@ -94,14 +100,15 @@ export default {
         });
       }
     },
-    updateUserState(listItemIndex, iconIndex) {
+    async updateUserState(listItemIndex, iconIndex) {
       this.userStates[listItemIndex] = iconIndex;
-      setUserItemStates(this.getCurrentUser.id, this.list.id, this.userStates);
+      await setUserItemStates(this.list.id, this.userStates);
     },
   },
   mounted() {
     this.fetchList({ listId: this.$route.params.listId });
-    console.info('Current User @mounted: ', this.getCurrentUser, auth.currentUser);
+    // get all the user states and set them
+    // console.info('Current User @mounted: ', this.currentUser, auth.currentUser);
   },
 };
 </script>

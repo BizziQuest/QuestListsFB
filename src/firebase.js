@@ -65,15 +65,15 @@ async function saveListItems(fbListId, listItems) {
   }
 }
 
-async function getUserItemStates(fbUserId, listId) {
-  const userListsCollection = db.collection(`users/${fbUserId}/lists`);
+async function getUserItemStates(listId) {
+  const userListsCollection = db.collection(`users/${auth.currentUser.uid}/lists`);
   const states = await userListsCollection.get(listId);
   return states;
 }
 
-async function setUserItemStates(fbUserId, listId, newStates) {
-  const userListsCollection = db.collection(`users/${fbUserId}/lists`);
-  const states = await userListsCollection.set(listId, newStates);
+async function setUserItemStates(listId, newStates) {
+  const userListsStatesDoc = db.collection(`users/${auth.currentUser.uid}/lists`).doc(listId);
+  const states = await userListsStatesDoc.set({ states: newStates });
   return states;
 }
 
@@ -92,7 +92,7 @@ async function getOrderedCollectionAsList(collectionPath) {
   return list.sort((a, b) => a.order < b.order);
 }
 
-async function getListStates(fbList) {
+async function getListPossibleStates(fbList) {
   const fbStatesDoc = await fbList.stateGroup.get();
   if (!fbStatesDoc) return [];
   const statesDoc = fbStatesDoc.data();
@@ -111,7 +111,7 @@ export {
   stateGroupsCollection,
   usersCollection,
   getListItems,
-  getListStates,
+  getListPossibleStates,
   getUserItemStates,
   getOrderedCollectionAsList,
   saveListItems,
