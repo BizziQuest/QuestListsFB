@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1>{{list.title}}</h1>
-    <div v-if="currentUser != null">Loading User Information</div>
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in listItems" :key="`${item.text}${index}`">
         <list-item
@@ -20,6 +19,7 @@
 <script>
 import { mapState } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   getListItems,
@@ -27,7 +27,7 @@ import {
   getListPossibleStates,
   listsCollection,
   saveListItems,
-  setUserItemStates,
+  // setUserItemStates,
   auth,
 } from '../firebase';
 
@@ -78,7 +78,7 @@ export default {
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
       if (!theLastItem || !theLastItem.isNewItem) {
-        listItems.push({ title: 'New Item', isNewItem: true });
+        listItems.push({ title: 'New Item', isNewItem: true, id: uuidv4() });
       }
       this.list = list;
       this.listItems = listItems;
@@ -95,14 +95,21 @@ export default {
         const lastItem = this.listItems[lastItemIndex];
         lastItem.isNewItem = undefined;
         this.listItems.push({
-          text: 'New Item',
+          id: uuidv4(),
           isNewItem: true,
         });
       }
     },
     async updateUserState(listItemIndex, iconIndex) {
+      // TODO: we need to pass the list item ID instead of the index to  this function
+      // this.userStates is a DocumentSnapshot
+
       this.userStates[listItemIndex] = iconIndex;
-      await setUserItemStates(this.list.id, this.userStates);
+
+      // this.userStates.save();
+      const userStates = await this.userStates;
+      console.log(typeof userStates, userStates.get());
+      // await setUserItemStates(this.list.id, userStates);
     },
   },
   mounted() {
