@@ -124,6 +124,10 @@ const store = new Vuex.Store({
         const { user } = result;
         console.log(token);
         console.log(user);
+        console.log(auth.currentUser);
+        if (auth.currentUser) {
+          await auth.currentUser.sendEmailVerification();
+        }
       } catch (error) {
         console.warn(error);
       }
