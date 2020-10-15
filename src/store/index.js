@@ -16,6 +16,7 @@ import {
   listsCollection,
   stateGroupsCollection,
   googleOAuthLogin,
+  facebookOAuthLogin,
 } from '../firebase';
 
 Vue.use(Vuex);
@@ -120,6 +121,17 @@ const store = new Vuex.Store({
     async googleSigninoAuth() {
       try {
         await auth.signInWithPopup(googleOAuthLogin);
+        if (auth.currentUser) {
+          await auth.currentUser.sendEmailVerification();
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+
+    async faceBookSigninoAuth() {
+      try {
+        await auth.signInWithPopup(facebookOAuthLogin);
         if (auth.currentUser) {
           await auth.currentUser.sendEmailVerification();
         }

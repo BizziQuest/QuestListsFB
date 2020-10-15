@@ -41,6 +41,7 @@ const userStatesCollection = db.collection('userListItemStates');
 
 // firebase oAuth login
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
+const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
@@ -109,4 +110,5 @@ export {
   saveListItems,
   // oAuthloginProvider
   googleOAuthLogin,
+  facebookOAuthLogin,
 };
