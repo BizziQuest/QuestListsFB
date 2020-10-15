@@ -49,6 +49,11 @@ export default {
       type: Boolean,
       description: 'it is new item entry',
     },
+    currentState: {
+      type: Number,
+      default: 0,
+      description: 'the current state of the item',
+    },
   },
   data: () => ({
     isActive: false,
@@ -86,6 +91,10 @@ export default {
     placeholder() {
       return this.listItem.isNewItem ? 'New Item' : '';
     },
+  },
+  mounted() {
+    console.log('Setting state', this.currentState);
+    this.currentStateIdx = this.currentState;
   },
 };
 </script>

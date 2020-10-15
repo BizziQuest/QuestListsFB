@@ -66,14 +66,22 @@ async function saveListItems(fbListId, listItems) {
 }
 
 async function getUserItemStates(listId) {
-  const userListsDoc = db.collection(`users/${auth.currentUser.uid}/lists`).doc(listId);
-  const states = await userListsDoc.get();
+  const userListsDoc = await db.collection('users')
+    .doc(auth.currentUser.uid).collection('lists').doc(listId)
+    .get();
+  console.log(listId, userListsDoc, userListsDoc.exists);
+  if (!userListsDoc.exists) return {};
+  const states = await userListsDoc.get('states');
   return states;
 }
 
 async function setUserItemStates(listId, newStates) {
-  const userListsStatesDoc = db.collection('users').doc(auth.currentUser.uid).collection('lists').doc(listId);
-  console.log(userListsStatesDoc);
+  const userDoc = db.collection('users').doc(auth.currentUser.uid);
+  if (!userDoc.exist) {
+    // create empty document so we can create a subcollection inside it
+    await userDoc.set({});
+  }
+  const userListsStatesDoc = userDoc.collection('lists').doc(listId);
   const states = await userListsStatesDoc.set({ states: newStates });
   return states;
 }

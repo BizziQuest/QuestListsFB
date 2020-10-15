@@ -5,12 +5,12 @@
       <li v-for="(item,index) in listItems" :key="`${item.text}${index}`">
         <list-item
           :listItem="item"
-          :currentState="'whatever'"
+          :currentState="userStates[item.id]"
           :states="states || globalPreferences.defaultStateGroup.states"
           @blur="saveItem"
           :isNewItem="item.isNewItem"
           @update:text="addNewItem(index, $event)"
-          @update:icon="updateUserState(index, $event)"
+          @update:icon="updateUserState(item.id, $event)"
         />
       </li>
      </ol>
@@ -27,7 +27,7 @@ import {
   getListPossibleStates,
   listsCollection,
   saveListItems,
-  // setUserItemStates,
+  setUserItemStates,
   auth,
 } from '../firebase';
 
@@ -50,7 +50,7 @@ export default {
       },
       listItems: [],
       states: [],
-      userStates: [],
+      userStates: {},
     };
   },
   computed: {
@@ -67,14 +67,14 @@ export default {
   methods: {
     async fetchList({ listId }) {
       // ? Should we check in $state.lists for the list, or trust firebase to get it without a network call?
-      console.info('Current User @fetchList: ', this.currentUser, auth.currentUser);
       const doc = await listsCollection.doc(listId).get();
       const list = doc.data();
       list.id = doc.id;
       const listItems = await getListItems(list);
       const states = await getListPossibleStates(list);
       // get all user states
-      this.userStates = getUserItemStates(list.id);
+      this.userStates = await getUserItemStates(list.id);
+      console.log('StATES:', this.userStates);
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
       if (!theLastItem || !theLastItem.isNewItem) {
@@ -100,16 +100,15 @@ export default {
         });
       }
     },
-    async updateUserState(listItemIndex, iconIndex) {
-      // TODO: we need to pass the list item ID instead of the index to  this function
-      // this.userStates is a DocumentSnapshot
-
-      this.userStates[listItemIndex] = iconIndex;
-
-      // this.userStates.save();
-      const userStates = await this.userStates;
-      console.log(typeof userStates, userStates.get());
-      // await setUserItemStates(this.list.id, userStates);
+    async updateUserState(listItemId, iconIndex) {
+      // XXX: we can use analytics to keep track of what the user has done, so
+      //      we should remove the deletion logic here.
+      if (iconIndex === 0) {
+        delete this.userStates[listItemId];
+      } else {
+        this.userStates[listItemId] = iconIndex;
+      }
+      await setUserItemStates(this.list.id, this.userStates);
     },
   },
   mounted() {
