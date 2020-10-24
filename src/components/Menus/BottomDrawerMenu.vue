@@ -1,71 +1,29 @@
 <template>
-    <v-navigation-drawer
-      :bottom="isMobile"
-      :floating="isMobile"
-      :expand-on-hover="!$vuetify.breakpoint.lgAndUp"
-      :app="!isMobile"
-      :permanent="!isMobile"
-      v-model="showDrawer"
-      :fixed="isMobile"
+    <v-bottom-navigation
+      absolute
+      app
+      :input-value="isMobile"
+      hide-on-scroll
       :dark="!isDark"
       :light="isDark"
       >
-      <v-list dense nav>
+        <v-btn
+          :color="menuHighlightColor"
+          icon
+          title="View App Menu"
+          to="/"
+          @click="$emit('update:drawer', !drawer)"
+        >
+          <v-icon>mdi-shield-check-outline</v-icon>
+        </v-btn>
         <user-menu-item :dark="!isDark" :light="isDark"/>
-
-        <v-list-item link :color="menuHighlightColor" title="View All QuestLists" to="/">
-          <v-list-item-action>
-            <v-icon>mdi-shield-check-outline</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>QuestLists</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
         <CreateAList
           :dark="!isDark"
           :light="isDark"
           :showDialog="showCreateList"
-          :highlightColor="menuHighlightColor"/>
-
-        <v-list-item link title="Look for a particular quest" to="/search">
-          <v-list-item-action>
-            <v-icon>mdi-magnify</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Search</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item>
-            <v-divider class="my-4"></v-divider>
-            <v-subheader>Favorite Quests</v-subheader>
-        </v-list-item>
-
-        <v-list-item v-for="item in favoriteQuests" :key="item.id" link :title="item.name" :to="`/lists/${item.id}`">
-          <v-list-item-action>
-            <v-icon>{{item.icon}}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>{{item.name}}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item>
-            <v-divider class="my-4"></v-divider>
-            <v-subheader></v-subheader>
-        </v-list-item>
-
-        <v-list-item link @click="isDark = !isDark">
-          <v-list-item-action>
-            <v-icon>{{isDark ? 'mdi-brightness-4' : 'mdi-brightness-7'}}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Turn Dark Mode {{isDark ? 'Off' : 'On'}}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+          :highlightColor="menuHighlightColor"
+          fab/>
+    </v-bottom-navigation>
 </template>
 
 <script>
@@ -74,17 +32,8 @@ import { auth } from '../../firebase';
 import UserMenuItem from './UserMenuItem.vue';
 
 export default {
-  name: 'DrawerMenu',
-  props: {
-    drawer: {
-      type: Boolean,
-      default: false,
-    },
-    bottom: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  name: 'BottomDrawerMenu',
+  props: ['drawer'],
   components: {
     CreateAList,
     UserMenuItem,
