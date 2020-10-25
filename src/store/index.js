@@ -124,7 +124,7 @@ const store = new Vuex.Store({
     async googleSigninoAuth() {
       try {
         const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
-        if (googleInfo.additionalUserInfo.isNewUser) {
+        if (googleInfo.additionalUserInfo.isNewUser()) {
           if (auth.currentUser) {
             await auth.currentUser.sendEmailVerification();
           }
