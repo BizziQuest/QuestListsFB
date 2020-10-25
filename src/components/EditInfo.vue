@@ -88,6 +88,30 @@ export default {
       };
       this.$store.dispatch('saveProfile', userInfo);
     },
+    cancelForm() {
+      const {
+        displayName,
+        email,
+        avatar,
+        id,
+      } = this.$store.state.currentUser;
+      if (id) {
+        this.userId = id;
+        this.displayName = displayName || this.displayName;
+        this.email = email;
+        this.avatar = avatar || this.avatar;
+        this.useGravatar = false;
+      }
+    },
+    useOrNotUseGravatar(event) {
+      console.log(event);
+      if (this.useGravatar) {
+        console.log(this.useGravatar);
+        this.avatar = `https://www.gravatar.com/avatar/${md5(this.email)}`;
+      } else {
+        this.avatar = '/img/unknown_user.svg';
+      }
+    },
   },
 };
 </script>
