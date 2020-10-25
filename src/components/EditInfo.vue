@@ -97,13 +97,15 @@ export default {
           displayName,
           email,
           avatar,
-          id,
+          uid,
+          useGravatar,
         } = state.currentUser;
-        if (id) {
-          this.userId = id;
+        if (uid) {
+          this.userId = uid;
           this.displayName = displayName || this.displayName;
           this.email = email;
           this.avatar = avatar || this.avatar;
+          this.useGravatar = useGravatar || false;
         }
         return state.currentUser;
       },
@@ -112,10 +114,11 @@ export default {
   methods: {
     saveForm() {
       const userInfo = {
-        id: this.currentUser.id,
+        uid: this.currentUser.uid,
         email: this.email,
         displayName: this.displayName || 'New Member',
         avatar: this.avatar || '/img/unknown_user.svg',
+        useGravatar: this.useGravatar || false,
       };
       this.$store.dispatch('saveProfile', userInfo);
     },
@@ -124,10 +127,10 @@ export default {
         displayName,
         email,
         avatar,
-        id,
+        uid,
       } = this.$store.state.currentUser;
-      if (id) {
-        this.userId = id;
+      if (uid) {
+        this.userId = uid;
         this.displayName = displayName || this.displayName;
         this.email = email;
         this.avatar = avatar || this.avatar;

@@ -27,6 +27,8 @@ const defaultState = {
     displayName: '',
     email: '',
     emailVerified: false,
+    uid: undefined,
+    useGravatar: false,
   },
   lists: [],
 };
@@ -71,11 +73,12 @@ const store = new Vuex.Store({
     setUser(state, user) {
       if (user) {
         state.currentUser = {
-          id: user.uid,
+          uid: user.uid,
           email: user.email,
-          displayName: 'New Member',
-          avatar: '/img/unknown_user.svg',
+          displayName: user.displayName || 'New Member',
+          avatar: user.avatar || '/img/unknown_user.svg',
           emailVerified: user.emailVerified,
+          useGravatar: user.useGravatar,
         };
       }
     },
@@ -186,6 +189,8 @@ const store = new Vuex.Store({
           displayName: payload.displayName,
           photoURL: payload.avatar,
         });
+        // TODO: write the rest of payload to the DB.
+        console.log('result of save profile', payload, auth.currentUser);
         commit('setUser', payload);
       } catch (error) {
         console.warn('saveProfile', error);
