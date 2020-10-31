@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     goToEditInfo() {
-      this.$router.push('EditInfo');
+      this.$router.push('/EditInfo');
     },
   },
 };
