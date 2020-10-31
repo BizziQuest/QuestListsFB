@@ -71,16 +71,14 @@ const store = new Vuex.Store({
   },
   mutations: {
     setUser(state, user) {
-      if (user) {
-        state.currentUser = {
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName || 'New Member',
-          avatar: user.avatar || '/img/unknown_user.svg',
-          emailVerified: user.emailVerified,
-          useGravatar: user.useGravatar,
-        };
-      }
+      state.currentUser = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || 'New Member',
+        avatar: user.avatar || '/img/unknown_user.svg',
+        emailVerified: user.emailVerified,
+        useGravatar: user.useGravatar,
+      };
     },
     setLists(state, payload) {
       if (payload) {
@@ -122,15 +120,11 @@ const store = new Vuex.Store({
     },
 
     async googleSigninoAuth() {
-      try {
-        const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
-        if (googleInfo.additionalUserInfo.isNewUser()) {
-          if (auth.currentUser) {
-            await auth.currentUser.sendEmailVerification();
-          }
+      const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
+      if (googleInfo.additionalUserInfo.isNewUser) {
+        if (auth.currentUser) {
+          await auth.currentUser.sendEmailVerification();
         }
-      } catch (error) {
-        console.warn(error);
       }
     },
 

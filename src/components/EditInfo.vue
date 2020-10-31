@@ -84,15 +84,8 @@ export default {
   computed: {
     ...mapState({
       currentUser(state) {
-        // this needs to be here due to the async nature of firebase user retrieval
-        if (!state.currentUser) {
-          this.userId = null;
-          this.displayName = null;
-          this.avatar = null;
-          this.email = null;
-          this.useGravatar = false;
-          return {};
-        }
+        if (!state.currentUser
+            || !Object.prototype.hasOwnProperty.call(state.currentUser, 'uid')) return {};
         const {
           displayName,
           email,
@@ -100,13 +93,11 @@ export default {
           uid,
           useGravatar,
         } = state.currentUser;
-        if (uid) {
-          this.userId = uid;
-          this.displayName = displayName || this.displayName;
-          this.email = email;
-          this.avatar = avatar || this.avatar;
-          this.useGravatar = useGravatar || false;
-        }
+        this.userId = uid;
+        this.displayName = displayName;
+        this.email = email;
+        this.avatar = avatar;
+        this.useGravatar = useGravatar || false;
         return state.currentUser;
       },
     }),
