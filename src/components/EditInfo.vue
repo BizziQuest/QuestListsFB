@@ -23,6 +23,7 @@
               <v-text-field
                 v-model="avatar"
                 clearable
+                @click:clear="unCheckAvatar()"
                 label="Avatar" color="secondary"></v-text-field>
             </v-row>
             <v-row>
@@ -77,6 +78,7 @@ export default {
       userId: null,
       displayName: null,
       avatar: null,
+      $_tempAvatar: null,
       email: null,
       useGravatar: false,
     };
@@ -128,14 +130,17 @@ export default {
         this.useGravatar = false;
       }
     },
-    useOrNotUseGravatar(event) {
-      console.log(event);
+    useOrNotUseGravatar() {
       if (this.useGravatar) {
-        console.log(this.useGravatar);
+        this.$_tempAvatar = this.avatar;
         this.avatar = `https://www.gravatar.com/avatar/${md5(this.email)}`;
       } else {
-        this.avatar = '/img/unknown_user.svg';
+        // this.avatar = '/img/unknown_user.svg';
+        this.avatar = this.$_tempAvatar;
       }
+    },
+    unCheckAvatar() {
+      this.useGravatar = false;
     },
   },
 };
