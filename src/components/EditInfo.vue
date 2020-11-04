@@ -3,7 +3,7 @@
     <v-card class="mx-auto mt-10" max-width="500" raised shaped>
       <v-card-text>
         <v-avatar class="d-flex justify-center align-center">
-          <img :src="avatar"/>
+          <img :src="avatarPreview"/>
         </v-avatar>
         <h1 class="d-flex justify-center align-center mt-10">Edit Info</h1>
         <h4 class="d-flex justify-center align-center mt-10">{{currentUser.email}}</h4>
@@ -23,15 +23,19 @@
               <v-text-field
                 v-model="avatar"
                 clearable
-                @click:clear="unCheckAvatar()"
-                label="Avatar" color="secondary"></v-text-field>
+                :disabled="useGravatar"
+                label="Customized Avatar" color="secondary"
+                @input="updateAvatarPreview"
+                @click:clear="updateAvatarPreview"></v-text-field>
             </v-row>
             <v-row>
               <v-checkbox
                 v-model="useGravatar"
                 label="Use Gravatar"
                 color="secondary"
-                @click= "useOrNotUseGravatar"></v-checkbox>
+                @click="updateAvatarPreview"
+               ></v-checkbox>
+               <label class="pt-5 pl-2">(<a href="https://gravatar.com">sign up</a>)</label>
             </v-row>
             <v-row>
               <v-col cols="12" md="12">
@@ -81,6 +85,7 @@ export default {
       $_tempAvatar: null,
       email: null,
       useGravatar: false,
+      avatarPreview: null,
     };
   },
   computed: {
@@ -99,6 +104,7 @@ export default {
         this.displayName = displayName;
         this.email = email;
         this.avatar = avatar;
+        this.avatarPreview = avatar;
         this.useGravatar = useGravatar || false;
         return state.currentUser;
       },
@@ -130,17 +136,14 @@ export default {
         this.useGravatar = false;
       }
     },
-    useOrNotUseGravatar() {
+    updateAvatarPreview() {
       if (this.useGravatar) {
-        this.$_tempAvatar = this.avatar;
-        this.avatar = `https://www.gravatar.com/avatar/${md5(this.email)}`;
+        this.avatarPreview = `https://www.gravatar.com/avatar/${md5(this.email)}`;
+        console.log('if', this.avatar);
       } else {
-        // this.avatar = '/img/unknown_user.svg';
-        this.avatar = this.$_tempAvatar;
+        this.avatarPreview = this.avatar;
+        console.log('else', this.avatar);
       }
-    },
-    unCheckAvatar() {
-      this.useGravatar = false;
     },
   },
 };
