@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/analytics';
+import slugify from 'slugify';
 
 require('dotenv').config();
 
@@ -45,6 +46,7 @@ const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
+  // debugger;
   let listItems = [];
   const items = await listItemsCollection.get();
   items.forEach(async (doc) => {
@@ -92,6 +94,18 @@ async function getListStates(fbList) {
   return statesDoc.states.sort((state) => state.order);
 }
 
+async function ensureSlugUniqueness(title) {
+  debugger;
+  const allListsWithTitle = await listsCollection.where('title', '==', title);
+  const lists = await allListsWithTitle.get();
+  if (lists.size < 2) return slugify(title);
+  const newSlug = slugify(`${title}-${lists.size}`);
+
+  // if slug already exists, check for last created and get the last id
+  console.log(allListsWithTitle, newSlug);
+  return newSlug;
+}
+
 export {
   fbApp,
   fbAnalytics,
@@ -111,4 +125,5 @@ export {
   // oAuthloginProvider
   googleOAuthLogin,
   facebookOAuthLogin,
+  ensureSlugUniqueness,
 };
