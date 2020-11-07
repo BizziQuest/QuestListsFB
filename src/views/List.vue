@@ -50,21 +50,16 @@ export default {
   methods: {
     // async fetchList({ listId }) {
     async fetchList({ slug }) {
-      // ? Should we check in $state.lists for the list, or trust firebase to get it without a network call?
-      // const doc = await listsCollection.doc(listId).get();
       const doc = await listsCollection.where('slug', '==', slug);
-      console.log('doc', doc);
       const result = await doc.get();
-      console.log('result', result);
       let foundedList;
       // TODO: ensure we have only one slug. We should warn otherwise.
       // we are assuming there is only one slug that matches this value.
       // this may break under certain circumstances
+      // is not done?
       result.forEach((list) => {
-        console.log('here', list.id, typeof result);
         foundedList = { id: list.id, ...list.data() };
       });
-      console.log('list', foundedList);
       const listItems = await getListItems(foundedList);
       const states = await getListStates(foundedList);
       const listItemsLength = listItems.length;

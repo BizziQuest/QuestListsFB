@@ -82,7 +82,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import { firestore } from 'firebase';
+// import { firestore } from 'firebase'; using TimeStampe
 import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
@@ -140,8 +140,6 @@ export default {
           createdAt: Date.now(), // firestore.Timestamp(),
           createdBy: auth.currentUser.uid,
         };
-        console.log(firestore.Timestamp());
-        debugger;
         this.$store.dispatch('createList', payload);
         this.$refs.addTitleAndColorForm.reset();
         this.dialog = false;

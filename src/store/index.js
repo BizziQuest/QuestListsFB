@@ -186,7 +186,6 @@ const store = new Vuex.Store({
           photoURL: payload.avatar,
         });
         // TODO: write the rest of payload to the DB.
-        console.log('result of save profile', payload, auth.currentUser);
         commit('setUser', payload);
       } catch (error) {
         console.warn('saveProfile', error);
