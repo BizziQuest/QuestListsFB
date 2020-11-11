@@ -94,7 +94,7 @@ async function getListStates(fbList) {
 }
 
 async function ensureSlugUniqueness(title) {
-  const allListsWithTitle = await listsCollection.where('title', '==', title);
+  const allListsWithTitle = listsCollection.where('title', '==', title);
   const lists = await allListsWithTitle.get();
   if (lists.size < 2) return slugify(title);
   const newSlug = slugify(`${title}-${lists.size}`);

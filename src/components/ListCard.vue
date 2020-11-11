@@ -5,7 +5,6 @@
     class="list-card"
     style="margin-bottom: 20px; margin-right: 0px; border-radius: 10px;"
   >
-    <!--v-list-item :to="{ name: 'List', params: { listId: list.id }}"-->
     <v-list-item :to="{ name: 'List', params: { slug: list.slug }}">
       <v-img :src="list.image || 'https://picsum.photos/200/300'" max-width="100"></v-img>
       <v-list-item-content>

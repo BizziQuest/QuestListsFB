@@ -31,13 +31,18 @@ const defaultState = {
     useGravatar: false,
   },
   lists: [],
+  message: {
+    text: '',
+    type: 'none', // it can be error, info, or warning
+  },
 };
 
 const store = new Vuex.Store({
   state: {
     currentUser: null,
     lists: null,
-    currentList: { },
+    message: {},
+    currentList: {},
     stateGroups: [],
     globalPreferences: {
       defaultColor: '#000000',
@@ -85,6 +90,10 @@ const store = new Vuex.Store({
         state.lists = payload;
       }
     },
+    setMessage(state, payload) {
+      const { text, type } = payload;
+      state.message = { text, type };
+    },
     setGlobalPreferences(state, prefs) {
       state.globalPreferences = { ...prefs };
     },
@@ -111,11 +120,12 @@ const store = new Vuex.Store({
     },
     // underscore is a placeholder for a variable that should be there, but is not used
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
-    async loginUser(_, { email = '', password = '' } = {}) {
+    async loginUser({ commit }, { email = '', password = '' } = {}) {
       try {
         await auth.signInWithEmailAndPassword(email, password);
+        commit('setMessage', { text: 'successful sign in', type: 'info' });
       } catch (error) {
-        console.warn(error);
+        commit('setMessage', { text: error, type: 'error' });
       }
     },
 
@@ -143,8 +153,9 @@ const store = new Vuex.Store({
       try {
         await auth.signOut();
         commit('setUser', { ...defaultState.user });
+        commit('setMessage', { text: 'logged out successfuly', type: 'success' });
       } catch (error) {
-        console.warn(error);
+        commit('setMessage', { text: error, type: 'error' });
       }
     },
     authenticationChanged({ commit }, payload) {
