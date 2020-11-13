@@ -129,12 +129,23 @@ const store = new Vuex.Store({
       }
     },
 
-    async googleSigninoAuth() {
-      const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
-      if (googleInfo.additionalUserInfo.isNewUser) {
-        if (auth.currentUser) {
-          await auth.currentUser.sendEmailVerification();
+    async googleSigninoAuth({ commit }) {
+      try {
+        const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
+        console.log('email verified:', auth.currentUser.isEmailVerified);
+        console.log('googleInfo', googleInfo);
+        // isEmailedVerified issue
+        // https://stackoverflow.com/questions/50894869/firebase-firestore-not-updating-email-verification-status
+        if (googleInfo.additionalUserInfo.isNewUser) {
+          commit('setMessage', { text: 'welcome to world possibilities', type: 'info' });
+          // if (auth.currentUser) {
+          //   await auth.currentUser.sendEmailVerification();
+          // }
+        } else {
+          commit('setMessage', { text: 'successful sign in', type: 'info' });
         }
+      } catch (error) {
+        commit('setMessage', { text: error, type: 'error' });
       }
     },
 
