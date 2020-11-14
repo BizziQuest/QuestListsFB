@@ -23,6 +23,7 @@
               :placeholder="placeholder"
               >{{ listItem.isNewItem ? '' : listItem.title }}</v-text-field
             >
+            <v-btn @click='makeSublist()'>add Sublist</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -32,6 +33,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { ensureSlugUniqueness, auth } from '../firebase';
 
 export default {
   props: {
@@ -72,9 +74,24 @@ export default {
       if (nextIdx > this.states.length - 1) nextIdx = 0;
       this.currentStateIdx = nextIdx;
     },
+    async makeSublist() {
+      const stateGroup = this.getGlobalPreferences.defaultStateGroup;
+      const payload = {
+        title: this.listItem.title,
+        slug: await ensureSlugUniqueness(this.listItem.title),
+        // color: this.color,
+        stateGroup,
+        // description: this.description,
+        createdAt: Date.now(), // firestore.Timestamp(),
+        createdBy: auth.currentUser.uid,
+      };
+      this.$store.dispatch('createList', payload);
+      // once we have a newly-created list, we uppdate the value
+      // of this list item to be a reference to the new list
+    },
   },
   computed: {
-    ...mapGetters(['itemStates']),
+    ...mapGetters(['itemStates', 'getGlobalPreferences']),
     icon() {
       if (this.isNewItem) return 'mdi-plus';
       return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].icon;

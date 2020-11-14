@@ -187,6 +187,10 @@ const store = new Vuex.Store({
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
       listsCollection.add({ ...listData, stateGroup: stateGroupRef });
     },
+    async createSubList({ dispatch }, listData) {
+      const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
+      listsCollection.add({ ...listData, stateGroup: stateGroupRef });
+    },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);
     },

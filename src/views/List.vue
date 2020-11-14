@@ -89,8 +89,8 @@ export default {
     },
   },
   mounted() {
-    // this.fetchList({ listId: this.$route.params.listId });
-    this.fetchList({ slug: this.$route.params.slug });
+    const path = this.$route.params.slug.split('/');
+    this.fetchList({ slug: path[path.length - 1] });
   },
 };
 </script>
