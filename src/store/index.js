@@ -31,17 +31,17 @@ const defaultState = {
     useGravatar: false,
   },
   lists: [],
-  message: {
+  message: [{
     text: '',
     type: 'none', // it can be error, info, or warning
-  },
+  }],
 };
 
 const store = new Vuex.Store({
   state: {
     currentUser: null,
     lists: null,
-    message: {},
+    messages: [],
     currentList: {},
     stateGroups: [],
     globalPreferences: {
@@ -90,9 +90,9 @@ const store = new Vuex.Store({
         state.lists = payload;
       }
     },
-    setMessage(state, payload) {
-      const { text, type } = payload;
-      state.message = { text, type };
+    setMessages(state, payload) {
+      // const { text, type, timeout = 2000 } = payload;
+      state.message = payload;
     },
     setGlobalPreferences(state, prefs) {
       state.globalPreferences = { ...prefs };
@@ -112,51 +112,69 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    async signupUser(_, payload) {
-      await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-      if (auth.currentUser) {
-        await auth.currentUser.sendEmailVerification();
+    notify({ dispatch }, messages) {
+      let messageArray = messages;
+      if (!Array.isArray(messages)) messageArray = [messages];
+      dispatch('setMessages', messageArray);
+    },
+    async signupUser({ commit }, payload) {
+      try {
+        const userCred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
+        console.log(userCred);
+        if (userCred.additionalUserInfo.isNewUser) {
+          commit('setMessages', { text: 'welcome to world of possibilities', type: 'info' });
+          if (auth.currentUser) {
+            await auth.currentUser.sendEmailVerification();
+          }
+        }
+      } catch (error) {
+        commit('setMessages', { text: error, type: 'error' });
       }
     },
     // underscore is a placeholder for a variable that should be there, but is not used
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
     async loginUser({ commit }, { email = '', password = '' } = {}) {
       try {
-        await auth.signInWithEmailAndPassword(email, password);
-        commit('setMessage', { text: 'successful sign in', type: 'info' });
+        const userCred = await auth.signInWithEmailAndPassword(email, password);
+        if (!userCred.user.emailVerified) {
+          commit('setMessages', {
+            text: 'please do not forget to verify your email',
+            type: 'error',
+            timeout: 2500,
+          });
+        }
+        commit('setMessages', {
+          text: 'successful sign in',
+          type: 'info',
+          timeout: 2500,
+        });
       } catch (error) {
-        commit('setMessage', { text: error, type: 'error' });
+        commit('setMessages', { text: error, type: 'error' });
       }
     },
 
     async googleSigninoAuth({ commit }) {
       try {
         const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
-        console.log('email verified:', auth.currentUser.isEmailVerified);
-        console.log('googleInfo', googleInfo);
-        // isEmailedVerified issue
-        // https://stackoverflow.com/questions/50894869/firebase-firestore-not-updating-email-verification-status
         if (googleInfo.additionalUserInfo.isNewUser) {
-          commit('setMessage', { text: 'welcome to world possibilities', type: 'info' });
-          // if (auth.currentUser) {
-          //   await auth.currentUser.sendEmailVerification();
-          // }
+          commit('setMessages', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
-          commit('setMessage', { text: 'successful sign in', type: 'info' });
+          commit('setMessages', { text: 'successful sign in', type: 'info' });
         }
       } catch (error) {
-        commit('setMessage', { text: error, type: 'error' });
+        commit('setMessages', { text: error, type: 'error' });
       }
     },
-
-    async faceBookSigninoAuth() {
+    async faceBookSigninoAuth({ commit }) {
       try {
-        await auth.signInWithPopup(facebookOAuthLogin);
-        if (auth.currentUser) {
-          await auth.currentUser.sendEmailVerification();
+        const facebookInfo = await auth.signInWithPopup(facebookOAuthLogin);
+        if (facebookInfo.additionalUserInfo.isNewUser) {
+          commit('setMessages', { text: 'welcome to world of possibilities', type: 'info' });
+        } else {
+          commit('setMessages', { text: 'successful sign in', type: 'info' });
         }
       } catch (error) {
-        console.warn(error);
+        commit('setMessages', { text: error, type: 'error' });
       }
     },
 
@@ -164,9 +182,9 @@ const store = new Vuex.Store({
       try {
         await auth.signOut();
         commit('setUser', { ...defaultState.user });
-        commit('setMessage', { text: 'logged out successfuly', type: 'success' });
+        commit('setMessages', { text: 'logged out successfuly', type: 'success' });
       } catch (error) {
-        commit('setMessage', { text: error, type: 'error' });
+        commit('setMessages', { text: error, type: 'error' });
       }
     },
     authenticationChanged({ commit }, payload) {
