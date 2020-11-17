@@ -135,7 +135,6 @@ export default {
         this.$_tempAvatar = this.avatar;
         this.avatar = `https://www.gravatar.com/avatar/${md5(this.email)}`;
       } else {
-        // this.avatar = '/img/unknown_user.svg';
         this.avatar = this.$_tempAvatar;
       }
     },

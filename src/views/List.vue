@@ -23,8 +23,6 @@ import {
   listsCollection,
   saveListItems,
 } from '../firebase';
-// import { debug } from 'webpack';
-// import ListCardVue from '../components/ListCard.vue';
 
 export default {
   name: 'List',
@@ -48,7 +46,6 @@ export default {
     };
   },
   methods: {
-    // async fetchList({ listId }) {
     async fetchList({ slug }) {
       const doc = await listsCollection.where('slug', '==', slug);
       const result = await doc.get();
@@ -89,7 +86,6 @@ export default {
     },
   },
   mounted() {
-    // this.fetchList({ listId: this.$route.params.listId });
     this.fetchList({ slug: this.$route.params.slug });
   },
 };

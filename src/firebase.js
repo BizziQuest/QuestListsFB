@@ -40,7 +40,6 @@ const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
 const userStatesCollection = db.collection('userListItemStates');
 
-// firebase oAuth login
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
@@ -98,8 +97,6 @@ async function ensureSlugUniqueness(title) {
   const lists = await allListsWithTitle.get();
   if (lists.size < 2) return slugify(title);
   const newSlug = slugify(`${title}-${lists.size}`);
-
-  // if slug already exists, check for last created and get the last id
   return newSlug;
 }
 
@@ -119,7 +116,6 @@ export {
   getListStates,
   getOrderedCollectionAsList,
   saveListItems,
-  // oAuthloginProvider
   googleOAuthLogin,
   facebookOAuthLogin,
   ensureSlugUniqueness,
