@@ -2,11 +2,12 @@
   <v-card
     max-height="auto"
     :color="list.color"
-    class="list-card"
-    style="margin-bottom: 20px; margin-right: 0px; border-radius: 10px;"
+    class="list-card mb-2 mr-0 "
+    :class="cardClasses"
+    elevation="3"
   >
     <v-list-item :to="{ name: 'List', params: { listId: list.id }}">
-      <v-img :src="list.image || 'https://picsum.photos/200/300'" max-width="100"></v-img>
+      <v-img :src="list.image || 'https://picsum.photos/200/300'" max-width="100" :class="imageClasses"></v-img>
       <v-list-item-content>
         <v-list-item-title class="headline mb-1">{{list.title}}</v-list-item-title>
         <v-list-item-subtitle>{{list.description}}</v-list-item-subtitle>
@@ -54,6 +55,16 @@ export default {
   }),
   computed: {
     ...mapState(['globalPreferences']),
+    cardClasses() {
+      if (this.$vuetify.breakpoint.lgAndUp) return 'rounded-t-xl';
+      if (this.$vuetify.breakpoint.smAndDown) return 'rounded-xl';
+      return '';
+    },
+    imageClasses() {
+      if (this.$vuetify.breakpoint.lgAndUp) return 'rounded-tl-xl';
+      if (this.$vuetify.breakpoint.smAndDown) return 'rounded-l-xl';
+      return '';
+    },
   },
   async mounted() {
     this.states = await getListStates(this.list);
