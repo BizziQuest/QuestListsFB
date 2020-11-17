@@ -91,8 +91,7 @@ const store = new Vuex.Store({
       }
     },
     setMessages(state, payload) {
-      // const { text, type, timeout = 2000 } = payload;
-      state.message = payload;
+      state.messages = payload;
     },
     setGlobalPreferences(state, prefs) {
       state.globalPreferences = { ...prefs };
@@ -112,79 +111,79 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    notify({ dispatch }, messages) {
-      let messageArray = messages;
-      if (!Array.isArray(messages)) messageArray = [messages];
-      dispatch('setMessages', messageArray);
+    notify({ state, commit }, message) {
+      const { text, type, timeout = 2000 } = message;
+      const messageArray = [];
+      messageArray.push({ text, type, timeout });
+      commit('setMessages', [...state.messages, ...messageArray]);
     },
-    async signupUser({ commit }, payload) {
+    async signupUser({ dispatch }, payload) {
       try {
         const userCred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-        console.log(userCred);
         if (userCred.additionalUserInfo.isNewUser) {
-          commit('setMessages', { text: 'welcome to world of possibilities', type: 'info' });
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
           if (auth.currentUser) {
             await auth.currentUser.sendEmailVerification();
           }
         }
       } catch (error) {
-        commit('setMessages', { text: error, type: 'error' });
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
     // underscore is a placeholder for a variable that should be there, but is not used
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
-    async loginUser({ commit }, { email = '', password = '' } = {}) {
+    async loginUser({ dispatch }, { email = '', password = '' } = {}) {
       try {
         const userCred = await auth.signInWithEmailAndPassword(email, password);
         if (!userCred.user.emailVerified) {
-          commit('setMessages', {
+          dispatch('notify', {
             text: 'please do not forget to verify your email',
             type: 'error',
-            timeout: 2500,
+            timeout: 3000,
           });
         }
-        commit('setMessages', {
+        dispatch('notify', {
           text: 'successful sign in',
           type: 'info',
-          timeout: 2500,
+          timeout: 4000,
         });
       } catch (error) {
-        commit('setMessages', { text: error, type: 'error' });
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
 
-    async googleSigninoAuth({ commit }) {
+    async googleSigninoAuth({ dispatch }) {
       try {
         const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
         if (googleInfo.additionalUserInfo.isNewUser) {
-          commit('setMessages', { text: 'welcome to world of possibilities', type: 'info' });
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
-          commit('setMessages', { text: 'successful sign in', type: 'info' });
+          dispatch('notify', { text: 'successful sign in', type: 'info' });
         }
       } catch (error) {
-        commit('setMessages', { text: error, type: 'error' });
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
-    async faceBookSigninoAuth({ commit }) {
+    async faceBookSigninoAuth({ dispatch }) {
       try {
         const facebookInfo = await auth.signInWithPopup(facebookOAuthLogin);
         if (facebookInfo.additionalUserInfo.isNewUser) {
-          commit('setMessages', { text: 'welcome to world of possibilities', type: 'info' });
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
-          commit('setMessages', { text: 'successful sign in', type: 'info' });
+          dispatch('notify', { text: 'successful sign in', type: 'info' });
         }
       } catch (error) {
-        commit('setMessages', { text: error, type: 'error' });
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
 
-    async logOut({ commit }) {
+    async logOut({ commit, dispatch }) {
       try {
         await auth.signOut();
         commit('setUser', { ...defaultState.user });
-        commit('setMessages', { text: 'logged out successfuly', type: 'success' });
+        dispatch('notify', { text: 'logged out successfuly', type: 'success' });
       } catch (error) {
-        commit('setMessages', { text: error, type: 'error' });
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
     authenticationChanged({ commit }, payload) {

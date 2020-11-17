@@ -1,22 +1,9 @@
 <template>
   <div>
-    <!-- <v-snackbar v-for="(message, i) in messages" :key="i" v-model="showSnackbar"
-                top
-                shaped
-                :color='`${message.type}`'
-                :timeout='`${message.timeout}`'
-                @input="nextMessage"
-              >
-        {{ message.text }}
-        <template v-slot:action="{ attrs }">
-          <v-btn text v-bind="attrs" @click="showSnackbar = false">
-            X
-          </v-btn>
-        </template>
-    </v-snackbar> -->
     <v-snackbar v-if="messages[0]" v-model="showSnackbar"
                 top
                 shaped
+                transition="fab-transition"
                 :color="messages[0].type"
                 :timeout="messages[0].timeout"
                 @input="nextMessage"
@@ -31,7 +18,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   data: () => ({
@@ -41,21 +28,19 @@ export default {
   computed: {
     ...mapState({
       messages(state) {
-        if (!state.messages.length > 0) return [];
+        if (state.messages.length < 1) return [];
         this.showSnackbar = true;
-        // setTimeout(() => {}, this.message.timeout);
-        // debugger;
-        console.log(state.messages);
         return state.messages;
       },
     }),
   },
   methods: {
+    ...mapMutations(['setMessages']),
     nextMessage($evt) {
-      console.log('message input changed: ', $evt);
       if ($evt === false) {
-        // show next message
-        this.setMessage(this.messages.unshift());
+        if (this.messages.length > 0) {
+          this.$nextTick(() => { this.setMessages(this.messages.slice(1)); });
+        }
       }
     },
   },
