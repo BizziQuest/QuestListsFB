@@ -1,11 +1,12 @@
 <template>
     <v-bottom-navigation
-      absolute
-      app
+      fixed
+      v-if="isMobile"
+      :app="isMobile"
       :input-value="isMobile"
-      hide-on-scroll
       :dark="!isDark"
       :light="isDark"
+      grow
       >
         <v-btn
           :color="menuHighlightColor"
@@ -14,15 +15,28 @@
           to="/"
           @click="$emit('update:drawer', !drawer)"
         >
-          <v-icon>mdi-shield-check-outline</v-icon>
+          <span>QuestLists</span>
+          <v-icon style="d-inline">mdi-shield-check-outline</v-icon>
         </v-btn>
-        <user-menu-item :dark="!isDark" :light="isDark"/>
         <CreateAList
           :dark="!isDark"
           :light="isDark"
           :showDialog="showCreateList"
           :highlightColor="menuHighlightColor"
-          fab/>
+          fab>
+          <template v-slot:default="slotProps">
+            <v-btn fab
+              :dark="!isDark" :color="menuHighlightColor"
+              absolute top center
+              medium
+              class="rounded-circle main-fab"
+              v-on="slotProps.on"
+            >
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+        </template>
+        </CreateAList>
+        <user-menu-item :dark="!isDark" :light="isDark" toolbar/>
     </v-bottom-navigation>
 </template>
 
@@ -85,6 +99,20 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.v-item-group.v-bottom-navigation .main-fab.v-btn--fab {
+  box-shadow: #fff 0px 0px 0px 3px;
+}
+.v-item-group.v-bottom-navigation .main-fab.v-btn--fab.v-size--small {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+}
+.v-item-group.v-bottom-navigation .main-fab.v-btn--fab.v-size--default {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  max-width: 56px;
+}
 .v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
   &:not([color]) {
     color: #ffffff !important;
