@@ -1,14 +1,16 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px" class="primary">
+  <v-dialog v-model="dialog" max-width="600px" class="primary">
     <template v-slot:activator="{ on }">
-      <v-list-item link v-on="on"  :color="highlightColor" :dark="dark" :light="light" title="Create A New Quest">
-        <v-list-item-action>
-          <v-icon :color="highlightColor">add</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title :class="`${highlightColor}--text`">New Quest</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <slot :on="on">
+        <v-list-item link v-on="on" :color="highlightColor" :dark="dark" :light="light" title="Create A New Quest">
+          <v-list-item-action>
+            <v-icon :color="highlightColor">add</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title :class="`${highlightColor}--text`">New Quest</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </slot>
     </template>
     <v-card>
       <v-card-title>
@@ -16,7 +18,7 @@
       </v-card-title>
       <v-card-text>
         <v-container>
-          <user-auth-alert/>
+          <user-auth-alert />
           <v-form ref="addTitleAndColorForm" @submit.prevent>
             <v-row>
               <v-col cols="12" sm="6" md="6">
@@ -56,16 +58,15 @@
           <v-row>
             <v-col cols="12" sm="6" md="6">
               <v-text-field
-              label="Description"
-                v-model='description'
+                label="Description"
+                v-model="description"
                 required
                 placeholder="Describe your list purpose."
-                outlined></v-text-field>
+                outlined
+              ></v-text-field>
             </v-col>
           </v-row>
-          <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup"
-                          @list:updated="listUpdated"
-          />
+          <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup" @list:updated="listUpdated" />
         </v-container>
         <small>*indicates required field</small>
       </v-card-text>
@@ -101,6 +102,7 @@ export default {
       statesPicked: '',
       updatedListStatesItems: [],
       description: '',
+      listColor: '#A0E9C9',
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
@@ -111,7 +113,24 @@ export default {
       ],
     };
   },
-  props: ['highlightColor', 'dark', 'light'],
+  props: {
+    highlightColor: {
+      default: undefined,
+    },
+    dark: {
+      default: true,
+      type: Boolean,
+    },
+    light: {
+      default: true,
+      type: Boolean,
+    },
+    fab: {
+      description: 'Shows this as a fab',
+      default: false,
+      type: Boolean,
+    },
+  },
   methods: {
     ...mapMutations(['setItemStates']),
     listUpdated($event) {
@@ -188,15 +207,14 @@ export default {
 };
 </script>
 <style scoped>
-#availableListStates{
-  height: 100px;
-  overflow: auto;
-}
-.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-  color: #ffffff !important;
-}
-.theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-  color: #ffffff !important;
-}
-
+  #availableListStates {
+    height: 100px;
+    overflow: auto;
+  }
+  .theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+    color: #ffffff !important;
+  }
+  .theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+    color: #ffffff !important;
+  }
 </style>
