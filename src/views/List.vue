@@ -9,13 +9,14 @@
           @blur="saveItem"
           :isNewItem="item.isNewItem"
           @update:text="addNewItem(index, $event)"
+          :listId="list.id"
         />
       </li>
      </ol>
   </div>
 </template>
 <script>
-// import { mapGetters, mapMutations } from 'vuex';
+
 import ListItem from '@/components/ListItem.vue';
 import {
   getListItems,
@@ -23,8 +24,6 @@ import {
   listsCollection,
   saveListItems,
 } from '../firebase';
-// import { debug } from 'webpack';
-// import ListCardVue from '../components/ListCard.vue';
 
 export default {
   name: 'List',
@@ -42,13 +41,13 @@ export default {
     return {
       list: {
         title: 'Loading...',
+        id: undefined,
       },
       listItems: [],
       states: [],
     };
   },
   methods: {
-    // async fetchList({ listId }) {
     async fetchList({ slug }) {
       const doc = await listsCollection.where('slug', '==', slug);
       const result = await doc.get();
@@ -67,6 +66,7 @@ export default {
       if (!theLastItem || !theLastItem.isNewItem) {
         listItems.push({ title: 'New Item', isNewItem: true });
       }
+      this.list.id = foundedList.id || 'none';
       this.list = foundedList;
       this.listItems = listItems;
       this.states = states;

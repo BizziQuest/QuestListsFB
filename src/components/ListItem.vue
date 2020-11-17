@@ -23,7 +23,13 @@
               :placeholder="placeholder"
               >{{ listItem.isNewItem ? '' : listItem.title }}</v-text-field
             >
-            <v-btn @click='makeSublist()'>add Sublist</v-btn>
+            <v-btn v-show="disabledAdd" @click='makeSublist()'>add Sublist</v-btn>
+                <router-link
+                  :to="subListPath"
+                  v-show="showLink"
+                  v-if="haveParent">
+                    sublist link
+                </router-link>
           </v-col>
         </v-row>
       </v-container>
@@ -33,6 +39,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import slugify from 'slugify';
 import { ensureSlugUniqueness, auth } from '../firebase';
 
 export default {
@@ -51,10 +58,16 @@ export default {
       type: Boolean,
       description: 'it is new item entry',
     },
+    listId: {
+      type: String,
+      describe: 'id of the list',
+    },
   },
   data: () => ({
     isActive: false,
     currentStateIdx: 0,
+    disabledAdd: true,
+    showLink: false,
   }),
   methods: {
     deactivate() {
@@ -79,13 +92,17 @@ export default {
       const payload = {
         title: this.listItem.title,
         slug: await ensureSlugUniqueness(this.listItem.title),
-        // color: this.color,
+        color: '#9999FF',
         stateGroup,
-        // description: this.description,
-        createdAt: Date.now(), // firestore.Timestamp(),
+        description: `sublist of ${this.listItem.title}`,
+        createdAt: Date.now(),
         createdBy: auth.currentUser.uid,
+        parent: this.listId,
       };
+      console.log(payload);
       this.$store.dispatch('createList', payload);
+      this.disabledAdd = false;
+      this.showLink = true;
       // once we have a newly-created list, we uppdate the value
       // of this list item to be a reference to the new list
     },
@@ -101,6 +118,13 @@ export default {
     },
     placeholder() {
       return this.listItem.isNewItem ? 'New Item' : '';
+    },
+    subListPath() {
+      const slug = slugify(this.listItem.title);
+      return `/Lists/${this.$route.params.slug}/${slug}`;
+    },
+    haveParent() {
+      return this.listId !== 'none';
     },
   },
 };
