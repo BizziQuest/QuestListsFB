@@ -2,7 +2,7 @@
     <v-navigation-drawer
       :bottom="isMobile"
       :floating="isMobile"
-      :expand-on-hover="!$vuetify.breakpoint.lgAndUp"
+      :expand-on-hover="!isMobile && !$vuetify.breakpoint.lgAndUp"
       :app="!isMobile"
       :permanent="!isMobile"
       v-model="showDrawer"
