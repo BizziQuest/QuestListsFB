@@ -65,7 +65,6 @@ const store = new Vuex.Store({
   getters: {
     getCurrentUser: (state) => state.currentUser,
     getUserAvatar: (state) => {
-      // debugger;
       if (state.currentUser.useGravatar) return `https://www.gravatar.com/avatar/${md5(state.currentUser.email)}`;
       return state.currentUser.avatar || '/img/unknown_user.svg';
     },
@@ -190,7 +189,6 @@ const store = new Vuex.Store({
           photoURL: payload.avatar,
         });
         // TODO: write the rest of payload to the DB.
-        console.log('result of save profile', payload, auth.currentUser);
         commit('setUser', payload);
       } catch (error) {
         console.warn('saveProfile', error);
