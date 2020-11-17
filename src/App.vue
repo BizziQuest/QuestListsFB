@@ -1,14 +1,10 @@
 <template>
   <v-app id="app" @keyup.ctrl.102="handleFind">
-    <div id="nav">
-        <drawer-menu :drawer.sync="drawer"/>
-    </div>
+    <drawer-menu :drawer.sync="drawer"/>
     <v-main>
       <router-view></router-view>
     </v-main>
-    <div id="nav">
-        <bottom-drawer-menu :drawer.sync="drawer"/>
-    </div>
+    <bottom-drawer-menu :drawer.sync="drawer"/>
   </v-app>
 </template>
 
@@ -31,6 +27,13 @@ export default {
     handleFind() {
       console.log('Showing Search Box...');
     },
+  },
+  mounted() {
+    this.$watch('$vuetify.breakpoint.name', (from, to) => {
+      if (from !== 'sm' && to === 'sm') {
+        this.drawer = false;
+      }
+    });
   },
 };
 </script>
