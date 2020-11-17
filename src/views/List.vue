@@ -15,7 +15,6 @@
   </div>
 </template>
 <script>
-// import { mapGetters, mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import {
   getListItems,
