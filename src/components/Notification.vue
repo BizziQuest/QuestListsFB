@@ -36,6 +36,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setMessages']),
+    //  Event to be Fired when Snackbar closes after timeout makes sense for @input
     nextMessage($evt) {
       if ($evt === false) {
         if (this.messages.length > 0) {
