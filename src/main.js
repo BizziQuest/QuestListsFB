@@ -12,12 +12,7 @@ Vue.config.productionTip = false;
 
 auth.onAuthStateChanged((user) => {
   if (user) {
-    store.dispatch('authenticationChanged', {
-      id: user.uid,
-      email: user.email,
-      displayName: 'New Member',
-      avatar: '/img/unknown_user.svg',
-    });
+    store.dispatch('authenticationChanged', user);
   }
 });
 
