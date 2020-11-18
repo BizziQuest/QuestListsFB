@@ -30,6 +30,19 @@
             Log In</v-btn>
             <v-btn class="success" color="darken-1" elevation="2" x-large rounded text
             @click="loginOrSignUser(true)"> Sign Up</v-btn>
+            <v-btn class="success" color="darken-1"  elevation="2"  x-large rounded text
+                   @click = "googleSignin()">
+              <v-icon >mdi-google</v-icon>
+            </v-btn>
+            <v-btn class="success"
+                   color="darken-1"
+                   elevation="2"
+                   x-large
+                   rounded
+                   text
+                   @click = "faceBookSignin()">
+              <v-icon >mdi-facebook</v-icon>
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -57,6 +70,12 @@ export default {
         this.$refs.form.reset();
         this.dialog = false;
       }
+    },
+    googleSignin() {
+      this.$store.dispatch('googleSigninoAuth');
+    },
+    faceBookSignin() {
+      this.$store.dispatch('faceBookSigninoAuth');
     },
   },
 };

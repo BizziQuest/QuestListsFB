@@ -10,7 +10,6 @@ export default {
     ...mapMutations(['setUser']),
     async verifyUser() {
       this.isUserVerified = await this.$_isUserVerifiedPromise();
-      console.log(this.isUserVerified);
     },
     async $_isUserVerifiedPromise() {
       if (!auth.currentUser) return false;

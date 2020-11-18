@@ -10,11 +10,14 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import md5 from 'md5';
 import {
   auth,
   globalPreferences,
   listsCollection,
   stateGroupsCollection,
+  googleOAuthLogin,
+  facebookOAuthLogin,
 } from '../firebase';
 
 Vue.use(Vuex);
@@ -25,16 +28,16 @@ const defaultState = {
     displayName: '',
     email: '',
     emailVerified: false,
+    uid: undefined,
+    useGravatar: false,
   },
   lists: [],
 };
 
 const store = new Vuex.Store({
   state: {
-    currentUser: null,
-    lists: null,
-    currentList: { },
-    stateGroups: [],
+    currentUser: defaultState.currentUser,
+    lists: defaultState.lists,
     globalPreferences: {
       defaultColor: '#000000',
       defaultStateGroup: {
@@ -61,21 +64,24 @@ const store = new Vuex.Store({
   },
   getters: {
     getCurrentUser: (state) => state.currentUser,
+    getUserAvatar: (state) => {
+      if (state.currentUser.useGravatar) return `https://www.gravatar.com/avatar/${md5(state.currentUser.email)}`;
+      return state.currentUser.avatar || '/img/unknown_user.svg';
+    },
     getCurrentList: (state) => state.currentList,
     getAllLists: (state) => state.lists,
     getGlobalPreferences: (state) => state.globalPreferences,
   },
   mutations: {
     setUser(state, user) {
-      if (user) {
-        state.currentUser = {
-          id: user.uid,
-          email: user.email,
-          displayName: 'New Member',
-          avatar: '/img/unknown_user.svg',
-          emailVerified: user.emailVerified,
-        };
-      }
+      state.currentUser = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || 'New Member',
+        avatar: user.avatar || '/img/unknown_user.svg',
+        emailVerified: user.emailVerified,
+        useGravatar: user.useGravatar,
+      };
     },
     setLists(state, payload) {
       if (payload) {
@@ -116,10 +122,29 @@ const store = new Vuex.Store({
       }
     },
 
+    async googleSigninoAuth() {
+      const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
+      if (googleInfo.additionalUserInfo.isNewUser) {
+        if (auth.currentUser) {
+          await auth.currentUser.sendEmailVerification();
+        }
+      }
+    },
+
+    async faceBookSigninoAuth() {
+      try {
+        await auth.signInWithPopup(facebookOAuthLogin);
+        if (auth.currentUser) {
+          await auth.currentUser.sendEmailVerification();
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+
     async logOut({ commit }) {
       try {
         await auth.signOut();
-        await auth.currentUser.reload();
         commit('setUser', { ...defaultState.user });
       } catch (error) {
         console.warn(error);
@@ -163,6 +188,7 @@ const store = new Vuex.Store({
           displayName: payload.displayName,
           photoURL: payload.avatar,
         });
+        // TODO: write the rest of payload to the DB.
         commit('setUser', payload);
       } catch (error) {
         console.warn('saveProfile', error);
