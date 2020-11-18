@@ -33,13 +33,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 db.settings(settings);
 
-// firebase collections
 const globalPreferences = db.collection('globalPreferences');
 const listsCollection = db.collection('lists');
 const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
 const userStatesCollection = db.collection('userListItemStates');
-
 
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
@@ -98,8 +96,6 @@ async function ensureSlugUniqueness(title) {
   const lists = await allListsWithTitle.get();
   if (lists.size < 2) return slugify(title);
   const newSlug = slugify(`${title}-${lists.size}`);
-
-  // if slug already exists, check for last created and get the last id
   return newSlug;
 }
 
@@ -111,7 +107,6 @@ export {
   currentUser,
   globalPreferences,
   listsCollection,
-  // listItemsCollection,
   stateGroupsCollection,
   usersCollection,
   userStatesCollection,

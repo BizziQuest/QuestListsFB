@@ -10,6 +10,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import md5 from 'md5';
 import {
   auth,
   globalPreferences,
@@ -39,8 +40,8 @@ const defaultState = {
 
 const store = new Vuex.Store({
   state: {
-    currentUser: null,
-    lists: null,
+    currentUser: defaultState.currentUser,
+    lists: defaultState.lists,
     messages: [],
     currentList: {},
     stateGroups: [],
@@ -70,6 +71,10 @@ const store = new Vuex.Store({
   },
   getters: {
     getCurrentUser: (state) => state.currentUser,
+    getUserAvatar: (state) => {
+      if (state.currentUser.useGravatar) return `https://www.gravatar.com/avatar/${md5(state.currentUser.email)}`;
+      return state.currentUser.avatar || '/img/unknown_user.svg';
+    },
     getCurrentList: (state) => state.currentList,
     getAllLists: (state) => state.lists,
     getGlobalPreferences: (state) => state.globalPreferences,
