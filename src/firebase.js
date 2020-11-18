@@ -33,7 +33,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 db.settings(settings);
 
-// firebase collections
 const globalPreferences = db.collection('globalPreferences');
 const listsCollection = db.collection('lists');
 const stateGroupsCollection = db.collection('stateGroups');
@@ -108,7 +107,6 @@ export {
   currentUser,
   globalPreferences,
   listsCollection,
-  // listItemsCollection,
   stateGroupsCollection,
   usersCollection,
   userStatesCollection,

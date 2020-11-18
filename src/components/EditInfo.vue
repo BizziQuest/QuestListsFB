@@ -3,7 +3,7 @@
     <v-card class="mx-auto mt-10" max-width="500" raised shaped>
       <v-card-text>
         <v-avatar class="d-flex justify-center align-center">
-          <img :src="avatar"/>
+          <img :src="avatarPreview"/>
         </v-avatar>
         <h1 class="d-flex justify-center align-center mt-10">Edit Info</h1>
         <h4 class="d-flex justify-center align-center mt-10">{{currentUser.email}}</h4>
@@ -23,15 +23,17 @@
               <v-text-field
                 v-model="avatar"
                 clearable
-                @click:clear="unCheckAvatar()"
-                label="Avatar" color="secondary"></v-text-field>
+                :disabled="useGravatar"
+                label="Customized Avatar" color="secondary"
+              ></v-text-field>
             </v-row>
             <v-row>
               <v-checkbox
                 v-model="useGravatar"
                 label="Use Gravatar"
                 color="secondary"
-                @click= "useOrNotUseGravatar"></v-checkbox>
+               ></v-checkbox>
+               <label class="pt-5 pl-2">(<a href="https://gravatar.com">sign up</a>)</label>
             </v-row>
             <v-row>
               <v-col cols="12" md="12">
@@ -78,7 +80,6 @@ export default {
       userId: null,
       displayName: null,
       avatar: null,
-      $_tempAvatar: null,
       email: null,
       useGravatar: false,
     };
@@ -103,6 +104,12 @@ export default {
         return state.currentUser;
       },
     }),
+    avatarPreview() {
+      if (this.useGravatar) {
+        return `https://www.gravatar.com/avatar/${md5(this.email)}`;
+      }
+      return this.avatar;
+    },
   },
   methods: {
     saveForm() {
@@ -129,17 +136,6 @@ export default {
         this.avatar = avatar || this.avatar;
         this.useGravatar = false;
       }
-    },
-    useOrNotUseGravatar() {
-      if (this.useGravatar) {
-        this.$_tempAvatar = this.avatar;
-        this.avatar = `https://www.gravatar.com/avatar/${md5(this.email)}`;
-      } else {
-        this.avatar = this.$_tempAvatar;
-      }
-    },
-    unCheckAvatar() {
-      this.useGravatar = false;
     },
   },
 };
