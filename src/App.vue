@@ -9,12 +9,14 @@
     <v-main>
       <router-view></router-view>
     </v-main>
+    <notification-vue/>
   </v-app>
 </template>
 
 <script>
 import TopMenuBarVue from './components/Menus/TopMenuBar.vue';
 import DrawerMenuVue from './components/Menus/DrawerMenu.vue';
+import NotificationVue from './components/Notification.vue';
 
 export default {
   name: 'App',
@@ -22,6 +24,7 @@ export default {
   components: {
     'top-menu-bar': TopMenuBarVue,
     'drawer-menu-bar': DrawerMenuVue,
+    NotificationVue,
   },
   data() {
     return {

@@ -32,12 +32,19 @@ const defaultState = {
     useGravatar: false,
   },
   lists: [],
+  message: [{
+    text: '',
+    type: 'none', // it can be error, info, or warning
+  }],
 };
 
 const store = new Vuex.Store({
   state: {
     currentUser: defaultState.currentUser,
     lists: defaultState.lists,
+    messages: [],
+    currentList: {},
+    stateGroups: [],
     globalPreferences: {
       defaultColor: '#000000',
       defaultStateGroup: {
@@ -88,6 +95,9 @@ const store = new Vuex.Store({
         state.lists = payload;
       }
     },
+    setMessages(state, payload) {
+      state.messages = payload;
+    },
     setGlobalPreferences(state, prefs) {
       state.globalPreferences = { ...prefs };
     },
@@ -106,48 +116,79 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    async signupUser(_, payload) {
-      await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-      if (auth.currentUser) {
-        await auth.currentUser.sendEmailVerification();
+    notify({ state, commit }, message) {
+      const { text, type, timeout = 2000 } = message;
+      const messageArray = [];
+      messageArray.push({ text, type, timeout });
+      commit('setMessages', [...state.messages, ...messageArray]);
+    },
+    async signupUser({ dispatch }, payload) {
+      try {
+        const userCred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
+        if (userCred.additionalUserInfo.isNewUser) {
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
+          if (auth.currentUser) {
+            await auth.currentUser.sendEmailVerification();
+          }
+        }
+      } catch (error) {
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
     // underscore is a placeholder for a variable that should be there, but is not used
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
-    async loginUser(_, { email = '', password = '' } = {}) {
+    async loginUser({ dispatch }, { email = '', password = '' } = {}) {
       try {
-        await auth.signInWithEmailAndPassword(email, password);
-      } catch (error) {
-        console.warn(error);
-      }
-    },
-
-    async googleSigninoAuth() {
-      const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
-      if (googleInfo.additionalUserInfo.isNewUser) {
-        if (auth.currentUser) {
-          await auth.currentUser.sendEmailVerification();
+        const userCred = await auth.signInWithEmailAndPassword(email, password);
+        if (!userCred.user.emailVerified) {
+          dispatch('notify', {
+            text: 'please do not forget to verify your email',
+            type: 'error',
+            timeout: 3000,
+          });
         }
+        dispatch('notify', {
+          text: 'successful sign in',
+          type: 'info',
+          timeout: 4000,
+        });
+      } catch (error) {
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
 
-    async faceBookSigninoAuth() {
+    async googleSigninoAuth({ dispatch }) {
       try {
-        await auth.signInWithPopup(facebookOAuthLogin);
-        if (auth.currentUser) {
-          await auth.currentUser.sendEmailVerification();
+        const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
+        if (googleInfo.additionalUserInfo.isNewUser) {
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
+        } else {
+          dispatch('notify', { text: 'successful sign in', type: 'info' });
         }
       } catch (error) {
-        console.warn(error);
+        dispatch('notify', { text: error, type: 'error' });
+      }
+    },
+    async faceBookSigninoAuth({ dispatch }) {
+      try {
+        const facebookInfo = await auth.signInWithPopup(facebookOAuthLogin);
+        if (facebookInfo.additionalUserInfo.isNewUser) {
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
+        } else {
+          dispatch('notify', { text: 'successful sign in', type: 'info' });
+        }
+      } catch (error) {
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
 
-    async logOut({ commit }) {
+    async logOut({ commit, dispatch }) {
       try {
         await auth.signOut();
         commit('setUser', { ...defaultState.user });
+        dispatch('notify', { text: 'logged out successfuly', type: 'success' });
       } catch (error) {
-        console.warn(error);
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
     authenticationChanged({ commit }, payload) {
