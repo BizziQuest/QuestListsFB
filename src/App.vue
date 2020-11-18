@@ -9,7 +9,7 @@
     <v-main>
       <router-view></router-view>
     </v-main>
-    <NotificationVue/>
+    <notification-vue/>
   </v-app>
 </template>
 

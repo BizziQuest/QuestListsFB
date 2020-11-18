@@ -10,6 +10,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import md5 from 'md5';
 import {
   auth,
   globalPreferences,
@@ -31,17 +32,17 @@ const defaultState = {
     useGravatar: false,
   },
   lists: [],
-  message: {
+  message: [{
     text: '',
     type: 'none', // it can be error, info, or warning
-  },
+  }],
 };
 
 const store = new Vuex.Store({
   state: {
-    currentUser: null,
-    lists: null,
-    message: {},
+    currentUser: defaultState.currentUser,
+    lists: defaultState.lists,
+    messages: [],
     currentList: {},
     stateGroups: [],
     globalPreferences: {
@@ -70,6 +71,10 @@ const store = new Vuex.Store({
   },
   getters: {
     getCurrentUser: (state) => state.currentUser,
+    getUserAvatar: (state) => {
+      if (state.currentUser.useGravatar) return `https://www.gravatar.com/avatar/${md5(state.currentUser.email)}`;
+      return state.currentUser.avatar || '/img/unknown_user.svg';
+    },
     getCurrentList: (state) => state.currentList,
     getAllLists: (state) => state.lists,
     getGlobalPreferences: (state) => state.globalPreferences,
@@ -90,9 +95,8 @@ const store = new Vuex.Store({
         state.lists = payload;
       }
     },
-    setMessage(state, payload) {
-      const { text, type } = payload;
-      state.message = { text, type };
+    setMessages(state, payload) {
+      state.messages = payload;
     },
     setGlobalPreferences(state, prefs) {
       state.globalPreferences = { ...prefs };
@@ -112,61 +116,79 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    async signupUser(_, payload) {
-      await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-      if (auth.currentUser) {
-        await auth.currentUser.sendEmailVerification();
+    notify({ state, commit }, message) {
+      const { text, type, timeout = 2000 } = message;
+      const messageArray = [];
+      messageArray.push({ text, type, timeout });
+      commit('setMessages', [...state.messages, ...messageArray]);
+    },
+    async signupUser({ dispatch }, payload) {
+      try {
+        const userCred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
+        if (userCred.additionalUserInfo.isNewUser) {
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
+          if (auth.currentUser) {
+            await auth.currentUser.sendEmailVerification();
+          }
+        }
+      } catch (error) {
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
     // underscore is a placeholder for a variable that should be there, but is not used
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
-    async loginUser({ commit }, { email = '', password = '' } = {}) {
+    async loginUser({ dispatch }, { email = '', password = '' } = {}) {
       try {
-        await auth.signInWithEmailAndPassword(email, password);
-        commit('setMessage', { text: 'successful sign in', type: 'info' });
+        const userCred = await auth.signInWithEmailAndPassword(email, password);
+        if (!userCred.user.emailVerified) {
+          dispatch('notify', {
+            text: 'please do not forget to verify your email',
+            type: 'error',
+            timeout: 3000,
+          });
+        }
+        dispatch('notify', {
+          text: 'successful sign in',
+          type: 'info',
+          timeout: 4000,
+        });
       } catch (error) {
-        commit('setMessage', { text: error, type: 'error' });
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
 
-    async googleSigninoAuth({ commit }) {
+    async googleSigninoAuth({ dispatch }) {
       try {
         const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
-        console.log('email verified:', auth.currentUser.isEmailVerified);
-        console.log('googleInfo', googleInfo);
-        // isEmailedVerified issue
-        // https://stackoverflow.com/questions/50894869/firebase-firestore-not-updating-email-verification-status
         if (googleInfo.additionalUserInfo.isNewUser) {
-          commit('setMessage', { text: 'welcome to world possibilities', type: 'info' });
-          // if (auth.currentUser) {
-          //   await auth.currentUser.sendEmailVerification();
-          // }
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
-          commit('setMessage', { text: 'successful sign in', type: 'info' });
+          dispatch('notify', { text: 'successful sign in', type: 'info' });
         }
       } catch (error) {
-        commit('setMessage', { text: error, type: 'error' });
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
-
-    async faceBookSigninoAuth() {
+    async faceBookSigninoAuth({ dispatch }) {
       try {
-        await auth.signInWithPopup(facebookOAuthLogin);
-        if (auth.currentUser) {
-          await auth.currentUser.sendEmailVerification();
+        const facebookInfo = await auth.signInWithPopup(facebookOAuthLogin);
+        if (facebookInfo.additionalUserInfo.isNewUser) {
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
+        } else {
+          dispatch('notify', { text: 'successful sign in', type: 'info' });
         }
       } catch (error) {
-        console.warn(error);
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
 
-    async logOut({ commit }) {
+    async logOut({ commit, dispatch }) {
       try {
         await auth.signOut();
         commit('setUser', { ...defaultState.user });
-        commit('setMessage', { text: 'logged out successfuly', type: 'success' });
+        dispatch('notify', { text: 'logged out successfuly', type: 'success' });
       } catch (error) {
-        commit('setMessage', { text: error, type: 'error' });
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
     authenticationChanged({ commit }, payload) {
