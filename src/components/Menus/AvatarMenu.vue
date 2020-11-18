@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import LogOut from '../LogOut.vue';
 
 export default {
@@ -48,13 +49,14 @@ export default {
     return {};
   },
   computed: {
+    ...mapGetters(['getUserAvatar']),
     getAvatar() {
-      return this.$store.state.currentUser.avatar;
+      return this.getUserAvatar;
     },
   },
   methods: {
     goToEditInfo() {
-      this.$router.push('EditInfo');
+      this.$router.push('/EditInfo');
     },
   },
 };

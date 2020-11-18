@@ -19,6 +19,7 @@
     "fb:dev:clean": "firebase emulators:exec --only firestore 'yarn serve --open'",
     "fb:emulate": "firebase emulators:start --only firestore,auth --import tests/data",
     "fb:emulate:save": "firebase emulators:export --force tests/data",
+    "fb:emulate:stop": "firebase emulators:stop",
     "fb:login": "firebase login --no-localhost",
     "fb:e2e": "firebase emulators:exec --only firestore 'yarn test:e2e --mode=development'",
     "fb:e2e:clean": "firebase emulators:exec --only firestore 'yarn test:e2e --mode=development'",

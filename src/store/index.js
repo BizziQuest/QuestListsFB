@@ -10,11 +10,14 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import md5 from 'md5';
 import {
   auth,
   globalPreferences,
   listsCollection,
   stateGroupsCollection,
+  googleOAuthLogin,
+  facebookOAuthLogin,
 } from '../firebase';
 
 Vue.use(Vuex);
@@ -25,15 +28,22 @@ const defaultState = {
     displayName: '',
     email: '',
     emailVerified: false,
+    uid: undefined,
+    useGravatar: false,
   },
   lists: [],
+  message: [{
+    text: '',
+    type: 'none', // it can be error, info, or warning
+  }],
 };
 
 const store = new Vuex.Store({
   state: {
-    currentUser: null,
-    lists: null,
-    currentList: { },
+    currentUser: defaultState.currentUser,
+    lists: defaultState.lists,
+    messages: [],
+    currentList: {},
     stateGroups: [],
     globalPreferences: {
       defaultColor: '#000000',
@@ -61,26 +71,32 @@ const store = new Vuex.Store({
   },
   getters: {
     getCurrentUser: (state) => state.currentUser,
+    getUserAvatar: (state) => {
+      if (state.currentUser.useGravatar) return `https://www.gravatar.com/avatar/${md5(state.currentUser.email)}`;
+      return state.currentUser.avatar || '/img/unknown_user.svg';
+    },
     getCurrentList: (state) => state.currentList,
     getAllLists: (state) => state.lists,
     getGlobalPreferences: (state) => state.globalPreferences,
   },
   mutations: {
     setUser(state, user) {
-      if (user) {
-        state.currentUser = {
-          id: user.uid,
-          email: user.email,
-          displayName: 'New Member',
-          avatar: '/img/unknown_user.svg',
-          emailVerified: user.emailVerified,
-        };
-      }
+      state.currentUser = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || 'New Member',
+        avatar: user.avatar || '/img/unknown_user.svg',
+        emailVerified: user.emailVerified,
+        useGravatar: user.useGravatar,
+      };
     },
     setLists(state, payload) {
       if (payload) {
         state.lists = payload;
       }
+    },
+    setMessages(state, payload) {
+      state.messages = payload;
     },
     setGlobalPreferences(state, prefs) {
       state.globalPreferences = { ...prefs };
@@ -100,29 +116,79 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    async signupUser(_, payload) {
-      await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-      if (auth.currentUser) {
-        await auth.currentUser.sendEmailVerification();
+    notify({ state, commit }, message) {
+      const { text, type, timeout = 2000 } = message;
+      const messageArray = [];
+      messageArray.push({ text, type, timeout });
+      commit('setMessages', [...state.messages, ...messageArray]);
+    },
+    async signupUser({ dispatch }, payload) {
+      try {
+        const userCred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
+        if (userCred.additionalUserInfo.isNewUser) {
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
+          if (auth.currentUser) {
+            await auth.currentUser.sendEmailVerification();
+          }
+        }
+      } catch (error) {
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
     // underscore is a placeholder for a variable that should be there, but is not used
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
-    async loginUser(_, { email = '', password = '' } = {}) {
+    async loginUser({ dispatch }, { email = '', password = '' } = {}) {
       try {
-        await auth.signInWithEmailAndPassword(email, password);
+        const userCred = await auth.signInWithEmailAndPassword(email, password);
+        if (!userCred.user.emailVerified) {
+          dispatch('notify', {
+            text: 'please do not forget to verify your email',
+            type: 'error',
+            timeout: 3000,
+          });
+        }
+        dispatch('notify', {
+          text: 'successful sign in',
+          type: 'info',
+          timeout: 4000,
+        });
       } catch (error) {
-        console.warn(error);
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
 
-    async logOut({ commit }) {
+    async googleSigninoAuth({ dispatch }) {
+      try {
+        const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
+        if (googleInfo.additionalUserInfo.isNewUser) {
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
+        } else {
+          dispatch('notify', { text: 'successful sign in', type: 'info' });
+        }
+      } catch (error) {
+        dispatch('notify', { text: error, type: 'error' });
+      }
+    },
+    async faceBookSigninoAuth({ dispatch }) {
+      try {
+        const facebookInfo = await auth.signInWithPopup(facebookOAuthLogin);
+        if (facebookInfo.additionalUserInfo.isNewUser) {
+          dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
+        } else {
+          dispatch('notify', { text: 'successful sign in', type: 'info' });
+        }
+      } catch (error) {
+        dispatch('notify', { text: error, type: 'error' });
+      }
+    },
+
+    async logOut({ commit, dispatch }) {
       try {
         await auth.signOut();
-        await auth.currentUser.reload();
         commit('setUser', { ...defaultState.user });
+        dispatch('notify', { text: 'logged out successfuly', type: 'success' });
       } catch (error) {
-        console.warn(error);
+        dispatch('notify', { text: error, type: 'error' });
       }
     },
     authenticationChanged({ commit }, payload) {
@@ -163,6 +229,7 @@ const store = new Vuex.Store({
           displayName: payload.displayName,
           photoURL: payload.avatar,
         });
+        // TODO: write the rest of payload to the DB.
         commit('setUser', payload);
       } catch (error) {
         console.warn('saveProfile', error);

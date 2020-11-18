@@ -14,8 +14,7 @@ const routes = [
     component: Lists,
   },
   {
-    path: '/Lists/:listId',
-    props: true,
+    path: '/Lists/:slug',
     name: 'List',
     component: List,
   },

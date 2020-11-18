@@ -14,7 +14,7 @@
       prepend-icon="search"
     ></v-text-field>
     <v-spacer></v-spacer>
-    <avatar-menu v-if="currentUser && currentUser.id"></avatar-menu>
+    <avatar-menu v-if="currentUser && currentUser.uid"></avatar-menu>
     <login-or-signup v-else></login-or-signup>
   </v-app-bar>
 </template>

@@ -2,10 +2,14 @@
   <div>
     <v-card class="mx-auto mt-10" max-width="500" raised shaped>
       <v-card-text>
+        <v-avatar class="d-flex justify-center align-center">
+          <img :src="avatarPreview"/>
+        </v-avatar>
         <h1 class="d-flex justify-center align-center mt-10">Edit Info</h1>
+        <h4 class="d-flex justify-center align-center mt-10">{{currentUser.email}}</h4>
       </v-card-text>
       <v-card-actions>
-        <v-form ref="editForm">
+        <v-form ref="infoForm">
           <v-container>
             <v-row>
                 <v-text-field
@@ -19,7 +23,17 @@
               <v-text-field
                 v-model="avatar"
                 clearable
-                label="Avatar" color="secondary"></v-text-field>
+                :disabled="useGravatar"
+                label="Customized Avatar" color="secondary"
+              ></v-text-field>
+            </v-row>
+            <v-row>
+              <v-checkbox
+                v-model="useGravatar"
+                label="Use Gravatar"
+                color="secondary"
+               ></v-checkbox>
+               <label class="pt-5 pl-2">(<a href="https://gravatar.com">sign up</a>)</label>
             </v-row>
             <v-row>
               <v-col cols="12" md="12">
@@ -35,8 +49,17 @@
                   x-large
                   rounded
                   text
-                  v-on:click="editForm"
-                >Edit</v-btn>
+                  v-on:click="saveForm"
+                >Save Profile</v-btn>
+                                <v-btn
+                  class="success"
+                  color="darken-1"
+                  elevation="2"
+                  x-large
+                  rounded
+                  text
+                  v-on:click="cancelForm"
+                >Cancel Changes</v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -48,6 +71,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import md5 from 'md5';
 
 export default {
   name: 'EditInfo',
@@ -57,36 +81,61 @@ export default {
       displayName: null,
       avatar: null,
       email: null,
+      useGravatar: false,
     };
   },
   computed: {
     ...mapState({
       currentUser(state) {
+        if (!state.currentUser
+            || !Object.prototype.hasOwnProperty.call(state.currentUser, 'uid')) return {};
         const {
           displayName,
           email,
           avatar,
-          id,
+          uid,
+          useGravatar,
         } = state.currentUser;
-        if (id) {
-          this.userId = id;
-          this.displayName = displayName || this.displayName;
-          this.email = email;
-          this.avatar = avatar || this.avatar;
-        }
+        this.userId = uid;
+        this.displayName = displayName;
+        this.email = email;
+        this.avatar = avatar;
+        this.useGravatar = useGravatar || false;
         return state.currentUser;
       },
     }),
+    avatarPreview() {
+      if (this.useGravatar) {
+        return `https://www.gravatar.com/avatar/${md5(this.email)}`;
+      }
+      return this.avatar;
+    },
   },
   methods: {
-    editForm() {
+    saveForm() {
       const userInfo = {
-        id: this.currentUser.id,
+        uid: this.currentUser.uid,
         email: this.email,
         displayName: this.displayName || 'New Member',
         avatar: this.avatar || '/img/unknown_user.svg',
+        useGravatar: this.useGravatar || false,
       };
       this.$store.dispatch('saveProfile', userInfo);
+    },
+    cancelForm() {
+      const {
+        displayName,
+        email,
+        avatar,
+        uid,
+      } = this.$store.state.currentUser;
+      if (uid) {
+        this.userId = uid;
+        this.displayName = displayName || this.displayName;
+        this.email = email;
+        this.avatar = avatar || this.avatar;
+        this.useGravatar = false;
+      }
     },
   },
 };

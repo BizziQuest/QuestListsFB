@@ -6,14 +6,15 @@
     :class="cardClasses"
     elevation="3"
   >
-    <v-list-item :to="{ name: 'List', params: { listId: list.id }}">
+    <v-list-item :to="{ name: 'List', params: { slug: list.slug }}">
       <v-img :src="list.image || 'https://picsum.photos/200/300'" max-width="100" :class="imageClasses"></v-img>
       <v-list-item-content>
         <v-list-item-title class="headline mb-1">{{list.title}}</v-list-item-title>
         <v-list-item-subtitle>{{list.description}}</v-list-item-subtitle>
         <ul>
           <li>Next Items:</li>
-          <li v-for="item in list.nextItems" :color="globalPreferences.defaultStateGroup.color" :key="item.order">
+          <li v-for="item in list.nextItems"
+              :color="globalPreferences.defaultStateGroup.color" :key="item.order">
             <list-item
               v-if="item"
               :list-item="item"

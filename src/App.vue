@@ -5,23 +5,26 @@
       <router-view></router-view>
     </v-main>
     <bottom-drawer-menu :drawer.sync="drawer"/>
+    <notification/>
   </v-app>
 </template>
 
 <script>
 import DrawerMenu from './components/Menus/DrawerMenu.vue';
 import BottomDrawerMenu from './components/Menus/BottomDrawerMenu.vue';
+import Notification from './components/Notification.vue';
 
 export default {
   name: 'App',
+  components: {
+    DrawerMenu,
+    BottomDrawerMenu,
+    Notification,
+  },
   data() {
     return {
       drawer: false,
     };
-  },
-  components: {
-    DrawerMenu,
-    BottomDrawerMenu,
   },
   methods: {
     handleFind() {

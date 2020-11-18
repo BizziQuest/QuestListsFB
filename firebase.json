@@ -36,7 +36,7 @@
       "port": 9099
     },
     "hub": {
-      "port": 4000
+      "port": 4500
     },
     "functions": {
       "port": 5001

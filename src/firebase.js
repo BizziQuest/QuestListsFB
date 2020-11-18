@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/analytics';
+import slugify from 'slugify';
 
 require('dotenv').config();
 
@@ -32,12 +33,14 @@ if (process.env.NODE_ENV === 'development') {
 }
 db.settings(settings);
 
-// firebase collections
 const globalPreferences = db.collection('globalPreferences');
 const listsCollection = db.collection('lists');
 const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
 const userStatesCollection = db.collection('userListItemStates');
+
+const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
+const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
@@ -88,6 +91,14 @@ async function getListStates(fbList) {
   return statesDoc.states.sort((state) => state.order);
 }
 
+async function ensureSlugUniqueness(title) {
+  const allListsWithTitle = listsCollection.where('title', '==', title);
+  const lists = await allListsWithTitle.get();
+  if (lists.size < 2) return slugify(title);
+  const newSlug = slugify(`${title}-${lists.size}`);
+  return newSlug;
+}
+
 export {
   fbApp,
   fbAnalytics,
@@ -96,7 +107,6 @@ export {
   currentUser,
   globalPreferences,
   listsCollection,
-  // listItemsCollection,
   stateGroupsCollection,
   usersCollection,
   userStatesCollection,
@@ -104,4 +114,7 @@ export {
   getListStates,
   getOrderedCollectionAsList,
   saveListItems,
+  googleOAuthLogin,
+  facebookOAuthLogin,
+  ensureSlugUniqueness,
 };
