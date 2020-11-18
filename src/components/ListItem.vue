@@ -92,7 +92,8 @@ export default {
       const payload = {
         title: this.listItem.title,
         slug: await ensureSlugUniqueness(this.listItem.title),
-        color: '#9999FF',
+        // color: '#9999FF',
+        color: '#'.concat(Math.floor(Math.random() * 16777215).toString(16)),
         stateGroup,
         description: `sublist of ${this.listItem.title}`,
         createdAt: Date.now(),
