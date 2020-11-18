@@ -32,14 +32,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 db.settings(settings);
 
-// firebase collections
 const globalPreferences = db.collection('globalPreferences');
 const listsCollection = db.collection('lists');
 const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
 const userStatesCollection = db.collection('userListItemStates');
 
-// firebase oAuth login
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
@@ -100,7 +98,6 @@ export {
   currentUser,
   globalPreferences,
   listsCollection,
-  // listItemsCollection,
   stateGroupsCollection,
   usersCollection,
   userStatesCollection,
@@ -108,7 +105,6 @@ export {
   getListStates,
   getOrderedCollectionAsList,
   saveListItems,
-  // oAuthloginProvider
   googleOAuthLogin,
   facebookOAuthLogin,
 };
