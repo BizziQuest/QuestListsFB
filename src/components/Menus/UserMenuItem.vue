@@ -1,5 +1,5 @@
 <template>
-  <login-or-signup-list-item :dark='dark' v-if="!userId"/>
+  <login-or-signup-list-item :dark='dark' v-if="!userId" :toolbar="toolbar"/>
   <v-list-item v-else link title="User Management">
     <v-list-item-action>
       <img v-if="avatar" :src="avatar"/>
@@ -25,6 +25,11 @@ export default {
   props: {
     dark: {
       description: 'sets the dark mode on this component.',
+      default: false,
+      type: Boolean,
+    },
+    toolbar: {
+      description: 'Shows this as if it were in a toolbar instead of a list.',
       default: false,
       type: Boolean,
     },

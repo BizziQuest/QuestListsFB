@@ -1,14 +1,16 @@
 <template>
   <v-dialog v-model="dialog" persistent :dark='dark' max-width="600px">
     <template v-slot:activator="{ on }">
-      <v-list-item link :dark="dark" v-on="on" title="Sign In / Sign Up">
-        <v-list-item-action>
-          <v-icon>mdi-account-arrow-right</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Sign In or Sign Up</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <slot :on="on">
+        <v-list-item link :dark="dark" v-on="on" title="Sign In / Sign Up">
+          <v-list-item-action>
+            <v-icon>mdi-account-arrow-right</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Sign In or Sign Up</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </slot>
     </template>
     <v-form ref="form">
       <v-card>
@@ -47,6 +49,11 @@ export default {
   props: {
     dark: {
       description: 'sets the dark mode on this component.',
+      default: false,
+      type: Boolean,
+    },
+    toolbar: {
+      description: 'Shows this as if it were in a toolbar instead of a list.',
       default: false,
       type: Boolean,
     },

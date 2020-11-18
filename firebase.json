@@ -32,6 +32,9 @@
     "rules": "storage.rules"
   },
   "emulators": {
+    "auth": {
+      "port": 9099
+    },
     "hub": {
       "port": 4000
     },

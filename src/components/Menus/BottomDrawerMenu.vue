@@ -34,9 +34,16 @@
             >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
-        </template>
+          </template>
         </CreateAList>
-        <user-menu-item :dark="!isDark" :light="isDark" toolbar/>
+        <user-menu-item :dark="!isDark" :light="isDark">
+          <template v-slot:default="slotProps">
+            <v-btn value="signIn" v-on="slotProps.on" icon :color="menuHighlightColor">
+              <span>Sign In</span>
+              <v-icon>mdi-account-arrow-right</v-icon>
+            </v-btn>
+          </template>
+        </user-menu-item>
     </v-bottom-navigation>
 </template>
 
