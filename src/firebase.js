@@ -40,7 +40,7 @@ const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
 const userStatesCollection = db.collection('userListItemStates');
 
-// firebase oAuth login
+
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
@@ -119,7 +119,6 @@ export {
   getListStates,
   getOrderedCollectionAsList,
   saveListItems,
-  // oAuthloginProvider
   googleOAuthLogin,
   facebookOAuthLogin,
   ensureSlugUniqueness,
