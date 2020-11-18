@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 import 'firebase/analytics';
+import slugify from 'slugify';
 
 require('dotenv').config();
 
@@ -90,6 +91,14 @@ async function getListStates(fbList) {
   return statesDoc.states.sort((state) => state.order);
 }
 
+async function ensureSlugUniqueness(title) {
+  const allListsWithTitle = await listsCollection.where('title', '==', title);
+  const lists = await allListsWithTitle.get();
+  if (lists.size < 2) return slugify(title);
+  const newSlug = slugify(`${title}-${lists.size}`);
+  return newSlug;
+}
+
 export {
   fbApp,
   fbAnalytics,
@@ -107,4 +116,5 @@ export {
   saveListItems,
   googleOAuthLogin,
   facebookOAuthLogin,
+  ensureSlugUniqueness,
 };

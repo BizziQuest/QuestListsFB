@@ -55,7 +55,6 @@ export default {
 
       const orderedArray = this.$_ql_reorder(array, sourceIndex, targetIndex);
       if (orderedArray === false) {
-        console.log('No motion:', array);
         $event.preventDefault();
         $event.stopPropagation();
         return;
@@ -99,7 +98,6 @@ export default {
       const arrayExcludingLast = array.slice(0, array.length - 1);
       const lastItem = array.slice(array.length - 1);
       if (targetIndex > array.length - 2 || sourceIndex === targetIndex || sourceIndex === targetIndex + 1) {
-        console.log('No motion:', arrayExcludingLast);
         return false;
       }
       let sortedList = [];

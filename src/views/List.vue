@@ -15,7 +15,6 @@
   </div>
 </template>
 <script>
-// import { mapGetters, mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import {
   getListItems,
@@ -46,19 +45,25 @@ export default {
     };
   },
   methods: {
-    async fetchList({ listId }) {
-      // ? Should we check in $state.lists for the list, or trust firebase to get it without a network call?
-      const doc = await listsCollection.doc(listId).get();
-      const list = doc.data();
-      list.id = doc.id;
-      const listItems = await getListItems(list);
-      const states = await getListStates(list);
+    async fetchList({ slug }) {
+      const doc = await listsCollection.where('slug', '==', slug);
+      const result = await doc.get();
+      let foundedList;
+      // TODO: ensure we have only one slug. We should warn otherwise.
+      // we are assuming there is only one slug that matches this value.
+      // this may break under certain circumstances
+      // is not done?
+      result.forEach((list) => {
+        foundedList = { id: list.id, ...list.data() };
+      });
+      const listItems = await getListItems(foundedList);
+      const states = await getListStates(foundedList);
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
       if (!theLastItem || !theLastItem.isNewItem) {
         listItems.push({ title: 'New Item', isNewItem: true });
       }
-      this.list = list;
+      this.list = foundedList;
       this.listItems = listItems;
       this.states = states;
     },
@@ -80,7 +85,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchList({ listId: this.$route.params.listId });
+    this.fetchList({ slug: this.$route.params.slug });
   },
 };
 </script>

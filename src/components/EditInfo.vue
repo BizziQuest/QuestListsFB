@@ -25,15 +25,13 @@
                 clearable
                 :disabled="useGravatar"
                 label="Customized Avatar" color="secondary"
-                @input="updateAvatarPreview"
-                @click:clear="updateAvatarPreview"></v-text-field>
+              ></v-text-field>
             </v-row>
             <v-row>
               <v-checkbox
                 v-model="useGravatar"
                 label="Use Gravatar"
                 color="secondary"
-                @click="updateAvatarPreview"
                ></v-checkbox>
                <label class="pt-5 pl-2">(<a href="https://gravatar.com">sign up</a>)</label>
             </v-row>
@@ -82,10 +80,8 @@ export default {
       userId: null,
       displayName: null,
       avatar: null,
-      $_tempAvatar: null,
       email: null,
       useGravatar: false,
-      avatarPreview: null,
     };
   },
   computed: {
@@ -104,11 +100,16 @@ export default {
         this.displayName = displayName;
         this.email = email;
         this.avatar = avatar;
-        this.avatarPreview = avatar;
         this.useGravatar = useGravatar || false;
         return state.currentUser;
       },
     }),
+    avatarPreview() {
+      if (this.useGravatar) {
+        return `https://www.gravatar.com/avatar/${md5(this.email)}`;
+      }
+      return this.avatar;
+    },
   },
   methods: {
     saveForm() {
@@ -134,15 +135,6 @@ export default {
         this.email = email;
         this.avatar = avatar || this.avatar;
         this.useGravatar = false;
-      }
-    },
-    updateAvatarPreview() {
-      if (this.useGravatar) {
-        this.avatarPreview = `https://www.gravatar.com/avatar/${md5(this.email)}`;
-        console.log('if', this.avatar);
-      } else {
-        this.avatarPreview = this.avatar;
-        console.log('else', this.avatar);
       }
     },
   },

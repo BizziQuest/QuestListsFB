@@ -85,6 +85,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
+import { ensureSlugUniqueness, auth } from '../firebase';
 
 export default {
   name: 'CreateAList',
@@ -118,7 +119,7 @@ export default {
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
-    createAList() {
+    async createAList() {
       if (this.$refs.addTitleAndColorForm.validate()) {
         // TODO: add an input for the name and description for this stateGroup
         let stateGroup = this.getGlobalPreferences.defaultStateGroup;
@@ -131,9 +132,12 @@ export default {
         }
         const payload = {
           title: this.title,
+          slug: await ensureSlugUniqueness(this.title),
           color: this.color,
           stateGroup,
           description: this.description,
+          createdAt: Date.now(),
+          createdBy: auth.currentUser.uid,
         };
         this.$store.dispatch('createList', payload);
         this.$refs.addTitleAndColorForm.reset();
