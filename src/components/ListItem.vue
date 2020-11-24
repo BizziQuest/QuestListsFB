@@ -103,7 +103,6 @@ export default {
       };
       this.listItem.subList = await createList(payload);
       this.subListSlug = this.listItem.subList.slug;
-      console.debug('SUBLIST', this.listItem, this.listItem.subList, this.subListSlug);
       this.$emit('update:subList', this.listItem.subList);
       this.$forceUpdate();
       await this.computeSubListPath(this.listItem.subList);
