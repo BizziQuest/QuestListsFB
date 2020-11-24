@@ -7,7 +7,7 @@
         <drawer-menu-bar :drawer.sync="drawer" color="primary"></drawer-menu-bar>
     </div>
     <v-main>
-      <router-view></router-view>
+      <router-view :key="$route.path"></router-view>
     </v-main>
     <notification-vue/>
   </v-app>

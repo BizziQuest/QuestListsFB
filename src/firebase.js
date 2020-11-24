@@ -59,13 +59,12 @@ async function saveListItems(fbListId, listItems) {
   const listItemsCollection = db.collection(`lists/${fbListId}/listItems`);
   const listItemDocs = await listItemsCollection.limit(1).get();
   // TODO: see if size is over 900Kb and create as many docs as neccessary
-  const listItemJSON = JSON.parse(JSON.stringify(listItems)); // convert vue observer objects to js objects
   if (listItemDocs.empty) {
-    await listItemsCollection.add({ data: listItemJSON });
+    await listItemsCollection.add({ data: listItems });
   } else {
     let docID = null;
     listItemDocs.forEach(async (doc) => { docID = doc.id; });
-    await listItemsCollection.doc(docID).set({ data: listItemJSON });
+    await listItemsCollection.doc(docID).set({ data: listItems });
   }
 }
 
@@ -99,6 +98,20 @@ async function ensureSlugUniqueness(title) {
   return newSlug;
 }
 
+async function createList(payload) {
+  const defaultPayload = {
+    title: 'New List',
+    color: '#333333',
+    description: 'Newly Created List',
+    createdAt: Date.now(),
+    createdBy: auth.currentUser.uid,
+  };
+  const newPayload = { ...defaultPayload, ...payload };
+  newPayload.slug = await ensureSlugUniqueness(payload.title || 'New List');
+  const subList = await listsCollection.add(newPayload);
+  return subList;
+}
+
 export {
   fbApp,
   fbAnalytics,
@@ -117,4 +130,5 @@ export {
   googleOAuthLogin,
   facebookOAuthLogin,
   ensureSlugUniqueness,
+  createList,
 };

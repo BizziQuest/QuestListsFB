@@ -21,15 +21,19 @@
               @click.prevent="activate"
               @blur="deactivate"
               :placeholder="placeholder"
-              >{{ listItem.isNewItem ? '' : listItem.title }}</v-text-field
+              >{{ listItem.isNewItem ? 'No Title' : listItem.title }}</v-text-field
             >
-            <v-btn v-show="disabledAdd" @click='makeSublist()'>add Sublist</v-btn>
-                <router-link
-                  :to="subListPath"
-                  v-show="showLink"
-                  v-if="haveParent">
-                    sublist link
-                </router-link>
+            <v-btn v-if="!listItem.subList"
+                   :loading="creatingSubList"
+                   :disabled="creatingSubList"
+                   @click='makeSublist()'>
+                   add Sublist
+            </v-btn>
+            <router-link
+              :to="subListPath"
+              v-else>
+                sublist link
+            </router-link>
           </v-col>
         </v-row>
       </v-container>
@@ -39,8 +43,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import slugify from 'slugify';
-import { ensureSlugUniqueness, auth } from '../firebase';
+import { createList, stateGroupsCollection } from '../firebase';
 
 export default {
   props: {
@@ -66,8 +69,10 @@ export default {
   data: () => ({
     isActive: false,
     currentStateIdx: 0,
-    disabledAdd: true,
-    showLink: false,
+    subListSlug: '',
+    subListPath: '',
+    subList: null,
+    creatingSubList: false,
   }),
   methods: {
     deactivate() {
@@ -88,25 +93,33 @@ export default {
       this.currentStateIdx = nextIdx;
     },
     async makeSublist() {
-      const stateGroup = this.getGlobalPreferences.defaultStateGroup;
+      this.creatingSubList = true;
+      const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
+      const stateGroup = stateGroupsCollection.doc(stateGroupDoc.id);
       const payload = {
         title: this.listItem.title,
-        slug: await ensureSlugUniqueness(this.listItem.title),
-        // color: '#9999FF',
-        color: '#'.concat(Math.floor(Math.random() * 16777215).toString(16)),
+        description: `sublist of ${this.listItem.title}`, // same as title
         stateGroup,
-        description: `sublist of ${this.listItem.title}`,
-        createdAt: Date.now(),
-        createdBy: auth.currentUser.uid,
-        parent: this.listId,
       };
-      console.log(payload);
-      this.$store.dispatch('createList', payload);
-      this.disabledAdd = false;
-      this.showLink = true;
-      // once we have a newly-created list, we uppdate the value
-      // of this list item to be a reference to the new list
+      this.listItem.subList = await createList(payload);
+      this.subListSlug = this.listItem.subList.slug;
+      console.debug('SUBLIST', this.listItem, this.listItem.subList, this.subListSlug);
+      this.$emit('update:subList', this.listItem.subList);
+      this.$forceUpdate();
+      await this.computeSubListPath(this.listItem.subList);
+      this.creatingSubList = false;
     },
+    async computeSubListPath(subListRef) {
+      if (!subListRef) return;
+      const subList = await subListRef.get();
+      const { slug } = subList.data();
+      this.subListPath = `${this.$route.path}/${slug}`;
+    },
+  },
+  async mounted() {
+    if (this.$props.listItem.subList) {
+      await this.computeSubListPath(this.$props.listItem.subList);
+    }
   },
   computed: {
     ...mapGetters(['itemStates', 'getGlobalPreferences']),
@@ -119,10 +132,6 @@ export default {
     },
     placeholder() {
       return this.listItem.isNewItem ? 'New Item' : '';
-    },
-    subListPath() {
-      const slug = slugify(this.listItem.title);
-      return `/Lists/${this.$route.params.slug}/${slug}`;
     },
     haveParent() {
       return this.listId !== 'none';

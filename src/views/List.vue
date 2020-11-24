@@ -9,6 +9,7 @@
           @blur="saveItem"
           :isNewItem="item.isNewItem"
           @update:text="addNewItem(index, $event)"
+          @update:subList="addNewSubList(index, $event)"
           :listId="list.id"
         />
       </li>
@@ -74,12 +75,15 @@ export default {
       const items = this.listItems.slice(0, -1);
       saveListItems(this.list.id, items);
     },
+    addNewSubList() {
+      this.saveItem();
+    },
     addNewItem(index, item) {
       const lastItemIndex = this.listItems.length - 1;
       if (index < lastItemIndex) return;
       if (item.length !== 0) {
         const lastItem = this.listItems[lastItemIndex];
-        lastItem.isNewItem = undefined;
+        delete lastItem.isNewItem;
         this.listItems.push({
           text: 'New Item',
           isNewItem: true,
