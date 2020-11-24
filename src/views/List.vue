@@ -9,6 +9,8 @@
           @blur="saveItem"
           :isNewItem="item.isNewItem"
           @update:text="addNewItem(index, $event)"
+          @update:subList="addNewSubList(index, $event)"
+          :listId="list.id"
         />
       </li>
      </ol>
@@ -39,6 +41,7 @@ export default {
     return {
       list: {
         title: 'Loading...',
+        id: undefined,
       },
       listItems: [],
       states: [],
@@ -63,6 +66,7 @@ export default {
       if (!theLastItem || !theLastItem.isNewItem) {
         listItems.push({ title: 'New Item', isNewItem: true });
       }
+      this.list.id = foundedList.id || 'none';
       this.list = foundedList;
       this.listItems = listItems;
       this.states = states;
@@ -71,12 +75,15 @@ export default {
       const items = this.listItems.slice(0, -1);
       saveListItems(this.list.id, items);
     },
+    addNewSubList() {
+      this.saveItem();
+    },
     addNewItem(index, item) {
       const lastItemIndex = this.listItems.length - 1;
       if (index < lastItemIndex) return;
       if (item.length !== 0) {
         const lastItem = this.listItems[lastItemIndex];
-        lastItem.isNewItem = undefined;
+        delete lastItem.isNewItem;
         this.listItems.push({
           text: 'New Item',
           isNewItem: true,
@@ -85,7 +92,8 @@ export default {
     },
   },
   mounted() {
-    this.fetchList({ slug: this.$route.params.slug });
+    const path = this.$route.params.slug.split('/');
+    this.fetchList({ slug: path[path.length - 1] });
   },
 };
 </script>
