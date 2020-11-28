@@ -18,39 +18,36 @@
           <span class="headline">Log In or Sign Up</span>
         </v-card-title>
         <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field v-model="email" outlined  label="Email*" required clearable></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field v-model="password" outlined label="Password*" type="password" required clearable>
-                </v-text-field>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field v-model="email" outlined  label="Email*" required clearable></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field v-model="password" outlined label="Password*" type="password" required clearable>
+              </v-text-field>
+            </v-col>
+          </v-row>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" elevation="2" x-large rounded text @click="dialog = false">
-          Cancel</v-btn>
-          <v-btn color="primary"  elevation="2" x-large rounded text @click="loginOrSignUser()">
-          Log In</v-btn>
-          <v-btn color="primary" elevation="2" x-large rounded text
-          @click="loginOrSignUser(true)"> Sign Up</v-btn>
-          <v-btn class="success" color="darken-1"  elevation="2"  x-large rounded text
-                  @click = "googleSignin()">
+          <v-spacer/>
+          <v-btn color="secondary" text @click = "googleSignin()">
             <v-icon >mdi-google</v-icon>
           </v-btn>
-          <v-btn class="success"
-                  color="darken-1"
-                  elevation="2"
-                  x-large
-                  rounded
+          <v-btn  color="secondary"
                   text
                   @click = "faceBookSignin()">
             <v-icon >mdi-facebook</v-icon>
           </v-btn>
+          <v-spacer/>
+        </v-card-actions>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary-lighten1" text @click="dialog = false">
+          Cancel</v-btn>
+          <v-spacer/>
+          <v-btn color="success" text @click="loginOrSignUser()">
+          Log In</v-btn>
+          <v-btn color="secondary" text
+          @click="loginOrSignUser(true)"> Sign Up</v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

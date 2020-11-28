@@ -1,16 +1,25 @@
 <template>
-  <login-or-signup-list-item :dark='dark' v-if="!userId" :toolbar="toolbar"/>
-  <v-list-item v-else link title="User Management">
-    <v-list-item-action>
-      <img v-if="avatar" :src="avatar"/>
-      <v-icon v-else>mdi-account</v-icon>
-    </v-list-item-action>
-    <v-list-item-content>
-      <v-list-item-title>{{userName}}</v-list-item-title>
-      <router-link tag="v-icon" v-if="userId" to="EditInfo">mdi-account-edit-outline</router-link>
-      <v-icon v-if="userId">mdi-exit-to-app</v-icon>
-    </v-list-item-content>
-  </v-list-item>
+  <div>
+    <login-or-signup-list-item :dark='dark' v-if="!currentUser.uid" :toolbar="toolbar">
+      <template v-slot:default="slotProps">
+        <slot name="login" :on="slotProps.on"/>
+      </template>
+    </login-or-signup-list-item>
+    <slot v-else name="avatar" :avatar="avatar" :username="currentUser.name" :userId="currentUser.uid">
+      <v-list-item link title="User Management">
+        <v-list-item-avatar size="28">
+          <v-img v-if="currentUser.avatar" :src="currentUser.avatar"/>
+          <v-icon v-else>mdi-account</v-icon>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <router-link class="text-truncate">{{currentUser.displayName}}</router-link>
+        </v-list-item-content>
+        <router-link tag="v-icon" icon small v-if="currentUser.uid" to="/EditInfo">
+          mdi-exit-to-app
+        </router-link>
+      </v-list-item>
+    </slot>
+  </div>
 </template>
 
 <script>
@@ -42,15 +51,17 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      currentUser(user) {
-        if (user) {
-          this.userId = user.id;
-          this.userName = user.name;
-          this.avatar = user.avatar;
-        }
-      },
-    }),
+    ...mapState(['currentUser']),
+    //  ...mapState({
+    //  currentUser({ currentUser }) {
+    //    console.log('user: ', currentUser);
+    //    if (currentUser.uid) {
+    //      this.userId = currentUser.id;
+    //      this.userName = currentUser.name;
+    //      this.avatar = currentUser.avatar;
+    //    }
+    //  },
+    //  }),
   },
 };
 </script>

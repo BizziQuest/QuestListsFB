@@ -37,10 +37,18 @@
           </template>
         </CreateAList>
         <user-menu-item :dark="!isDark" :light="isDark">
-          <template v-slot:default="slotProps">
+          <template v-slot:login="slotProps">
             <v-btn value="signIn" v-on="slotProps.on" icon :color="menuHighlightColor">
               <span>Sign In</span>
               <v-icon>mdi-account-arrow-right</v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:avatar="slotProps">
+            <v-btn value="viewProfile" icon to="/EditInfo" :color="menuHighlightColor">
+              {{slotProps}}
+              <span>{{slotProps.username}}</span>
+              <img v-if="slotProps.avatar" :src="slotProps.avatar"/>
+              <v-icon v-else>mdi-account</v-icon>
             </v-btn>
           </template>
         </user-menu-item>

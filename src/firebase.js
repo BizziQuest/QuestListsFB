@@ -1,4 +1,5 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/analytics';
 import slugify from 'slugify';
@@ -21,6 +22,7 @@ const firebaseConfig = {
 const fbApp = firebase.initializeApp(firebaseConfig);
 const fbAnalytics = process.env.NODE_ENV !== 'test' ? firebase.analytics() : null;
 const auth = fbApp.auth();
+if (process.env.VUE_APP_FIREBASE_AUTH_HOST) auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST);
 const db = fbApp.firestore();
 const { currentUser } = auth;
 

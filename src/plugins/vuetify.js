@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+import Vuetify, { VIcon, VBtn } from 'vuetify/lib';
 import '@mdi/font/css/materialdesignicons.css'; // for the default material design icons
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import { preset as replyPreset } from 'vue-cli-plugin-vuetify-preset-reply/preset';
@@ -25,7 +25,9 @@ preset.theme.themes = { // this only works because rally is dark and reply is li
   light: { ...replyPreset.theme.themes.light },
 };
 
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+  components: { VIcon, VBtn }, // load components here to use with :is or :tag attributes
+});
 export default new Vuetify({
   preset,
   theme: {
