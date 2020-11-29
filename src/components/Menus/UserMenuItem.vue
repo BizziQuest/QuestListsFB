@@ -1,35 +1,35 @@
 <template>
   <div>
-    <login-or-signup-list-item :dark='dark' v-if="!currentUser.uid" :toolbar="toolbar">
+    <login-or-signup :dark='dark' v-if="!currentUser.uid" :toolbar="toolbar">
       <template v-slot:default="slotProps">
         <slot name="login" :on="slotProps.on"/>
       </template>
-    </login-or-signup-list-item>
+    </login-or-signup>
     <slot v-else name="avatar" :avatar="avatar" :username="currentUser.name" :userId="currentUser.uid">
-      <v-list-item link title="User Management">
+      <v-list-item link title="User Management" to="/EditInfo">
         <v-list-item-avatar size="28">
           <v-img v-if="currentUser.avatar" :src="currentUser.avatar"/>
           <v-icon v-else>mdi-account</v-icon>
         </v-list-item-avatar>
         <v-list-item-content>
-          <router-link class="text-truncate">{{currentUser.displayName}}</router-link>
+          <v-list-item-title class="text-truncate">{{currentUser.displayName}}</v-list-item-title>
         </v-list-item-content>
-        <router-link tag="v-icon" icon small v-if="currentUser.uid" to="/EditInfo">
+        <v-icon icon small v-if="currentUser.uid" @click.stop.prevent="logoutAndGoHome">
           mdi-exit-to-app
-        </router-link>
+        </v-icon>
       </v-list-item>
     </slot>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import LoginOrSignupListItem from './LoginOrSignupListItem.vue';
+import { mapActions, mapState } from 'vuex';
+import LoginOrSignup from './LoginOrSignup.vue';
 
 export default {
   name: 'UserMenuItem',
   components: {
-    LoginOrSignupListItem,
+    LoginOrSignup,
   },
   props: {
     dark: {
@@ -50,18 +50,15 @@ export default {
       userName: 'Sign Up / Sign In',
     };
   },
+  methods: {
+    ...mapActions(['logOut']),
+    logoutAndGoHome() {
+      this.logOut();
+      this.$router.push('/');
+    },
+  },
   computed: {
     ...mapState(['currentUser']),
-    //  ...mapState({
-    //  currentUser({ currentUser }) {
-    //    console.log('user: ', currentUser);
-    //    if (currentUser.uid) {
-    //      this.userId = currentUser.id;
-    //      this.userName = currentUser.name;
-    //      this.avatar = currentUser.avatar;
-    //    }
-    //  },
-    //  }),
   },
 };
 </script>

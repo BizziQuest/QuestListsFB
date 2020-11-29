@@ -20,7 +20,7 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import LoginOrSignup from '../LogInorSignUp.vue';
+import LoginOrSignup from './LoginOrSignup.vue';
 import AvatarMenu from './AvatarMenu.vue';
 
 export default {

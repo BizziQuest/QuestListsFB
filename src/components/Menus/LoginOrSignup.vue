@@ -55,7 +55,7 @@
 </template>
 <script>
 export default {
-  name: 'LogInorSignUpButton',
+  name: 'LogInorSignUp',
   props: {
     dark: {
       description: 'sets the dark mode on this component.',

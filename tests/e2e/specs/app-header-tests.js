@@ -19,9 +19,7 @@ describe('Message when no lists are available', () => {
     cy.server();
     cy.route('http://localhost:8888/*').as('firebaseRequest');
     cy.visit('/');
-    cy.wait('@firebaseRequest', {timeout: 30000});
+    cy.wait('@firebaseRequest', { timeout: 30000 });
     cy.contains('.v-alert', 'There are no lists yet. Please add a list.');
   });
 });
-
-

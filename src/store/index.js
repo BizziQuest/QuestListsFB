@@ -250,7 +250,6 @@ globalPreferences.onSnapshot(async (snapshot) => {
   if (prefs.length < 1) return;
 
   const { defaultColor, defaultStateGroup } = prefs[0];
-
   const stateGroup = await defaultStateGroup.get();
   store.commit('setGlobalPreferences', {
     defaultColor,
