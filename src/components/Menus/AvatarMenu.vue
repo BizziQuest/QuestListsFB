@@ -37,8 +37,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import LogOut from '../LogOut.vue';
+import { getAvatarForUser } from '../../util';
 
 export default {
   name: 'AvatarMenu',
@@ -49,9 +50,9 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(['getUserAvatar']),
+    ...mapState(['currentUser']),
     getAvatar() {
-      return this.getUserAvatar;
+      return getAvatarForUser(this.currentUser);
     },
   },
   methods: {
