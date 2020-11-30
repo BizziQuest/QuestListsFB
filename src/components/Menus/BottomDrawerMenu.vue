@@ -12,11 +12,14 @@
           :color="menuHighlightColor"
           icon
           title="View App Menu"
-          to="/"
           @click="$emit('update:drawer', !drawer)"
         >
           <span>QuestLists</span>
           <v-icon style="d-inline">mdi-shield-check-outline</v-icon>
+        </v-btn>
+        <v-btn value="search" icon to="/search" :color="menuHighlightColor">
+          <span>Search</span>
+          <v-icon>mdi-magnify</v-icon>
         </v-btn>
         <CreateAList
           :dark="!isDark"
@@ -36,6 +39,10 @@
             </v-btn>
           </template>
         </CreateAList>
+        <v-btn value="favorite" icon to="/favorites" :color="menuHighlightColor">
+          <span>Favorites</span>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
         <user-menu-item :dark="!isDark" :light="isDark">
           <template v-slot:login="slotProps">
             <v-btn value="signIn" v-on="slotProps.on" icon :color="menuHighlightColor">
@@ -44,11 +51,15 @@
             </v-btn>
           </template>
           <template v-slot:avatar="slotProps">
-            <v-btn value="viewProfile" icon to="/EditInfo" :color="menuHighlightColor">
-              {{slotProps}}
-              <span>{{slotProps.username}}</span>
-              <img v-if="slotProps.avatar" :src="slotProps.avatar"/>
-              <v-icon v-else>mdi-account</v-icon>
+            <v-btn value="viewProfile"
+              class="d-flex flex-column text-truncate"
+              icon to="/EditInfo" :color="menuHighlightColor"
+            >
+              <span class="text-truncate d-inline-block" style="max-width:100px">{{slotProps.username}}</span>
+              <v-avatar size="24">
+                <v-img v-if="slotProps.avatar" :src="slotProps.avatar"/>
+                <v-icon v-else>mdi-account</v-icon>
+              </v-avatar>
             </v-btn>
           </template>
         </user-menu-item>
@@ -114,6 +125,9 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.v-item-group.v-bottom-navigation .v-btn.align-center {
+  height: 100%;
+}
 .v-item-group.v-bottom-navigation .main-fab.v-btn--fab {
   box-shadow: #fff 0px 0px 0px 3px;
 }
