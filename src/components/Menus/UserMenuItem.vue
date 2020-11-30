@@ -1,11 +1,15 @@
 <template>
-  <div>
+  <div class="user-menu-item">
     <login-or-signup :dark='dark' v-if="!currentUser.uid" :toolbar="toolbar">
       <template v-slot:default="slotProps">
         <slot name="login" :on="slotProps.on"/>
       </template>
     </login-or-signup>
-    <slot v-else name="avatar" :avatar="avatar" :username="currentUser.name" :userId="currentUser.uid">
+    <slot v-else name="avatar"
+      :avatar="currentUser.avatar"
+      :username="currentUser.displayName"
+      :userId="currentUser.uid"
+    >
       <v-list-item link title="User Management" to="/EditInfo">
         <v-list-item-avatar size="28">
           <v-img v-if="currentUser.avatar" :src="currentUser.avatar"/>
@@ -25,11 +29,17 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import LoginOrSignup from './LoginOrSignup.vue';
+import { getAvatarForUser } from '../../util';
 
 export default {
   name: 'UserMenuItem',
   components: {
     LoginOrSignup,
+  },
+  data() {
+    return {
+      avatar: null,
+    };
   },
   props: {
     dark: {
@@ -43,13 +53,6 @@ export default {
       type: Boolean,
     },
   },
-  data() {
-    return {
-      avatar: false,
-      userId: false,
-      userName: 'Sign Up / Sign In',
-    };
-  },
   methods: {
     ...mapActions(['logOut']),
     logoutAndGoHome() {
@@ -58,7 +61,13 @@ export default {
     },
   },
   computed: {
-    ...mapState(['currentUser']),
+    ...mapState({
+      currentUser(state) {
+        const user = state.currentUser;
+        this.avatar = getAvatarForUser(user);
+        return user;
+      },
+    }),
   },
 };
 </script>
