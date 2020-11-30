@@ -15,6 +15,7 @@
         @blur="deactivate"
         :placeholder="placeholder"
         :hide-details="readOnly"
+        :clearable="!readOnly"
         >
           <v-icon
             slot="prepend-inner"
@@ -24,14 +25,29 @@
             @blur="deactivate"
             :title="iconTitle"
           >{{icon}}</v-icon>
-          {{ listItem.isNewItem ? '' : listItem.title }}</v-text-field
-      >
+          {{ listItem.isNewItem ? '' : listItem.title }}
+          <v-btn v-if="!readOnly && !listItem.subList" slot="append"
+            :loading="creatingSubList"
+            :disabled="creatingSubList"
+            icon
+            @click='makeSublist()'>
+            <v-icon>mdi-shield-plus-outline</v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            slot="append"
+            :to="subListPath"
+            v-if="!readOnly && listItem.subList">
+              <v-icon>mdi-shield-link-variant-outline</v-icon>
+          </v-btn>
+      </v-text-field>
     </template>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import { createList, stateGroupsCollection } from '../firebase';
 
 export default {
   props: {
@@ -54,10 +70,18 @@ export default {
       default: false,
       description: 'Whether to allow editing of the content or only view it.',
     },
+    listId: {
+      type: String,
+      describe: 'id of the list',
+    },
   },
   data: () => ({
     isActive: false,
     currentStateIdx: 0,
+    subListSlug: '',
+    subListPath: '',
+    subList: null,
+    creatingSubList: false,
   }),
   methods: {
     deactivate() {
@@ -77,9 +101,36 @@ export default {
       if (nextIdx > this.states.length - 1) nextIdx = 0;
       this.currentStateIdx = nextIdx;
     },
+    async makeSublist() {
+      this.creatingSubList = true;
+      const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
+      const stateGroup = stateGroupsCollection.doc(stateGroupDoc.id);
+      const payload = {
+        title: this.listItem.title,
+        description: `sublist of ${this.listItem.title}`, // same as title
+        stateGroup,
+      };
+      this.listItem.subList = await createList(payload);
+      this.subListSlug = this.listItem.subList.slug;
+      this.$emit('update:subList', this.listItem.subList);
+      this.$forceUpdate();
+      await this.computeSubListPath(this.listItem.subList);
+      this.creatingSubList = false;
+    },
+    async computeSubListPath(subListRef) {
+      if (!subListRef) return;
+      const subList = await subListRef.get();
+      const { slug } = subList.data();
+      this.subListPath = `${this.$route.path}/${slug}`;
+    },
+  },
+  async mounted() {
+    if (this.$props.listItem.subList) {
+      await this.computeSubListPath(this.$props.listItem.subList);
+    }
   },
   computed: {
-    ...mapGetters(['itemStates']),
+    ...mapGetters(['itemStates', 'getGlobalPreferences']),
     icon() {
       if (this.isNewItem) return 'mdi-plus';
       return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].icon;
@@ -89,6 +140,9 @@ export default {
     },
     placeholder() {
       return this.listItem.isNewItem ? 'New Item' : '';
+    },
+    haveParent() {
+      return this.listId !== 'none';
     },
   },
 };

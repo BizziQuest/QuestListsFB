@@ -156,6 +156,7 @@ export default {
           description: this.description,
           createdAt: Date.now(),
           createdBy: auth.currentUser.uid,
+          parent: 'none',
         };
         this.$store.dispatch('createList', payload);
         this.$refs.addTitleAndColorForm.reset();

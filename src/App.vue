@@ -2,7 +2,7 @@
   <v-app id="app" @keyup.ctrl.102="handleFind">
     <drawer-menu :drawer.sync="drawer"/>
     <v-main>
-      <router-view></router-view>
+      <router-view :key="$route.path"></router-view>
     </v-main>
     <bottom-drawer-menu :drawer.sync="drawer"/>
     <notification/>
