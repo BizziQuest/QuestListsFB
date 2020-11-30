@@ -1,31 +1,31 @@
 <template>
   <div class="list-item-view">
     <template>
-      <v-container>
-        <v-row>
-          <v-col col="12" md="6">
-            <v-icon
-              large
-              class="listitem-icon"
-              :outlined="isActive"
-              @click.prevent="cycleIcon"
-              @blur="deactivate"
-              :title="iconTitle"
-            >{{icon}}</v-icon>
-            <v-text-field
-              style="margin-bottom:20px;"
-              :value="listItem.title"
-              @change="listItem.title = $event"
-              @input="updateText($event)"
-              :outlined="isActive"
-              @click.prevent="activate"
-              @blur="deactivate"
-              :placeholder="placeholder"
-              >{{ listItem.isNewItem ? '' : listItem.title }}</v-text-field
-            >
-          </v-col>
-        </v-row>
-      </v-container>
+      <v-text-field
+        :readonly="readOnly"
+        dense
+        :single-line="readOnly"
+        :flat="readOnly"
+        :solo="readOnly"
+        :value="listItem.title"
+        @change="listItem.title = $event"
+        @input="updateText($event)"
+        :outlined="isActive"
+        @click.prevent="activate"
+        @blur="deactivate"
+        :placeholder="placeholder"
+        :hide-details="readOnly"
+        >
+          <v-icon
+            slot="prepend-inner"
+            class="listitem-icon"
+            :outlined="isActive"
+            @click.prevent="cycleIcon"
+            @blur="deactivate"
+            :title="iconTitle"
+          >{{icon}}</v-icon>
+          {{ listItem.isNewItem ? '' : listItem.title }}</v-text-field
+      >
     </template>
   </div>
 </template>
@@ -49,6 +49,11 @@ export default {
       type: Boolean,
       description: 'it is new item entry',
     },
+    readOnly: {
+      type: Boolean,
+      default: false,
+      description: 'Whether to allow editing of the content or only view it.',
+    },
   },
   data: () => ({
     isActive: false,
@@ -60,7 +65,7 @@ export default {
       this.$emit('blur', this.listItem);
     },
     activate() {
-      this.isActive = true;
+      this.isActive = !this.readOnly;
     },
     updateText(text) {
       this.$emit('update:text', text);
@@ -96,5 +101,9 @@ export default {
 }
 .listitem-text {
   display: inline-block;
+}
+::v-deep .theme--light.v-text-field--solo > .v-input__control > .v-input__slot,
+::v-deep .theme--dark.v-text-field--solo > .v-input__control > .v-input__slot {
+  background: none;
 }
 </style>
