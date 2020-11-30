@@ -101,6 +101,20 @@ async function ensureSlugUniqueness(title) {
   return newSlug;
 }
 
+async function saveUserPreferences(prefs) {
+  const userDocument = db.collection('users').doc(auth.currentUser.uid);
+  await userDocument.set(prefs, { merge: true });
+  return userDocument.get();
+}
+
+async function getUserPreferences() {
+  const userDocumentRef = db.collection('users').doc(auth.currentUser.uid);
+  const userDocument = await userDocumentRef.get();
+  if (userDocument.exists) return userDocument.data();
+  console.warn('User Prefs don\'t exist: ', auth.currentUser.uid, userDocument.path);
+  return {};
+}
+
 export {
   fbApp,
   fbAnalytics,
@@ -119,4 +133,6 @@ export {
   googleOAuthLogin,
   facebookOAuthLogin,
   ensureSlugUniqueness,
+  saveUserPreferences,
+  getUserPreferences,
 };

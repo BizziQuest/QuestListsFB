@@ -71,7 +71,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import md5 from 'md5';
+import { getAvatarForUser } from '../util';
 
 export default {
   name: 'EditInfo',
@@ -100,15 +100,12 @@ export default {
         this.displayName = displayName;
         this.email = email;
         this.avatar = avatar;
-        this.useGravatar = useGravatar || false;
+        this.useGravatar = !!useGravatar;
         return state.currentUser;
       },
     }),
     avatarPreview() {
-      if (this.useGravatar) {
-        return `https://www.gravatar.com/avatar/${md5(this.email)}`;
-      }
-      return this.avatar;
+      return getAvatarForUser({ useGravatar: this.useGravatar, email: this.email, avatar: this.avatar });
     },
   },
   methods: {
@@ -118,7 +115,7 @@ export default {
         email: this.email,
         displayName: this.displayName || 'New Member',
         avatar: this.avatar || '/img/unknown_user.svg',
-        useGravatar: this.useGravatar || false,
+        useGravatar: !!this.useGravatar,
       };
       this.$store.dispatch('saveProfile', userInfo);
     },
