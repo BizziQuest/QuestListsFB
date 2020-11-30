@@ -43,7 +43,7 @@
           <span>Favorites</span>
           <v-icon>mdi-heart</v-icon>
         </v-btn>
-        <user-menu-item :dark="!isDark" :light="isDark">
+        <user-menu-item :dark="!isDark" :light="isDark" class="d-flex flex-column align-center">
           <template v-slot:login="slotProps">
             <v-btn value="signIn" v-on="slotProps.on" icon :color="menuHighlightColor">
               <span>Sign In</span>
@@ -52,7 +52,7 @@
           </template>
           <template v-slot:avatar="slotProps">
             <v-btn value="viewProfile"
-              class="d-flex flex-column text-truncate"
+              class="d-flex flex-column text-truncate align-center"
               icon to="/EditInfo" :color="menuHighlightColor"
             >
               <span class="text-truncate d-inline-block" style="max-width:100px">{{slotProps.username}}</span>

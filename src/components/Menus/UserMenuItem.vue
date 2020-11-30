@@ -6,16 +6,16 @@
       </template>
     </login-or-signup>
     <slot v-else name="avatar"
-      :avatar="currentUser.avatar"
+      :avatar="avatar"
       :username="currentUser.displayName"
       :userId="currentUser.uid"
     >
       <v-list-item link title="User Management" to="/EditInfo">
         <v-list-item-avatar size="28">
-          <v-img v-if="currentUser.avatar" :src="currentUser.avatar"/>
+          <v-img v-if="avatar" :src="avatar"/>
           <v-icon v-else>mdi-account</v-icon>
         </v-list-item-avatar>
-        <v-list-item-content>
+        <v-list-item-content class="ml-3">
           <v-list-item-title class="text-truncate">{{currentUser.displayName}}</v-list-item-title>
         </v-list-item-content>
         <v-icon icon small v-if="currentUser.uid" @click.stop.prevent="logoutAndGoHome">

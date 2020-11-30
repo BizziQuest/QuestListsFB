@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-card class="mx-auto mt-10" max-width="500" raised shaped>
-      <v-card-text>
-        <v-avatar class="d-flex justify-center align-center">
+      <v-card-text class="d-flex flex-column align-center mt-10">
+        <h1 class="mt-10">Edit Profile</h1>
+        <v-avatar class="my-4" size="96">
           <img :src="avatarPreview"/>
         </v-avatar>
-        <h1 class="d-flex justify-center align-center mt-10">Edit Info</h1>
-        <h4 class="d-flex justify-center align-center mt-10">{{currentUser.email}}</h4>
+        <h4 class="">{{currentUser.email}}</h4>
       </v-card-text>
       <v-card-actions>
         <v-form ref="infoForm">
@@ -34,11 +34,6 @@
                 color="secondary"
                ></v-checkbox>
                <label class="pt-5 pl-2">(<a href="https://gravatar.com">sign up</a>)</label>
-            </v-row>
-            <v-row>
-              <v-col cols="12" md="12">
-                <v-text-field v-model="email" label="E-mail" disabled></v-text-field>
-              </v-col>
             </v-row>
             <v-row>
               <v-col class="d-flex align-center justify-center">
@@ -105,7 +100,12 @@ export default {
       },
     }),
     avatarPreview() {
-      return getAvatarForUser({ useGravatar: this.useGravatar, email: this.email, avatar: this.avatar });
+      return getAvatarForUser({
+        useGravatar: this.useGravatar,
+        email: this.email,
+        avatar: this.avatar,
+        displayName: this.displayName,
+      });
     },
   },
   methods: {
