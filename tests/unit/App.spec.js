@@ -1,15 +1,16 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 import App from '@/App.vue';
+import Vue from 'vue';
 import vuetify from 'vuetify';
 import router from '@/router';
 import store from '@/store';
 
+Vue.use(vuetify);
+
 let wrapper = null;
+const localVue = createLocalVue();
 
 beforeEach(() => {
-  const localVue = createLocalVue();
-  localVue.use(vuetify);
-
   wrapper = shallowMount(App, {
     localVue,
     router,
@@ -36,3 +37,7 @@ describe('App.vue', () => {
     expect(wrapper.findAll('router-view-stub').length).toBe(1);
   });
 });
+
+/// NOTE:
+// mock firebase
+// mock firebase.auth.currentUser to return fake object with user's properties, including emailVerified
