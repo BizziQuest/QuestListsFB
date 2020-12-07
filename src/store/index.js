@@ -192,7 +192,6 @@ const store = new Vuex.Store({
     },
     async authenticationChanged({ commit }, payload) {
       const userPrefs = await getUserPreferences();
-      console.debug('PREFS:', { ...userPrefs });
       commit('setUser', { ...payload, ...userPrefs });
     },
     async addStateGroup({ commit, state }, stateGroupData) {
@@ -234,7 +233,6 @@ const store = new Vuex.Store({
           displayName: payload.displayName,
           photoURL: payload.avatar,
         });
-        // TODO: write the rest of payload to the DB.
         await saveUserPreferences(payload);
         commit('setUser', payload);
       } catch (error) {

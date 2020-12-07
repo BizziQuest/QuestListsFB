@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     handleFind() {
-      console.log('Showing Search Box...');
+      console.warn('Search Not Implemented');
     },
   },
   mounted() {

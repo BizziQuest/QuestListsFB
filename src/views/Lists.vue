@@ -11,7 +11,7 @@
       <v-row v-if="lists && lists.length < 1" key="sad" class='ml-5 mr-5 '>
         <v-alert prominent icon="mdi-shield-plus-outline" type="info" class="col-12">
           Welcome to Quest Lists! You don't have any Quests yet, but have no fear, simply click on the
-          <v-icon>mdi-plus</v-icon> icon on the left to get started!
+          <v-icon>mdi-shield-plus-outline</v-icon> icon on the left to get started!
         </v-alert>
       </v-row>
       <v-col v-else v-for="list in lists" :key="list.id" col="12" md="4" class="d-flex align-stretch">

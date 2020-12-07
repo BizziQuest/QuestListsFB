@@ -35,7 +35,7 @@
               class="rounded-circle main-fab"
               v-on="slotProps.on"
             >
-              <v-icon>mdi-plus</v-icon>
+              <v-icon>mdi-shield-plus-outline</v-icon>
             </v-btn>
           </template>
         </CreateAList>

@@ -192,7 +192,6 @@ export default {
   },
   mounted() {
     if (this.$route.query?.newQuest) {
-      console.log('SHOW LOGIN');
       this.dialog = true;
     }
   },
