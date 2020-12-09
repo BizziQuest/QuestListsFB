@@ -43,6 +43,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
       env:
+        CI: true
         VUE_APP_FIREBASE_PROJECT_ID: ${{ secrets.VUE_APP_FIREBASE_PROJECT_ID }}
         VUE_APP_FIREBASE_API_KEY: ${{ secrets.VUE_APP_FIREBASE_API_KEY }}
         VUE_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.VUE_APP_FIREBASE_AUTH_DOMAIN }}
@@ -53,6 +54,7 @@ jobs:
         VUE_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.VUE_APP_GOOGLE_ANALYTICS_ID }}
         VUE_APP_I18N_LOCALE: en
         VUE_APP_I18N_FALLBACK_LOCALE: en
+        FIREBASE_TOKEN: ${{ secrets.CI_FIREBASE_TOKEN }}
     - run: npm install -g yarn @vue/cli
     - run: yarn
     - run: CI=true yarn ci:unit
@@ -72,6 +74,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
       env:
+        CI: true
         VUE_APP_FIREBASE_PROJECT_ID: ${{ secrets.VUE_APP_FIREBASE_PROJECT_ID }}
         VUE_APP_FIREBASE_API_KEY: ${{ secrets.VUE_APP_FIREBASE_API_KEY }}
         VUE_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.VUE_APP_FIREBASE_AUTH_DOMAIN }}
@@ -82,6 +85,7 @@ jobs:
         VUE_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.VUE_APP_GOOGLE_ANALYTICS_ID }}
         VUE_APP_I18N_LOCALE: en
         VUE_APP_I18N_FALLBACK_LOCALE: en
+        FIREBASE_TOKEN: ${{ secrets.CI_FIREBASE_TOKEN }}
     - run: npm install -g yarn @vue/cli
     - run: yarn
     - run: CI=true yarn ci:e2e
