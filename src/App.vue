@@ -1,7 +1,5 @@
 <template>
-  <!-- id="keep" has no effect ? -->
   <v-app id="app" dark color="primary" class="primary">
-    <!-- @updateDrawer="handleUpdate" -->
     <div id="nav">
         <top-menu-bar :drawer.sync="drawer" color="primary"></top-menu-bar>
         <drawer-menu-bar :drawer.sync="drawer" color="primary"></drawer-menu-bar>

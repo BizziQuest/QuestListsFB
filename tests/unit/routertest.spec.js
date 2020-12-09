@@ -1,26 +1,45 @@
+/* eslint-disable import/no-unresolved */
 import { mount, createLocalVue } from '@vue/test-utils';
+import Vuex from 'vuex';
+import store from '@/store';
 import VueRouter from 'vue-router';
 import Lists from '@/views/Lists.vue';
+import List from '@/views/List.vue';
 import TopMenuBar from '@/components/Menus/TopMenuBar.vue';
-import routes from '@/router/routes';
+// eslint-disable-next-line import/extensions
+import routes from '@/router/routes.js';
 import App from '@/App.vue';
-import store from '@/store';
-import vuetify from 'vuetify';
+import Vuetify from 'vuetify';
 
 const localVue = createLocalVue();
-localVue.use(VueRouter, vuetify);
+const router = new VueRouter({ routes });
+const vuetify = new Vuetify();
+localVue.use(VueRouter, Vuetify, Vuex);
 
-describe('App', () => {
-  it('render List component via routing', async () => {
-    const router = new VueRouter({ routes });
+describe('Page Views', () => {
+  it('render Lists component via routing', async () => {
     const wrapper = mount(App, {
       localVue,
       router,
+      vuetify,
       store,
     });
-    wrapper.vm.$router.push('/Lists');
+    // wrapper.vm.$router.push('/');
     await wrapper.vm.$nextTick();
     expect(wrapper.findComponent(TopMenuBar).exists()).toBe(true);
     expect(wrapper.findComponent(Lists).exists()).toBe(true);
+  });
+  it('renders a single List component via routing', async () => {
+    const wrapper = mount(App, {
+      localVue,
+      router,
+      vuetify,
+      store,
+    });
+    // for correctness, we need to create a list in the store or mock the firebase lib to return waht we need
+    wrapper.vm.$router.push('/lists/abc123');
+    await wrapper.vm.$nextTick();
+    console.log(wrapper.html());
+    expect(wrapper.findComponent(List).exists()).toBe(true);
   });
 });

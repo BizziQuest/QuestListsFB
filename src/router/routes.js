@@ -1,5 +1,4 @@
 import EditInfo from '../components/EditInfo.vue';
-
 import Lists from '../views/Lists.vue';
 import List from '../views/List.vue';
 

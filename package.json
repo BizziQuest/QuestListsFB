@@ -23,7 +23,7 @@
     "fb:e2e": "firebase emulators:exec --only firestore 'yarn test:e2e --mode=development'",
     "fb:e2e:clean": "firebase emulators:exec --only firestore 'yarn test:e2e --mode=development'",
     "test": "yarn test:unit && yarn test:e2e",
-    "test:jest": "jest --watch --maxWorkers=4",
+    "test:jest": "jest --watch --maxWorkers=4 ",
     "ui": "vue ui"
   },
   "dependencies": {
@@ -42,6 +42,7 @@
     "slugify": "^1.4.6",
     "vue": "^2.6.11",
     "vue-cli-plugin-vuetify-preset-reply": "^1.0.4",
+    "vue-jest": "^3.0.7",
     "vue-router": "^3.3.4",
     "vue-template-compiler": "^2.6.12",
     "vuetify": "^2.3.7",

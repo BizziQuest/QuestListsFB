@@ -1,14 +1,17 @@
+import Vue from 'vue';
 import TopMenuBar from '@/components/Menus/TopMenuBar.vue';
-import { createLocalVue, shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import vuetify from 'vuetify';
 import router from '@/router';
 import store from '@/store';
 
 let wrapper = null;
-const localVue = createLocalVue();
-localVue.use(vuetify);
+// const localVue = createLocalVue();
+// seemingly there is a bug with using vuetify
+// with localVue
+Vue.use(vuetify);
 wrapper = shallowMount(TopMenuBar, {
-  localVue,
+  // localVue,
   store,
   router,
 });
@@ -24,8 +27,8 @@ wrapper = shallowMount(TopMenuBar, {
 //   console.debug(wrapper);
 // });
 
-beforeEach(() => {
-});
+// beforeEach(() => {
+// });
 
 afterEach(() => {
   // wrapper.destroy();
