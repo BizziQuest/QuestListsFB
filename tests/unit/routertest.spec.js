@@ -40,7 +40,7 @@ describe('Page Views', () => {
     });
     // for correctness, we need to create a list in the store or mock the firebase lib to return waht we need
     wrapper.vm.$router.push('/lists/abc123');
-    await wrapper.vm.$nextTick().catch((e) => console.log(e));
+    await wrapper.vm.$nextTick();
     expect(wrapper.findComponent(List).exists()).toBe(true);
   });
 });
