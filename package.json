@@ -7,8 +7,8 @@
     "build": "vue-cli-service build --mode production",
     "ci:e2e:clean": "firebase emulators:exec --only firestore,auth 'yarn test:e2e'",
     "ci:e2e": "firebase emulators:exec --only firestore,auth 'yarn test:e2e --headless --mode=development'",
-    "ci:unit": "firebase emulators:exec --only firestore,auth 'yarn test:unit'",
-    "ci": "CI=true firebase emulators:exec --only firestore,auth 'CI=true yarn test:e2e --headless && yarn test:unit'",
+    "ci:unit": "firebase emulators:exec --only firestore,auth 'yarn test:jest'",
+    "ci": "CI=true firebase emulators:exec --only firestore,auth 'CI=true yarn test:e2e --headless && yarn test:jest'",
     "dev": "yarn fb:emulate; yarn serve --open",
     "fb:deploy": "firebase deploy",
     "fb:dev:clean": "firebase emulators:exec --only firestore,auth 'yarn serve --open'",
@@ -19,19 +19,12 @@
     "fb:emulate:stop": "firebase emulators:stop",
     "fb:emulate": "firebase emulators:start --only firestore,auth --import tests/data",
     "fb:login": "firebase login --no-localhost",
-<<<<<<< HEAD
-    "fb:e2e": "firebase emulators:exec --only firestore 'yarn test:e2e --mode=development'",
-    "fb:e2e:clean": "firebase emulators:exec --only firestore 'yarn test:e2e --mode=development'",
-    "test": "yarn test:unit && yarn test:e2e",
-    "test:jest": "jest --watch --maxWorkers=4 ",
-=======
     "lint": "vue-cli-service lint --mode production",
     "serve": "vue-cli-service serve --mode development",
-    "test:e2e": "vue-cli-service test:e2e",
-    "test:jest": "jest --watch --maxWorkers=4",
-    "test:unit": "vue-cli-service test:unit --mode=development",
     "test": "yarn test:unit && yarn test:e2e",
->>>>>>> 4427c8ebe1dd1fe767136b9c940642c52ee0d702
+    "test:e2e": "vue-cli-service test:e2e",
+    "test:jest": "jest --watch --maxWorkers=4 ",
+    "test:unit": "vue-cli-service test:unit --mode=development",
     "ui": "vue ui"
   },
   "dependencies": {
