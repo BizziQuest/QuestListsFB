@@ -53,7 +53,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: env | sort
     - run: npm install -g yarn @vue/cli
     - run: yarn
     - run: CI=true yarn ci:unit
@@ -69,7 +68,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: env | sort
     - run: npm install -g yarn @vue/cli
     - run: yarn
     - run: CI=true yarn ci:e2e
