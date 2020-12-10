@@ -88,4 +88,4 @@ jobs:
         FIREBASE_TOKEN: ${{ secrets.CI_FIREBASE_TOKEN }}
     - run: npm install -g yarn @vue/cli
     - run: yarn
-    - run: CI=true yarn ci:e2e
+    - run: env && CI=true yarn ci:e2e
