@@ -43,6 +43,7 @@ jobs:
     - run: yarn lint
 
   unit-tests:
+    needs: linting
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -58,6 +59,7 @@ jobs:
     - run: CI=true yarn ci:unit
 
   end2end-tests:
+    needs: linting
     runs-on: ubuntu-latest
     strategy:
       matrix:
