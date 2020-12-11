@@ -16,7 +16,7 @@ const vuetify = new Vuetify();
 localVue.use(VueRouter, Vuetify, Vuex);
 
 describe('login or sign up', () => {
-  it('should render the header', () => {
+  it('should render the header', async () => {
     const wrapper = shallowMount(LogInorSignUp, {
       localVue,
       router,

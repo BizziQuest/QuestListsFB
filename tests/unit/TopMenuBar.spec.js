@@ -35,8 +35,13 @@ afterEach(() => {
 });
 
 describe('Top Menu Bar', () => {
-  it('component include text Lists', () => {
+  it('component include text Lists', (done) => {
     // expect(wrapper.html()).toMatchSnapshot();
-    expect(wrapper.find('.font-weight-light').text()).toContain('Lists');
+    try {
+      expect(wrapper.find('.font-weight-light').text()).toContain('Lists');
+      done();
+    } catch (e) {
+      done(e);
+    }
   });
 });

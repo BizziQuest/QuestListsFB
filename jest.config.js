@@ -1,7 +1,7 @@
 module.exports = {
   preset: '@vue/cli-plugin-unit-jest',
   // some says to put it inside package.json
-  // testEnvironment: 'node',
+  // testEnvironment: '<rootDir>/tests/firebaseWorkaround.js',
   moduleFileExtensions: ['js', 'json', 'vue'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -16,4 +16,5 @@ module.exports = {
   },
   collectCoverage: false,
   collectCoverageFrom: ['**/*.{js,vue}', '!**/node_modules/**'],
+  setupFiles: ['<rootDir>tests/setupJest.js'],
 };
