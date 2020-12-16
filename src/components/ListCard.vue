@@ -12,11 +12,12 @@
         <v-list-item-subtitle>{{list.description}}</v-list-item-subtitle>
         <ul>
           <li>Next Items:</li>
-          <li v-for="item in list.nextItems"
+          <li v-for="item in updatedList.nextItems"
               :color="globalPreferences.defaultStateGroup.color" :key="item.order">
             <list-item
               v-if="item"
               :list-item="item"
+              :value="item"
               :states="states || globalPreferences.defaultStateGroup.states"
               @click.prevent="null"
             />
@@ -51,6 +52,7 @@ export default {
     },
   },
   data: () => ({
+    updatedList: [],
     states: [],
   }),
   computed: {
@@ -58,6 +60,7 @@ export default {
   },
   async mounted() {
     this.states = await getListStates(this.list);
+    this.updatedList = this.$props.list;
   },
 };
 </script>

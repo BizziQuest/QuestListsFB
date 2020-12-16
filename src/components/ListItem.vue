@@ -11,29 +11,26 @@
               @click.prevent="cycleIcon"
               @blur="deactivate"
               :title="iconTitle"
-            >{{icon}}</v-icon>
+              >{{ icon }}</v-icon
+            >
             <v-text-field
-              style="margin-bottom:20px;"
-              :value="listItem.title"
-              @change="listItem.title = $event"
-              @input="updateText($event)"
+              style="margin-bottom: 20px"
+              v-model="title"
               :outlined="isActive"
               @click.prevent="activate"
               @blur="deactivate"
               :placeholder="placeholder"
-              >{{ listItem.isNewItem ? 'No Title' : listItem.title }}</v-text-field
+              >{{ isNewItem ? "No Title" : title }}</v-text-field
             >
-            <v-btn v-if="!listItem.subList"
-                   :loading="creatingSubList"
-                   :disabled="creatingSubList"
-                   @click='makeSublist()'>
-                   add Sublist
+            <v-btn
+              v-if="!subList"
+              :loading="creatingSubList"
+              :disabled="creatingSubList"
+              @click="makeSublist()"
+            >
+              add Sublist
             </v-btn>
-            <router-link
-              :to="subListPath"
-              v-else>
-                sublist link
-            </router-link>
+            <router-link :to="subListPath" v-else> sublist link </router-link>
           </v-col>
         </v-row>
       </v-container>
@@ -47,7 +44,7 @@ import { createList, stateGroupsCollection } from '../firebase';
 
 export default {
   props: {
-    listItem: {
+    value: {
       type: Object,
       default: () => ({}),
       description: 'List Item is an object in the form: {title, state}',
@@ -57,33 +54,34 @@ export default {
       default: () => [],
       description: 'The list of states that this item should have.',
     },
-    isNewItem: {
-      type: Boolean,
-      description: 'it is new item entry',
-    },
-    listId: {
-      type: String,
-      describe: 'id of the list',
-    },
   },
   data: () => ({
+    title: '',
     isActive: false,
+    isNewItem: false,
     currentStateIdx: 0,
     subListSlug: '',
     subListPath: '',
     subList: null,
     creatingSubList: false,
+    listId: '',
   }),
   methods: {
+    emitUpdate(newValues) {
+      const newItem = { ...this.value };
+      if (this.isNewItem) newItem.isNewItem = this.isNewItem;
+      if (this.subList) newItem.subList = this.subList;
+      this.$emit('input', {
+        ...newItem,
+        ...newValues,
+      });
+    },
     deactivate() {
       this.isActive = false;
-      this.$emit('blur', this.listItem);
+      this.emitUpdate();
     },
     activate() {
       this.isActive = true;
-    },
-    updateText(text) {
-      this.$emit('update:text', text);
     },
     cycleIcon() {
       if (this.isNewItem) return;
@@ -97,15 +95,14 @@ export default {
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
       const stateGroup = stateGroupsCollection.doc(stateGroupDoc.id);
       const payload = {
-        title: this.listItem.title,
-        description: `sublist of ${this.listItem.title}`, // same as title
+        title: this.title,
+        description: `sublist of ${this.title}`, // same as title
         stateGroup,
       };
-      this.listItem.subList = await createList(payload);
-      this.subListSlug = this.listItem.subList.slug;
-      this.$emit('update:subList', this.listItem.subList);
-      this.$forceUpdate();
-      await this.computeSubListPath(this.listItem.subList);
+      this.subList = await createList(payload);
+      this.subListSlug = this.subList.slug;
+      this.emitUpdate();
+      await this.computeSubListPath(this.subList);
       this.creatingSubList = false;
     },
     async computeSubListPath(subListRef) {
@@ -116,8 +113,11 @@ export default {
     },
   },
   async mounted() {
-    if (this.$props.listItem.subList) {
-      await this.computeSubListPath(this.$props.listItem.subList);
+    this.title = this.$props.value.title;
+    this.isNewItem = this.$props.value.isNewItem;
+    this.listId = this.$props.value.listId;
+    if (this.$props.value.subList) {
+      await this.computeSubListPath(this.$props.subList);
     }
   },
   computed: {
@@ -130,7 +130,7 @@ export default {
       return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].name;
     },
     placeholder() {
-      return this.listItem.isNewItem ? 'New Item' : '';
+      return this.isNewItem ? 'New Item' : '';
     },
     haveParent() {
       return this.listId !== 'none';
