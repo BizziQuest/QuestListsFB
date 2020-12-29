@@ -1,46 +1,39 @@
 <template>
   <div class="list-item-view">
     <template>
-      <v-text-field
-        :readonly="readOnly"
-        dense
-        :single-line="readOnly"
-        :flat="readOnly"
-        :solo="readOnly"
-        :value="listItem.title"
-        @change="listItem.title = $event"
-        @input="updateText($event)"
-        :outlined="isActive"
-        @click.prevent="activate"
-        @blur="deactivate"
-        :placeholder="placeholder"
-        :hide-details="readOnly"
-        :clearable="!readOnly"
-        >
-          <v-icon
-            slot="prepend-inner"
-            class="listitem-icon"
-            :outlined="isActive"
-            @click.prevent="cycleIcon"
-            @blur="deactivate"
-            :title="iconTitle"
-          >{{icon}}</v-icon>
-          {{ listItem.isNewItem ? '' : listItem.title }}
-          <v-btn v-if="!readOnly && !listItem.subList" slot="append"
-            :loading="creatingSubList"
-            :disabled="creatingSubList"
-            icon
-            @click='makeSublist()'>
-            <v-icon>mdi-shield-plus-outline</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            slot="append"
-            :to="subListPath"
-            v-if="!readOnly && listItem.subList">
-              <v-icon>mdi-shield-link-variant-outline</v-icon>
-          </v-btn>
-      </v-text-field>
+      <v-container>
+        <v-row>
+          <v-col col="12" md="6">
+            <v-icon
+              large
+              class="listitem-icon"
+              :outlined="isActive"
+              @click.prevent="cycleIcon"
+              @blur="deactivate"
+              :title="iconTitle"
+              >{{ icon }}</v-icon
+            >
+            <v-text-field
+              style="margin-bottom: 20px"
+              v-model="title"
+              :outlined="isActive"
+              @click.prevent="activate"
+              @blur="deactivate"
+              :placeholder="placeholder"
+              >{{ isNewItem ? "No Title" : title }}</v-text-field
+            >
+            <v-btn
+              v-if="!subList"
+              :loading="creatingSubList"
+              :disabled="creatingSubList"
+              @click="makeSublist()"
+            >
+              add Sublist
+            </v-btn>
+            <router-link :to="subListPath" v-else> sublist link </router-link>
+          </v-col>
+        </v-row>
+      </v-container>
     </template>
   </div>
 </template>
@@ -51,7 +44,7 @@ import { createList, stateGroupsCollection } from '../firebase';
 
 export default {
   props: {
-    listItem: {
+    value: {
       type: Object,
       default: () => ({}),
       description: 'List Item is an object in the form: {title, state}',
@@ -61,6 +54,7 @@ export default {
       default: () => [],
       description: 'The list of states that this item should have.',
     },
+<<<<<<< HEAD
     isNewItem: {
       type: Boolean,
       description: 'it is new item entry',
@@ -74,25 +68,36 @@ export default {
       type: String,
       describe: 'id of the list',
     },
+=======
+>>>>>>> 25-create-some-tests
   },
   data: () => ({
+    title: '',
     isActive: false,
+    isNewItem: false,
     currentStateIdx: 0,
     subListSlug: '',
     subListPath: '',
     subList: null,
     creatingSubList: false,
+    listId: '',
   }),
   methods: {
+    emitUpdate(newValues) {
+      const newItem = { ...this.value };
+      if (this.isNewItem) newItem.isNewItem = this.isNewItem;
+      if (this.subList) newItem.subList = this.subList;
+      this.$emit('input', {
+        ...newItem,
+        ...newValues,
+      });
+    },
     deactivate() {
       this.isActive = false;
-      this.$emit('blur', this.listItem);
+      this.emitUpdate();
     },
     activate() {
       this.isActive = !this.readOnly;
-    },
-    updateText(text) {
-      this.$emit('update:text', text);
     },
     cycleIcon() {
       if (this.isNewItem) return;
@@ -106,15 +111,14 @@ export default {
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
       const stateGroup = stateGroupsCollection.doc(stateGroupDoc.id);
       const payload = {
-        title: this.listItem.title,
-        description: `sublist of ${this.listItem.title}`, // same as title
+        title: this.title,
+        description: `sublist of ${this.title}`, // same as title
         stateGroup,
       };
-      this.listItem.subList = await createList(payload);
-      this.subListSlug = this.listItem.subList.slug;
-      this.$emit('update:subList', this.listItem.subList);
-      this.$forceUpdate();
-      await this.computeSubListPath(this.listItem.subList);
+      this.subList = await createList(payload);
+      this.subListSlug = this.subList.slug;
+      this.emitUpdate();
+      await this.computeSubListPath(this.subList);
       this.creatingSubList = false;
     },
     async computeSubListPath(subListRef) {
@@ -125,8 +129,11 @@ export default {
     },
   },
   async mounted() {
-    if (this.$props.listItem.subList) {
-      await this.computeSubListPath(this.$props.listItem.subList);
+    this.title = this.$props.value.title;
+    this.isNewItem = this.$props.value.isNewItem;
+    this.listId = this.$props.value.listId;
+    if (this.$props.value.subList) {
+      await this.computeSubListPath(this.$props.subList);
     }
   },
   computed: {
@@ -139,7 +146,7 @@ export default {
       return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].name;
     },
     placeholder() {
-      return this.listItem.isNewItem ? 'New Item' : '';
+      return this.isNewItem ? 'New Item' : '';
     },
     haveParent() {
       return this.listId !== 'none';

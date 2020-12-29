@@ -1,30 +1,30 @@
 <template>
   <v-card
     light
-    :color="list.color"
+    :color="updatedList.color"
     class="list-card mb-2 mr-0 d-flex align-stretch flex-row"
     :class="cardClasses"
     elevation="3"
-    :to="{ name: 'List', params: { slug: list.slug }}"
+    :to="{ name: 'List', params: { slug: updatedList.slug }}"
   >
     <v-img
-      :src="list.image || 'https://picsum.photos/200/300'"
+      :src="updatedList.image || 'https://picsum.photos/200/300'"
       max-width="100"
       :class="imageClasses"
     ></v-img>
     <v-container class="ma-0 pa-1 align-self-start" dark>
-      <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold">{{list.title}}</v-card-title>
-      <v-card-subtitle class="ml-0 px-1 text-subtitle-2" dark>{{list.description}}</v-card-subtitle>
+      <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold">{{updatedList.title}}</v-card-title>
+      <v-card-subtitle class="ml-0 px-1 text-subtitle-2" dark>{{updatedList.description}}</v-card-subtitle>
       <v-card-text class="ml-0 px-1">
         <v-list dense class="ml-0 px-0">
           <v-list-item-title class="ml-0 px-0 font-weight-medium text-decoration-underline">
             Next Items:
           </v-list-item-title>
-          <v-list-item class="font-weight-bold" v-if="!list.nextItems || list.nextItems.length < 1">
+          <v-list-item class="font-weight-bold" v-if="!updatedList.nextItems || updatedList.nextItems.length < 1">
             There is nothing to do in this list. Click this card to add your quest items.
           </v-list-item>
           <list-item class="ml-0 px-0"
-            v-for="item in list.nextItems"
+            v-for="item in updatedList.nextItems"
             :color="globalPreferences.defaultStateGroup.color" :key="item.order"
             :list-item="item"
             :states="states || globalPreferences.defaultStateGroup.states"
@@ -61,6 +61,7 @@ export default {
     },
   },
   data: () => ({
+    updatedList: () => ({}),
     states: [],
   }),
   computed: {
@@ -78,6 +79,7 @@ export default {
   },
   async mounted() {
     this.states = await getListStates(this.list);
+    this.updatedList = this.$props.list;
   },
 };
 </script>

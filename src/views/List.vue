@@ -5,12 +5,9 @@
       <li v-for="(item,index) in listItems" :key="`${item.text}${index}`">
         <list-item
           :listItem="item"
+          :value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
-          @blur="saveItem"
-          :isNewItem="item.isNewItem"
-          @update:text="addNewItem(index, $event)"
-          @update:subList="addNewSubList(index, $event)"
-          :listId="list.id"
+          @input="saveItem(index, $event)"
         />
       </li>
      </ol>
@@ -71,8 +68,9 @@ export default {
       this.listItems = listItems;
       this.states = states;
     },
-    saveItem() {
+    saveItem(idx, newItem) {
       const items = this.listItems.slice(0, -1);
+      items[idx] = newItem;
       saveListItems(this.list.id, items);
     },
     addNewSubList() {
