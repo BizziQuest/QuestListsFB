@@ -1,40 +1,47 @@
 <template>
   <div class="list-item-view">
-    <template>
-      <v-container>
-        <v-row>
-          <v-col col="12" md="6">
-            <v-icon
-              large
-              class="listitem-icon"
-              :outlined="isActive"
-              @click.prevent="cycleIcon"
-              @blur="deactivate"
-              :title="iconTitle"
-              >{{ icon }}</v-icon
-            >
-            <v-text-field
-              style="margin-bottom: 20px"
-              v-model="title"
-              :outlined="isActive"
-              @click.prevent="activate"
-              @blur="deactivate"
-              :placeholder="placeholder"
-              >{{ isNewItem ? "No Title" : title }}</v-text-field
-            >
-            <v-btn
-              v-if="!subList"
-              :loading="creatingSubList"
-              :disabled="creatingSubList"
-              @click="makeSublist()"
-            >
-              add Sublist
-            </v-btn>
-            <router-link :to="subListPath" v-else> sublist link </router-link>
-          </v-col>
-        </v-row>
-      </v-container>
-    </template>
+    <v-text-field
+      dense
+      v-model="title"
+      @blur="deactivate"
+      @click.prevent="activate"
+      @input="emitUpdate({ title: $event })"
+      :clearable="!readOnly"
+      :flat="readOnly"
+      :hide-details="readOnly"
+      :outlined="isActive"
+      :placeholder="placeholder"
+      :readonly="readOnly"
+      :single-line="readOnly"
+      :solo="readOnly"
+      :tabindex="tabindex"
+      >
+        <v-icon
+          slot="prepend-inner"
+          class="listitem-icon"
+          :outlined="isActive"
+          @click.prevent="cycleIcon"
+          @blur="deactivate"
+          :title="iconTitle"
+        >{{icon}}</v-icon>
+        {{ isNewItem ? '' : title }}
+        <v-btn v-if="!readOnly && !subList" slot="append"
+          :loading="creatingSubList"
+          :disabled="creatingSubList"
+          title="Make a new sublist from this item."
+          icon
+          @click='makeSublist()'>
+          <v-icon>mdi-shield-plus-outline</v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          slot="append"
+          :to="subListPath"
+          title="Edit / View Sublist"
+          v-if="!readOnly && subList">
+            <v-icon>mdi-shield-link-variant-outline</v-icon>
+        </v-btn>
+    </v-text-field>
   </div>
 </template>
 
@@ -54,22 +61,16 @@ export default {
       default: () => [],
       description: 'The list of states that this item should have.',
     },
-<<<<<<< HEAD
-    isNewItem: {
-      type: Boolean,
-      description: 'it is new item entry',
-    },
     readOnly: {
       type: Boolean,
       default: false,
       description: 'Whether to allow editing of the content or only view it.',
     },
-    listId: {
-      type: String,
-      describe: 'id of the list',
+    tabindex: {
+      type: Number,
+      default: null,
+      description: 'The html tabindex to use for tab navigation.',
     },
-=======
->>>>>>> 25-create-some-tests
   },
   data: () => ({
     title: '',
@@ -84,17 +85,31 @@ export default {
   }),
   methods: {
     emitUpdate(newValues) {
-      const newItem = { ...this.value };
-      if (this.isNewItem) newItem.isNewItem = this.isNewItem;
-      if (this.subList) newItem.subList = this.subList;
-      this.$emit('input', {
-        ...newItem,
-        ...newValues,
-      });
+      this.$emit('input', this.$_makeNewItem(newValues));
+    },
+    $_makeNewItem(newValues) {
+      const newItem = { ...this.value, ...newValues };
+      if (newValues?.title !== '') this.isNewItem = false;
+      if (this.subList && !newItem.subList) {
+        newItem.subList = this.subList;
+      } else {
+        delete newItem.subList;
+      }
+      if (!this.isNewItem) delete newItem.isNewItem;
+      return newItem;
+    },
+    invalidateNewItem(newValue) {
+      if (this.isNewItem && (newValue !== '' || !!newValue)) {
+        console.log('invalidating', newValue);
+        this.isNewItem = false;
+        this.emitUpdate({ title: newValue, isNewItem: false });
+      }
     },
     deactivate() {
       this.isActive = false;
-      this.emitUpdate();
+      this.$emit('blur', {
+        ...this.value, title: this.title, isNewItem: this.isNewItem, subList: this.subList,
+      });
     },
     activate() {
       this.isActive = !this.readOnly;
