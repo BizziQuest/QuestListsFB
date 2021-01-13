@@ -2,6 +2,7 @@
   <v-card
     light
     :color="updatedList.color"
+    :style="textStyles"
     class="list-card mb-2 mr-0 d-flex align-stretch flex-row"
     :class="cardClasses"
     elevation="3"
@@ -40,6 +41,7 @@
 <script>
 import { mapState } from 'vuex';
 import { getListStates } from '../firebase';
+import { contrastColor } from '../util';
 import ListItem from './ListItem.vue';
 
 export default {
@@ -76,6 +78,9 @@ export default {
       if (this.$vuetify.breakpoint.smAndDown) return 'rounded-l-xl rounded-tr-0';
       return '';
     },
+    textStyles() {
+      return `color: ${contrastColor('#888888', this.updatedList.color)};`;
+    },
   },
   async mounted() {
     this.states = await getListStates(this.list);
@@ -85,9 +90,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-* {
-  color: black;
-}
 ul {
   margin-left: 0px;
   padding-left: 0px;
@@ -126,5 +128,15 @@ ul {
 .list-image {
   border-radius: 10px;
   width: 30%;
+}
+.v-card.list-card {
+  .v-card__title,
+  .v-card__subtitle,
+  .v-card__text,
+  .v-list,
+  .v-list .v-list-item:not(.v-list-item--active):not(.v-list-item--disabled),
+  .v-list .v-list-item__title {
+    color: inherit !important;
+  }
 }
 </style>
