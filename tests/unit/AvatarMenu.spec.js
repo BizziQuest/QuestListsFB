@@ -1,14 +1,13 @@
 import AvatarMenu from '@/components/Menus/AvatarMenu.vue';
-import { shallowMount, mount, createLocalVue } from '@vue/test-utils';
-import Vue from 'vue';
+import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import store from '@/store';
 import VueRouter from 'vue-router';
-// eslint-disable-next-line import/extensions
-import routes from '@/router/routes.js';
+import routes from '@/router/routes';
 import Vuetify from 'vuetify';
+import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
-Vue.use(Vuetify);
+toHaveBeenWarnedInit();
 
 const localVue = createLocalVue();
 const router = new VueRouter({ routes });
@@ -17,6 +16,8 @@ localVue.use(VueRouter, Vuetify, Vuex);
 
 let wrapper = null;
 let app = null;
+const el = document.createElement('div')
+el.setAttribute('data-app', true);
 
 describe('default state', () => {
   beforeEach(() => {
@@ -55,30 +56,18 @@ describe('avatar changes', () => {
 
 describe('the user menu', () => {
   beforeEach(() => {
-    app = localVue.component('App', {
-      components: { AvatarMenu },
-      template: `
-        <v-app>
-        </v-app>
-      `,
-    });
-    document.body.setAttribute('data-app', 'true');
     wrapper = mount(AvatarMenu, {
       localVue,
       router,
       vuetify,
       store,
-      attachTo: 'v-app',
     });
   });
   it("should show when clicking on the user's avatar", async (done) => {
-    // const wrapper = mountedApp.findComponent(AvatarMenu);
-    // const avatar = wrapper.findComponent({ name: 'VAvatar' });
-    document.body.setAttribute('data-app', 'true');
     let theMenu = wrapper.findComponent({ name: 'VList' });
     expect(theMenu.exists()).toBe(false);
 
-    await wrapper.trigger('click');
+    await wrapper.findComponent({ name: 'VAvatar' }).trigger('click');
 
     let AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
     const AllTheButtons = wrapper.findAllComponents({ name: 'VBtn' });
@@ -96,7 +85,7 @@ describe('the user menu', () => {
       AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
       expect(AllTheTooltip.length).toBe(2);
       expect(AllTheTooltip.wrappers[0].html()).toContain('Edit Profile');
-      document.body.setAttribute('data-app', 'false');
+      expect('Unable to locate target [data-app]').toHaveBeenTipped();
       done();
     });
   });
@@ -109,12 +98,14 @@ describe('the user menu', () => {
     requestAnimationFrame(() => {
       const AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
       expect(AllTheTooltip.wrappers[0].html()).toContain('Edit Profile');
+      expect('Unable to locate target [data-app]').toHaveBeenTipped();
       done();
     });
   });
   it('should mount the logout component', async () => {
     await wrapper.findComponent({ name: 'VAvatar' }).trigger('click');
     const logoutComponent = wrapper.findAllComponents({ name: 'LogOut' });
+    expect('Unable to locate target [data-app]').toHaveBeenTipped();
     expect(logoutComponent.exists()).toBe(true);
   });
 });

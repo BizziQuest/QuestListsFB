@@ -1,14 +1,13 @@
 import LogOut from '@/components/LogOut.vue';
 import { shallowMount, mount, createLocalVue } from '@vue/test-utils';
-import Vue from 'vue';
 import Vuex from 'vuex';
 import store from '@/store';
 import VueRouter from 'vue-router';
-// eslint-disable-next-line import/extensions
-import routes from '@/router/routes.js';
+import routes from '@/router/routes';
 import Vuetify from 'vuetify';
+import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
-Vue.use(Vuetify);
+toHaveBeenWarnedInit();
 
 const localVue = createLocalVue();
 const router = new VueRouter({ routes });
@@ -20,21 +19,11 @@ let app = null;
 
 describe('default state', () => {
   beforeEach(() => {
-    // app = localVue.component('App', {
-    //   components: { LogOut },
-    //   template: `
-    //     <v-app data-app="true">
-    //       <LogOut />
-    //     </v-app>
-    //   `,
-    // });
-    // document.body.setAttribute('data-app', 'true');
     wrapper = mount(LogOut, {
       localVue,
       router,
       vuetify,
       store,
-      attachTo: document.body,
     });
   });
   afterEach(() => {
@@ -47,10 +36,10 @@ describe('default state', () => {
     let AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
     const AllTheButtons = wrapper.findAllComponents({ name: 'VBtn' });
     await AllTheButtons.wrappers[0].trigger('mouseenter');
-    // await wrapper.vm.$nextTick();
     requestAnimationFrame(() => {
       AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
       expect(AllTheTooltip.wrappers[0].html()).toContain('Log Out');
+      expect('Unable to locate target [data-app]').toHaveBeenTipped();
       done();
     });
   });

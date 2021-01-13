@@ -1,13 +1,14 @@
 import CreateAList from '@/components/CreateAList.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
-import Vue from 'vue';
+// import Vue from 'vue';
 import Vuex from 'vuex';
 import store from '@/store';
 import VueRouter from 'vue-router';
 import routes from '@/router/routes';
 import Vuetify from 'vuetify';
+import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
-Vue.use(Vuetify);
+toHaveBeenWarnedInit();
 
 const localVue = createLocalVue();
 const router = new VueRouter({ routes });
@@ -15,7 +16,6 @@ const vuetify = new Vuetify();
 localVue.use(VueRouter, Vuetify, Vuex);
 
 let wrapper;
-let app;
 
 beforeEach(() => {
   wrapper = mount(CreateAList, {
@@ -37,15 +37,7 @@ describe('default state', () => {
 
 describe('clicking on the link', () => {
   beforeEach(() => {
-    app = localVue.component('App', {
-      components: { CreateAList },
-      template: `
-        <v-app data-app>
-          <CreateAList />
-        </v-app>
-      `,
-    });
-    wrapper = mount(app, {
+    wrapper = mount(CreateAList, {
       localVue,
       router,
       vuetify,
@@ -56,6 +48,7 @@ describe('clicking on the link', () => {
     expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(false);
     await wrapper.findComponent({ name: 'VListItem' }).trigger('click');
     expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(true);
+    expect('Unable to locate target [data-app]').toHaveBeenTipped();
   });
 });
 
