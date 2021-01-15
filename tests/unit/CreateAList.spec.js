@@ -48,11 +48,32 @@ describe('clicking on the link', () => {
     expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(false);
     await wrapper.findComponent({ name: 'VListItem' }).trigger('click');
     expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(true);
-    expect('Unable to locate target [data-app]').toHaveBeenTipped();
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
 });
 
 describe('entering information in the dialog', () => {
+  beforeEach(async () => {
+    wrapper = mount(CreateAList, {
+      localVue,
+      router,
+      vuetify,
+      store,
+    });
+    expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(false);
+    await wrapper.findComponent({ name: 'VListItem' }).trigger('click');
+  });
+  it('should set the vm title from the title input', async () => {
+    expect(wrapper.vm.title).toBe('');
+    await wrapper.find('input[placeholder="Your Title"]').setValue('A New Title');
+    expect(wrapper.vm.title).toBe('A New Title');
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
+  });
+  it('should not allow empty titles', async () => {
+    await wrapper.find('.v-btn[name="submit"]').trigger('click');
+    expect(wrapper.text()).toContain('Title is required');
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
+  });
   it.todo('should not allow invalid colors');
   it.todo('should enforce a title');
   it.todo('should allow a descripton');

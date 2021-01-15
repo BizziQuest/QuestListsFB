@@ -1,4 +1,9 @@
-// This was copied from the Vuetify source. https://github.com/vuetifyjs/vuetify/blob/be8e7a77eafad8925432a4a3abf22f3b8e6f04f8/packages/vuetify/test/util/to-have-been-warned.ts
+/* eslint-disable no-undef */
+/* eslint-disable max-len */
+/*
+  This was copied from the Vuetify source.
+  https://github.com/vuetifyjs/vuetify/blob/be8e7a77eafad8925432a4a3abf22f3b8e6f04f8/packages/vuetify/test/util/to-have-been-warned.ts
+*/
 
 // From Vue, slightly modified
 function noop() { }
@@ -17,6 +22,7 @@ const asserted = [];
 
 function createCompareFn(spy) {
   const hasWarned = (msg) => {
+    // eslint-disable-next-line no-restricted-syntax
     for (const args of spy.mock.calls) {
       if (args.some((arg) => (
         arg.toString().includes(msg)
@@ -46,8 +52,8 @@ function toHaveBeenWarnedInit() {
     warn = jest.spyOn(console, 'warn').mockImplementation(noop);
     error = jest.spyOn(console, 'error').mockImplementation(noop);
     expect.extend({
-      toHaveBeenWarned: createCompareFn(error),
-      toHaveBeenTipped: createCompareFn(warn),
+      toHaveBeenErrored: createCompareFn(error),
+      toHaveBeenWarned: createCompareFn(warn),
     });
   });
 
@@ -58,8 +64,10 @@ function toHaveBeenWarnedInit() {
   });
 
   afterEach((done) => {
+    // eslint-disable-next-line no-restricted-syntax
     for (const type of ['error', 'warn']) {
       const warned = (msg) => asserted.some((assertedMsg) => msg.toString().includes(assertedMsg));
+      // eslint-disable-next-line no-restricted-syntax
       for (const args of console[type].mock.calls) {
         if (!warned(args[0])) {
           done.fail(`Unexpected console.${type} message: ${args[0]}`);

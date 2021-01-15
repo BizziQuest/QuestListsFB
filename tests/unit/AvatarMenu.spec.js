@@ -85,7 +85,7 @@ describe('the user menu', () => {
       AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
       expect(AllTheTooltip.length).toBe(2);
       expect(AllTheTooltip.wrappers[0].html()).toContain('Edit Profile');
-      expect('Unable to locate target [data-app]').toHaveBeenTipped();
+      expect('Unable to locate target [data-app]').toHaveBeenWarned();
       done();
     });
   });
@@ -98,14 +98,15 @@ describe('the user menu', () => {
     requestAnimationFrame(() => {
       const AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
       expect(AllTheTooltip.wrappers[0].html()).toContain('Edit Profile');
-      expect('Unable to locate target [data-app]').toHaveBeenTipped();
+      // expect(AllTheTooltip.wrappers[0].vm.isActive).toBe(true); // this is how vuetify tests
+      expect('Unable to locate target [data-app]').toHaveBeenWarned();
       done();
     });
   });
   it('should mount the logout component', async () => {
     await wrapper.findComponent({ name: 'VAvatar' }).trigger('click');
     const logoutComponent = wrapper.findAllComponents({ name: 'LogOut' });
-    expect('Unable to locate target [data-app]').toHaveBeenTipped();
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
     expect(logoutComponent.exists()).toBe(true);
   });
 });

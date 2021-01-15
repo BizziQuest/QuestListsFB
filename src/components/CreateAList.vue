@@ -73,7 +73,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="resetTitleAndColorForm">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
+          <v-btn color="blue darken-1" name="submit" text @click="createAList">Create</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

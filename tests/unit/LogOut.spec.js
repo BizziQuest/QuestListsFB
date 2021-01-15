@@ -39,7 +39,7 @@ describe('default state', () => {
     requestAnimationFrame(() => {
       AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
       expect(AllTheTooltip.wrappers[0].html()).toContain('Log Out');
-      expect('Unable to locate target [data-app]').toHaveBeenTipped();
+      expect('Unable to locate target [data-app]').toHaveBeenWarned();
       done();
     });
   });
