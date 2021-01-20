@@ -76,6 +76,7 @@
           <v-btn color="blue darken-1" name="submit" text @click="createAList">Create</v-btn>
         </v-card-actions>
       </v-card>
+      <v-snackbar type="info" v-model="showStateWarning">{{ warning }}</v-snackbar>
     </v-dialog>
   </v-row>
 </template>
@@ -104,6 +105,8 @@ export default {
       statesPicked: '',
       updatedListStatesItems: [],
       description: '',
+      warning: undefined,
+      showStateWarning: false,
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
@@ -115,11 +118,12 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['setItemStates']),
+    ...mapMutations(['setItemStates', 'setMessages']),
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
     async createAList() {
+      this.warning = undefined;
       if (this.$refs.addTitleAndColorForm.validate()) {
         // TODO: add an input for the name and description for this stateGroup
         let stateGroup = this.getGlobalPreferences.defaultStateGroup;
@@ -129,6 +133,8 @@ export default {
             description: '',
             states: this.updatedListStatesItems,
           };
+        } else {
+          this.setMessages([{ type: 'info', text: 'No states configured. Using default states.' }]);
         }
         const payload = {
           title: this.title,
