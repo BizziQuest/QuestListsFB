@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
@@ -119,37 +119,37 @@ export default {
   },
   methods: {
     ...mapMutations(['setItemStates', 'setMessages']),
+    ...mapActions(['createList']),
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
     async createAList() {
       this.warning = undefined;
-      if (this.$refs.addTitleAndColorForm.validate()) {
-        // TODO: add an input for the name and description for this stateGroup
-        let stateGroup = this.getGlobalPreferences.defaultStateGroup;
-        if (this.updatedListStatesItems.length > 0) {
-          stateGroup = {
-            name: this.updatedListStatesItems.map((s) => s.name).join(', '),
-            description: '',
-            states: this.updatedListStatesItems,
-          };
-        } else {
-          this.setMessages([{ type: 'info', text: 'No states configured. Using default states.' }]);
-        }
-        const payload = {
-          title: this.title,
-          slug: await ensureSlugUniqueness(this.title),
-          color: this.color,
-          stateGroup,
-          description: this.description,
-          createdAt: Date.now(),
-          createdBy: auth.currentUser.uid,
-          parent: 'none',
+      if (!this.$refs.addTitleAndColorForm.validate()) return;
+      // TODO: add an input for the name and description for this stateGroup
+      let stateGroup = this.getGlobalPreferences.defaultStateGroup;
+      if (this.updatedListStatesItems.length > 0) {
+        stateGroup = {
+          name: this.updatedListStatesItems.map((s) => s.name).join(', '),
+          description: '',
+          states: this.updatedListStatesItems,
         };
-        this.$store.dispatch('createList', payload);
-        this.$refs.addTitleAndColorForm.reset();
-        this.dialog = false;
+      } else {
+        this.setMessages([{ type: 'info', text: 'No states configured. Using default states.' }]);
       }
+      const payload = {
+        title: this.title,
+        slug: await ensureSlugUniqueness(this.title),
+        color: this.color,
+        stateGroup,
+        description: this.description,
+        createdAt: Date.now(),
+        createdBy: auth.currentUser.uid,
+        parent: 'none',
+      };
+      this.createList(payload);
+      this.$refs.addTitleAndColorForm.reset();
+      this.dialog = false;
     },
     resetTitleAndColorForm() {
       this.dialog = false;
