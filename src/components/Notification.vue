@@ -25,7 +25,7 @@ import { mapState, mapMutations } from 'vuex';
 export default {
   data: () => ({
     showSnackbar: false,
-    timeout: undefined
+    timeout: undefined,
   }),
   computed: {
     ...mapState({
@@ -33,8 +33,8 @@ export default {
         if (state.messages.length < 1) return [];
         this.showSnackbar = true;
         return state.messages;
-      }
-    })
+      },
+    }),
   },
   methods: {
     ...mapMutations(['setMessages']),
@@ -47,8 +47,8 @@ export default {
           });
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped></style>
