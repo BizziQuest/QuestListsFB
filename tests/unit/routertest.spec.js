@@ -40,15 +40,19 @@ describe('Page Views', () => {
     expect(wrapper.findComponent(TopMenuBar).exists()).toBe(true);
     expect(wrapper.findComponent(Lists).exists()).toBe(true);
   });
-  it('renders a single List component via routing', async () => {
+  it('renders a single List component via routing', async (done) => {
     // since we are testing for the presence of a component, we only need to check if that component renders
     wrapper.vm.$router.push('/lists/abc123');
-    await wrapper.vm.$nextTick();
-    expect(wrapper.findComponent(List).exists()).toBe(true);
+    await wrapper.vm.$nextTick(() => {
+      expect(wrapper.findComponent(List).exists()).toBe(true);
+      done();
+    });
   });
-  it('renders the profile component via routing', async () => {
+  it('renders the profile component via routing', async (done) => {
     wrapper.vm.$router.push('/editinfo');
-    await wrapper.vm.$nextTick();
-    expect(wrapper.findComponent(EditInfo).exists()).toBe(true);
+    await wrapper.vm.$nextTick(() => {
+      expect(wrapper.findComponent(EditInfo).exists()).toBe(true);
+      done();
+    });
   });
 });
