@@ -41,9 +41,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 /*.theme--dark.v-application {
     background: #81b98b;
     color: #FFFFFF;
 }*/
+.firebase-emulator-warning { display: none; }
 </style>

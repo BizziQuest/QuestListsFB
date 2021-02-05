@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>{{list.title}}</h1>
+    <user-auth-alert action="edit this list"/>
     <ol style="list-style-type:none;">
       <li v-for="(item,index) in listItems" :key="`${item.title}${index}`">
         <list-item
@@ -17,6 +18,8 @@
 </template>
 <script>
 import ListItem from '@/components/ListItem.vue';
+import UserAuthAlert from '@/components/UserAuthAlert.vue';
+import userAuthMixin from '../mixins/UserAuth.vue';
 import {
   getListItems,
   getListStates,
@@ -33,8 +36,10 @@ export default {
       description: 'The title of the list you are displaying. Defaults to "New List".',
     },
   },
+  mixins: [userAuthMixin],
   components: {
     ListItem,
+    UserAuthAlert,
   },
   data() {
     return {
