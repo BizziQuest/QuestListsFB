@@ -28,6 +28,7 @@
                     required
                     placeholder="Your Title"
                     outlined
+                    test-title-input
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
@@ -37,6 +38,7 @@
                     v-model="color"
                     placeholder="#FFFFFF"
                     outlined
+                    test-color-input
                   >
                     <template v-slot:append>
                       <v-menu>

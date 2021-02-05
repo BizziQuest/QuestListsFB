@@ -66,12 +66,12 @@ describe('entering information in the dialog', () => {
   describe('the title field', () => {
     it('should set the vm title from the title input', async () => {
       expect(wrapper.vm.title).toBe('');
-      await wrapper.find('input[placeholder="Your Title"]').setValue('A New Title');
+      await wrapper.find('[test-title-input]').setValue('A New Title');
       expect(wrapper.vm.title).toBe('A New Title');
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should not allow empty titles', async () => {
-      await wrapper.find('input[placeholder="Your Title"]').setValue('');
+      wrapper.find('[test-title-input]').setValue('');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).toContain('Title is required');
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
