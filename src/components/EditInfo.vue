@@ -3,7 +3,7 @@
     <v-card class="mx-auto mt-10" max-width="500" raised shaped>
       <v-card-text>
         <v-avatar class="d-flex justify-center align-center">
-          <v-image :src="avatarPreview" />
+          <img :src="avatarPreview" />
         </v-avatar>
         <h1 class="d-flex justify-center align-center mt-10">Edit Info</h1>
         <h4 class="d-flex justify-center align-center mt-10">{{ currentUser.email }}</h4>
@@ -38,7 +38,24 @@
                 label="Use Gravatar"
                 color="secondary"
               ></v-checkbox>
-              <label class="pt-5 pl-2">(<a href="https://gravatar.com">sign up</a>)</label>
+              <label style="color: rgba(0, 0, 0, 0.6)" class="pt-5 pl-2">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-icon
+                      color="primary"
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      mdi mdi-help-circle
+                    </v-icon>
+                  </template>
+                  <div style="width: 20vw">
+                    Gravatar is a service for matching emails with avatars. Click sign-up to sign up for yours!
+                  </div>
+                </v-tooltip>
+                (<a style="color: rgba(0, 0, 0, 0.6)" target="_new" href="https://gravatar.com">sign up</a>)
+              </label>
             </v-row>
             <v-row>
               <v-col cols="12" md="12">
