@@ -3,41 +3,46 @@
     <v-card class="mx-auto mt-10" max-width="500" raised shaped>
       <v-card-text>
         <v-avatar class="d-flex justify-center align-center">
-          <img :src="avatarPreview"/>
+          <v-image :src="avatarPreview" />
         </v-avatar>
         <h1 class="d-flex justify-center align-center mt-10">Edit Info</h1>
-        <h4 class="d-flex justify-center align-center mt-10">{{currentUser.email}}</h4>
+        <h4 class="d-flex justify-center align-center mt-10">{{ currentUser.email }}</h4>
       </v-card-text>
       <v-card-actions>
         <v-form ref="infoForm">
           <v-container>
             <v-row>
-                <v-text-field
-                 v-model="displayName"
-                 label="Display Name"
-                 clearable
-                 color="secondary"
-                 required></v-text-field>
+              <v-text-field
+                test-dispalyname-input
+                v-model="displayName"
+                label="Display Name"
+                clearable
+                color="secondary"
+                required
+              ></v-text-field>
             </v-row>
             <v-row>
               <v-text-field
+                test-avatar-input
                 v-model="avatar"
                 clearable
                 :disabled="useGravatar"
-                label="Customized Avatar" color="secondary"
+                label="Customized Avatar"
+                color="secondary"
               ></v-text-field>
             </v-row>
             <v-row>
               <v-checkbox
+                test-useGravatar-checkbox
                 v-model="useGravatar"
                 label="Use Gravatar"
                 color="secondary"
-               ></v-checkbox>
-               <label class="pt-5 pl-2">(<a href="https://gravatar.com">sign up</a>)</label>
+              ></v-checkbox>
+              <label class="pt-5 pl-2">(<a href="https://gravatar.com">sign up</a>)</label>
             </v-row>
             <v-row>
               <v-col cols="12" md="12">
-                <v-text-field v-model="email" label="E-mail" disabled></v-text-field>
+                <v-text-field test-email-input v-model="email" label="E-mail" disabled></v-text-field>
               </v-col>
             </v-row>
             <v-row>
@@ -49,9 +54,12 @@
                   x-large
                   rounded
                   text
+                  test-save-button
                   v-on:click="saveForm"
-                >Save Profile</v-btn>
-                                <v-btn
+                  >Save Profile</v-btn
+                >
+                <v-btn
+                  test-cancel-button
                   class="success"
                   color="darken-1"
                   elevation="2"
@@ -59,7 +67,8 @@
                   rounded
                   text
                   v-on:click="cancelForm"
-                >Cancel Changes</v-btn>
+                  >Cancel Changes</v-btn
+                >
               </v-col>
             </v-row>
           </v-container>
@@ -87,14 +96,9 @@ export default {
   computed: {
     ...mapState({
       currentUser(state) {
-        if (!state.currentUser
-            || !Object.prototype.hasOwnProperty.call(state.currentUser, 'uid')) return {};
+        if (!state.currentUser || !Object.prototype.hasOwnProperty.call(state.currentUser, 'uid')) return {};
         const {
-          displayName,
-          email,
-          avatar,
-          uid,
-          useGravatar,
+          displayName, email, avatar, uid, useGravatar,
         } = state.currentUser;
         this.userId = uid;
         this.displayName = displayName;
@@ -124,10 +128,7 @@ export default {
     },
     cancelForm() {
       const {
-        displayName,
-        email,
-        avatar,
-        uid,
+        displayName, email, avatar, uid,
       } = this.$store.state.currentUser;
       if (uid) {
         this.userId = uid;
