@@ -22,6 +22,7 @@ const fbApp = firebase.initializeApp(firebaseConfig);
 const nodeEnv = process.env.NODE_ENV;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? firebase.analytics() : null;
 const auth = fbApp.auth();
+if (process.env.VUE_APP_FIREBASE_AUTH_HOST) auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST);
 const db = fbApp.firestore();
 const { currentUser } = auth;
 
