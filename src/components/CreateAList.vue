@@ -29,6 +29,7 @@
                   required
                   placeholder="Your Title"
                   outlined
+                  test-title-input
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
@@ -38,6 +39,7 @@
                   v-model="listColor"
                   placeholder="#FFFFFF"
                   outlined
+                  test-color-input
                 >
                   <template v-slot:append>
                     <v-menu>
@@ -73,14 +75,15 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="resetTitleAndColorForm">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="createAList">Create</v-btn>
+        <v-btn color="blue darken-1" name="submit" text @click="createAList">Create</v-btn>
       </v-card-actions>
     </v-card>
+    <v-snackbar type="info" v-model="showStateWarning">{{ warning }}</v-snackbar>
   </v-dialog>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
@@ -103,7 +106,9 @@ export default {
       statesPicked: '',
       updatedListStatesItems: [],
       description: '',
-      listColor: '#A0E9C9',
+      warning: undefined,
+      showStateWarning: false,
+       listColor: '#A0E9C9',
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
@@ -133,35 +138,38 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['setItemStates']),
+    ...mapMutations(['setItemStates', 'setMessages']),
+    ...mapActions(['createList']),
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
     async createAList() {
-      if (this.$refs.addTitleAndColorForm.validate()) {
-        // TODO: add an input for the name and description for this stateGroup
-        let stateGroup = this.getGlobalPreferences.defaultStateGroup;
-        if (this.updatedListStatesItems.length > 0) {
-          stateGroup = {
-            name: this.updatedListStatesItems.map((s) => s.name).join(', '),
-            description: '',
-            states: this.updatedListStatesItems,
-          };
-        }
-        const payload = {
-          title: this.title,
-          color: this.listColor,
-          slug: await ensureSlugUniqueness(this.title),
-          stateGroup,
-          description: this.description,
-          createdAt: Date.now(),
-          createdBy: auth.currentUser.uid,
-          parent: 'none',
+      this.warning = undefined;
+      if (!this.$refs.addTitleAndColorForm.validate()) return;
+      // TODO: add an input for the name and description for this stateGroup
+      let stateGroup = this.getGlobalPreferences.defaultStateGroup;
+      if (this.updatedListStatesItems.length > 0) {
+        stateGroup = {
+          name: this.updatedListStatesItems.map((s) => s.name).join(', '),
+          description: '',
+          states: this.updatedListStatesItems,
         };
-        this.$store.dispatch('createList', payload);
-        this.$refs.addTitleAndColorForm.reset();
-        this.dialog = false;
+      } else {
+        this.setMessages([{ type: 'info', text: 'No states configured. Using default states.' }]);
       }
+      const payload = {
+        title: this.title,
+        slug: await ensureSlugUniqueness(this.title),
+        color: this.color,
+        stateGroup,
+        description: this.description,
+        createdAt: Date.now(),
+        createdBy: auth.currentUser.uid,
+        parent: 'none',
+      };
+      this.createList(payload);
+      this.$refs.addTitleAndColorForm.reset();
+      this.dialog = false;
     },
     resetTitleAndColorForm() {
       this.dialog = false;

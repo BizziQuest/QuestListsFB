@@ -15,7 +15,6 @@ const vuetify = new Vuetify();
 localVue.use(VueRouter, Vuetify, Vuex);
 
 let wrapper = null;
-let app = null;
 const el = document.createElement('div')
 el.setAttribute('data-app', true);
 
