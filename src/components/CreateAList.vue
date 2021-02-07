@@ -59,11 +59,13 @@
             <v-row>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                label="Description"
-                 v-model='description'
-                 required
-                 placeholder="Describe your list purpose."
-                 outlined></v-text-field>
+                  label="Description"
+                  v-model='description'
+                  required
+                  placeholder="Describe your list purpose."
+                  outlined
+                  test-description-input
+                ></v-text-field>
               </v-col>
             </v-row>
             <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup"
