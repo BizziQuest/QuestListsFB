@@ -19,9 +19,6 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "predeploy": [
-      "yarn build"
-    ],
     "rewrites": [
       {
         "source": "**",
