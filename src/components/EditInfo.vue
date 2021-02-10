@@ -3,7 +3,7 @@
     <v-card class="mx-auto mt-10" max-width="500" raised shaped>
       <v-card-text>
         <v-avatar class="d-flex justify-center align-center">
-          <img :src="avatarPreview" />
+          <v-img :src="avatarPreview" test-avatar-image/>
         </v-avatar>
         <h1 class="d-flex justify-center align-center mt-10">Edit Info</h1>
         <h4 class="d-flex justify-center align-center mt-10">{{ currentUser.email }}</h4>
@@ -129,7 +129,7 @@ export default {
       if (this.useGravatar) {
         return `https://www.gravatar.com/avatar/${md5(this.email)}`;
       }
-      return this.avatar;
+      return this.avatar || '/img/unknown_user.svg';
     },
   },
   methods: {

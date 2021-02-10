@@ -17,20 +17,100 @@ localVue.use(VueRouter, Vuetify, Vuex);
 
 let wrapper;
 
-beforeEach(() => {
-  wrapper = mount(EditInfo, {
-    localVue,
-    router,
-    vuetify,
-    store,
+describe('default state with unverified username/password user', () => {
+  beforeEach(() => {
+    const localStore = new Vuex.Store({
+      state: {
+        currentUser: {
+          avatar: null,
+          displayName: null,
+          email: 'tersterson3@test.com',
+          emailVerified: false,
+          uid: 'UUID123456',
+          useGravatar: false,
+        },
+      },
+    });
+    wrapper = mount(EditInfo, {
+      localVue,
+      router,
+      vuetify,
+      store: localStore,
+    });
+  });
+
+  it('should render "the unknown user avatar"', () => {
+    const avatarImage = wrapper.find('.v-image[test-avatar-image]');
+    expect(avatarImage.vm.src).toBe('/img/unknown_user.svg');
+  });
+  it('should have the correct user values', () => {
+    expect(wrapper.vm.userId).toBe('UUID123456');
+    expect(wrapper.vm.displayName).toBe(null);
+    expect(wrapper.vm.email).toBe('tersterson3@test.com');
+    expect(wrapper.vm.avatar).toBe(null);
+    expect(wrapper.vm.useGravatar).toBe(false);
+  });
+});
+describe('default state with unverified 0Auth user', () => {
+  beforeEach(() => {
+    const localStore = new Vuex.Store({
+      state: {
+        currentUser: {
+          avatar: '/path/to/image.jpg',
+          displayName: '0Auth Dispaly Name',
+          email: 'tersterson3@test.com',
+          emailVerified: false,
+          uid: 'UUID123456',
+          useGravatar: false,
+        },
+      },
+    });
+    wrapper = mount(EditInfo, {
+      localVue,
+      router,
+      vuetify,
+      store: localStore,
+    });
+  });
+  it('should render "the user\'s 0Auth avatar"', () => {
+    const avatarImage = wrapper.find('.v-image[test-avatar-image]');
+    expect(avatarImage.vm.src).toBe('/path/to/image.jpg');
+  });
+  it('should have the correct user values', () => {
+    expect(wrapper.vm.userId).toBe('UUID123456');
+    expect(wrapper.vm.displayName).toBe('0Auth Dispaly Name');
+    expect(wrapper.vm.email).toBe('tersterson3@test.com');
+    expect(wrapper.vm.avatar).toBe('/path/to/image.jpg');
+    expect(wrapper.vm.useGravatar).toBe(false);
   });
 });
 
-describe('default state', () => {
-  it('should render "the user\'s avatar"', () => {
-    expect(wrapper.findComponent({ name: 'VListItem' }).text()).toBe('add create a list');
+describe('saving a user', () => {
+  beforeEach(() => {
+    const localStore = new Vuex.Store({
+      state: {
+        currentUser: {
+          avatar: '/path/to/image.jpg',
+          displayName: '0Auth Dispaly Name',
+          email: 'tersterson3@test.com',
+          emailVerified: false,
+          uid: 'UUID123456',
+          useGravatar: false,
+        },
+      },
+    });
+    wrapper = mount(EditInfo, {
+      localVue,
+      router,
+      vuetify,
+      store: localStore,
+    });
   });
-  it('should not show the dialog', () => {
-    expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(false);
+  describe('setting the gravatar', () => {
+    it.todo('set to true, sets the avatar to the gravatar');
+    it.todo('updated the preview accordingly');
+    it.todo('set to false, uses the last set avatar');
+    it.todo('set to false, and user has no last avatar, uses the default avatar');
+    it.todo('stores gravatar to firestore');
   });
 });
