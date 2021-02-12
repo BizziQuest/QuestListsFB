@@ -4,7 +4,7 @@
       <v-card-text class="d-flex flex-column align-center mt-10">
         <h1 class="mt-10">Edit Profile</h1>
         <v-avatar class="my-4" size="96">
-          <img :src="avatarPreview"/>
+          <v-img :src="avatarPreview"/>
         </v-avatar>
         <h4 class="">{{currentUser.email}}</h4>
       </v-card-text>
@@ -12,28 +12,55 @@
         <v-form ref="infoForm">
           <v-container>
             <v-row>
-                <v-text-field
-                 v-model="displayName"
-                 label="Display Name"
-                 clearable
-                 color="secondary"
-                 required></v-text-field>
+              <v-text-field
+                test-dispalyname-input
+                v-model="displayName"
+                label="Display Name"
+                clearable
+                color="secondary"
+                required
+              ></v-text-field>
             </v-row>
             <v-row>
               <v-text-field
+                test-avatar-input
                 v-model="avatar"
                 clearable
                 :disabled="useGravatar"
-                label="Customized Avatar" color="secondary"
+                label="Customized Avatar"
+                color="secondary"
               ></v-text-field>
             </v-row>
             <v-row>
               <v-checkbox
+                test-useGravatar-checkbox
                 v-model="useGravatar"
                 label="Use Gravatar"
                 color="secondary"
-               ></v-checkbox>
-               <label class="pt-5 pl-2">(<a href="https://gravatar.com">sign up</a>)</label>
+              ></v-checkbox>
+              <label style="color: rgba(0, 0, 0, 0.6)" class="pt-5 pl-2">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-icon
+                      color="primary"
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      mdi mdi-help-circle
+                    </v-icon>
+                  </template>
+                  <div style="width: 20vw">
+                    Gravatar is a service for matching emails with avatars. Click sign-up to sign up for yours!
+                  </div>
+                </v-tooltip>
+                (<a style="color: rgba(0, 0, 0, 0.6)" target="_new" href="https://gravatar.com">sign up</a>)
+              </label>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="12">
+                <v-text-field v-model="email" label="E-mail" disabled></v-text-field>
+              </v-col>
             </v-row>
             <v-row>
               <v-col class="d-flex align-center justify-center">
@@ -44,9 +71,12 @@
                   x-large
                   rounded
                   text
+                  test-save-button
                   v-on:click="saveForm"
-                >Save Profile</v-btn>
-                                <v-btn
+                  >Save Profile</v-btn
+                >
+                <v-btn
+                  test-cancel-button
                   class="success"
                   color="darken-1"
                   elevation="2"
@@ -54,7 +84,8 @@
                   rounded
                   text
                   v-on:click="cancelForm"
-                >Cancel Changes</v-btn>
+                  >Cancel Changes</v-btn
+                >
               </v-col>
             </v-row>
           </v-container>
@@ -82,30 +113,23 @@ export default {
   computed: {
     ...mapState({
       currentUser(state) {
-        if (!state.currentUser
-            || !Object.prototype.hasOwnProperty.call(state.currentUser, 'uid')) return {};
+        if (!state.currentUser || !Object.prototype.hasOwnProperty.call(state.currentUser, 'uid')) return {};
         const {
-          displayName,
-          email,
-          avatar,
-          uid,
-          useGravatar,
+          displayName, email, avatar, uid, useGravatar,
         } = state.currentUser;
         this.userId = uid;
         this.displayName = displayName;
         this.email = email;
         this.avatar = avatar;
-        this.useGravatar = !!useGravatar;
+        this.useGravatar = useGravatar || false;
         return state.currentUser;
       },
     }),
     avatarPreview() {
-      return getAvatarForUser({
-        useGravatar: this.useGravatar,
-        email: this.email,
-        avatar: this.avatar,
-        displayName: this.displayName,
-      });
+      if (this.useGravatar) {
+        return `https://www.gravatar.com/avatar/${md5(this.email)}`;
+      }
+      return this.avatar;
     },
   },
   methods: {
@@ -115,16 +139,13 @@ export default {
         email: this.email,
         displayName: this.displayName || 'New Member',
         avatar: this.avatar || '/img/unknown_user.svg',
-        useGravatar: !!this.useGravatar,
+        useGravatar: this.useGravatar || false,
       };
       this.$store.dispatch('saveProfile', userInfo);
     },
     cancelForm() {
       const {
-        displayName,
-        email,
-        avatar,
-        uid,
+        displayName, email, avatar, uid,
       } = this.$store.state.currentUser;
       if (uid) {
         this.userId = uid;

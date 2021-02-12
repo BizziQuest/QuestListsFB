@@ -23,37 +23,13 @@
             <v-row>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                  label="List Title*"
-                  :rules="titleRules"
-                  v-model="title"
+                  label="Description"
+                  v-model='description'
                   required
-                  placeholder="Your Title"
+                  placeholder="Describe your list purpose."
                   outlined
-                  test-title-input
+                  test-description-input
                 ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  label="Color*"
-                  :rules="colorPickerRules"
-                  v-model="listColor"
-                  placeholder="#FFFFFF"
-                  outlined
-                  test-color-input
-                >
-                  <template v-slot:append>
-                    <v-menu>
-                      <template v-slot:activator="{ on }">
-                        <div :style="swatchStyle()" v-on="on" />
-                      </template>
-                      <v-card>
-                        <v-card-text>
-                          <v-color-picker v-model="listColor" flat />
-                        </v-card-text>
-                      </v-card>
-                    </v-menu>
-                  </template>
-                </v-text-field>
               </v-col>
             </v-row>
           </v-form>

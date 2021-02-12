@@ -26,9 +26,9 @@ Vue.use(Vuex);
 
 const defaultState = {
   currentUser: {
-    avatar: '',
-    displayName: '',
-    email: '',
+    avatar: null,
+    displayName: null,
+    email: null,
     emailVerified: false,
     uid: undefined,
     useGravatar: false,
