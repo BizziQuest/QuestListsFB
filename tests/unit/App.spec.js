@@ -4,7 +4,6 @@ import Vue from 'vue';
 import vuetify from 'vuetify';
 import router from '@/router';
 import store from '@/store';
-import Vue from 'vue';
 
 Vue.use(vuetify);
 

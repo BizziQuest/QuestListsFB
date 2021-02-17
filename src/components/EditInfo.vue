@@ -4,7 +4,7 @@
       <v-card-text class="d-flex flex-column align-center mt-10">
         <h1 class="mt-10">Edit Profile</h1>
         <v-avatar class="my-4" size="96">
-          <v-img :src="avatarPreview"/>
+          <v-img :src="avatarPreview" test-avatar-image/>
         </v-avatar>
         <h4 class="">{{currentUser.email}}</h4>
       </v-card-text>
@@ -97,7 +97,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import { getAvatarForUser } from '../util';
+// import { getAvatarForUser } from '../util';
+import md5 from 'md5';
 
 export default {
   name: 'EditInfo',
@@ -129,7 +130,7 @@ export default {
       if (this.useGravatar) {
         return `https://www.gravatar.com/avatar/${md5(this.email)}`;
       }
-      return this.avatar;
+      return this.avatar || '/img/unknown_user.svg';
     },
   },
   methods: {

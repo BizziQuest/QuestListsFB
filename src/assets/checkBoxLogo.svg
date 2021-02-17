@@ -24,7 +24,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="-39.69063"
+     inkscape:cx="-78.581503"
      inkscape:cy="245.72051"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -78,13 +78,13 @@
        y="270"
        inkscape:label="#checkedBox" />
     <path
-       style="fill:none;stroke:#f9aa33;stroke-width:10.00063038;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:10.00063038,10.00063038;stroke-opacity:1;stroke-dashoffset:0"
-       d="m 230,70 c 80,0 80,70 80,70"
+       style="fill:none;stroke:#f9aa33;stroke-width:10.0006;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:10.0006, 10.0006;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 352,176 c 80,0 80,70 80,70"
        id="uncheckedToPartial"
        inkscape:label="#uncheckedToPartial" />
     <path
-       style="fill:none;stroke:#f9aa33;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stroke-dashoffset:0;paint-order:markers stroke fill"
-       d="m 170,350 c 0,70 72.2867,75.38515 90,70"
+       style="fill:none;stroke:#f9aa33;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       d="m 342,458 c 0,70 72.2867,75.38515 90,70"
        id="partialToCheckedPath"
        sodipodi:nodetypes="cc" />
     <path

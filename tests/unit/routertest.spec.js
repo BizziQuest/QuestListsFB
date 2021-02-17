@@ -6,7 +6,7 @@ import store from '@/store';
 import VueRouter from 'vue-router';
 import Lists from '@/views/Lists.vue';
 import List from '@/views/List.vue';
-import TopMenuBar from '@/components/Menus/TopMenuBar.vue';
+import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
 import EditInfo from '@/components/EditInfo.vue';
 import routes from '@/router/routes';
 import App from '@/App.vue';
@@ -37,7 +37,7 @@ afterEach(() => {
 describe('Page Views', () => {
   it('render Lists component via routing', async () => {
     wrapper.vm.$nextTick();
-    expect(wrapper.findComponent(TopMenuBar).exists()).toBe(true);
+    expect(wrapper.findComponent(DrawerMenu).exists()).toBe(true);
     expect(wrapper.findComponent(Lists).exists()).toBe(true);
   });
   it('renders a single List component via routing', async (done) => {

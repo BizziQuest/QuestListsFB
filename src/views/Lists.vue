@@ -8,7 +8,7 @@
           type="list-item-avatar, divider, list-item-three-line, card-heading, image, actions"
         ></v-skeleton-loader>
       </v-col>
-      <v-row v-if="lists && lists.length < 1" key="sad" class='ml-5 mr-5 '>
+      <v-row v-if="lists && lists.length < 1" key="sad" class='ml-5 mr-5 mt-10'>
         <v-alert prominent icon="mdi-shield-plus-outline" type="info" class="col-12">
           Welcome to Quest Lists! You don't have any Quests yet, but have no fear, simply click on the
           <v-icon>mdi-shield-plus-outline</v-icon> icon on the left to get started!

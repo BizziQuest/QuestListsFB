@@ -84,7 +84,7 @@ export default {
       description: '',
       warning: undefined,
       showStateWarning: false,
-       listColor: '#A0E9C9',
+      listColor: '#A0E9C9',
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
