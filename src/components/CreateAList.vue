@@ -7,7 +7,7 @@
             <v-icon :color="highlightColor">add</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title :class="`${highlightColor}--text`">New Quest</v-list-item-title>
+            <v-list-item-title test-activate-item :class="`${highlightColor}--text`">New Quest</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </slot>
@@ -19,12 +19,48 @@
       <v-card-text>
         <v-container>
           <user-auth-alert />
-          <v-form ref="addTitleAndColorForm" @submit.prevent>
+          <v-form ref="addTitleAndColorForm" v-model="formIsValid" @submit.prevent>
+            <v-row>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  label="List Title*"
+                  :rules="titleRules"
+                  v-model="title"
+                  required
+                  placeholder="Your Title"
+                  outlined
+                  test-title-input
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-text-field
+                  label="Color*"
+                  :rules="colorPickerRules"
+                  v-model="listColor"
+                  placeholder="#FFFFFF"
+                  outlined
+                  test-color-input
+                >
+                  <template v-slot:append>
+                    <v-menu>
+                      <template v-slot:activator="{ on }">
+                        <div :style="swatchStyle()" v-on="on" />
+                      </template>
+                      <v-card>
+                        <v-card-text>
+                          <v-color-picker v-model="listColor" flat />
+                        </v-card-text>
+                      </v-card>
+                    </v-menu>
+                  </template>
+                </v-text-field>
+              </v-col>
+            </v-row>
             <v-row>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
                   label="Description"
-                  v-model='description'
+                  v-model="description"
                   required
                   placeholder="Describe your list purpose."
                   outlined
@@ -33,17 +69,6 @@
               </v-col>
             </v-row>
           </v-form>
-          <v-row>
-            <v-col cols="12" sm="6" md="6">
-              <v-text-field
-                label="Description"
-                v-model="description"
-                required
-                placeholder="Describe your list purpose."
-                outlined
-              ></v-text-field>
-            </v-col>
-          </v-row>
           <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup" @list:updated="listUpdated" />
         </v-container>
         <small>*indicates required field</small>
@@ -74,7 +99,6 @@ export default {
   },
   data() {
     return {
-      color: '#A0E9C9',
       title: '',
       dialog: false,
       newState: '',
@@ -85,6 +109,7 @@ export default {
       warning: undefined,
       showStateWarning: false,
       listColor: '#A0E9C9',
+      formIsValid: false,
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
@@ -121,7 +146,7 @@ export default {
     },
     async createAList() {
       this.warning = undefined;
-      if (!this.$refs.addTitleAndColorForm.validate()) return;
+      if (this.$refs.addTitleAndColorForm.validate() === false) return;
       // TODO: add an input for the name and description for this stateGroup
       let stateGroup = this.getGlobalPreferences.defaultStateGroup;
       if (this.updatedListStatesItems.length > 0) {
@@ -136,7 +161,7 @@ export default {
       const payload = {
         title: this.title,
         slug: await ensureSlugUniqueness(this.title),
-        color: this.color,
+        color: this.listColor,
         stateGroup,
         description: this.description,
         createdAt: Date.now(),

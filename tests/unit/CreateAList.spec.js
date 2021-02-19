@@ -27,8 +27,8 @@ beforeEach(() => {
 });
 
 describe('default state', () => {
-  it('should render "create a list"', () => {
-    expect(wrapper.findComponent({ name: 'VListItem' }).text()).toBe('add create a list');
+  it('should render "New Quest"', () => {
+    expect(wrapper.findComponent({ name: 'VListItem' }).text()).toBe('add New Quest');
   });
   it('should not show the dialog', () => {
     expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(false);
@@ -135,24 +135,24 @@ describe('entering information in the dialog', () => {
     });
   });
   it.todo('should not allow empty states');
-  // it('should not allow empty states', async () => {
-  //   wrapper.vm.title = 'test';
-  //   wrapper.vm.updatedListStatesItems = [];
-  //   wrapper.vm.color = '#ffa';
-  //   await wrapper.vm.createAList();
-  //   expect('Unable to locate target [data-app]').toHaveBeenWarned();
-  //   expect(wrapper.text()).toContain('No states configured. Using default states.');
-  // });
 });
 
 describe('list creation', () => {
   let actions;
   let getters;
+  let mutations;
   beforeEach(() => {
     getters = {
       getGlobalPreferences() {
-        return { defaultStateGroup: {} };
+        return {
+          defaultStateGroup: {
+            states: [],
+          },
+        };
       },
+    };
+    mutations = {
+      setMessages: jest.fn(),
     };
     actions = {
       createList: jest.fn(),
@@ -160,13 +160,25 @@ describe('list creation', () => {
     const localStore = new Vuex.Store({
       actions,
       getters,
+      mutations,
+      watch: {
+        dialog(val) {
+          jest.fn();
+        },
+      },
+      state: {
+        currentUser: {
+          emailVerified: true,
+          uid: 'UUID1',
+        },
+      },
     });
-    wrapper = shallowMount(CreateAList, {
+    wrapper = mount(CreateAList, {
       data() {
         return {
-          title: '',
-          description: '',
-          color: '',
+          title: 'Test List',
+          description: 'Rando Description',
+          listColor: '#fff',
         };
       },
       localVue,
@@ -174,14 +186,32 @@ describe('list creation', () => {
       vuetify,
       store: localStore,
     });
-    wrapper.setData({ title: 'Test list' });
-    wrapper.setData({ description: 'Test list' });
-    wrapper.setData({ color: '#FFF' });
   });
   it('should do nothing if the title and color form does not validate', () => {
-    wrapper.vm.title = '';
+    wrapper.vm.title = '123';
+    wrapper.vm.listColor = 'kajsbfkajsb';
     wrapper.vm.createAList();
     expect(actions.createList).not.toHaveBeenCalled();
-    // expect('Unable to locate target [data-app]').toHaveBeenWarned();
+    // the following needs to be commented when testing this independently.
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
+  });
+  it('should notify users when there are no states given.', async () => {
+    wrapper.find('[test-activate-item]').trigger('click');
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.createAList();
+    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
+    expect(mutations.setMessages).toHaveBeenCalled();
+    expect(actions.createList).not.toHaveBeenCalled();
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
+  });
+  it('should notify users when there are no states given.', async () => {
+    wrapper.find('[test-activate-item]').trigger('click');
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.createAList();
+    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
+    expect(wrapper.vm.updatedListStatesItems.length).not.toBeGreaterThan(0);
+    expect(mutations.setMessages).toHaveBeenCalled();
+    expect(actions.createList).toHaveBeenCalledWith();
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
 });
