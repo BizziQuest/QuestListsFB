@@ -5,6 +5,7 @@ import VueRouter from 'vue-router';
 import routes from '@/router/routes';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
+import store from '@/store';
 
 toHaveBeenWarnedInit();
 
@@ -14,29 +15,37 @@ const vuetify = new Vuetify();
 localVue.use(VueRouter, Vuetify, Vuex);
 
 let wrapper;
+
 beforeEach(() => {
-  const localStore = new Vuex.Store({
-    state: {
-      currentUser: {
-        avatar: null,
-        displayName: null,
-        email: 'tersterson3@test.com',
-        emailVerified: false,
-        uid: 'UUID123456',
-        useGravatar: false,
-      },
-    },
-  });
   wrapper = mount(DrawerMenu, {
     localVue,
     router,
     vuetify,
-    store: localStore,
+    store,
   });
+  wrapper.vm.favoriteQuests = [{
+    name: 'My Favorite Quest',
+    icon: 'mdi-flower',
+    id: '123abc',
+  }];
 });
 
 describe('Drawer Menu', () => {
-  it('component include text Lists', () => {
-    expect(wrapper.find('.font-weight-light').text()).toContain('Lists');
+  it('component include the user menu item', () => {
+    expect(wrapper.find('.user-menu-item').text()).toBe('Sign In or Sign Up');
+  });
+  it('component include questlists link to homepage', () => {
+    expect(wrapper.find('[test-questlists-link]').text()).toBe('QuestLists');
+  });
+  it('component include link to add new list', () => {
+    expect(wrapper.find('[test-default-create-list-item]').text()).toBe('add New Quest');
+  });
+  it('component include search button', () => {
+    expect(wrapper.find('[test-search-link]').text()).toBe('Search');
+  });
+  it('component include favorites list', () => {
+    expect(wrapper.find('[test-fav-header]').text()).toBe('Favorite Quests');
+    expect(wrapper.findAll('[test-fav-link]').length).toBe(1);
+    expect(wrapper.findAll('[test-fav-link]').at(0).text()).toBe('My Favorite Quest');
   });
 });

@@ -1,8 +1,9 @@
 <template>
-  <v-dialog v-model="dialog" max-width="600px" class="primary">
+  <v-dialog v-model="dialog" max-width="600px" class="primary" :dark="dark" :light="light">
     <template v-slot:activator="{ on }">
       <slot :on="on">
-        <v-list-item link v-on="on" :color="highlightColor" :dark="dark" :light="light" title="Create A New Quest">
+        <v-list-item test-default-create-list-item link
+          v-on="on" :color="highlightColor" :dark="dark" :light="light" title="Create A New Quest">
           <v-list-item-action>
             <v-icon :color="highlightColor">add</v-icon>
           </v-list-item-action>
@@ -57,7 +58,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12" sm="6" md="6">
+              <v-col cols="12" sm="12" md="12" >
                 <v-text-field
                   label="Description"
                   v-model="description"
@@ -75,7 +76,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="resetTitleAndColorForm">Close</v-btn>
+        <v-btn color="blue darken-1" text @click="resetForm">Close</v-btn>
         <v-btn color="blue darken-1" name="submit" text @click="createAList">Create</v-btn>
       </v-card-actions>
     </v-card>
@@ -90,6 +91,16 @@ import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import { ensureSlugUniqueness, auth } from '../firebase';
 
+const defaultFormData = {
+  title: '',
+  newState: '',
+  newItem: '',
+  statesPicked: '',
+  updatedListStatesItems: [],
+  description: '',
+  listColor: '#363636',
+};
+
 export default {
   name: 'CreateAList',
   mixins: [userAuthMixin],
@@ -99,16 +110,10 @@ export default {
   },
   data() {
     return {
-      title: '',
+      ...defaultFormData,
       dialog: false,
-      newState: '',
-      newItem: '',
-      statesPicked: '',
-      updatedListStatesItems: [],
-      description: '',
       warning: undefined,
       showStateWarning: false,
-      listColor: '#A0E9C9',
       formIsValid: false,
       titleRules: [
         (v) => !!v || 'Title is required',
@@ -169,13 +174,17 @@ export default {
         parent: 'none',
       };
       this.createList(payload);
-      this.$refs.addTitleAndColorForm.reset();
-      this.dialog = false;
+      this.resetForm();
     },
-    resetTitleAndColorForm() {
+    resetForm() {
+      this.$refs.addTitleAndColorForm.resetValidation();
+      this.listColor = defaultFormData.listColor;
+      this.title = defaultFormData.title;
+      this.description = defaultFormData.description;
+      this.newState = defaultFormData.newState;
+      this.statesPicked = defaultFormData.statesPicked;
+      this.updatedListStatesItems = defaultFormData.updatedListStatesItems;
       this.dialog = false;
-      this.$refs.addTitleAndColorForm.reset();
-      this.listColor = '#A0E9C9';
     },
     swatchStyle() {
       return {
@@ -209,6 +218,7 @@ export default {
       const newQuery = { ...this.$route.query };
       if (Object.prototype.hasOwnProperty.call(newQuery, 'newQuest') && newQuery.newQuest === val) return;
       if (!val) {
+        // this.resetForm();  // when user clicks outside dialog, reset form?
         delete newQuery.newQuest;
       } else {
         newQuery.newQuest = true;

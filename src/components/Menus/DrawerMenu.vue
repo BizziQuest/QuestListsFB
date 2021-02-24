@@ -9,11 +9,12 @@
       :fixed="isMobile"
       :dark="!isDark"
       :light="isDark"
+      test-navigation-drawer
       >
       <v-list dense nav>
         <user-menu-item :dark="!isDark" :light="isDark"/>
 
-        <v-list-item link :color="menuHighlightColor" title="View All QuestLists" to="/">
+        <v-list-item test-questlists-link link :color="menuHighlightColor" title="View All QuestLists" to="/">
           <v-list-item-action>
             <v-icon>mdi-shield-check-outline</v-icon>
           </v-list-item-action>
@@ -23,12 +24,14 @@
         </v-list-item>
 
         <CreateAList
+          test-create-list
           :dark="!isDark"
           :light="isDark"
           :showDialog="showCreateList"
-          :highlightColor="menuHighlightColor"/>
+          :highlightColor="menuHighlightColor"
+        />
 
-        <v-list-item link title="Look for a particular quest" to="/search">
+        <v-list-item test-search-link link title="Look for a particular quest" to="/search">
           <v-list-item-action>
             <v-icon>mdi-magnify</v-icon>
           </v-list-item-action>
@@ -37,12 +40,13 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item test-fav-header>
             <v-divider class="my-4"></v-divider>
             <v-subheader>Favorite Quests</v-subheader>
         </v-list-item>
 
-        <v-list-item v-for="item in favoriteQuests" :key="item.id" link :title="item.name" :to="`/lists/${item.id}`">
+        <v-list-item test-fav-link v-for="item in favoriteQuests"
+        :key="item.id" link :title="item.name" :to="`/lists/${item.id}`">
           <v-list-item-action>
             <v-icon>{{item.icon}}</v-icon>
           </v-list-item-action>
@@ -56,7 +60,7 @@
             <v-subheader></v-subheader>
         </v-list-item>
 
-        <v-list-item link @click="isDark = !isDark">
+        <v-list-item test-dark-mode-switch link @click="isDark = !isDark">
           <v-list-item-action>
             <v-icon>{{isDark ? 'mdi-brightness-4' : 'mdi-brightness-7'}}</v-icon>
           </v-list-item-action>
