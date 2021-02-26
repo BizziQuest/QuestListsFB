@@ -14,7 +14,7 @@
           <v-icon>mdi-shield-plus-outline</v-icon> icon on the left to get started!
         </v-alert>
       </v-row>
-      <v-col v-else v-for="list in lists" :key="list.id" col="12" md="4" class="d-flex align-stretch">
+      <v-col v-else v-for="list in lists" :key="list.id" md="4" sm="6" xs="12" class="d-flex align-stretch">
         <ListCard :list="list"></ListCard>
       </v-col>
     </transition-group>

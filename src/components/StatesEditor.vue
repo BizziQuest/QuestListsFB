@@ -62,7 +62,7 @@ export default {
       items: [
         ...this.stateGroup.states,
         {
-          name: 'New State',
+          text: 'New State',
           icon: 'mdi-plus',
         },
       ],
@@ -82,7 +82,7 @@ export default {
         if (state.text.length !== 0) {
           this.items.push({
             icon: 'mdi-plus',
-            name: 'New Item',
+            text: 'New Item',
           });
         }
       }

@@ -156,7 +156,7 @@ export default {
       let stateGroup = this.getGlobalPreferences.defaultStateGroup;
       if (this.updatedListStatesItems.length > 0) {
         stateGroup = {
-          name: this.updatedListStatesItems.map((s) => s.name).join(', '),
+          name: this.updatedListStatesItems.map((s) => s.text).join(', '),
           description: '',
           states: this.updatedListStatesItems,
         };

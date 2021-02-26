@@ -6,7 +6,7 @@
     <div class="icon-state">
       <icon-state :icon.sync="item.icon"></icon-state>
     </div>
-    <v-text-field :value.sync="item.name"
+    <v-text-field :value.sync="item.text"
                   @input="isChanging($event)"
                   @blur="updateText">
     </v-text-field>
@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return {
-      text: this.item.name,
+      text: this.item.text,
     };
   },
   methods: {
