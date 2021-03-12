@@ -1,4 +1,4 @@
-import LogInOrSignUp from '@/components/LogInorSignUp.vue';
+import LogInOrSignUp from '@/components/Menus/LoginOrSignup.vue';
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -32,10 +32,23 @@ describe('login or sign up', () => {
       vuetify,
       store,
     });
-    expect(wrapper.text()).not.toContain('E-mail is required');
-    await wrapper.find('button').trigger('click');
+    await wrapper.find('[test-open-dialog]').trigger('click');
+    expect(wrapper.text()).not.toContain('Email is required');
     await wrapper.find('.v-btn[test-login-button]').trigger('click');
-    expect(wrapper.text()).toContain('E-mail is required');
+    expect(wrapper.text()).toContain('Email is required');
+  });
+  it('should warn when giving an invalid email', async () => {
+    const wrapper = mount(LogInOrSignUp, {
+      localVue,
+      router,
+      vuetify,
+      store,
+    });
+    await wrapper.find('[test-open-dialog]').trigger('click');
+    expect(wrapper.text()).not.toContain('Email is in an invalid format');
+    wrapper.find('[test-email-field]').setValue('invalid.email@!!@you.com');
+    await wrapper.find('.v-btn[test-login-button]').trigger('click');
+    expect(wrapper.text()).toContain('Email is in an invalid format');
   });
   it('should warn when not giving a password', async () => {
     const wrapper = mount(LogInOrSignUp, {
@@ -44,15 +57,50 @@ describe('login or sign up', () => {
       vuetify,
       store,
     });
-    await wrapper.find('button').trigger('click');
+    await wrapper.find('[test-open-dialog]').trigger('click');
     expect(wrapper.text()).not.toContain('Password is required');
     await wrapper.find('.v-btn[test-login-button]').trigger('click');
     expect(wrapper.text()).toContain('Password is required');
   });
 });
 describe('Signing Up As A New User', () => {
-  it.todo('should warn when email is empty');
-  it.todo('should warn when email is invalid');
+  it('should warn when not giving a email', async () => {
+    const wrapper = mount(LogInOrSignUp, {
+      localVue,
+      router,
+      vuetify,
+      store,
+    });
+    await wrapper.find('[test-open-dialog]').trigger('click');
+    expect(wrapper.text()).not.toContain('Email is required');
+    await wrapper.find('.v-btn[test-signup-button]').trigger('click');
+    expect(wrapper.text()).toContain('Email is required');
+  });
+  it('should warn when giving an invalid email', async () => {
+    const wrapper = mount(LogInOrSignUp, {
+      localVue,
+      router,
+      vuetify,
+      store,
+    });
+    await wrapper.find('[test-open-dialog]').trigger('click');
+    expect(wrapper.text()).not.toContain('Email is in an invalid format');
+    wrapper.find('[test-email-field]').setValue('invalid.email@!!@you.com');
+    await wrapper.find('.v-btn[test-signup-button]').trigger('click');
+    expect(wrapper.text()).toContain('Email is in an invalid format');
+  });
+  it('should warn when not giving a password', async () => {
+    const wrapper = mount(LogInOrSignUp, {
+      localVue,
+      router,
+      vuetify,
+      store,
+    });
+    await wrapper.find('[test-open-dialog]').trigger('click');
+    expect(wrapper.text()).not.toContain('Password is required');
+    await wrapper.find('.v-btn[test-signup-button]').trigger('click');
+    expect(wrapper.text()).toContain('Password is required');
+  });
   it('should warn when password is invalid', async () => {
     const wrapper = mount(LogInOrSignUp, {
       localVue,
@@ -60,26 +108,14 @@ describe('Signing Up As A New User', () => {
       vuetify,
       store,
     });
-    await wrapper.find('button').trigger('click');
+    await wrapper.find('[test-open-dialog]').trigger('click');
     expect(wrapper.text()).not.toContain('Password must be at least 8 characters.');
-    await wrapper.find('input[test-password-field]').setValue('123');
+    await wrapper.find('input[test-password-field]').setValue('567');
+    expect(wrapper.text()).toContain('3');
     await wrapper.find('.v-btn[test-signup-button]').trigger('click');
-    expect(wrapper.text()).toContain('Password must be at least 8 characters.');
+    expect(wrapper.text()).toContain('Password must be at least 8 characters');
   });
-  it('should warn when password is empty', async () => {
-    const wrapper = mount(LogInOrSignUp, {
-      localVue,
-      router,
-      vuetify,
-      store,
-    });
-    await wrapper.find('button').trigger('click');
-    expect(wrapper.text()).not.toContain('Password is required.');
-    await wrapper.find('input[test-password-field]').setValue('');
-    await wrapper.find('.v-btn[test-signup-button]').trigger('click');
-    expect(wrapper.text()).toContain('Password is required');
-  });
-  it('should submit form when password is valid', async () => {
+  it('should submit form when email and password is valid', async () => {
     const actions = {
       signupUser: jest.fn(),
       loginUser: jest.fn(),
@@ -93,7 +129,7 @@ describe('Signing Up As A New User', () => {
       vuetify,
       store: localStore,
     });
-    await wrapper.find('button').trigger('click');
+    await wrapper.find('[test-open-dialog]').trigger('click');
     expect(wrapper.text()).not.toContain('Password is required.');
     expect(wrapper.text()).not.toContain('Password must be at least 8 characters.');
     expect(wrapper.vm.dialog).toBe(true);
@@ -104,7 +140,7 @@ describe('Signing Up As A New User', () => {
     await wrapper.vm.$nextTick();
     expect(actions.signupUser).toHaveBeenCalled();
     expect(wrapper.vm.dialog).toBe(false);
-    expect(wrapper.vm.action).toBe(false);
+    // expect(wrapper.vm.action).toBe(false);
     expect(wrapper.text()).not.toContain('Password is required.');
     expect(wrapper.text()).not.toContain('Password must be at least 8 characters.');
     expect(wrapper.find('form').isVisible()).toBe(false);

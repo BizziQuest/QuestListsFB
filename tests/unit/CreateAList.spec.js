@@ -162,7 +162,7 @@ describe('list creation', () => {
       getters,
       mutations,
       watch: {
-        dialog(val) {
+        dialog(_val) {
           jest.fn();
         },
       },

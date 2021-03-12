@@ -214,16 +214,17 @@ export default {
     }
   },
   watch: {
-    dialog(val) {
+    dialog(showDialog) {
       const newQuery = { ...this.$route.query };
-      if (Object.prototype.hasOwnProperty.call(newQuery, 'newQuest') && newQuery.newQuest === val) return;
-      if (!val) {
+      if (!showDialog) {
         // this.resetForm();  // when user clicks outside dialog, reset form?
         delete newQuery.newQuest;
       } else {
-        newQuery.newQuest = true;
+        newQuery.newQuest = 'true';
       }
-      this.$router.push({ query: newQuery });
+      if (this.$route.query.newQuest !== newQuery.newQuest) {
+        this.$router.push({ query: newQuery });
+      }
       this.verifyUser();
     },
   },
