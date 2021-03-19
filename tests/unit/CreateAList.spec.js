@@ -7,6 +7,21 @@ import VueRouter from 'vue-router';
 import routes from '@/router/routes';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
+// import {globalPreferences} from '../../src/firebase';
+
+jest.mock('firebase.js', () => ({
+  auth: {
+    currentUser: {
+      uid: 'alskdaslkd',
+    },
+  },
+  globalPreferences: {
+    onSnapshot: jest.fn(),
+  },
+  ensureSlugUniqueness: jest.fn(),
+}));
+
+// now we can say: expect(mockFirebase.ensureSlugUniqueness).toHaveBeenCalled();
 
 toHaveBeenWarnedInit();
 
@@ -128,8 +143,8 @@ describe('entering information in the dialog', () => {
       const unicodeString = 'ʕノ•ᴥ•ʔノ ︵ ┻━┻ ✌.ʕʘ‿ʘʔ.✌ 😀';
       await wrapper.find('input[test-title-input]').setValue('A Title');
       await wrapper.find('input[test-description-input]').setValue(unicodeString);
-      await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.vm.description).toEqual(unicodeString);
+      await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).toMatch(/Description\s+Possible/);
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
@@ -185,6 +200,13 @@ describe('list creation', () => {
       router,
       vuetify,
       store: localStore,
+      mocks: {
+        auth: {
+          currentUser: {
+            uid: 'TestUserUID',
+          },
+        },
+      },
     });
   });
   it('should do nothing if the title and color form does not validate', () => {

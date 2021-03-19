@@ -58,6 +58,7 @@ async function getListItems(fbList) {
   });
   return listItems.sort((a, b) => a.order < b.order);
 }
+
 async function saveListItems(fbListId, listItems) {
   const listItemsCollection = db.collection(`lists/${fbListId}/listItems`);
   const listItemDocs = await listItemsCollection.limit(1).get();
@@ -94,10 +95,17 @@ async function getListStates(fbList) {
 }
 
 async function ensureSlugUniqueness(title) {
+  // TODO: sort DESC by created date
   const allListsWithTitle = listsCollection.where('title', '==', title);
-  const lists = await allListsWithTitle.get();
+  let lists = await allListsWithTitle.get();
   if (lists.size < 2) return slugify(title);
-  const newSlug = slugify(`${title}-${lists.size}`);
+  lists = lists.sort((a, b) => a.created_at < b.created_at);
+  const lastList = lists[lists.length - 1];
+  const titleArray = lastList.title.split('-');
+  if (titleArray.length < 2) return slugify(`${title}-1`);
+  const count = titleArray[titleArray.length - 1];
+  const newIndex = (parseInt(count, 10) || 0) + 1;
+  const newSlug = slugify(`${title}-${newIndex}`);
   return newSlug;
 }
 

@@ -7,6 +7,9 @@ import VueRouter from 'vue-router';
 // eslint-disable-next-line import/extensions
 import routes from '@/router/routes.js';
 import Vuetify from 'vuetify';
+import toHaveBeenWarnedInit from '../toHaveBeenWarned';
+
+toHaveBeenWarnedInit();
 
 Vue.use(Vuetify);
 
@@ -36,6 +39,7 @@ describe('login or sign up', () => {
     expect(wrapper.text()).not.toContain('Email is required');
     await wrapper.find('.v-btn[test-login-button]').trigger('click');
     expect(wrapper.text()).toContain('Email is required');
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
   it('should warn when giving an invalid email', async () => {
     const wrapper = mount(LogInOrSignUp, {
@@ -49,6 +53,7 @@ describe('login or sign up', () => {
     wrapper.find('[test-email-field]').setValue('invalid.email@!!@you.com');
     await wrapper.find('.v-btn[test-login-button]').trigger('click');
     expect(wrapper.text()).toContain('Email is in an invalid format');
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
   it('should warn when not giving a password', async () => {
     const wrapper = mount(LogInOrSignUp, {
@@ -61,6 +66,7 @@ describe('login or sign up', () => {
     expect(wrapper.text()).not.toContain('Password is required');
     await wrapper.find('.v-btn[test-login-button]').trigger('click');
     expect(wrapper.text()).toContain('Password is required');
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
 });
 describe('Signing Up As A New User', () => {
@@ -75,6 +81,7 @@ describe('Signing Up As A New User', () => {
     expect(wrapper.text()).not.toContain('Email is required');
     await wrapper.find('.v-btn[test-signup-button]').trigger('click');
     expect(wrapper.text()).toContain('Email is required');
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
   it('should warn when giving an invalid email', async () => {
     const wrapper = mount(LogInOrSignUp, {
@@ -88,6 +95,7 @@ describe('Signing Up As A New User', () => {
     wrapper.find('[test-email-field]').setValue('invalid.email@!!@you.com');
     await wrapper.find('.v-btn[test-signup-button]').trigger('click');
     expect(wrapper.text()).toContain('Email is in an invalid format');
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
   it('should warn when not giving a password', async () => {
     const wrapper = mount(LogInOrSignUp, {
@@ -100,6 +108,7 @@ describe('Signing Up As A New User', () => {
     expect(wrapper.text()).not.toContain('Password is required');
     await wrapper.find('.v-btn[test-signup-button]').trigger('click');
     expect(wrapper.text()).toContain('Password is required');
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
   it('should warn when password is invalid', async () => {
     const wrapper = mount(LogInOrSignUp, {
@@ -114,6 +123,7 @@ describe('Signing Up As A New User', () => {
     expect(wrapper.text()).toContain('3');
     await wrapper.find('.v-btn[test-signup-button]').trigger('click');
     expect(wrapper.text()).toContain('Password must be at least 8 characters');
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
   it('should submit form when email and password is valid', async () => {
     const actions = {
@@ -144,5 +154,6 @@ describe('Signing Up As A New User', () => {
     expect(wrapper.text()).not.toContain('Password is required.');
     expect(wrapper.text()).not.toContain('Password must be at least 8 characters.');
     expect(wrapper.find('form').isVisible()).toBe(false);
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
 });
