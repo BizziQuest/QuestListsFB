@@ -6,20 +6,12 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "functions": {
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
-    ]
-  },
   "hosting": {
     "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "predeploy": [
-      "yarn build"
     ],
     "rewrites": [
       {
@@ -32,6 +24,9 @@
     "rules": "storage.rules"
   },
   "emulators": {
+    "auth": {
+      "port": 9099
+    },
     "hub": {
       "port": 4500
     },
@@ -49,6 +44,9 @@
     },
     "pubsub": {
       "port": 8085
+    },
+    "ui": {
+      "enabled": true
     }
   }
 }

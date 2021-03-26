@@ -1,27 +1,72 @@
 <template>
-    <v-navigation-drawer v-model="localDrawer" app clipped color="primary">
-      <v-list dense>
-        <template v-for="(item, i) in items">
-          <v-row v-if="item.heading" :key="i" align="center">
-            <v-col cols="6">
-              <v-subheader style="accent darken-4" v-if="item.heading">{{ item.heading }}</v-subheader>
-            </v-col>
-            <v-col cols="6" class="text-right">
-              <v-btn small text style="accent darken-4" >edit</v-btn>
-            </v-col>
-          </v-row>
-          <v-divider v-else-if="item.divider" :key="i" class="my-4" style="accent lighten-2"></v-divider>
-          <v-list-item color="accent" v-else :key="i" link>
-            <v-list-item-action>
-              <v-icon color="secondary">{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title color="secondary">{{ item.text }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
+    <v-navigation-drawer
+      :bottom="isMobile"
+      :floating="isMobile"
+      :expand-on-hover="!isMobile && !$vuetify.breakpoint.lgAndUp"
+      :app="!isMobile"
+      :permanent="!isMobile"
+      v-model="showDrawer"
+      :fixed="isMobile"
+      :dark="!isDark"
+      :light="isDark"
+      test-navigation-drawer
+      >
+      <v-list dense nav>
+        <user-menu-item :dark="!isDark" :light="isDark"/>
+
+        <v-list-item test-questlists-link link :color="menuHighlightColor" title="View All QuestLists" to="/">
+          <v-list-item-action>
+            <v-icon>mdi-shield-check-outline</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>QuestLists</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <CreateAList
+          test-create-list
+          :dark="!isDark"
+          :light="isDark"
+          :showDialog="showCreateList"
+          :highlightColor="menuHighlightColor"
+        />
+
+        <v-list-item test-search-link link title="Look for a particular quest" to="/search">
+          <v-list-item-action>
+            <v-icon>mdi-magnify</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Search</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item test-fav-header>
+            <v-divider class="my-4"></v-divider>
+            <v-subheader>Favorite Quests</v-subheader>
+        </v-list-item>
+
+        <v-list-item test-fav-link v-for="item in favoriteQuests"
+        :key="item.id" link :title="item.name" :to="`/lists/${item.id}`">
+          <v-list-item-action>
+            <v-icon>{{item.icon}}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>{{item.name}}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
         <v-list-item>
-          <CreateAList color="secondary"></CreateAList>
+            <v-divider class="my-4"></v-divider>
+            <v-subheader></v-subheader>
+        </v-list-item>
+
+        <v-list-item test-dark-mode-switch link @click="isDark = !isDark">
+          <v-list-item-action>
+            <v-icon>{{isDark ? 'mdi-brightness-4' : 'mdi-brightness-7'}}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Turn Dark Mode {{isDark ? 'Off' : 'On'}}</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -29,35 +74,50 @@
 
 <script>
 import CreateAList from '../CreateAList.vue';
+import { auth } from '../../firebase';
+import UserMenuItem from './UserMenuItem.vue';
 
 export default {
   name: 'DrawerMenu',
-  props: ['drawer'],
+  props: {
+    drawer: {
+      type: Boolean,
+      default: false,
+    },
+    bottom: {
+      type: Boolean,
+      default: false,
+    },
+  },
   components: {
     CreateAList,
+    UserMenuItem,
   },
   data() {
     return {
-      items: [
-        { icon: 'lightbulb_outline', text: 'Notes' },
-        { icon: 'touch_app', text: 'Reminders' },
-        { divider: true },
-        { heading: 'Labels' },
-        { icon: 'add', text: 'Create new label' },
-        { divider: true },
-        { icon: 'archive', text: 'Archive' },
-        { icon: 'delete', text: 'Trash' },
-        { divider: true },
-        { icon: 'settings', text: 'Settings' },
-        { icon: 'chat_bubble', text: 'Trash' },
-        { icon: 'help', text: 'Help' },
-        { icon: 'phonelink', text: 'App downloads' },
-        { icon: 'keyboard', text: 'Keyboard shortcuts' },
+      currentTheme: this.$vuetify.theme,
+      showCreateList: false,
+      auth,
+      favoriteQuests: [
+        {
+          name: 'Sample Favorite Quest with amazingly long title and now that\'s about it',
+          icon: 'mdi-heart',
+          id: 0,
+        },
       ],
     };
   },
   computed: {
-    localDrawer: {
+    isMobile() {
+      return this.$vuetify.breakpoint.xs;
+    },
+    menuHighlightColor() {
+      return this.isDark ? 'primary' : 'secondary';
+    },
+    avatar() {
+      return this.$store.state.currentUser?.avatar;
+    },
+    showDrawer: {
       get() {
         return this.drawer;
       },
@@ -65,6 +125,64 @@ export default {
         this.$emit('update:drawer', val);
       },
     },
+    isNavDark() {
+      return !this.isDark;
+    },
+    isDark: {
+      get() {
+        return this.$vuetify.theme.dark;
+      },
+      set(val) {
+        this.$vuetify.theme.dark = val;
+      },
+    },
   },
 };
 </script>
+<style scoped lang="scss">
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+  &:not([color]) {
+    color: #ffffff !important;
+    &.theme--light {
+      color: #ffffff !important;
+      .v-icon {
+        color: #ffffff;
+      }
+    }
+  }
+  &.theme--dark {
+    color: #ffffff !important;
+    .secondary--text {
+      color: var(--v-secondary-base) !important;
+    }
+    .v-icon {
+      color: #ffffff;
+    }
+  }
+}
+/* /deep/ .theme--light {
+  &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]) {
+    color: #ffffff !important;
+  }
+  &.v-icon {
+    color: #ffffff;
+  }
+}
+/deep/ [color="secondary"] {
+  &.theme--light {
+    .v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+      color: var(--v-secondary-base) !important;
+    }
+  }
+  &.theme--dark {
+    &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+      color: var(--v-secondary-base) !important;
+    }
+  }
+}
+
+/deep/ .theme--light .secondary--text {
+  font-weight: bold;
+}
+*/
+</style>

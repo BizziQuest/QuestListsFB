@@ -1,14 +1,14 @@
 <template>
   <span class="icon-state">
-    <v-icon color="primary" dark @click.stop="dialog = true">{{ localIcon }}</v-icon>
+    <v-icon color="primary" @click.stop="dialog = true">{{ localIcon }}</v-icon>
     <v-dialog v-model="dialog" max-width="400">
       <v-card>
-        <v-card-title class="headline">Please choose your Icon?</v-card-title>
+        <v-card-title class="headline">Please choose your Icon</v-card-title>
         <v-card-text>
           <v-row>
-            <span class='pa-5 mb-5 rounded-tl-xl' style='background-color: grey;'>
-              Please enter the name of icon you wish to use for this state. You can get the icon names from
-            </span>
+            <div class='pa-5 mb-5 rounded-t-xl' color="info">
+              Please enter the name of icon you wish to use for this state. You can get the icon
+              names from the following sites.<br/>
             <v-chip
               class="mr-2"
               @click="openMaterial"
@@ -23,6 +23,7 @@
                 <v-icon class='mr-2'>mdi-material-design</v-icon>
                 Material desgin
             </v-chip>
+            </div>
           </v-row>
           <v-row>
             <div class="local-icon">

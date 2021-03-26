@@ -1,4 +1,5 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/analytics';
 import slugify from 'slugify';
@@ -8,19 +9,21 @@ require('dotenv').config();
 // firebase init goes here
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
   authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  measurementId: process.env.VUE_APP_FIREBASE_APP_ID,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
   projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
   storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.VUE_APP_FIREBASE_APP_ID,
-  measurementId: process.env.VUE_APP_FIREBASE_APP_ID,
 };
 
 // firebase utils
 const fbApp = firebase.initializeApp(firebaseConfig);
-const fbAnalytics = process.env.NODE_ENV !== 'test' ? firebase.analytics() : null;
+const nodeEnv = process.env.NODE_ENV;
+const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? firebase.analytics() : null;
 const auth = fbApp.auth();
+if (process.env.VUE_APP_FIREBASE_AUTH_HOST) auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST);
 const db = fbApp.firestore();
 const { currentUser } = auth;
 
@@ -55,6 +58,7 @@ async function getListItems(fbList) {
   });
   return listItems.sort((a, b) => a.order < b.order);
 }
+
 async function saveListItems(fbListId, listItems) {
   const listItemsCollection = db.collection(`lists/${fbListId}/listItems`);
   const listItemDocs = await listItemsCollection.limit(1).get();
@@ -91,11 +95,32 @@ async function getListStates(fbList) {
 }
 
 async function ensureSlugUniqueness(title) {
+  // TODO: sort DESC by created date
   const allListsWithTitle = listsCollection.where('title', '==', title);
-  const lists = await allListsWithTitle.get();
+  let lists = await allListsWithTitle.get();
   if (lists.size < 2) return slugify(title);
-  const newSlug = slugify(`${title}-${lists.size}`);
+  lists = lists.sort((a, b) => a.created_at < b.created_at);
+  const lastList = lists[lists.length - 1];
+  const titleArray = lastList.title.split('-');
+  if (titleArray.length < 2) return slugify(`${title}-1`);
+  const count = titleArray[titleArray.length - 1];
+  const newIndex = (parseInt(count, 10) || 0) + 1;
+  const newSlug = slugify(`${title}-${newIndex}`);
   return newSlug;
+}
+
+async function saveUserPreferences(prefs) {
+  const userDocument = db.collection('users').doc(auth.currentUser.uid);
+  await userDocument.set(prefs, { merge: true });
+  return userDocument.get();
+}
+
+async function getUserPreferences() {
+  const userDocumentRef = db.collection('users').doc(auth.currentUser.uid);
+  const userDocument = await userDocumentRef.get();
+  if (userDocument.exists) return userDocument.data();
+  console.warn('User Prefs don\'t exist: ', auth.currentUser.uid, userDocument.path);
+  return {};
 }
 
 async function createList(payload) {
@@ -130,5 +155,7 @@ export {
   googleOAuthLogin,
   facebookOAuthLogin,
   ensureSlugUniqueness,
+  saveUserPreferences,
+  getUserPreferences,
   createList,
 };

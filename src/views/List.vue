@@ -1,16 +1,16 @@
 <template>
   <div>
     <h1>{{list.title}}</h1>
+    <user-auth-alert action="edit this list"/>
     <ol style="list-style-type:none;">
-      <li v-for="(item,index) in listItems" :key="`${item.text}${index}`">
+      <li v-for="(item,index) in listItems" :key="`${item.title}${index}`">
         <list-item
           :listItem="item"
+          :value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
-          @blur="saveItem"
-          :isNewItem="item.isNewItem"
-          @update:text="addNewItem(index, $event)"
-          @update:subList="addNewSubList(index, $event)"
-          :listId="list.id"
+          @blur="saveItem(index, $event)"
+          @input="addNewItem(index, $event)"
+          :tabindex="index"
         />
       </li>
      </ol>
@@ -18,6 +18,8 @@
 </template>
 <script>
 import ListItem from '@/components/ListItem.vue';
+import UserAuthAlert from '@/components/UserAuthAlert.vue';
+import userAuthMixin from '../mixins/UserAuth.vue';
 import {
   getListItems,
   getListStates,
@@ -34,8 +36,10 @@ export default {
       description: 'The title of the list you are displaying. Defaults to "New List".',
     },
   },
+  mixins: [userAuthMixin],
   components: {
     ListItem,
+    UserAuthAlert,
   },
   data() {
     return {
@@ -64,16 +68,18 @@ export default {
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
       if (!theLastItem || !theLastItem.isNewItem) {
-        listItems.push({ title: 'New Item', isNewItem: true });
+        listItems.push({ title: '', isNewItem: true });
       }
       this.list.id = foundedList.id || 'none';
       this.list = foundedList;
       this.listItems = listItems;
       this.states = states;
     },
-    saveItem() {
+    saveItem(idx, newItem) {
       const items = this.listItems.slice(0, -1);
+      items[idx] = newItem;
       saveListItems(this.list.id, items);
+      this.addNewItem(idx, newItem);
     },
     addNewSubList() {
       this.saveItem();
@@ -85,7 +91,7 @@ export default {
         const lastItem = this.listItems[lastItemIndex];
         delete lastItem.isNewItem;
         this.listItems.push({
-          text: 'New Item',
+          title: '',
           isNewItem: true,
         });
       }

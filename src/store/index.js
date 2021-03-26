@@ -10,7 +10,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
-import md5 from 'md5';
+import { getAvatarForUser } from '../util';
 import {
   auth,
   globalPreferences,
@@ -18,15 +18,17 @@ import {
   stateGroupsCollection,
   googleOAuthLogin,
   facebookOAuthLogin,
+  saveUserPreferences,
+  getUserPreferences,
 } from '../firebase';
 
 Vue.use(Vuex);
 
 const defaultState = {
   currentUser: {
-    avatar: '',
-    displayName: '',
-    email: '',
+    avatar: null,
+    displayName: null,
+    email: null,
     emailVerified: false,
     uid: undefined,
     useGravatar: false,
@@ -71,10 +73,7 @@ const store = new Vuex.Store({
   },
   getters: {
     getCurrentUser: (state) => state.currentUser,
-    getUserAvatar: (state) => {
-      if (state.currentUser.useGravatar) return `https://www.gravatar.com/avatar/${md5(state.currentUser.email)}`;
-      return state.currentUser.avatar || '/img/unknown_user.svg';
-    },
+    getUserAvatar: (state) => getAvatarForUser(state.currentUser),
     getCurrentList: (state) => state.currentList,
     getAllLists: (state) => state.lists,
     getGlobalPreferences: (state) => state.globalPreferences,
@@ -191,8 +190,9 @@ const store = new Vuex.Store({
         dispatch('notify', { text: error, type: 'error' });
       }
     },
-    authenticationChanged({ commit }, payload) {
-      commit('setUser', payload);
+    async authenticationChanged({ commit }, payload) {
+      const userPrefs = await getUserPreferences();
+      commit('setUser', { ...payload, ...userPrefs });
     },
     async addStateGroup({ commit, state }, stateGroupData) {
       // TODO: check for groups that have the current values and use that one instead.
@@ -233,7 +233,7 @@ const store = new Vuex.Store({
           displayName: payload.displayName,
           photoURL: payload.avatar,
         });
-        // TODO: write the rest of payload to the DB.
+        await saveUserPreferences(payload);
         commit('setUser', payload);
       } catch (error) {
         console.warn('saveProfile', error);
@@ -254,7 +254,6 @@ globalPreferences.onSnapshot(async (snapshot) => {
   if (prefs.length < 1) return;
 
   const { defaultColor, defaultStateGroup } = prefs[0];
-
   const stateGroup = await defaultStateGroup.get();
   store.commit('setGlobalPreferences', {
     defaultColor,

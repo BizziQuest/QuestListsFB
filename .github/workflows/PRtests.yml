@@ -9,6 +9,20 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  CI: true
+  VUE_APP_FIREBASE_PROJECT_ID: ${{ secrets.VUE_APP_FIREBASE_PROJECT_ID }}
+  VUE_APP_FIREBASE_API_KEY: ${{ secrets.VUE_APP_FIREBASE_API_KEY }}
+  VUE_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.VUE_APP_FIREBASE_AUTH_DOMAIN }}
+  VUE_APP_FIREBASE_DATABASE_URL: ${{ secrets.VUE_APP_FIREBASE_DATABASE_URL }}
+  VUE_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.VUE_APP_FIREBASE_STORAGE_BUCKET }}
+  VUE_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VUE_APP_FIREBASE_MESSAGING_SENDER_ID }}
+  VUE_APP_FIREBASE_APP_ID: ${{ secrets.VUE_APP_FIREBASE_APP_ID }}
+  VUE_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.VUE_APP_GOOGLE_ANALYTICS_ID }}
+  VUE_APP_I18N_LOCALE: en
+  VUE_APP_I18N_FALLBACK_LOCALE: en
+  FIREBASE_TOKEN: ${{ secrets.CI_FIREBASE_TOKEN }}
+
 jobs:
   linting:
 
@@ -16,7 +30,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x] # only use 10, for firebase-tools compatibility
+        node-version: [15.x] # only use 10, for firebase-tools compatibility
 
     steps:
     - uses: actions/checkout@v2
@@ -29,13 +43,11 @@ jobs:
     - run: yarn lint
 
   unit-tests:
-
+    needs: linting
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [10.x] # only use 10, for firebase-tools compatibility
-
+        node-version: [15.x] # only use 10, for firebase-tools compatibility
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -47,13 +59,11 @@ jobs:
     - run: CI=true yarn ci:unit
 
   end2end-tests:
-
+    needs: linting
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [10.x] # only use 10, for firebase-tools compatibility
-
+        node-version: [15.x] # only use 10, for firebase-tools compatibility
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -62,4 +72,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
     - run: yarn
-    - run: CI=true yarn ci:e2e1
+    - run: CI=true yarn ci:e2e

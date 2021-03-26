@@ -1,58 +1,50 @@
 <template>
-  <!-- id="keep" has no effect ? -->
-  <v-app id="app" dark color="primary" class="primary">
-    <!-- @updateDrawer="handleUpdate" -->
-    <div id="nav">
-        <top-menu-bar :drawer.sync="drawer" color="primary"></top-menu-bar>
-        <drawer-menu-bar :drawer.sync="drawer" color="primary"></drawer-menu-bar>
-    </div>
+  <v-app id="app" @keyup.ctrl.102="handleFind">
+    <drawer-menu :drawer.sync="drawer"/>
     <v-main>
       <router-view :key="$route.path"></router-view>
     </v-main>
-    <notification-vue/>
+    <bottom-drawer-menu :drawer.sync="drawer"/>
+    <notification/>
   </v-app>
 </template>
 
 <script>
-import TopMenuBarVue from './components/Menus/TopMenuBar.vue';
-import DrawerMenuVue from './components/Menus/DrawerMenu.vue';
-import NotificationVue from './components/Notification.vue';
+import DrawerMenu from './components/Menus/DrawerMenu.vue';
+import BottomDrawerMenu from './components/Menus/BottomDrawerMenu.vue';
+import Notification from './components/Notification.vue';
 
 export default {
   name: 'App',
-
   components: {
-    'top-menu-bar': TopMenuBarVue,
-    'drawer-menu-bar': DrawerMenuVue,
-    NotificationVue,
+    DrawerMenu,
+    BottomDrawerMenu,
+    Notification,
   },
   data() {
     return {
       drawer: false,
-      items: [
-        { icon: 'lightbulb_outline', text: 'Notes' },
-        { icon: 'touch_app', text: 'Reminders' },
-        { divider: true },
-        { heading: 'Labels' },
-        { icon: 'add', text: 'Create new label' },
-        { divider: true },
-        { icon: 'archive', text: 'Archive' },
-        { icon: 'delete', text: 'Trash' },
-        { divider: true },
-        { icon: 'settings', text: 'Settings' },
-        { icon: 'chat_bubble', text: 'Trash' },
-        { icon: 'help', text: 'Help' },
-        { icon: 'phonelink', text: 'App downloads' },
-        { icon: 'keyboard', text: 'Keyboard shortcuts' },
-      ],
     };
+  },
+  methods: {
+    handleFind() {
+      console.warn('Search Not Implemented');
+    },
+  },
+  mounted() {
+    this.$watch('$vuetify.breakpoint.name', (from, to) => {
+      if (from !== 'sm' && to === 'sm') {
+        this.drawer = false;
+      }
+    });
   },
 };
 </script>
 
-<style scoped>
+<style>
 /*.theme--dark.v-application {
     background: #81b98b;
     color: #FFFFFF;
 }*/
+.firebase-emulator-warning { display: none; }
 </style>

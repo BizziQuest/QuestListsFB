@@ -23,18 +23,20 @@
         ref="row"
         :data-key="`${item.text}${index}${numForceRedraws}`"
       >
-        <list-state
-          :item="item"
-          :draggable="index !== items.length - 1"
-          :isDraggable="index !== items.length - 1"
-          @update:item="ensureNewState(index, $event)"
-          @blur="updateItem(index, $event)"
-          :class="{
-            changed: updatedRows.find(e => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
-            endDrag: updatedRows[0] && updatedRows[0].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
-            startDrag: updatedRows[1] && updatedRows[1].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0
-          }"
-        />
+        <v-row class="justify-start align-center">
+          <list-state
+            :item="item"
+            :draggable="index !== items.length - 1"
+            :isDraggable="index !== items.length - 1"
+            @update:item="ensureNewState(index, $event)"
+            @blur="updateItem(index, $event)"
+            :class="{
+              changed: updatedRows.find(e => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
+              endDrag: updatedRows[0] && updatedRows[0].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
+              startDrag: updatedRows[1] && updatedRows[1].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0
+            }"
+          />
+        </v-row>
       </span>
     </div>
   </v-container>
@@ -62,7 +64,7 @@ export default {
       items: [
         ...this.stateGroup.states,
         {
-          name: 'New State',
+          text: 'New State',
           icon: 'mdi-plus',
         },
       ],
@@ -82,7 +84,7 @@ export default {
         if (state.text.length !== 0) {
           this.items.push({
             icon: 'mdi-plus',
-            name: 'New Item',
+            text: 'New Item',
           });
         }
       }
