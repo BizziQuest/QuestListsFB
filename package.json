@@ -10,6 +10,7 @@
     "ci:unit": "firebase emulators:exec --only firestore,auth 'yarn test:unit'",
     "ci": "CI=true firebase emulators:exec --only firestore,auth 'CI=true yarn test:e2e --headless && yarn test:unit'",
     "dev": "yarn fb:emulate; yarn serve --open",
+    "container": "yarn fb:emulate; yarn serve",
     "fb:deploy": "firebase deploy",
     "fb:dev:clean": "firebase emulators:exec --only firestore,auth 'yarn serve --open'",
     "fb:dev": "firebase emulators:exec --only firestore,auth --import tests/data 'yarn serve --open'",
