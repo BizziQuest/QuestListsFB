@@ -1,13 +1,12 @@
 import EditInfo from '@/components/EditInfo.vue';
-import { mount, createLocalVue, shallowMount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
 // import Vue from 'vue';
 import Vuex from 'vuex';
-import store from '@/store';
 import VueRouter from 'vue-router';
 import routes from '@/router/routes';
 import Vuetify from 'vuetify';
-import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 import md5 from 'md5';
+import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 toHaveBeenWarnedInit();
 

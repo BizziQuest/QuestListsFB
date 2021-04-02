@@ -1,5 +1,5 @@
 import CreateAList from '@/components/CreateAList.vue';
-import { mount, createLocalVue, shallowMount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
 // import Vue from 'vue';
 import Vuex from 'vuex';
 import store from '@/store';
@@ -177,7 +177,7 @@ describe('list creation', () => {
       getters,
       mutations,
       watch: {
-        dialog(_val) {
+        dialog() {
           jest.fn();
         },
       },

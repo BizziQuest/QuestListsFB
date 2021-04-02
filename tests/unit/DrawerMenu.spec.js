@@ -4,8 +4,8 @@ import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import routes from '@/router/routes';
 import Vuetify from 'vuetify';
-import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 import store from '@/store';
+import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 toHaveBeenWarnedInit();
 

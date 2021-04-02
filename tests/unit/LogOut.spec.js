@@ -1,5 +1,5 @@
 import LogOut from '@/components/LogOut.vue';
-import { shallowMount, mount, createLocalVue } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import store from '@/store';
 import VueRouter from 'vue-router';
@@ -15,7 +15,6 @@ const vuetify = new Vuetify();
 localVue.use(VueRouter, Vuetify, Vuex);
 
 let wrapper = null;
-let app = null;
 
 describe('default state', () => {
   beforeEach(() => {
