@@ -25,8 +25,9 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
-      - name: Install Dependencies
+      - name: Install Global Dependencies
         run: npm install -g yarn @vue/cli
+      - name: Install Local Dependencies
         run: yarn
       - name: Build
         run: yarn build
