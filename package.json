@@ -59,7 +59,6 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.6.3",
-    "@mdi/font": "^4.5.95",
     "@storybook/addon-a11y": "^5.2",
     "@storybook/addon-actions": "^5.2",
     "@storybook/addon-knobs": "^5.2",
