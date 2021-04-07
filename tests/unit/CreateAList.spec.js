@@ -155,7 +155,6 @@ describe('entering information in the dialog', () => {
 describe('list creation', () => {
   let actions;
   let getters;
-  let mutations;
   beforeEach(async () => {
     getters = {
       getGlobalPreferences() {
