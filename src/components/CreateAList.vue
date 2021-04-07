@@ -144,8 +144,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['setItemStates', 'setMessages']),
-    ...mapActions(['createList']),
+    ...mapMutations(['setItemStates']),
+    ...mapActions(['createList', 'notify']),
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
@@ -161,7 +161,7 @@ export default {
           states: this.updatedListStatesItems,
         };
       } else {
-        this.setMessages([{ type: 'info', text: 'No states configured. Using default states.' }]);
+        this.notify([{ type: 'info', text: 'No states configured. Using default states.' }]);
       }
       const payload = {
         title: this.title,

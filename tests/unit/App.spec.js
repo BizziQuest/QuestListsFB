@@ -4,8 +4,9 @@ import Vue from 'vue';
 import vuetify from 'vuetify';
 import router from '@/router';
 import store from '@/store';
+// import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
-Vue.use(vuetify);
+// toHaveBeenWarnedInit();
 
 Vue.use(vuetify);
 
@@ -28,6 +29,7 @@ afterEach(() => {
 describe('App.vue', () => {
   it('renders a single v-app element', () => {
     expect(wrapper.findAll('v-app-stub').length).toBe(1);
+    // expect('the Auth Emulator').toHaveBeenSaid();
   });
   it('renders the left menu drawer', () => {
     expect(wrapper.findAll('drawer-menu-stub').length).toBe(1);

@@ -69,7 +69,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item test-fav-link link title="About QuestLists" to="/about">
+        <v-list-item link title="About QuestLists" to="/about">
           <v-list-item-action>
             <v-icon>mdi-information</v-icon>
           </v-list-item-action>
