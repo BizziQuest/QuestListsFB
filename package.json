@@ -7,7 +7,7 @@
     "build": "vue-cli-service build --mode production",
     "ci:e2e:clean": "firebase emulators:exec --only firestore,auth 'yarn test:e2e'",
     "ci:e2e": "firebase emulators:exec --only firestore,auth 'yarn test:e2e --headless --mode=development'",
-    "ci:unit": "firebase emulators:exec --only firestore,auth 'yarn test:unit'",
+    "ci:unit": "firebase emulators:exec --only firestore,auth 'yarn test:unit --detectOpenHandles'",
     "ci": "CI=true firebase emulators:exec --only firestore,auth 'CI=true yarn test:e2e --headless && yarn test:unit'",
     "dev": "yarn fb:emulate; yarn serve --open",
     "container": "yarn fb:emulate; yarn serve",
