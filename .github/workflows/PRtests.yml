@@ -30,7 +30,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
+        node-version: [10.x] # only use 10, for firebase-tools compatibility
 
     steps:
     - uses: actions/checkout@v2
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
+        node-version: [10.x] # only use 10, for firebase-tools compatibility
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -58,18 +58,18 @@ jobs:
     - run: yarn
     - run: CI=true yarn ci:unit
 
-  end2end-tests:
-    needs: linting
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn @vue/cli
-    - run: yarn
-    - run: CI=true yarn ci:e2e
+  # end2end-tests:
+  #   needs: linting
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node-version: [15.x] # only use 10, for firebase-tools compatibility
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Use Node.js ${{ matrix.node-version }}
+  #     uses: actions/setup-node@v1
+  #     with:
+  #       node-version: ${{ matrix.node-version }}
+  #   - run: npm install -g yarn @vue/cli
+  #   - run: yarn
+  #   - run: CI=true yarn ci:e2e

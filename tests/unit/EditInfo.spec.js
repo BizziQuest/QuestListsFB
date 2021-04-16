@@ -11,6 +11,7 @@ import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 toHaveBeenWarnedInit();
 
 const localVue = createLocalVue();
+localVue.use(Vuex);
 const router = new VueRouter({ routes });
 const vuetify = new Vuetify();
 localVue.use(VueRouter, Vuetify, Vuex);
