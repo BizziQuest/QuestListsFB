@@ -1,0 +1,314 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`smoother ux transition transitioning between lists view and edit info page (should be less than 0.3 seconds) renders correctly 1`] = `
+<div
+  class="v-application v-application--is-ltr theme--light"
+  data-app="true"
+  id="app"
+>
+  <div
+    class="v-application--wrap"
+  >
+    <nav
+      class="v-navigation-drawer v-navigation-drawer--fixed v-navigation-drawer--mini-variant v-navigation-drawer--open v-navigation-drawer--open-on-hover theme--dark"
+      style="height: 100vh; top: 0px; max-height: calc(100% - 0px); transform: translateX(0%); width: 56px;"
+      test-navigation-drawer=""
+    >
+      <div
+        class="v-navigation-drawer__content"
+      >
+        <div
+          class="v-list v-sheet theme--dark v-list--dense v-list--nav"
+        >
+          <div
+            class="user-menu-item"
+          >
+            <a
+              class="v-list-item v-list-item--link theme--dark"
+              href="#/EditInfo"
+              tabindex="0"
+              title="User Management"
+            >
+              <div
+                class="v-avatar v-list-item__avatar"
+                style="height: 28px; min-width: 28px; width: 28px;"
+              >
+                <div
+                  class="v-image v-responsive theme--dark"
+                >
+                  <transition-stub
+                    mode="in-out"
+                    name="fade-transition"
+                  >
+                    <div
+                      class="v-image__image v-image__image--preload v-image__image--cover"
+                      style="background-position: center center;"
+                    />
+                  </transition-stub>
+                  <div
+                    class="v-responsive__content"
+                  />
+                </div>
+              </div>
+               
+              <div
+                class="v-list-item__content ml-3"
+              >
+                <div
+                  class="v-list-item__title text-truncate"
+                >
+                  
+                </div>
+              </div>
+               
+              <button
+                class="v-icon notranslate v-icon--link mdi mdi-exit-to-app theme--dark"
+                icon=""
+                style="font-size: 16px;"
+                type="button"
+              />
+            </a>
+          </div>
+           
+          <a
+            aria-current="page"
+            class="v-list-item--active v-list-item v-list-item--link theme--dark secondary--text"
+            href="#/"
+            tabindex="0"
+            test-questlists-link=""
+            title="View All QuestLists"
+          >
+            <div
+              class="v-list-item__action"
+            >
+              <i
+                aria-hidden="true"
+                class="v-icon notranslate mdi mdi-shield-check-outline theme--dark"
+              />
+            </div>
+             
+            <div
+              class="v-list-item__content"
+            >
+              <div
+                class="v-list-item__title"
+              >
+                QuestLists
+              </div>
+            </div>
+          </a>
+           
+          <div
+            class="v-dialog__container primary"
+            role="dialog"
+            test-create-list=""
+          >
+            <!---->
+          </div>
+          <div
+            class="v-list-item v-list-item--link theme--dark secondary--text"
+            tabindex="0"
+            test-default-create-list-item=""
+            title="Create A New Quest"
+          >
+            <div
+              class="v-list-item__action"
+            >
+              <i
+                aria-hidden="true"
+                class="v-icon notranslate material-icons theme--dark secondary--text"
+              >
+                add
+              </i>
+            </div>
+             
+            <div
+              class="v-list-item__content"
+            >
+              <div
+                class="v-list-item__title secondary--text"
+                test-activate-item=""
+              >
+                New Quest
+              </div>
+            </div>
+          </div>
+           
+          <a
+            class="v-list-item v-list-item--link theme--dark"
+            href="#/search"
+            tabindex="0"
+            test-search-link=""
+            title="Look for a particular quest"
+          >
+            <div
+              class="v-list-item__action"
+            >
+              <i
+                aria-hidden="true"
+                class="v-icon notranslate mdi mdi-magnify theme--dark"
+              />
+            </div>
+             
+            <div
+              class="v-list-item__content"
+            >
+              <div
+                class="v-list-item__title"
+              >
+                Search
+              </div>
+            </div>
+          </a>
+           
+          <div
+            class="v-list-item theme--dark"
+            tabindex="-1"
+            test-fav-header=""
+          >
+            <hr
+              aria-orientation="horizontal"
+              class="my-4 v-divider theme--dark"
+              role="separator"
+            />
+             
+            <div
+              class="v-subheader theme--dark"
+            >
+              Favorite Quests
+            </div>
+          </div>
+           
+          <a
+            class="v-list-item v-list-item--link theme--dark"
+            href="#/lists/0"
+            tabindex="0"
+            test-fav-link=""
+            title="Sample Favorite Quest with amazingly long title and now that's about it"
+          >
+            <div
+              class="v-list-item__action"
+            >
+              <i
+                aria-hidden="true"
+                class="v-icon notranslate mdi mdi-heart theme--dark"
+              />
+            </div>
+             
+            <div
+              class="v-list-item__content"
+            >
+              <div
+                class="v-list-item__title"
+              >
+                Sample Favorite Quest with amazingly long title and now that's about it
+              </div>
+            </div>
+          </a>
+           
+          <div
+            class="v-list-item theme--dark"
+            tabindex="-1"
+          >
+            <hr
+              aria-orientation="horizontal"
+              class="my-4 v-divider theme--dark"
+              role="separator"
+            />
+             
+            <div
+              class="v-subheader theme--dark"
+            />
+          </div>
+           
+          <div
+            class="v-list-item v-list-item--link theme--dark"
+            tabindex="0"
+            test-dark-mode-switch=""
+          >
+            <div
+              class="v-list-item__action"
+            >
+              <i
+                aria-hidden="true"
+                class="v-icon notranslate mdi mdi-brightness-7 theme--dark"
+              />
+            </div>
+             
+            <div
+              class="v-list-item__content"
+            >
+              <div
+                class="v-list-item__title"
+              >
+                Turn Dark Mode On
+              </div>
+            </div>
+          </div>
+           
+          <a
+            class="v-list-item v-list-item--link theme--dark"
+            href="#/about"
+            tabindex="0"
+            title="About QuestLists"
+          >
+            <div
+              class="v-list-item__action"
+            >
+              <i
+                aria-hidden="true"
+                class="v-icon notranslate mdi mdi-information theme--dark"
+              />
+            </div>
+             
+            <div
+              class="v-list-item__content"
+            >
+              <div
+                class="v-list-item__title"
+              >
+                About QuestLists
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div
+        class="v-navigation-drawer__border"
+      />
+    </nav>
+     
+    <main
+      class="v-main"
+      style="padding: 0px 0px 0px 56px;"
+    >
+      <div
+        class="v-main__wrap"
+      >
+        <transition-stub
+          name="router-anim"
+        >
+          <div
+            class="container lists-view container--fluid"
+          >
+            <transition-group-stub
+              class="row"
+              name="fade"
+              tag="div"
+            >
+              <!---->
+               
+            </transition-group-stub>
+          </div>
+        </transition-stub>
+      </div>
+    </main>
+     
+    <!---->
+     
+    <div>
+      <!---->
+    </div>
+  </div>
+</div>
+`;

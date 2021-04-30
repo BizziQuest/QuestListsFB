@@ -1,19 +1,19 @@
 <template>
   <div>
-    <h1>{{list.title}}</h1>
-    <user-auth-alert action="edit this list"/>
-    <ol style="list-style-type:none;">
-      <li v-for="(item,index) in listItems" :key="`${item.title}${index}`">
-        <list-item
-          :listItem="item"
-          :value="item"
-          :states="states || globalPreferences.defaultStateGroup.states"
-          @blur="saveItem(index, $event)"
-          @input="addNewItem(index, $event)"
-          :tabindex="index"
-        />
-      </li>
-     </ol>
+    <h1>{{ list.title }}</h1>
+    <user-auth-alert action="edit this list" />
+    <transition-group name="slide-x-transition">
+      <list-item
+        v-for="(item, index) in listItems"
+        :key="`${item.title}${index}`"
+        :listItem="item"
+        :value="item"
+        :states="states || globalPreferences.defaultStateGroup.states"
+        @blur="saveItem(index, $event)"
+        @input="addNewItem(index, $event)"
+        :tabindex="index"
+      />
+    </transition-group>
   </div>
 </template>
 <script>
@@ -21,10 +21,7 @@ import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import {
-  getListItems,
-  getListStates,
-  listsCollection,
-  saveListItems,
+  getListItems, getListStates, listsCollection, saveListItems,
 } from '../firebase';
 
 export default {
@@ -106,5 +103,9 @@ export default {
 <style lang='scss' scoped>
 h1 {
   margin-top: 10px;
+}
+.slide-x-transition-enter-active,
+.slide-x-transition-leave-active {
+  transition-duration: 2s !important;
 }
 </style>
