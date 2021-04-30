@@ -104,6 +104,7 @@ export default {
 h1 {
   margin-top: 10px;
 }
+
 .slide-x-transition-enter-active,
 .slide-x-transition-leave-active {
   transition-duration: 2s !important;
