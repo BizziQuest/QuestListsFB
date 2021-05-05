@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class='lists-view'>
     <transition-group tag="div" class="row" name="fade">
       <v-col v-if="lists === null" key="skeleton" class='mt-5'>
         <v-skeleton-loader v-for="i in 6" :key="i"

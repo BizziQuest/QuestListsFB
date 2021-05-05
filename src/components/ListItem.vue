@@ -100,7 +100,6 @@ export default {
     },
     invalidateNewItem(newValue) {
       if (this.isNewItem && (newValue !== '' || !!newValue)) {
-        // console.log('invalidating', newValue);
         this.isNewItem = false;
         this.emitUpdate({ title: newValue, isNewItem: false });
       }
