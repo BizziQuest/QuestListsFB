@@ -1,5 +1,4 @@
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
-import Vue from 'vue';
 import Vuex from 'vuex';
 import Vuetify from 'vuetify';
 import App from '@/App.vue'
@@ -30,7 +29,7 @@ beforeEach(() => {
     globalPreferences: {}
   };
   const localStore = new Vuex.Store({
-    getters: { getGlobalPreferences: (state) => state.globalPreferences },
+    getters: { getGlobalPreferences: (s) => s.globalPreferences },
     state,
     actions: { fetchLists: jest.fn() }
   });
@@ -53,7 +52,7 @@ describe('smoother ux transition', () => {
       router,
       vuetify,
     });
-    expect(wrapper1.find('transition-stub[name="router-anim"]').exists()).toBe(1 === 1)
+    expect(wrapper1.find('transition-stub[name="router-anim"]').exists()).toBe(true)
   });
    
     
