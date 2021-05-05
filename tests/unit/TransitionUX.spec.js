@@ -58,12 +58,7 @@ describe('smoother ux transition', () => {
     
   describe('transitioning between lists view and edit info page (should be less than 0.3 seconds)', () => {
     it.todo('(find out how to test transitions) lists view should have the proper classes when leaving')
-    it.todo('(find out how to test transitions) profile view should have the proper classes when entering')
-    
-    it('renders correctly', () => {
-       expect(wrapper.element).toMatchSnapshot()
-    })
-
+    it.todo('(find out how to test transitions) profile view should have the proper classes when entering')    
     
   });
 });
