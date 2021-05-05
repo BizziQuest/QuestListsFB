@@ -49,7 +49,7 @@
                       </template>
                       <v-card>
                         <v-card-text>
-                          <v-color-picker v-model="listColor" flat />
+                          <CustomeColorPicker v-model="listColor"/>
                         </v-card-text>
                       </v-card>
                     </v-menu>
@@ -89,6 +89,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
+import CustomeColorPicker from './CustomeColorPicker.vue';
 import { ensureSlugUniqueness, auth } from '../firebase';
 
 const defaultFormData = {
@@ -98,7 +99,7 @@ const defaultFormData = {
   statesPicked: '',
   updatedListStatesItems: [],
   description: '',
-  listColor: '#363636',
+  listColor: '#1236AF',
 };
 
 export default {
@@ -107,6 +108,7 @@ export default {
   components: {
     StatesEditor,
     UserAuthAlert,
+    CustomeColorPicker,
   },
   data() {
     return {
