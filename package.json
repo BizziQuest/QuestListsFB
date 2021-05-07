@@ -32,7 +32,7 @@
   "dependencies": {
     "@babel/runtime": "^7.12.5",
     "@firebase/auth": "^0.16.1",
-    "@mdi/font": "^5.8.55",
+    "@mdi/font": "^5.9.55",
     "@vue/babel-preset-app": "^4.5.10",
     "babel": "^6.23.0",
     "core-js": "^3.8.2",
