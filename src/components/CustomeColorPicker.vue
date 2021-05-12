@@ -1,47 +1,23 @@
 <template>
   <div>
-    <v-toolbar flat small dense height="28px" class="mb-2">
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn
-          title="HTML Hex Code"
-          :input-value="!hideInputs"
-          active-class="active"
-          class="ml-2"
-          icon
-          small
-          @click="hideInputs = !hideInputs"
-          ><v-icon>mdi-form-textbox</v-icon></v-btn
-        >
-        <v-btn
-          title="Color Sliders"
-          :input-value="!hideSliders"
-          active-class="active"
-          class="ml-2"
-          icon
-          small
-          @click="hideSliders = !hideSliders"
-          ><v-icon>mdi-gauge</v-icon></v-btn
-        >
-        <v-btn
-          title="Color Gradient"
-          :input-value="!hideCanvas"
-          active-class="active"
-          class="ml-2"
-          icon
-          small
-          rounded
-          @click="hideCanvas = !hideCanvas"
-          ><v-icon>mdi-palette</v-icon></v-btn
-        >
-      </v-toolbar-items>
-    </v-toolbar>
+    <v-btn-toggle
+    v-model="colorPickerState" dense multiple height="28px" class="mb-2">
+      <v-btn title="HTML Hex Code" class="ml-2" icon small>
+        <v-icon>mdi-form-textbox</v-icon>
+        </v-btn>
+      <v-btn title="Color Sliders" class="ml-2" icon small>
+        <v-icon>mdi-gauge</v-icon>
+        </v-btn>
+      <v-btn title="Color Gradient" class="ml-2" icon small rounded>
+        <v-icon>mdi-palette</v-icon>
+        </v-btn>
+    </v-btn-toggle>
     <v-color-picker
       :value="value"
       @input="$emit('input', $event)"
-      :hide-inputs="hideInputs"
-      :hide-canvas="hideCanvas"
-      :hide-sliders="hideSliders"
+      :hide-inputs="!colorPickerState.includes(0)"
+      :hide-canvas="!colorPickerState.includes(2)"
+      :hide-sliders="!colorPickerState.includes(1)"
       mode="hexa"
       :swatches="swatches"
       show-swatches
@@ -53,9 +29,7 @@ export default {
   props: ['value'],
   data() {
     return {
-      hideCanvas: true,
-      hideSliders: true,
-      hideInputs: true,
+      colorPickerState: [0, 1, 2],
       swatches: [
         ['#363636', '#F9AA33', '#9b6c41', '#e5a986', '#4690b5'],
         ['#308577', '#abcdef', '#e1b2c6', '#f34f4e', '#9aa1bc'],

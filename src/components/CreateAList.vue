@@ -163,7 +163,6 @@ export default {
   },
   methods: {
     closeMenu() {
-      console.log('"i am clicked"');
       this.closeOnClick = true;
     },
     ...mapMutations(['setItemStates']),
