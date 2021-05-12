@@ -50,7 +50,12 @@
                   test-color-input
                 >
                   <template v-slot:append>
-                    <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown">
+                    <v-menu
+                    :close-on-content-click="false"
+                    :close-on-click="false"
+                    v-model="colorPickerShown"
+                    left
+                    >
                       <template v-slot:activator="{ on }">
                         <div :style="swatchStyle()" v-on="on" />
                       </template>
