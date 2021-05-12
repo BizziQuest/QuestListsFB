@@ -54,7 +54,7 @@
                     :close-on-content-click="false"
                     :close-on-click="false"
                     v-model="colorPickerShown"
-                    left
+                     left top
                     >
                       <template v-slot:activator="{ on }">
                         <div :style="swatchStyle()" v-on="on" />
