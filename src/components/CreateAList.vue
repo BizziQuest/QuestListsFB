@@ -50,18 +50,13 @@
                   test-color-input
                 >
                   <template v-slot:append>
-                    <v-menu
-                    :close-on-content-click="false"
-                    :close-on-click="false"
-                    v-model="colorPickerShown"
-                     left top
-                    >
+                    <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
                       <template v-slot:activator="{ on }">
                         <div :style="swatchStyle()" v-on="on" />
                       </template>
                       <v-card>
                         <v-card-text>
-                          <CustomeColorPicker v-model="listColor" />
+                          <CustomColorPicker v-model="listColor" />
                           <v-row align="center">
                             <v-btn @click="colorPickerShown = false" class="mx-auto mt-3">Close</v-btn>
                           </v-row>
@@ -104,7 +99,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
-import CustomeColorPicker from './CustomeColorPicker.vue';
+import CustomColorPicker from './CustomColorPicker.vue';
 import { ensureSlugUniqueness, auth } from '../firebase';
 
 const defaultFormData = {
@@ -124,7 +119,7 @@ export default {
   components: {
     StatesEditor,
     UserAuthAlert,
-    CustomeColorPicker,
+    CustomColorPicker,
   },
   data() {
     return {

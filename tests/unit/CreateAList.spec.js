@@ -226,3 +226,6 @@ describe('list creation', () => {
     expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
 });
+
+it.todo('should show the color picker when the color picker icon is clicked.');
+it.todo('should set the color of the color picker icon when the color picker menu is closed.');
