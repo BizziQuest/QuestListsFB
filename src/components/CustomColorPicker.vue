@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div>
     <v-btn-toggle v-model="colorPickerState" dense multiple height="28px" class="mb-2">
       <v-btn test-inputs-btn title="HTML Hex Code" class="ml-2" icon small>

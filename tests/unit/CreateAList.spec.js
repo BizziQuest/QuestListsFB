@@ -7,7 +7,6 @@ import routes from '@/router/routes';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
-
 jest.mock('firebase.js', () => ({
   auth: {
     currentUser: {
