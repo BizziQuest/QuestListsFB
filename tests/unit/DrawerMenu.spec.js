@@ -30,6 +30,10 @@ beforeEach(() => {
   }];
 });
 
+afterEach(() => {
+  wrapper.destroy();
+});
+
 describe('Drawer Menu', () => {
   it('component include the user menu item', () => {
     expect(wrapper.find('.user-menu-item').text()).toBe('Sign In or Sign Up');
