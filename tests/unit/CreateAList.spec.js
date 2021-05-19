@@ -1,13 +1,11 @@
 import CreateAList from '@/components/CreateAList.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
-// import Vue from 'vue';
 import Vuex from 'vuex';
 import store from '@/store';
 import VueRouter from 'vue-router';
 import routes from '@/router/routes';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
-// import {globalPreferences} from '../../src/firebase';
 
 jest.mock('firebase.js', () => ({
   auth: {
@@ -227,3 +225,6 @@ describe('list creation', () => {
     expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
 });
+
+it.todo('should show the color picker when the color picker icon is clicked.');
+it.todo('should set the color of the color picker icon when the color picker menu is closed.');
