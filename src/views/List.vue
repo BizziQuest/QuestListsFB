@@ -11,6 +11,7 @@
         :states="states || globalPreferences.defaultStateGroup.states"
         @blur="saveItem(index, $event)"
         @input="addNewItem(index, $event)"
+        @delete="delItem(index, $event)"
         :tabindex="index"
       />
     </transition-group>
@@ -92,6 +93,9 @@ export default {
           isNewItem: true,
         });
       }
+    },
+    delItem(index, item) {
+      console.log(`${index}---${item}`);
     },
   },
   mounted() {

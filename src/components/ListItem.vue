@@ -25,7 +25,9 @@
           :title="iconTitle"
         >{{icon}}</v-icon>
         {{ isNewItem ? '' : title }}
-        <v-btn v-if="!readOnly && !subList" slot="append"
+        <v-btn
+          v-if="(!readOnly && !subList) || title !== null"
+          slot="append"
           :loading="creatingSubList"
           :disabled="creatingSubList"
           title="Make a new sublist from this item."
@@ -40,6 +42,14 @@
           title="Edit / View Sublist"
           v-if="!readOnly && subList">
             <v-icon>mdi-shield-link-variant-outline</v-icon>
+        </v-btn>
+        <v-btn
+        icon
+        slot="append"
+        title="delete"
+        v-if="!isNewItem && title !== null"
+        @click="emitDelete">
+        <v-icon>mdi-delete</v-icon>
         </v-btn>
     </v-text-field>
   </div>
@@ -88,6 +98,7 @@ export default {
       this.$emit('input', this.$_makeNewItem(newValues));
     },
     $_makeNewItem(newValues) {
+      // debugger;
       const newItem = { ...this.value, ...newValues };
       if (newValues?.title !== '') this.isNewItem = false;
       if (this.subList && !newItem.subList) {
@@ -103,6 +114,10 @@ export default {
         this.isNewItem = false;
         this.emitUpdate({ title: newValue, isNewItem: false });
       }
+    },
+    emitDelete() {
+      // console.log(`${this.title} == ${this.isNewItem}`);
+      this.$emit('delete', this.title);
     },
     deactivate() {
       this.isActive = false;
