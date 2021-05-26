@@ -26,7 +26,7 @@
         >{{icon}}</v-icon>
         {{ isNewItem ? '' : title }}
         <v-btn
-          v-if="(!readOnly && !subList) || title !== null"
+          v-if="(!isNewItem && title !== null) && (!readOnly && !subList)"
           slot="append"
           :loading="creatingSubList"
           :disabled="creatingSubList"
