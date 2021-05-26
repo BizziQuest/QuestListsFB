@@ -98,7 +98,6 @@ export default {
       this.$emit('input', this.$_makeNewItem(newValues));
     },
     $_makeNewItem(newValues) {
-      // debugger;
       const newItem = { ...this.value, ...newValues };
       if (newValues?.title !== '') this.isNewItem = false;
       if (this.subList && !newItem.subList) {
@@ -116,8 +115,7 @@ export default {
       }
     },
     emitDelete() {
-      // console.log(`${this.title} == ${this.isNewItem}`);
-      this.$emit('delete', this.title);
+      this.$emit('delete');
     },
     deactivate() {
       this.isActive = false;

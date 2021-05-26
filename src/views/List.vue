@@ -2,7 +2,8 @@
   <div>
     <h1>{{ list.title }}</h1>
     <user-auth-alert action="edit this list" />
-    <transition-group name="slide-x-transition">
+    <div id="items">
+    <transition-group name="expand-transition">
       <list-item
         v-for="(item, index) in listItems"
         :key="`${item.title}${index}`"
@@ -15,6 +16,7 @@
         :tabindex="index"
       />
     </transition-group>
+    </div>
   </div>
 </template>
 <script>
@@ -73,11 +75,18 @@ export default {
       this.listItems = listItems;
       this.states = states;
     },
+
     saveItem(idx, newItem) {
-      const items = this.listItems.slice(0, -1);
+      const items = [...this.listItems];
       items[idx] = newItem;
       saveListItems(this.list.id, items);
+      this.listItems = items;
       this.addNewItem(idx, newItem);
+    },
+    delItem(index) {
+      const items = this.listItems.filter((_itm, idx) => idx !== index);
+      this.listItems = items;
+      saveListItems(this.list.id, items);
     },
     addNewSubList() {
       this.saveItem();
@@ -94,9 +103,6 @@ export default {
         });
       }
     },
-    delItem(index, item) {
-      console.log(`${index}---${item}`);
-    },
   },
   mounted() {
     const path = this.$route.params.slug.split('/');
@@ -109,8 +115,13 @@ h1 {
   margin-top: 10px;
 }
 
-.slide-x-transition-enter-active,
-.slide-x-transition-leave-active {
+.expand-transition-enter-active,
+.expand-transition-leave-active {
   transition-duration: 2s !important;
+  // position: fixed !important;
+}
+
+#items {
+  width: 100%;
 }
 </style>
