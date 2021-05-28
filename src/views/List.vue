@@ -3,7 +3,10 @@
     <h1>{{ list.title }}</h1>
     <user-auth-alert action="edit this list" />
     <div id="items">
-    <transition-group name="expand-transition">
+    <transition-group name="slide-x-transition"
+    hide-on-leave
+    leave-absolute
+    :duration="{ enter: 300, leave: 200 }">
       <list-item
         v-for="(item, index) in listItems"
         :key="`${item.title}${index}`"
