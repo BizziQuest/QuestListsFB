@@ -6,7 +6,7 @@
     <transition-group name="slide-x-transition"
     hide-on-leave
     leave-absolute
-    :duration="{ enter: 300, leave: 200 }">
+    :duration="{ enter: 200, leave: 200 }">
       <list-item
         v-for="(item, index) in listItems"
         :key="`${item.title}${index}`"
@@ -56,7 +56,8 @@ export default {
   },
   methods: {
     async fetchList({ slug }) {
-      const doc = await listsCollection.where('slug', '==', slug);
+      console.log('fetchList():', slug);
+      const doc = listsCollection.where('slug', '==', slug);
       const result = await doc.get();
       let foundedList;
       // TODO: ensure we have only one slug. We should warn otherwise.
@@ -109,6 +110,7 @@ export default {
   },
   mounted() {
     const path = this.$route.params.slug.split('/');
+    console.log('mounted:', path);
     this.fetchList({ slug: path[path.length - 1] });
   },
 };
