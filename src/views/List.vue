@@ -27,7 +27,7 @@ import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import {
-  getListItems, getListStates, listsCollection, saveListItems,
+  getListItems, getListStates, getListBySlug, saveListItems,
 } from '../firebase';
 
 export default {
@@ -56,17 +56,9 @@ export default {
   },
   methods: {
     async fetchList({ slug }) {
-      console.log('fetchList():', slug);
-      const doc = listsCollection.where('slug', '==', slug);
-      const result = await doc.get();
-      let foundedList;
-      // TODO: ensure we have only one slug. We should warn otherwise.
-      // we are assuming there is only one slug that matches this value.
-      // this may break under certain circumstances
-      // is not done?
-      result.forEach((list) => {
-        foundedList = { id: list.id, ...list.data() };
-      });
+      const result = await getListBySlug(slug);
+      let foundedList = result[result.length - 1];
+      foundedList = { id: foundedList.id, ...foundedList.data() }
       const listItems = await getListItems(foundedList);
       const states = await getListStates(foundedList);
       const listItemsLength = listItems.length;
@@ -77,6 +69,7 @@ export default {
       this.list.id = foundedList.id || 'none';
       this.list = foundedList;
       this.listItems = listItems;
+      console.log('fetchList()', this.list);
       this.states = states;
     },
 
