@@ -56,20 +56,22 @@ export default {
   },
   methods: {
     async fetchList({ slug }) {
-      const result = await getListBySlug(slug);
-      let foundedList = result[result.length - 1];
-      foundedList = { id: foundedList.id, ...foundedList.data() }
-      const listItems = await getListItems(foundedList);
-      const states = await getListStates(foundedList);
+      const fbList = await getListBySlug(slug);
+      let foundList = fbList[fbList.length - 1];
+      foundList = { id: foundList.id, ...foundList.data() }
+
+      const listItems = await getListItems(foundList);
+      const states = await getListStates(foundList);
+
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
       if (!theLastItem || !theLastItem.isNewItem) {
         listItems.push({ title: '', isNewItem: true });
       }
-      this.list.id = foundedList.id || 'none';
-      this.list = foundedList;
+
+      this.list.id = foundList.id || 'none';
+      this.list = foundList;
       this.listItems = listItems;
-      console.log('fetchList()', this.list);
       this.states = states;
     },
 
@@ -103,7 +105,6 @@ export default {
   },
   mounted() {
     const path = this.$route.params.slug.split('/');
-    console.log('mounted:', path);
     this.fetchList({ slug: path[path.length - 1] });
   },
 };
