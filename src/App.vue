@@ -8,6 +8,12 @@
     </v-main>
     <bottom-drawer-menu :drawer.sync="drawer" />
     <notification />
+    <v-snackbar bottom :value="updateExists" :timeout="0" color="primary">
+      An update is available
+      <v-btn text @click="refreshApp">
+        Update
+      </v-btn>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -15,6 +21,7 @@
 import DrawerMenu from './components/Menus/DrawerMenu.vue';
 import BottomDrawerMenu from './components/Menus/BottomDrawerMenu.vue';
 import Notification from './components/Notification.vue';
+import appUpdate from './mixins/appUpdate';
 
 export default {
   name: 'App',
@@ -28,6 +35,7 @@ export default {
       drawer: false,
     };
   },
+  mixins: [appUpdate],
   methods: {
     handleFind() {
       console.warn('Search Not Implemented');

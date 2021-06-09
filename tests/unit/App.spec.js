@@ -22,9 +22,9 @@ beforeEach(() => {
   });
 });
 
-afterEach(() => {
-  wrapper.destroy();
-});
+// afterEach(() => {
+//   wrapper.destroy();
+// });
 
 describe('App.vue', () => {
   it('renders a single v-app element', () => {

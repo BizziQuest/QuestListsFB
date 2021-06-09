@@ -20,10 +20,11 @@ env:
 
 jobs:
   linting:
+    name: Run Linter
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
+        node-version: [15.x]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -35,7 +36,9 @@ jobs:
     - run: yarn lint
 
   unit-tests:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
+    needs: linting
     strategy:
       matrix:
         node-version: [10.x] # only use 10, for firebase-tools compatibility
@@ -50,12 +53,12 @@ jobs:
     - run: CI=true yarn ci:unit
 
   deploy:
-    name: Deploy
+    name: Deploy to https://questlists.web.app
     needs: unit-tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
+        node-version: [15.x]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
