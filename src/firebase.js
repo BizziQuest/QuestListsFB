@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === 'development') {
 db.settings(settings);
 
 const globalPreferences = db.collection('globalPreferences');
-debugger;
+
 const listsCollection = db.collection('lists');
 const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');

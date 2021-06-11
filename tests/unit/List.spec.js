@@ -86,7 +86,7 @@ describe('list with single item', () => {
     it('should show the list item and a new item input', () => {
       const listItemInputs = wrapper.findAll('.list-item-view');
       expect(listItemInputs.length).toEqual(2);
-      expect(listItemInputs[0].text()).toContain('Test Item');
+      expect(listItemInputs.wrappers[0].text()).toContain('Test Item');
     });
     it('should show the correct title', () => {
       expect(wrapper.text()).toContain('list123');
