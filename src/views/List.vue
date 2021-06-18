@@ -58,7 +58,7 @@ export default {
     async fetchList({ slug }) {
       const fbList = await getListBySlug(slug);
       let foundList = fbList[fbList.length - 1];
-      foundList = { id: foundList.id, ...foundList.data() }
+      foundList = { id: foundList.id, ...foundList.data() };
 
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);

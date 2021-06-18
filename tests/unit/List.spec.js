@@ -1,11 +1,11 @@
-jest.mock('../../src/firebase.js');
-
-import { shallowMount, mount, createLocalVue } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
 import List from '@/views/List.vue';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
-import flushPromises from 'flush-promises'
-import Fb, { saveListItems, getListBySlug, getListItems, getListStates } from '../../src/firebase.js';
+import flushPromises from 'flush-promises';
+import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
+
+jest.mock('../../src/firebase.js');
 
 const localVue = createLocalVue();
 const vuetify = new Vuetify();
@@ -30,7 +30,7 @@ describe('List.vue', () => {
   describe('when given an empty list', () => {
     let wrapper;
     beforeEach(async () => {
-      const lists = [{ id: "1", data: () => ({ title: 'list123' }) }]
+      const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
       getListBySlug.mockResolvedValueOnce(lists);
       wrapper = mount(List, {
         localVue,
@@ -38,10 +38,10 @@ describe('List.vue', () => {
         store: localStore,
         mocks: {
           $route,
-        }
+        },
       });
       expect(getListBySlug).toHaveBeenCalled();
-      await flushPromises();  // for fetchList() call in List.mounted()
+      await flushPromises(); // for fetchList() call in List.mounted()
     });
     it('should show a new item input', () => {
       expect(wrapper.vm.listItems).toEqual([{ isNewItem: true, title: '' }]);
@@ -50,7 +50,7 @@ describe('List.vue', () => {
       expect(wrapper.text()).toContain('list123');
     });
     it('should have the correct id in the $vm', () => {
-      expect(wrapper.vm.list['id']).toBe('1');
+      expect(wrapper.vm.list.id).toBe('1');
     });
     it('should have the correct title of the list in the $vm', () => {
       expect(wrapper.vm.list.title).toBe('list123');
@@ -66,9 +66,9 @@ describe('List.vue', () => {
   describe('when given a list with single item', () => {
     let wrapper;
     beforeEach(async () => {
-      const lists = [{ id: "1", data: () => ({ title: 'list123' }) }]
+      const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
       getListBySlug.mockResolvedValueOnce(lists);
-      const listItems = [{ title: 'Test Item' }]
+      const listItems = [{ title: 'Test Item' }];
       getListItems.mockResolvedValueOnce(listItems);
       wrapper = mount(List, {
         localVue,
@@ -76,10 +76,10 @@ describe('List.vue', () => {
         store: localStore,
         mocks: {
           $route,
-        }
+        },
       });
       expect(getListBySlug).toHaveBeenCalled();
-      await flushPromises();  // for fetchList() call in List.mounted()
+      await flushPromises(); // for fetchList() call in List.mounted()
     });
     it('should show the list item and a new item input', () => {
       const listItemInputs = wrapper.findAll('.list-item-view');
@@ -90,7 +90,7 @@ describe('List.vue', () => {
       expect(wrapper.text()).toContain('list123');
     });
     it('should have the correct id in the $vm', () => {
-      expect(wrapper.vm.list['id']).toBe('1');
+      expect(wrapper.vm.list.id).toBe('1');
     });
     it('should have the correct title of the list in the $vm', () => {
       expect(wrapper.vm.list.title).toBe('list123');
@@ -104,15 +104,14 @@ describe('List.vue', () => {
     it('should have the correct possible list item states in the $vm', () => {
       expect(wrapper.vm.states).toStrictEqual([]);
     });
-
   });
 
-  describe("when an items delete icon is clicked ", () => {
+  describe('when an items delete icon is clicked ', () => {
     let wrapper;
     beforeEach(async () => {
-      const lists = [{ id: "1", data: () => ({ title: 'list123' }) }]
+      const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
       getListBySlug.mockResolvedValueOnce(lists);
-      const listItems = [{ title: 'Test Item' }, { title: "Test Item 2" }]
+      const listItems = [{ title: 'Test Item' }, { title: 'Test Item 2' }];
       getListItems.mockResolvedValueOnce(listItems);
       saveListItems.mockResolvedValueOnce([]);
       wrapper = mount(List, {
@@ -121,30 +120,29 @@ describe('List.vue', () => {
         store: localStore,
         mocks: {
           $route,
-        }
+        },
       });
-      await flushPromises();  // for fetchList() call in List.mounted()
+      await flushPromises(); // for fetchList() call in List.mounted()
     });
     it('should remove the item', async () => {
       expect(wrapper.vm.listItems.length).toBe(3);
       expect(wrapper.vm.listItems[0].title).toBe('Test Item');
-      expect(wrapper.vm.listItems[0].isNewItem ).toBeFalsy();
+      expect(wrapper.vm.listItems[0].isNewItem).toBeFalsy();
       const itemInput = wrapper.find('.list-item-view');
       await itemInput.find('.v-btn[title="delete"]').trigger('click');
       await wrapper.vm.$nextTick();
       expect(saveListItems).toHaveBeenCalled();
       expect(wrapper.vm.listItems.length).toBe(2);
       expect(wrapper.vm.listItems[0].title).toBe('Test Item 2');
-      expect(wrapper.vm.listItems[0].isNewItem ).toBe(undefined);
+      expect(wrapper.vm.listItems[0].isNewItem).toBe(undefined);
       expect(wrapper.vm.listItems[1].title).toBe('');
-      expect(wrapper.vm.listItems[1].isNewItem ).toBe(true);
+      expect(wrapper.vm.listItems[1].isNewItem).toBe(true);
     });
     it('should save the new list', async () => {
       const itemInput = wrapper.find('.list-item-view');
       await itemInput.find('.v-btn[title="delete"]').trigger('click');
       await wrapper.vm.$nextTick();
-      expect(saveListItems).toBeCalledWith("1", [ { "title": "Test Item 2" }, {"isNewItem": true, "title": ''}]);
+      expect(saveListItems).toBeCalledWith('1', [{ title: 'Test Item 2' }, { isNewItem: true, title: '' }]);
     });
   });
 });
-
