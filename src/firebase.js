@@ -37,6 +37,7 @@ if (process.env.NODE_ENV === 'development') {
 db.settings(settings);
 
 const globalPreferences = db.collection('globalPreferences');
+
 const listsCollection = db.collection('lists');
 const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
@@ -44,6 +45,11 @@ const userStatesCollection = db.collection('userListItemStates');
 
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
+
+async function getListBySlug(slug) {
+  const doc = listsCollection.where('slug', '==', slug);
+  return doc.get();
+}
 
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
@@ -158,4 +164,5 @@ export {
   saveUserPreferences,
   getUserPreferences,
   createList,
+  getListBySlug,
 };
