@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512px"
+   height="512px"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="questlists-stroke.svg">
+  <title
+     id="title883">Questlists Logo</title>
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="taper_stroke"
+       id="path-effect881"
+       is_visible="true"
+       lpeversion="1"
+       stroke_width="-0.5"
+       attach_start="0"
+       end_offset="0"
+       smoothing="0.6"
+       jointype="extrapolated"
+       miter_limit="100" />
+    <inkscape:path-effect
+       effect="taper_stroke"
+       id="path-effect879"
+       is_visible="true"
+       lpeversion="1"
+       stroke_width="5.9764381"
+       attach_start="0"
+       end_offset="0"
+       smoothing="0.3"
+       jointype="bevel"
+       miter_limit="100" />
+    <inkscape:path-effect
+       effect="taper_stroke"
+       id="path-effect877"
+       is_visible="true"
+       lpeversion="1"
+       stroke_width="0.5952486"
+       attach_start="0"
+       end_offset="0.49328625"
+       smoothing="0.6"
+       jointype="extrapolated"
+       miter_limit="100" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="378"
+     inkscape:cy="239.07143"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:pagecheckerboard="true"
+     inkscape:window-width="1900"
+     inkscape:window-height="1003"
+     inkscape:window-x="10"
+     inkscape:window-y="44"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Questlists Logo</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Samuel C Tyler</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:source>http://rudeboy.dev</dc:source>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="opacity:0.995712;fill:none;fill-rule:nonzero;stroke:#f9aa33;stroke-width:10.7903;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path835"
+       sodipodi:type="arc"
+       sodipodi:cx="-34.914101"
+       sodipodi:cy="149.95486"
+       sodipodi:rx="54.515354"
+       sodipodi:ry="50.56319"
+       sodipodi:start="0.044319206"
+       sodipodi:end="1.5172156"
+       sodipodi:open="true"
+       sodipodi:arc-type="arc"
+       d="m 19.250438,152.18084 c -0.604034,12.63278 -6.322895,24.59505 -16.0208235,33.49582 -8.5843011,7.88109 -18.0124865,11.43265 -24.6329825,13.09609 -6.636222,1.6674 -10.591158,1.67274 -10.591158,1.67274 0,0 3.954162,0.14766 10.660594,-1.38305 6.689176,-1.52677 16.2800128,-4.97759 24.9660409,-12.94724 9.8095001,-9.00317 15.6010411,-21.10952 16.2128981,-33.90593 z"
+       inkscape:path-effect="#path-effect877" />
+    <path
+       style="opacity:0.995712;fill:none;fill-rule:nonzero;stroke:#f9aa33;stroke-width:10.7903;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path835-3"
+       sodipodi:type="arc"
+       sodipodi:cx="74.265274"
+       sodipodi:cy="152.16341"
+       sodipodi:rx="54.515354"
+       sodipodi:ry="50.56319"
+       sodipodi:start="3.1415927"
+       sodipodi:end="0.0010646508"
+       sodipodi:open="true"
+       sodipodi:arc-type="arc"
+       d="m 19.74992,152.16341 a 54.515354,50.56319 0 0 1 27.274435,-43.79798 54.515354,50.56319 0 0 1 54.532095,0.0269 54.515354,50.56319 0 0 1 27.22415,43.82489"
+       inkscape:path-effect="#path-effect879" />
+    <ellipse
+       style="opacity:0.995712;fill:none;fill-rule:nonzero;stroke:#f9aa33;stroke-width:10.7903;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path835-3-6"
+       transform="matrix(-0.99811391,-0.06138905,0.06087982,-0.9981451,0,0)"
+       cx="-192.94278"
+       cy="-139.48424"
+       rx="54.516209"
+       ry="50.562405" />
+  </g>
+</svg>

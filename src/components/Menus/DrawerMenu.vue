@@ -16,7 +16,7 @@
 
         <v-list-item test-questlists-link link :color="menuHighlightColor" title="View All QuestLists" to="/">
           <v-list-item-action>
-            <v-icon>mdi-shield-check-outline</v-icon>
+            <v-icon>mdi-questlists</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>QuestLists</v-list-item-title>
