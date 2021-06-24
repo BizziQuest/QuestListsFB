@@ -46,7 +46,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
     - run: yarn
-    - run: CI=true yarn test:unit
+    - run: yarn test:unit --detectOpenHandles
 
   deploy:
     name: Deploy
