@@ -39,6 +39,10 @@ beforeEach(() => {
   });
 });
 
+afterEach(() => {
+  wrapper.destroy();
+});
+
 describe('default state', () => {
   it('should render "New Quest"', () => {
     expect(wrapper.findComponent({ name: 'VListItem' }).text()).toBe('add New Quest');
