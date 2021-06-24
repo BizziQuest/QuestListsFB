@@ -23,16 +23,19 @@ const fbApp = firebase.initializeApp(firebaseConfig);
 const nodeEnv = process.env.NODE_ENV;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? firebase.analytics() : null;
 const auth = fbApp.auth();
-if (process.env.VUE_APP_FIREBASE_AUTH_HOST) auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST);
+if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
+  auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
+}
 const db = fbApp.firestore();
 const { currentUser } = auth;
 
 // firebase settings go here
-const settings = {};
+const settings = { };
 
 if (process.env.NODE_ENV === 'development') {
   settings.host = process.env.VUE_APP_FIREBASE_DATABASE_URL;
   settings.ssl = false;
+  settings.merge = true;
 }
 db.settings(settings);
 
