@@ -56,6 +56,12 @@ jobs:
     strategy:
       matrix:
         node-version: [15.x] # only use 10, for firebase-tools compatibility
+    env:
+        NODE_ENV: production
+        CI: false
+        VUE_APP_FIREBASE_DATABASE_URL: ${{ secrets.PROD_VUE_APP_FIREBASE_DATABASE_URL }}
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
