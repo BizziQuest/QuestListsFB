@@ -31,7 +31,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
     - run: yarn
-    - run: yarn versions
     - run: yarn lint
 
   unit-tests:
@@ -47,6 +46,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
     - run: yarn install
+    - run: yarn versions
     - run: npm list --all --json
     - run: yarn test:unit --detectOpenHandles --forceExit
 
