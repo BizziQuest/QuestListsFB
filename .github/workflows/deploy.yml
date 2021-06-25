@@ -46,8 +46,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
     - run: yarn install
-    # - run: yarn ci:unit
-    - run: yarn test:unit --detectOpenHandles --forceExit
+    - run: yarn ci:unit
+    # - run: yarn test:unit --detectOpenHandles --forceExit
 
   deploy:
     name: Deploy
