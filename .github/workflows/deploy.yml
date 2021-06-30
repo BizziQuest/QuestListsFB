@@ -16,7 +16,6 @@ env:
   VUE_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.VUE_APP_GOOGLE_ANALYTICS_ID }}
   VUE_APP_I18N_LOCALE: en
   VUE_APP_I18N_FALLBACK_LOCALE: en
-  FIREBASE_TOKEN: ${{ secrets.CI_FIREBASE_TOKEN }}
 
 jobs:
   linting:
@@ -49,8 +48,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
-    - run: yarn
-    - run: CI=true yarn ci:unit
+    - run: yarn install
+    - run: yarn ci:unit
+    # - run: yarn test:unit --detectOpenHandles --forceExit
 
   deploy:
     name: Deploy to https://questlists.web.app
@@ -58,7 +58,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [15.x] # only use 10, for firebase-tools compatibility
+    env:
+        NODE_ENV: production
+        CI: false
+        VUE_APP_FIREBASE_DATABASE_URL: ${{ secrets.PROD_VUE_APP_FIREBASE_DATABASE_URL }}
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -66,7 +71,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
-    - run: yarn
+    - run: yarn install --production=false
     - run: yarn build
     - name: Deploy to Firebase
       uses: w9jds/firebase-action@master
