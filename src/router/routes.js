@@ -15,18 +15,23 @@ const routes = [
   },
   {
     path: '/about',
-    name: 'About',
+    name: 'About Questlists',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
   {
-    path: '/tos',
-    name: 'TOS',
-    component: () => import(/* webpackChunkName: "tos" */ '../views/Tos.vue'),
+    path: '/about/terms-of-service',
+    name: 'Terms of Service',
+    component: () => import(/* webpackChunkName: "tos" */ '../views/about/Terms.vue'),
   },
   {
-    path: '/conduct',
-    name: 'Conduct',
-    component: () => import(/* webpackChunkName: "conduct" */ '../views/Conduct.vue'),
+    path: '/about/code-of-conduct',
+    name: 'Code of Conduct',
+    component: () => import(/* webpackChunkName: "conduct" */ '../views/about/Conduct.vue'),
+  },
+  {
+    path: '/about/privacy-policy',
+    name: 'Privacy Policy',
+    component: () => import(/* webpackChunkName: "privacy" */ '../views/about/Privacy.vue'),
   },
   {
     path: '/editinfo',
