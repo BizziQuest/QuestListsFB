@@ -2,6 +2,8 @@ import { mount, createLocalVue } from '@vue/test-utils';
 import ListItem from '@/components/ListItem.vue';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
+import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
+jest.mock('../../src/firebase.js');
 
 const localVue = createLocalVue();
 const vuetify = new Vuetify();

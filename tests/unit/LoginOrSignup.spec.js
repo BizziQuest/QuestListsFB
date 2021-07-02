@@ -9,6 +9,8 @@ import VueRouter from 'vue-router';
 // import router from '@/router';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
+import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
+jest.mock('../../src/firebase.js');
 
 toHaveBeenWarnedInit();
 
