@@ -13,12 +13,17 @@ Vue.use(vuetify);
 let wrapper = null;
 const localVue = createLocalVue();
 
+const elem = document.createElement('div');
+if (document.body) {
+  document.body.appendChild(elem);
+}
 beforeEach(() => {
   wrapper = shallowMount(App, {
     localVue,
     router,
     store,
     propsData: { },
+    attachTo: elem,
   });
 });
 
@@ -38,6 +43,11 @@ describe('App.vue', () => {
   });
   it('renders the router view', () => {
     expect(wrapper.findAll('router-view-stub').length).toBe(1);
+  });
+  it('shows a notification when the app has been updated', async () => {
+    expect(wrapper.find('[test-update-notification]')).toBeFalsy();
+    await wrapper.vm.trigger('swUpdate', {});
+    expect(wrapper.find('[test-update-notification]').exists()).toBe(true);
   });
 });
 
