@@ -47,6 +47,7 @@ beforeEach(() => {
 
   wrapper = shallowMount(App, {
     localVue,
+    vuetify,
     router,
     store: localStore,
     propsData: { },

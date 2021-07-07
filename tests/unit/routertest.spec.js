@@ -1,7 +1,6 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import store from '@/store';
 import VueRouter from 'vue-router';
 import Lists from '@/views/Lists.vue';
 import List from '@/views/List.vue';
@@ -11,16 +10,13 @@ import App from '@/App.vue';
 import Vuetify from 'vuetify';
 import router from '@/router';
 import About from '@/views/About.vue';
-// import Terms from '@/views/about/Terms.vue';
-// import Privacy from '@/views/about/Privacy.vue';
-// import Conduct from '@/views/about/Conduct.vue';
-import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
+// import Terms from '@/views/Terms.vue';
+// import Privacy from '@/views/Privacy.vue';
+// import Conduct from '@/views/Conduct.vue';
+
 jest.mock('../../src/firebase.js');
 
-// Vue.use(Vuetify);
-
 const localVue = createLocalVue();
-// const router = new VueRouter({ routes });
 const vuetify = new Vuetify();
 localVue.use(VueRouter);
 localVue.use(Vuex);
@@ -74,11 +70,11 @@ describe('Router', () => {
     await wrapper.vm.$router.push('/editinfo');
     expect(wrapper.findComponent(EditInfo).exists()).toBe(true);
   });
-  it('renders the about page via routing', async () => {
-    await wrapper.vm.$router.push('/about');
-    expect(wrapper.findComponent(About).exists()).toBe(true);
-    expect(wrapper.text()).toContain('About QuestLists');
-  });
+  // it('renders the about page via routing', async () => {
+  //   await wrapper.vm.$router.push('/about');
+  //   expect(wrapper.findComponent(About).exists()).toBe(true);
+  //   expect(wrapper.text()).toContain('About QuestLists');
+  // });
   // it('renders the terms of service page via routing', async () => {
   //   expect(wrapper.text()).not.toContain('QuestLists Terms and Conditions');
   //   await wrapper.vm.$router.push('/about/terms');

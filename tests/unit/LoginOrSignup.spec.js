@@ -1,29 +1,24 @@
 import LogInOrSignUp from '@/components/Menus/LoginOrSignup.vue';
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
-import Vue from 'vue';
 import Vuex from 'vuex';
-// import { store, globalPrefRef } from '@/store';
 import VueRouter from 'vue-router';
-// eslint-disable-next-line import/extensions
-// import routes from '@/router/routes.js';
-// import router from '@/router';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
-import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
+
 jest.mock('../../src/firebase.js');
 
 toHaveBeenWarnedInit();
 
-Vue.use(Vuetify);
 const localVue = createLocalVue();
-// const router = new VueRouter({ routes });
-localVue.use(VueRouter, Vuetify, Vuex);
+const vuetify = new Vuetify();
+localVue.use(vuetify);
+localVue.use(Vuex);
 let wrapper = null;
 
 beforeEach(() => {
   wrapper = mount(LogInOrSignUp, {
     localVue,
-    // router,
+    vuetify,
     propsData: { },
   });
 });
@@ -34,7 +29,7 @@ afterEach(() => {
 
 describe('login or sign up', () => {
   it('should render the header', async () => {
-    expect(wrapper.text()).toContain('Log In or Sign Up');
+    expect(wrapper.text()).toContain('Sign In or Sign Up');
   });
   it('should warn when not giving a email', async () => {
     await wrapper.find('[test-open-dialog]').trigger('click');
@@ -99,9 +94,9 @@ describe('Signing Up As A New User', () => {
     const localStore = new Vuex.Store({
       actions,
     });
-     wrapper = mount(LogInOrSignUp, {
+    wrapper = mount(LogInOrSignUp, {
       localVue,
-      router,
+      vuetify,
       store: localStore,
       propsData: { },
     });

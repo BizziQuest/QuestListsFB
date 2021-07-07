@@ -8,7 +8,7 @@
     </v-main>
     <bottom-drawer-menu :drawer.sync="drawer" />
     <notification />
-    <v-snackbar test-update-notification bottom :value="updateExists" :timeout="0" color="primary">
+    <v-snackbar test-update-notification bottom :value="updateExists" :timeout="-1" color="primary">
       An update is available
       <v-btn text @click="refreshApp">
         Update
