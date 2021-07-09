@@ -34,15 +34,16 @@ if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
 const db = fbApp.firestore();
 const { currentUser } = auth;
 
-// firebase settings go here
-const settings = { };
+// // firebase settings go here
+// const settings = { };
 
-if (process.env.NODE_ENV === 'development') {
-  settings.host = process.env.VUE_APP_FIREBASE_DATABASE_URL;
-  settings.ssl = false;
-  settings.merge = true;
-}
-db.settings(settings);
+// if (process.env.NODE_ENV !== 'production') {
+db.settings({
+  host: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  ssl: false,
+  merge: true,
+});
+// }
 
 const globalPreferences = db.collection('globalPreferences');
 

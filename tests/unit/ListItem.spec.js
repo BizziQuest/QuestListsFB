@@ -3,6 +3,8 @@ import ListItem from '@/components/ListItem.vue';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 
+jest.mock('../../src/firebase.js');
+
 const localVue = createLocalVue();
 const vuetify = new Vuetify();
 
