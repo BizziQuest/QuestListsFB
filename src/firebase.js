@@ -34,8 +34,8 @@ if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
 const db = fbApp.firestore();
 const { currentUser } = auth;
 
-// firebase settings go here
-const settings = { };
+// // firebase settings go here
+// const settings = { };
 
 // if (process.env.NODE_ENV !== 'production') {
 db.settings({

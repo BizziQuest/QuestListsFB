@@ -1,5 +1,4 @@
 import { mount, createLocalVue } from '@vue/test-utils';
-import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import Lists from '@/views/Lists.vue';
@@ -9,7 +8,7 @@ import EditInfo from '@/components/EditInfo.vue';
 import App from '@/App.vue';
 import Vuetify from 'vuetify';
 import router from '@/router';
-import About from '@/views/About.vue';
+// import About from '@/views/About.vue';
 // import Terms from '@/views/Terms.vue';
 // import Privacy from '@/views/Privacy.vue';
 // import Conduct from '@/views/Conduct.vue';

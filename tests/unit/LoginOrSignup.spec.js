@@ -1,7 +1,6 @@
 import LogInOrSignUp from '@/components/Menus/LoginOrSignup.vue';
-import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
-import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
