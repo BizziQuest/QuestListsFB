@@ -3,22 +3,19 @@
     <h1>{{ list.title }}</h1>
     <user-auth-alert action="edit this list" />
     <div id="items">
-    <transition-group name="slide-x-transition"
-    hide-on-leave
-    leave-absolute
-    :duration="{ enter: 200, leave: 200 }">
-      <list-item
-        v-for="(item, index) in listItems"
-        :key="`${item.title}${index}`"
-        :listItem="item"
-        :value="item"
-        :states="states || globalPreferences.defaultStateGroup.states"
-        @blur="saveItem(index, $event)"
-        @input="addNewItem(index, $event)"
-        @delete="delItem(index, $event)"
-        :tabindex="index"
-      />
-    </transition-group>
+      <transition-group name="slide-x-transition" hide-on-leave leave-absolute :duration="{ enter: 200, leave: 200 }">
+        <list-item
+          v-for="(item, index) in listItems"
+          :key="`${item.title}${index}`"
+          :listItem="item"
+          :value="item"
+          :states="states || globalPreferences.defaultStateGroup.states"
+          @blur="saveItem(index, $event)"
+          @input="addNewItem(index, $event)"
+          @delete="delItem(index, $event)"
+          :tabindex="index"
+        />
+      </transition-group>
     </div>
   </div>
 </template>
@@ -27,7 +24,10 @@ import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import {
-  getListItems, getListStates, getListBySlug, saveListItems,
+  getListItems,
+  getListStates,
+  getListBySlug,
+  saveListItems,
 } from '../firebase';
 
 export default {
@@ -37,6 +37,10 @@ export default {
       type: String, // vue check to see if the type you passed is the expected type
       default: 'New List', // the default value. if the type is Object, this MUST use a function
       description: 'The title of the list you are displaying. Defaults to "New List".',
+    },
+    slug: {
+      type: String,
+      description: 'slug that identifed a list',
     },
   },
   mixins: [userAuthMixin],
@@ -57,7 +61,7 @@ export default {
   methods: {
     async fetchList({ slug }) {
       const fbList = await getListBySlug(slug);
-      let foundList = fbList[fbList.length - 1];
+      let foundList = fbList.docs[fbList.docs.length - 1];
       foundList = { id: foundList.id, ...foundList.data() };
 
       const listItems = await getListItems(foundList);
@@ -104,8 +108,7 @@ export default {
     },
   },
   mounted() {
-    const path = this.$route.params.slug.split('/');
-    this.fetchList({ slug: path[path.length - 1] });
+    this.fetchList({ slug: this.slug });
   },
 };
 </script>
