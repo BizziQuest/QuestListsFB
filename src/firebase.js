@@ -55,7 +55,7 @@ const userStatesCollection = db.collection('userListItemStates');
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
-async function updateUserItemState(item, state) {
+async function updateUserItemState(listId, {item, state} = {}) {
   console.warn('it is to be implemented', item, state);
 }
 

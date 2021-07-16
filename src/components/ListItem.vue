@@ -15,42 +15,34 @@
       :single-line="readOnly"
       :solo="readOnly"
       :tabindex="tabindex"
+    >
+      <v-icon
+        slot="prepend-inner"
+        class="listitem-icon"
+        :outlined="isActive"
+        @click.prevent="cycleIcon"
+        @blur="deactivate"
+        :title="iconTitle"
+        >{{ icon }}</v-icon
       >
-        <v-icon
-          slot="prepend-inner"
-          class="listitem-icon"
-          :outlined="isActive"
-          @click.prevent="cycleIcon"
-          @blur="deactivate"
-          :title="iconTitle"
-        >{{icon}}</v-icon>
-        {{ isNewItem ? '' : title }}
-        <v-btn
-          v-if="(!readOnly && !subList) || title !== null"
-          slot="append"
-          :loading="creatingSubList"
-          :disabled="creatingSubList"
-          title="Make a new sublist from this item."
-          icon
-          @click='makeSublist()'>
-          <v-icon>mdi-shield-plus-outline</v-icon>
-        </v-btn>
-        <v-btn
-          icon
-          slot="append"
-          :to="subListPath"
-          title="Edit / View Sublist"
-          v-if="!readOnly && subList">
-            <v-icon>mdi-shield-link-variant-outline</v-icon>
-        </v-btn>
-        <v-btn
-        icon
+      {{ isNewItem ? '' : title }}
+      <v-btn
+        v-if="(!readOnly && !subList) || title !== null"
         slot="append"
-        title="delete"
-        v-if="!isNewItem && title !== null"
-        @click="emitDelete">
+        :loading="creatingSubList"
+        :disabled="creatingSubList"
+        title="Make a new sublist from this item."
+        icon
+        @click="makeSublist()"
+      >
+        <v-icon>mdi-shield-plus-outline</v-icon>
+      </v-btn>
+      <v-btn icon slot="append" :to="subListPath" title="Edit / View Sublist" v-if="!readOnly && subList">
+        <v-icon>mdi-shield-link-variant-outline</v-icon>
+      </v-btn>
+      <v-btn icon slot="append" title="delete" v-if="!isNewItem && title !== null" @click="emitDelete">
         <v-icon>mdi-delete</v-icon>
-        </v-btn>
+      </v-btn>
     </v-text-field>
   </div>
 </template>
@@ -120,7 +112,11 @@ export default {
     deactivate() {
       this.isActive = false;
       this.$emit('blur', {
-        ...this.value, title: this.title, isNewItem: this.isNewItem, subList: this.subList,
+        ...this.value,
+        title: this.title,
+        state: this.states[this.currentStateIdx],
+        isNewItem: this.isNewItem,
+        subList: this.subList,
       });
     },
     activate() {
