@@ -55,8 +55,22 @@ const userStatesCollection = db.collection('userListItemStates');
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
-async function updateUserItemState(listId, {item, state} = {}) {
-  console.warn('it is to be implemented', item, state);
+async function getUserDocumentRef() {
+  const userDocument = db.collection('users').doc(auth.currentUser.uid);
+  if (!userDocument.get().exists) await userDocument.set({}, { merge: true });
+  return userDocument;
+}
+
+async function updateUserItemStates(listId, items) {
+  const userDocument = await getUserDocumentRef();
+  const itemStates = items.reduce((states, item, itemIdx) => {
+    const state = { ...item.state };
+    if (!state.value) return states;
+    return { ...states, [itemIdx]: { value: state.value, title: item.title } };
+  }, {});
+  const userStatesDocument = userDocument.collection('states').doc(listId);
+  await userStatesDocument.set(itemStates);
+  return userStatesDocument.get();
 }
 
 async function getListBySlug(slug) {
@@ -87,7 +101,19 @@ async function saveListItems(fbListId, listItems) {
   } else {
     let docID = null;
     listItemDocs.forEach(async (doc) => { docID = doc.id; });
-    await listItemsCollection.doc(docID).set({ data: listItems });
+    const sanitizedItems = [];
+    listItems.forEach((listItem) => {
+      const sanitizedListItem = { ...listItem };
+      const listItemProps = Object.keys(listItem);
+      if (listItemProps.includes('isNewItem')) {
+        delete sanitizedListItem.isNewItem;
+      }
+      if (listItemProps.includes('subList') && !sanitizedListItem.subList) {
+        delete sanitizedListItem.subList;
+      }
+      sanitizedItems.push(sanitizedListItem);
+    });
+    await listItemsCollection.doc(docID).set({ data: sanitizedItems });
   }
 }
 
@@ -178,5 +204,5 @@ export {
   getUserPreferences,
   createList,
   getListBySlug,
-  updateUserItemState,
+  updateUserItemStates,
 };

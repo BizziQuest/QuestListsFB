@@ -33,6 +33,10 @@ service cloud.firestore {
         allow read: if request.auth.uid == userId;
         allow write: if request.auth.uid == userId && verifiedUser();
       }
+      match /states/{listId=**} {
+        allow read: if request.auth.uid == userId;
+        allow write: if request.auth.uid == userId && verifiedUser();
+      }
     }
 
     // this collection holds all the lists and list data. Soce this is a crowd-sourced app,

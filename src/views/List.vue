@@ -28,7 +28,7 @@ import {
   getListStates,
   getListBySlug,
   saveListItems,
-  updateUserItemState,
+  updateUserItemStates,
 } from '../firebase';
 
 export default {
@@ -80,12 +80,13 @@ export default {
       this.states = states;
     },
 
-    saveItem(idx, newItem) {
-      const { state } = newItem;
-      updateUserItemState(this.list.id, state);
-      delete newItem.state;
+    saveItem(idx, item) {
+      const newItem = { ...item };
+      // const { state } = newItem;
+      // delete newItem.state;
       const items = [...this.listItems];
       items[idx] = newItem;
+      updateUserItemStates(this.list.id, items);
       saveListItems(this.list.id, items);
       this.listItems = items;
       this.addNewItem(idx, newItem);

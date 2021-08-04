@@ -1,0 +1,25 @@
+{
+    "kind": "identitytoolkit#DownloadAccountResponse",
+    "users": [
+        {
+            "localId": "OTgSqsrVSDJqPtEjQdDwtsWSRxvp",
+            "createdAt": "1628045899337",
+            "lastLoginAt": "1628045899336",
+            "displayName": "Olive Peach",
+            "screenName": "peach_olive",
+            "email": "olive.peach.308@example.com",
+            "emailVerified": true,
+            "providerUserInfo": [
+                {
+                    "providerId": "google.com",
+                    "rawId": "1123559416725200724045785346245288095067",
+                    "federatedId": "1123559416725200724045785346245288095067",
+                    "displayName": "Olive Peach",
+                    "email": "olive.peach.308@example.com",
+                    "screenName": "peach_olive"
+                }
+            ],
+            "lastRefreshAt": "2021-08-04T02:58:19.338Z"
+        }
+    ]
+}
