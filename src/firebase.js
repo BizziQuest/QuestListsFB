@@ -80,15 +80,45 @@ async function getListBySlug(slug) {
 
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
+  const currentUserStatesCollection = await db.collection(`users/${auth.currentUser.uid}/states`).doc(fbList.id).get();
+  let userStates = {};
+  if (currentUserStatesCollection.exists) {
+    userStates = currentUserStatesCollection.data();
+  }
+  console.info(currentUserStatesCollection, userStates);
   let listItems = [];
-  const items = await listItemsCollection.get();
-  items.forEach(async (doc) => {
-    const item = doc.data();
-    item.id = doc.id;
-    if (Object.hasOwnProperty.call(item, 'data')) {
-      listItems = listItems.concat(item.data);
+  // to accommodate longer lists, we use multiple documents in a
+  // listItem collection
+  const listItemsPartials = await listItemsCollection.get();
+  listItemsPartials.forEach(async (listItemsPartialObj) => {
+    const listItemsPartial = listItemsPartialObj.data();
+    listItemsPartial.id = listItemsPartialObj.id;
+
+    // step through each list partial
+    //   step though each user state partial
+    //     if the title is the same, that is the matched item
+    //       remove the found item form the user states
+
+    if (Object.hasOwnProperty.call(listItemsPartial, 'data')) {
+      Oject.entries(listItemsPartial).reduce(([index, listItem], allListItems) => {
+        let foundIndex = -1;
+        const userStateData = Object.entries(userStates).find(([index, userState]) => {
+          debugger;
+          if (item.data.title === userState.title) {
+            foundIndex = index;
+            return true;
+          }
+          return false;
+        });
+        return {...allListItems, key: listItem}
+        }, {});
+      debugger;
+      if (foundIndex > -1) delete userStates[foundIndex];
+      const stateData = { ...(item.data?.state || {}), ...userStateData };
+      listItems = listItems.concat({ ...item.data, state: stateData });
     }
   });
+  debugger;
   return listItems.sort((a, b) => a.order < b.order);
 }
 
