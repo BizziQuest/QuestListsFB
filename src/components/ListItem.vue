@@ -155,6 +155,9 @@ export default {
     this.title = this.$props.value.title;
     this.isNewItem = this.$props.value.isNewItem;
     this.listId = this.$props.value.listId;
+    if (this.$props.value.state?.value) {
+      this.currentStateIdx = this.$props.value.state.value;
+    }
     if (this.$props.value.subList) {
       await this.computeSubListPath(this.$props.subList);
     }
