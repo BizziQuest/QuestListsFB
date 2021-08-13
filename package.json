@@ -26,6 +26,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "test:jest": "jest --watch --maxWorkers=4 ",
     "test:unit": "vue-cli-service test:unit --mode=development",
+    "test:unit:setup": "vue-cli-service test:unit --setupTestFrameworkScriptFile=./tests/setup.js",
     "test": "yarn test:unit && yarn test:e2e --headless",
     "ui": "vue ui"
   },

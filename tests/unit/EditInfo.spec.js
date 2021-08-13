@@ -79,7 +79,7 @@ describe('default state with unverified 0Auth user', () => {
   });
   it('should have the correct user values', () => {
     expect(wrapper.vm.userId).toBe('UUID123456');
-    expect(wrapper.vm.displayName).toBe('0Auth Dispaly Name');
+    expect(wrapper.vm.displayName).toBe('0Auth Display Name');
     expect(wrapper.vm.email).toBe('tersterson3@test.com');
     expect(wrapper.vm.avatar).toBe('/path/to/image.jpg');
     expect(wrapper.vm.useGravatar).toBe(false);
@@ -96,7 +96,7 @@ describe('saving a user', () => {
       state: {
         currentUser: {
           avatar: '/path/to/image.jpg',
-          displayName: '0Auth Dispaly Name',
+          displayName: '0Auth Display Name',
           email: 'tersterson3@test.com',
           emailVerified: false,
           uid: 'UUID123456',
