@@ -156,7 +156,7 @@ export default {
     this.isNewItem = this.$props.value.isNewItem;
     this.listId = this.$props.value.listId;
     if (this.$props.value.state?.value) {
-      this.currentStateIdx = this.$props.value.state.value;
+      this.currentStateIdx = parseInt(this.$props.value.state.value, 10);
     }
     if (this.$props.value.subList) {
       await this.computeSubListPath(this.$props.subList);

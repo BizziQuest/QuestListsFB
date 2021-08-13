@@ -63,6 +63,7 @@ async function getUserDocumentRef() {
 
 async function updateUserItemStates(listId, items) {
   const userDocument = await getUserDocumentRef();
+  debugger;
   const itemStates = items.reduce((states, item, itemIdx) => {
     const state = { ...item.state };
     if (!state.value) return states;
