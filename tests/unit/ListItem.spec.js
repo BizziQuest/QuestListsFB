@@ -25,6 +25,6 @@ describe('ListItem.vue', () => {
   test('button with title delete should not exists by default', () => {
     // const delButton = warpper.find(button)
     // expect(wrapper.attributes()['data-title']).toBe('delete');
-    expect(wrapper.find('[title = delete]')).toBe('true');
+    expect(wrapper.find('[title="delete"]').exists()).toBe(true);
   });
 });
