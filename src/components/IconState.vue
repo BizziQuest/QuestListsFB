@@ -46,7 +46,7 @@ export default {
       localIcon: this.icon,
       dialog: false,
       previousIcon: this.icon,
-      textFieldRules: [(v) => !!v || 'icon name is required'],
+      textFieldRules: [(v) => !!v || 'icon name is required!'],
     };
   },
   methods: {
