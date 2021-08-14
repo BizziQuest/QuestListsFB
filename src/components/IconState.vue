@@ -22,7 +22,8 @@
             </v-row>
             <v-row>
               <div class="local-icon">
-                <v-icon>{{ localIcon }}</v-icon>
+                <!-- <v-icon> {{ iconized() }} </v-icon> -->
+                <v-icon> {{ localIcon}} </v-icon>
               </div>
               <v-text-field v-model="localIcon" :rules="textFieldRules" required></v-text-field>
             </v-row>
@@ -50,6 +51,9 @@ export default {
     };
   },
   methods: {
+    iconized() {
+      return `mdi-${this.localIcon}`;
+    },
     chooseIcon() {
       if (this.$refs.iconForm.validate() === false) return;
       this.$emit('update:icon', this.localIcon);
@@ -65,7 +69,8 @@ export default {
       window.open('https://material.io/resources/icons/', '_blank');
     },
     openMaterialDesign() {
-      window.open('https://cdn.materialdesignicons.com/5.3.45/', '_blank');
+      // window.open('https://cdn.materialdesignicons.com/', '_blank');
+      window.open('https://materialdesignicons.com/', '_blank');
     },
   },
 };
