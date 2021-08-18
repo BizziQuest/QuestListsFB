@@ -1,7 +1,7 @@
 <template>
   <span class="icon-state">
     <v-icon color="primary" @click.stop="dialog = true">{{ localIcon }}</v-icon>
-    <v-dialog v-model="dialog" max-width="400">
+    <v-dialog v-model="dialog" persistent max-width="400">
       <v-card>
         <v-card-title class="headline">Please choose your Icon</v-card-title>
         <v-form ref="iconForm">
@@ -22,10 +22,10 @@
             </v-row>
             <v-row>
               <div class="local-icon">
-                <!-- <v-icon> {{ iconized() }} </v-icon> -->
-                <v-icon> {{ localIcon}} </v-icon>
+                <v-icon ref="icon" name="selected-icon"> {{ localIcon }} </v-icon>
               </div>
-              <v-text-field v-model="localIcon" :rules="textFieldRules" required></v-text-field>
+              <v-text-field v-model="localIcon"
+              :rules="textFieldRules" required ></v-text-field>
             </v-row>
           </v-card-text>
           <v-card-actions>
@@ -47,10 +47,19 @@ export default {
       localIcon: this.icon,
       dialog: false,
       previousIcon: this.icon,
-      textFieldRules: [(v) => !!v || 'icon name is required!'],
+      textFieldRules: [
+        (v) => !!v || 'icon name is required!',
+        (v) => this.$_validateIconName(v) || 'Not a valid icon name',
+      ],
     };
   },
   methods: {
+    $_validateIconName() {
+      const icon1 = document.querySelector('.local-icon [name="selected-icon"]');
+      if (!icon1) return true;
+      const objContent = window.getComputedStyle(icon1, '::before').getPropertyValue('content');
+      return objContent !== 'none';
+    },
     iconized() {
       return `mdi-${this.localIcon}`;
     },
@@ -81,5 +90,12 @@ export default {
   border: 1px solid green;
   margin: 5px;
   align-self: center;
+}
+#iconHere::before{
+  // background-color: red;
+  content: "\A0631";
+}
+#iconHere::after {
+  content: "\F0132"
 }
 </style>
