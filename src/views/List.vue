@@ -7,7 +7,6 @@
         <list-item
           v-for="(item, index) in listItems"
           :key="`${item.title}${index}`"
-          :listItem="item"
           :value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
           @blur="saveItem(index, $event)"
@@ -61,19 +60,25 @@ export default {
   },
   methods: {
     async fetchList({ slug }) {
-      const fbList = await getListBySlug(slug);
+      const context = slug.split('/');
+      const currentSlug = context[context.length - 1];
+      const fbList = await getListBySlug(currentSlug);
+      // from my investigation there is logic problem here
+      // specially for the subList, it cannot find the id of
+      // it cuz it does not know how to look for it?
+
+      // during your investigation, did you find out what type of object fbList is?
+      // NOTE: when investigating, add comments on each line telling hwat it is doing.
+      //       This is a form of "rubber-ducking"
       let foundList = fbList.docs[fbList.docs.length - 1];
       foundList = { id: foundList.id, ...foundList.data() };
-
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
-
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
       if (!theLastItem || !theLastItem.isNewItem) {
         listItems.push({ title: '', isNewItem: true });
       }
-
       this.list.id = foundList.id || 'none';
       this.list = foundList;
       this.listItems = listItems;
@@ -82,8 +87,6 @@ export default {
 
     saveItem(idx, item) {
       const newItem = { ...item };
-      // const { state } = newItem;
-      // delete newItem.state;
       const items = [...this.listItems];
       items[idx] = newItem;
       updateUserItemStates(this.list.id, items);

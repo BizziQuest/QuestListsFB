@@ -157,6 +157,7 @@ async function ensureSlugUniqueness(title) {
   // TODO: sort DESC by created date
   const allListsWithTitle = listsCollection.where('title', '==', title);
   let lists = await allListsWithTitle.get();
+  console.log(lists);
   if (lists.size < 2) return slugify(title);
   lists = lists.sort((a, b) => a.created_at < b.created_at);
   const lastList = lists[lists.length - 1];

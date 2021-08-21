@@ -27,7 +27,7 @@
       >
       {{ isNewItem ? '' : title }}
       <v-btn
-        v-if="(!readOnly && !subList) || title !== null"
+        v-if="!(readOnly || subList) || title !== null"
         slot="append"
         :loading="creatingSubList"
         :disabled="creatingSubList"
@@ -37,7 +37,7 @@
       >
         <v-icon>mdi-shield-plus-outline</v-icon>
       </v-btn>
-      <v-btn icon slot="append" :to="subListPath" title="Edit / View Sublist" v-if="!readOnly && subList">
+      <v-btn icon slot="append" :to="subListPath" :title="`${readOnly ? '' : 'Edit /'} View Sublist`" v-if="subList">
         <v-icon>mdi-shield-link-variant-outline</v-icon>
       </v-btn>
       <v-btn icon slot="append" title="delete" v-if="!isNewItem && title !== null" @click="emitDelete">
@@ -145,6 +145,7 @@ export default {
       this.creatingSubList = false;
     },
     async computeSubListPath(subListRef) {
+      console.log(subListRef);
       if (!subListRef) return;
       const subList = await subListRef.get();
       const { slug } = subList.data();
@@ -158,8 +159,10 @@ export default {
     if (this.$props.value.state?.value) {
       this.currentStateIdx = parseInt(this.$props.value.state.value, 10);
     }
-    if (this.$props.value.subList) {
-      await this.computeSubListPath(this.$props.subList);
+    console.table(this.value);
+    if (this.value.subList) {
+      await this.computeSubListPath(this.value.subList);
+      this.subList = this.value.subList;
     }
   },
   computed: {
