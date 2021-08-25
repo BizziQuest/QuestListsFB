@@ -37,10 +37,14 @@
       >
         <v-icon>mdi-shield-plus-outline</v-icon>
       </v-btn>
-      <v-btn icon slot="append" :to="subListPath" :title="`${readOnly ? '' : 'Edit /'} View Sublist`" v-if="subList">
+      <v-btn icon slot="append" @click="updateItem({to: subListPath})"
+             :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
+             v-if="subList">
         <v-icon>mdi-shield-link-variant-outline</v-icon>
       </v-btn>
-      <v-btn icon slot="append" title="delete" v-if="!isNewItem && title !== null" @click="emitDelete">
+      <v-btn icon slot="append"
+       title="delete"
+       v-if="!isNewItem && title !== null" @click="emitDelete">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-text-field>
@@ -129,6 +133,21 @@ export default {
       if (nextIdx > this.states.length - 1) nextIdx = 0;
       this.currentStateIdx = nextIdx;
     },
+    updateItem({ to } = {}) {
+      console.info('Updating item', to);
+      this.$emit('update', {
+        ...this.value,
+        title: this.title,
+        state: this.states[this.currentStateIdx],
+        isNewItem: this.isNewItem,
+        subList: this.subList,
+      });
+      if (to) {
+        this.$nextTick(() => {
+          this.$router.push(to);
+        });
+      }
+    },
     async makeSublist() {
       this.creatingSubList = true;
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
@@ -140,12 +159,11 @@ export default {
       };
       this.subList = await createList(payload);
       this.subListSlug = this.subList.slug;
-      this.emitUpdate();
       await this.computeSubListPath(this.subList);
+      this.updateItem();
       this.creatingSubList = false;
     },
     async computeSubListPath(subListRef) {
-      console.log(subListRef);
       if (!subListRef) return;
       const subList = await subListRef.get();
       const { slug } = subList.data();
@@ -159,7 +177,7 @@ export default {
     if (this.$props.value.state?.value) {
       this.currentStateIdx = parseInt(this.$props.value.state.value, 10);
     }
-    console.table(this.value);
+    // console.table(this.value);
     if (this.value.subList) {
       await this.computeSubListPath(this.value.subList);
       this.subList = this.value.subList;

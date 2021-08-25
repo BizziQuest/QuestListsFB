@@ -1,8 +1,12 @@
 <template>
   <div>
-    <h1>{{ list.title }}</h1>
     <user-auth-alert action="edit this list" />
-    <div id="items">
+    <h1>{{ list.title }}</h1>
+      <v-btn class="ma-2"
+      color="orange darken-2"
+      dark
+      @click="$router.back()" > <v-icon dark left> mdi-arrow-left </v-icon>Back </v-btn>
+   <div id="items">
       <transition-group name="slide-x-transition" hide-on-leave leave-absolute :duration="{ enter: 200, leave: 200 }">
         <list-item
           v-for="(item, index) in listItems"
@@ -10,6 +14,7 @@
           :value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
           @blur="saveItem(index, $event)"
+          @update="saveItem(index, $event)"
           @input="addNewItem(index, $event)"
           @delete="delItem(index, $event)"
           :tabindex="index"
@@ -23,11 +28,7 @@ import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import {
-  getListItems,
-  getListStates,
-  getListBySlug,
-  saveListItems,
-  updateUserItemStates,
+  getListItems, getListStates, getListBySlug, saveListItems, updateUserItemStates,
 } from '../firebase';
 
 export default {
@@ -61,6 +62,7 @@ export default {
   methods: {
     async fetchList({ slug }) {
       const context = slug.split('/');
+      console.log('fetchList slug', slug);
       const currentSlug = context[context.length - 1];
       const fbList = await getListBySlug(currentSlug);
       // from my investigation there is logic problem here
@@ -73,6 +75,7 @@ export default {
       let foundList = fbList.docs[fbList.docs.length - 1];
       foundList = { id: foundList.id, ...foundList.data() };
       const listItems = await getListItems(foundList);
+      console.log(listItems);
       const states = await getListStates(foundList);
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
@@ -84,8 +87,7 @@ export default {
       this.listItems = listItems;
       this.states = states;
     },
-
-    saveItem(idx, item) {
+    async saveItem(idx, item) {
       const newItem = { ...item };
       const items = [...this.listItems];
       items[idx] = newItem;
