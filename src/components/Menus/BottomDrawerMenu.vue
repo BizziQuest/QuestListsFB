@@ -15,7 +15,7 @@
           @click="$emit('update:drawer', !drawer)"
         >
           <span>QuestLists</span>
-          <v-icon style="d-inline">mdi-shield-check-outline</v-icon>
+          <v-icon style="d-inline">$questlists</v-icon>
         </v-btn>
         <v-btn value="search" icon to="/search" :color="menuHighlightColor">
           <span>Search</span>
@@ -35,7 +35,7 @@
               class="rounded-circle main-fab"
               v-on="slotProps.on"
             >
-              <v-icon>mdi-shield-plus-outline</v-icon>
+              <v-icon>$questlists</v-icon>
             </v-btn>
           </template>
         </CreateAList>

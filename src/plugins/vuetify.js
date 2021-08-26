@@ -4,6 +4,7 @@ import '@mdi/font/css/materialdesignicons.css'; // for the default material desi
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import { preset as replyPreset } from 'vue-cli-plugin-vuetify-preset-reply/preset';
 import { preset as rallyPreset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
+import QuestListsIcon from '@/components/QuestListsLogo.vue';
 
 import QuestlistsSVG from '../assets/questlists-stroke-optimized.svg';
 
@@ -42,6 +43,18 @@ export default new Vuetify({
     // default: 'dark',
     options: {
       customProperties: true,
+    },
+    icons: {
+      // 'questlists':
+      //  'M 150 350 C 200 350 200 300 200 300 A 50 50 0 0 1 300 300 A 50 50 0 0 0 400 300 A 50 50 0 1 0 300 300'
+      // https://codepen.io/anthonydugois/pen/mewdyZ?editors=1010
+    },
+  },
+  icons: {
+    values: {
+      questlists: {
+        component: QuestListsIcon,
+      },
     },
   },
 });

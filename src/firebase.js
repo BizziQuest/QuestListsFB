@@ -28,7 +28,7 @@ const db = fbApp.firestore();
 const { currentUser } = auth;
 
 // firebase settings go here
-const settings = {};
+const settings = { };
 
 if (process.env.NODE_ENV === 'development') {
   settings.host = process.env.VUE_APP_FIREBASE_DATABASE_URL;
