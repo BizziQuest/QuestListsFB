@@ -5,8 +5,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import { preset as replyPreset } from 'vue-cli-plugin-vuetify-preset-reply/preset';
 import { preset as rallyPreset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
 import QuestListsIcon from '@/components/QuestListsLogo.vue';
-
-import QuestlistsSVG from '../assets/questlists-stroke-optimized.svg';
+// import QuestlistsSVG from '../assets/questlists-stroke-optimized.svg';
 
 /**
  * We are using two different preset themes. Reply and Rally. See the material presets for more.
@@ -33,12 +32,12 @@ Vue.use(Vuetify, {
 });
 export default new Vuetify({
   preset,
-  icons: {
-    iconfont: 'mdi',
-    values: {
-      questlists: QuestlistsSVG,
-    },
-  },
+  // icons: {
+  //   iconfont: 'mdi',
+  //   values: {
+  //     questlists: QuestlistsSVG,
+  //   },
+  // },
   theme: {
     // default: 'dark',
     options: {
