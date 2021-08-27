@@ -80,10 +80,11 @@ async function getListBySlug(slug) {
 
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
-  const currentUserStatesCollection = await db.collection(`users/${auth.currentUser.uid}/states`).doc(fbList.id).get();
+  const currentUserStatesCollection = db.collection(`users/${auth.currentUser?.uid}/states`);
   let userStates = [];
   if (currentUserStatesCollection.exists) {
-    userStates = currentUserStatesCollection.data();
+    const currentUserStatesDoc = await currentUserStatesCollection.doc(fbList.id).get();
+    userStates = currentUserStatesDoc.data();
   }
   let listItems = [];
   // to accommodate longer lists, we use multiple documents in a
