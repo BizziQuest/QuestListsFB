@@ -1,6 +1,6 @@
 <template>
   <div>
-    <user-auth-alert action="edit this list" />
+    <user-auth-alert action="edit this list or save any changes" />
     <h1>{{ list.title }}</h1>
       <v-btn class="ma-2"
       color="orange darken-2"
@@ -13,7 +13,6 @@
           :key="`${item.title}${index}`"
           :value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
-          @blur="saveItem(index, $event)"
           @update="saveItem(index, $event)"
           @input="addNewItem(index, $event)"
           @delete="delItem(index, $event)"
