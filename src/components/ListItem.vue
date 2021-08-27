@@ -27,7 +27,7 @@
       >
       {{ isNewItem ? '' : title }}
       <v-btn
-        v-if="!(readOnly || subList) || title !== null"
+        v-if="!readOnly && !subList && title !== null"
         slot="append"
         :loading="creatingSubList"
         :disabled="creatingSubList"
@@ -37,14 +37,15 @@
       >
         <v-icon>mdi-shield-plus-outline</v-icon>
       </v-btn>
-      <v-btn icon slot="append" @click="updateItem({to: subListPath})"
+      <v-btn icon slot="append"
+             @click="updateItem({to: subListPath})"
              :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
              v-if="subList">
         <v-icon>mdi-shield-link-variant-outline</v-icon>
       </v-btn>
       <v-btn icon slot="append"
-       title="delete"
-       v-if="!isNewItem && title !== null" @click="emitDelete">
+             title="delete"
+             v-if="!isNewItem && title !== null" @click="emitDelete">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-text-field>
@@ -115,13 +116,7 @@ export default {
     },
     deactivate() {
       this.isActive = false;
-      this.$emit('blur', {
-        ...this.value,
-        title: this.title,
-        state: this.states[this.currentStateIdx],
-        isNewItem: this.isNewItem,
-        subList: this.subList,
-      });
+      this.updateItem();
     },
     activate() {
       this.isActive = !this.readOnly;
