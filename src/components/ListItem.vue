@@ -1,20 +1,22 @@
 <template>
   <div class="list-item-view">
-    <v-text-field
-      dense
-      v-model="title"
-      @blur="deactivate"
-      @click.prevent="activate"
-      @input="emitUpdate({ title: $event })"
-      :clearable="!readOnly"
-      :flat="readOnly"
-      :hide-details="readOnly"
-      :outlined="isActive"
-      :placeholder="placeholder"
-      :readonly="readOnly"
-      :single-line="readOnly"
-      :solo="readOnly"
-      :tabindex="tabindex"
+    <v-form ref="form">
+      <v-text-field
+        dense
+        v-model="title"
+        :rules="titleRules"
+        @blur="deactivate"
+        @click.prevent="activate"
+        @input="emitUpdate({ title: $event })"
+        :clearable="!readOnly"
+        :flat="readOnly"
+        :hide-details="readOnly"
+        :outlined="isActive"
+        :placeholder="placeholder"
+        :readonly="readOnly"
+        :single-line="readOnly"
+        :solo="readOnly"
+        :tabindex="tabindex"
       >
         <v-icon
           slot="prepend-inner"
@@ -23,25 +25,28 @@
           @click.prevent="cycleIcon"
           @blur="deactivate"
           :title="iconTitle"
-        >{{icon}}</v-icon>
+          >{{ icon }}</v-icon
+        >
         {{ isNewItem ? '' : title }}
-        <v-btn v-if="!readOnly && !subList" slot="append"
+        <v-btn
+          v-if="!readOnly && !subList"
+          slot="append"
           :loading="creatingSubList"
           :disabled="creatingSubList"
           title="Make a new sublist from this item."
           icon
-          @click='makeSublist()'>
+          @click="makeSublist()"
+        >
           <v-icon>mdi-shield-plus-outline</v-icon>
         </v-btn>
-        <v-btn
-          icon
-          slot="append"
-          :to="subListPath"
-          title="Edit / View Sublist"
-          v-if="!readOnly && subList">
-            <v-icon>mdi-shield-link-variant-outline</v-icon>
+        <v-btn icon slot="append"
+            :to="subListPath"
+            title="Edit / View Sublist"
+            v-if="!readOnly && subList">
+          <v-icon>mdi-shield-link-variant-outline</v-icon>
         </v-btn>
-    </v-text-field>
+      </v-text-field>
+    </v-form>
   </div>
 </template>
 
@@ -82,6 +87,10 @@ export default {
     subList: null,
     creatingSubList: false,
     listId: '',
+    titleRules: [
+      (v) => !!v || 'Title is required',
+      (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
+    ],
   }),
   methods: {
     emitUpdate(newValues) {
@@ -108,7 +117,10 @@ export default {
     deactivate() {
       this.isActive = false;
       this.$emit('blur', {
-        ...this.value, title: this.title, isNewItem: this.isNewItem, subList: this.subList,
+        ...this.value,
+        title: this.title,
+        isNewItem: this.isNewItem,
+        subList: this.subList,
       });
     },
     activate() {
@@ -122,6 +134,7 @@ export default {
       this.currentStateIdx = nextIdx;
     },
     async makeSublist() {
+      if (!this.$refs.form.validate()) return;
       this.creatingSubList = true;
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
       const stateGroup = stateGroupsCollection.doc(stateGroupDoc.id);
