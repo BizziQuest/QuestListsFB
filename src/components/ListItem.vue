@@ -34,6 +34,7 @@
           :loading="creatingSubList"
           :disabled="creatingSubList"
           title="Make a new sublist from this item."
+          test-make-sublist
           icon
           @click="makeSublist()"
         >
@@ -89,7 +90,6 @@ export default {
     listId: '',
     titleRules: [
       (v) => !!v || 'Title is required',
-      (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
     ],
   }),
   methods: {
