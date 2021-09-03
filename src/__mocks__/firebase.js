@@ -11,3 +11,9 @@ export const saveListItems = jest.fn(() => Promise.resolve([]));
 export const auth = jest.fn(() => Promise.resolve({ currentUser: {} }));
 
 export const globalPrefRef = jest.fn(() => Promise.resolve({ currentUser: {} }));
+
+export const globalPreferences = jest.fn(() => Promise.resolve({ }));
+
+export const stateGroupsCollection = { doc: jest.fn(() => Promise.resolve({ }))};
+
+export const createList = jest.fn(() => ({}));

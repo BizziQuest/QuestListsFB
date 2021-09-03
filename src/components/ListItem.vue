@@ -55,6 +55,7 @@
         <v-icon>mdi-delete</v-icon>
         </v-btn>
     </v-text-field>
+    </v-form>
   </div>
 </template>
 
