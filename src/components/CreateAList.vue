@@ -2,8 +2,15 @@
   <v-dialog v-model="dialog" max-width="600px" class="primary" :dark="dark" :light="light">
     <template v-slot:activator="{ on }">
       <slot :on="on">
-        <v-list-item test-default-create-list-item link
-          v-on="on" :color="highlightColor" :dark="dark" :light="light" title="Create A New Quest">
+        <v-list-item
+          test-default-create-list-item
+          link
+          v-on="on"
+          :color="highlightColor"
+          :dark="dark"
+          :light="light"
+          title="Create A New Quest"
+        >
           <v-list-item-action>
             <v-icon :color="highlightColor">add</v-icon>
           </v-list-item-action>
@@ -43,13 +50,16 @@
                   test-color-input
                 >
                   <template v-slot:append>
-                    <v-menu>
+                    <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
                       <template v-slot:activator="{ on }">
                         <div :style="swatchStyle()" v-on="on" />
                       </template>
                       <v-card>
                         <v-card-text>
-                          <v-color-picker v-model="listColor" flat />
+                          <CustomColorPicker v-model="listColor" />
+                          <v-row align="center">
+                            <v-btn @click="colorPickerShown = false" class="mx-auto mt-3">Close</v-btn>
+                          </v-row>
                         </v-card-text>
                       </v-card>
                     </v-menu>
@@ -58,7 +68,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12" sm="12" md="12" >
+              <v-col cols="12" sm="12" md="12">
                 <v-text-field
                   label="Description"
                   v-model="description"
@@ -89,6 +99,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
+import CustomColorPicker from './CustomColorPicker.vue';
 import { ensureSlugUniqueness, auth } from '../firebase';
 
 const defaultFormData = {
@@ -98,7 +109,8 @@ const defaultFormData = {
   statesPicked: '',
   updatedListStatesItems: [],
   description: '',
-  listColor: '#363636',
+  listColor: '#1236AF',
+  colorPickerShown: false,
 };
 
 export default {
@@ -107,6 +119,7 @@ export default {
   components: {
     StatesEditor,
     UserAuthAlert,
+    CustomColorPicker,
   },
   data() {
     return {
@@ -144,8 +157,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['setItemStates', 'setMessages']),
-    ...mapActions(['createList']),
+    closeMenu() {
+      this.closeOnClick = true;
+    },
+    ...mapMutations(['setItemStates']),
+    ...mapActions(['createList', 'notify']),
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
@@ -161,7 +177,7 @@ export default {
           states: this.updatedListStatesItems,
         };
       } else {
-        this.setMessages([{ type: 'info', text: 'No states configured. Using default states.' }]);
+        this.notify([{ type: 'info', text: 'No states configured. Using default states.' }]);
       }
       const payload = {
         title: this.title,
@@ -231,14 +247,14 @@ export default {
 };
 </script>
 <style scoped>
-  #availableListStates {
-    height: 100px;
-    overflow: auto;
-  }
-  .theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-    color: #ffffff !important;
-  }
-  .theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-    color: #ffffff !important;
-  }
+#availableListStates {
+  height: 100px;
+  overflow: auto;
+}
+.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+  color: #ffffff !important;
+}
+.theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+  color: #ffffff !important;
+}
 </style>

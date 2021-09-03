@@ -12,31 +12,41 @@ const firebaseConfig = {
   appId: process.env.VUE_APP_FIREBASE_APP_ID,
   authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
-  measurementId: process.env.VUE_APP_FIREBASE_APP_ID,
-  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  // measurementId: process.env.VUE_APP_FIREBASE_APP_ID,
+  // messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
   projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  // storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
 };
 
+if (process.env.NODE_ENV !== 'development') {
+  firebaseConfig.measurementId = process.env.VUE_APP_FIREBASE_APP_ID;
+  firebaseConfig.messagingSenderId = process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID;
+  firebaseConfig.storageBucket = process.env.VUE_APP_FIREBASE_STORAGE_BUCKET;
+}
 // firebase utils
 const fbApp = firebase.initializeApp(firebaseConfig);
 const nodeEnv = process.env.NODE_ENV;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? firebase.analytics() : null;
 const auth = fbApp.auth();
-if (process.env.VUE_APP_FIREBASE_AUTH_HOST) auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST);
+if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
+  auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
+}
 const db = fbApp.firestore();
 const { currentUser } = auth;
 
-// firebase settings go here
-const settings = {};
+// // firebase settings go here
+// const settings = { };
 
-if (process.env.NODE_ENV === 'development') {
-  settings.host = process.env.VUE_APP_FIREBASE_DATABASE_URL;
-  settings.ssl = false;
-}
-db.settings(settings);
+// if (process.env.NODE_ENV !== 'production') {
+db.settings({
+  host: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  ssl: false,
+  merge: true,
+});
+// }
 
 const globalPreferences = db.collection('globalPreferences');
+
 const listsCollection = db.collection('lists');
 const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
@@ -44,6 +54,11 @@ const userStatesCollection = db.collection('userListItemStates');
 
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
+
+async function getListBySlug(slug) {
+  const doc = listsCollection.where('slug', '==', slug);
+  return doc.get();
+}
 
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
@@ -158,4 +173,5 @@ export {
   saveUserPreferences,
   getUserPreferences,
   createList,
+  getListBySlug,
 };

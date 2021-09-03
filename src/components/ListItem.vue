@@ -29,7 +29,7 @@
         >
         {{ isNewItem ? '' : title }}
         <v-btn
-          v-if="!readOnly && !subList"
+          v-if="(!readOnly && !subList) || title !== null"
           slot="append"
           :loading="creatingSubList"
           :disabled="creatingSubList"
@@ -46,8 +46,15 @@
             v-if="!readOnly && subList">
           <v-icon>mdi-shield-link-variant-outline</v-icon>
         </v-btn>
-      </v-text-field>
-    </v-form>
+        <v-btn
+        icon
+        slot="append"
+        title="delete"
+        v-if="!isNewItem && title !== null"
+        @click="emitDelete">
+        <v-icon>mdi-delete</v-icon>
+        </v-btn>
+    </v-text-field>
   </div>
 </template>
 
@@ -109,10 +116,12 @@ export default {
     },
     invalidateNewItem(newValue) {
       if (this.isNewItem && (newValue !== '' || !!newValue)) {
-        // console.log('invalidating', newValue);
         this.isNewItem = false;
         this.emitUpdate({ title: newValue, isNewItem: false });
       }
+    },
+    emitDelete() {
+      this.$emit('delete');
     },
     deactivate() {
       this.isActive = false;

@@ -67,7 +67,7 @@ function toHaveBeenWarnedInit() {
     // eslint-disable-next-line no-restricted-syntax
     for (const type of ['error', 'warn']) {
       const warned = (msg) => asserted.some((assertedMsg) => msg.toString().includes(assertedMsg));
-      // eslint-disable-next-line no-restricted-syntax
+      // eslint-disable-next-line no-restricted-syntax,no-console
       for (const args of console[type].mock.calls) {
         if (!warned(args[0])) {
           done.fail(`Unexpected console.${type} message: ${args[0]}`);

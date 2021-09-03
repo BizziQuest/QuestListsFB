@@ -17,4 +17,5 @@ module.exports = {
   collectCoverage: false,
   collectCoverageFrom: ['**/*.{js,vue}', '!**/node_modules/**'],
   setupFiles: ['<rootDir>tests/setupJest.js'],
+  snapshotSerializers: ['jest-serializer-vue'],
 };

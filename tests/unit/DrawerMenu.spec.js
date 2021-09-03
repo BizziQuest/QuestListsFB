@@ -1,11 +1,23 @@
 import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
+import store from '@/store';
 import VueRouter from 'vue-router';
 import routes from '@/router/routes';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
-import store from '@/store';
+
+jest.mock('firebase.js', () => ({
+  auth: {
+    currentUser: {
+      uid: 'alskdaslkd',
+    },
+  },
+  globalPreferences: {
+    onSnapshot: jest.fn(),
+  },
+  ensureSlugUniqueness: jest.fn(),
+}));
 
 toHaveBeenWarnedInit();
 
@@ -28,6 +40,10 @@ beforeEach(() => {
     icon: 'mdi-flower',
     id: '123abc',
   }];
+});
+
+afterEach(() => {
+  wrapper.destroy();
 });
 
 describe('Drawer Menu', () => {

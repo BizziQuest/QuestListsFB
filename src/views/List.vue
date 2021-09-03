@@ -1,19 +1,25 @@
 <template>
   <div>
-    <h1>{{list.title}}</h1>
-    <user-auth-alert action="edit this list"/>
-    <ol style="list-style-type:none;">
-      <li v-for="(item,index) in listItems" :key="`${item.title}${index}`">
-        <list-item
-          :listItem="item"
-          :value="item"
-          :states="states || globalPreferences.defaultStateGroup.states"
-          @blur="saveItem(index, $event)"
-          @input="addNewItem(index, $event)"
-          :tabindex="index"
-        />
-      </li>
-     </ol>
+    <h1>{{ list.title }}</h1>
+    <user-auth-alert action="edit this list" />
+    <div id="items">
+    <transition-group name="slide-x-transition"
+    hide-on-leave
+    leave-absolute
+    :duration="{ enter: 200, leave: 200 }">
+      <list-item
+        v-for="(item, index) in listItems"
+        :key="`${item.title}${index}`"
+        :listItem="item"
+        :value="item"
+        :states="states || globalPreferences.defaultStateGroup.states"
+        @blur="saveItem(index, $event)"
+        @input="addNewItem(index, $event)"
+        @delete="delItem(index, $event)"
+        :tabindex="index"
+      />
+    </transition-group>
+    </div>
   </div>
 </template>
 <script>
@@ -21,10 +27,7 @@ import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import {
-  getListItems,
-  getListStates,
-  listsCollection,
-  saveListItems,
+  getListItems, getListStates, getListBySlug, saveListItems,
 } from '../firebase';
 
 export default {
@@ -53,33 +56,36 @@ export default {
   },
   methods: {
     async fetchList({ slug }) {
-      const doc = await listsCollection.where('slug', '==', slug);
-      const result = await doc.get();
-      let foundedList;
-      // TODO: ensure we have only one slug. We should warn otherwise.
-      // we are assuming there is only one slug that matches this value.
-      // this may break under certain circumstances
-      // is not done?
-      result.forEach((list) => {
-        foundedList = { id: list.id, ...list.data() };
-      });
-      const listItems = await getListItems(foundedList);
-      const states = await getListStates(foundedList);
+      const fbList = await getListBySlug(slug);
+      let foundList = fbList[fbList.length - 1];
+      foundList = { id: foundList.id, ...foundList.data() };
+
+      const listItems = await getListItems(foundList);
+      const states = await getListStates(foundList);
+
       const listItemsLength = listItems.length;
       const theLastItem = listItems[listItemsLength - 1];
       if (!theLastItem || !theLastItem.isNewItem) {
         listItems.push({ title: '', isNewItem: true });
       }
-      this.list.id = foundedList.id || 'none';
-      this.list = foundedList;
+
+      this.list.id = foundList.id || 'none';
+      this.list = foundList;
       this.listItems = listItems;
       this.states = states;
     },
+
     saveItem(idx, newItem) {
-      const items = this.listItems.slice(0, -1);
+      const items = [...this.listItems];
       items[idx] = newItem;
       saveListItems(this.list.id, items);
+      this.listItems = items;
       this.addNewItem(idx, newItem);
+    },
+    delItem(index) {
+      const items = this.listItems.filter((_itm, idx) => idx !== index);
+      this.listItems = items;
+      saveListItems(this.list.id, items);
     },
     addNewSubList() {
       this.saveItem();
@@ -106,5 +112,15 @@ export default {
 <style lang='scss' scoped>
 h1 {
   margin-top: 10px;
+}
+
+.expand-transition-enter-active,
+.expand-transition-leave-active {
+  transition-duration: 2s !important;
+  // position: fixed !important;
+}
+
+#items {
+  width: 100%;
 }
 </style>

@@ -1,13 +1,11 @@
 import CreateAList from '@/components/CreateAList.vue';
-import { mount, createLocalVue, shallowMount } from '@vue/test-utils';
-// import Vue from 'vue';
+import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import store from '@/store';
 import VueRouter from 'vue-router';
 import routes from '@/router/routes';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
-// import {globalPreferences} from '../../src/firebase';
 
 jest.mock('firebase.js', () => ({
   auth: {
@@ -39,6 +37,10 @@ beforeEach(() => {
     vuetify,
     store,
   });
+});
+
+afterEach(() => {
+  wrapper.destroy();
 });
 
 describe('default state', () => {
@@ -155,8 +157,7 @@ describe('entering information in the dialog', () => {
 describe('list creation', () => {
   let actions;
   let getters;
-  let mutations;
-  beforeEach(() => {
+  beforeEach(async () => {
     getters = {
       getGlobalPreferences() {
         return {
@@ -166,18 +167,15 @@ describe('list creation', () => {
         };
       },
     };
-    mutations = {
-      setMessages: jest.fn(),
-    };
     actions = {
       createList: jest.fn(),
+      notify: jest.fn(),
     };
     const localStore = new Vuex.Store({
       actions,
       getters,
-      mutations,
       watch: {
-        dialog(_val) {
+        dialog() {
           jest.fn();
         },
       },
@@ -208,6 +206,7 @@ describe('list creation', () => {
         },
       },
     });
+    await wrapper.findComponent({ name: 'VListItem' }).trigger('click');
   });
   it('should do nothing if the title and color form does not validate', () => {
     wrapper.vm.title = '123';
@@ -219,21 +218,17 @@ describe('list creation', () => {
   });
   it('should notify users when there are no states given.', async () => {
     wrapper.find('[test-activate-item]').trigger('click');
+    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
     await wrapper.vm.$nextTick();
     await wrapper.vm.createAList();
-    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
-    expect(mutations.setMessages).toHaveBeenCalled();
-    expect(actions.createList).not.toHaveBeenCalled();
-    expect('Unable to locate target [data-app]').toHaveBeenWarned();
-  });
-  it('should notify users when there are no states given.', async () => {
-    wrapper.find('[test-activate-item]').trigger('click');
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.createAList();
-    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
-    expect(wrapper.vm.updatedListStatesItems.length).not.toBeGreaterThan(0);
-    expect(mutations.setMessages).toHaveBeenCalled();
-    expect(actions.createList).toHaveBeenCalledWith();
+    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(false);
+    expect(actions.notify.mock.calls[0][1]).toEqual([
+      { type: 'info', text: 'No states configured. Using default states.' },
+    ]);
+    expect(actions.createList).toHaveBeenCalled();
     expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
 });
+
+it.todo('should show the color picker when the color picker icon is clicked.');
+it.todo('should set the color of the color picker icon when the color picker menu is closed.');

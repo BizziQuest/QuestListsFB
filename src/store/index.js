@@ -243,7 +243,7 @@ const store = new Vuex.Store({
 });
 
 // this is how to create a reactive firebase collection.
-globalPreferences.onSnapshot(async (snapshot) => {
+export const globalPrefRef = globalPreferences.onSnapshot(async (snapshot) => {
   const prefs = [];
   snapshot.forEach((doc) => {
     const pref = doc.data();

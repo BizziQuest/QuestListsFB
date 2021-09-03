@@ -19,9 +19,9 @@ class MyEnvironment extends NodeEnvironment {
     );
   }
 
-  async setup() {}
+  // async setup() {}
 
-  async teardown() {}
+  // async teardown() {}
 }
 
 module.exports = MyEnvironment;
