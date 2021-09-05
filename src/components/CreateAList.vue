@@ -12,7 +12,7 @@
           title="Create A New Quest"
         >
           <v-list-item-action>
-            <v-icon :color="highlightColor">add</v-icon>
+            <v-icon :color="highlightColor">$questlists-plus</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title test-activate-item :class="`${highlightColor}--text`">New Quest</v-list-item-title>

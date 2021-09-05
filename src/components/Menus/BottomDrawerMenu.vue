@@ -35,7 +35,7 @@
               class="rounded-circle main-fab"
               v-on="slotProps.on"
             >
-              <v-icon>$questlists</v-icon>
+              <v-icon>$questlists-plus</v-icon>
             </v-btn>
           </template>
         </CreateAList>

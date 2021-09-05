@@ -33,7 +33,7 @@
           title="Make a new sublist from this item."
           icon
           @click='makeSublist()'>
-          <v-icon>mdi-shield-plus-outline</v-icon>
+          <v-icon>$questlists-plus</v-icon>
         </v-btn>
         <v-btn
           icon

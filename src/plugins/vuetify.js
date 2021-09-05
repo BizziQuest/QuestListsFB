@@ -54,6 +54,12 @@ export default new Vuetify({
       questlists: {
         component: QuestListsIcon,
       },
+      'questlists-plus': {
+        component: QuestListsIcon,
+        props: {
+          variant: 'plus',
+        },
+      },
     },
   },
 });
