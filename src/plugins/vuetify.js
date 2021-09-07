@@ -30,7 +30,8 @@ preset.theme.themes = { // this only works because rally is dark and reply is li
 Vue.use(Vuetify, {
   components: { VIcon, VBtn }, // load components here to use with :is or :tag attributes
 });
-export default new Vuetify({
+
+export const options = {
   preset,
   // icons: {
   //   iconfont: 'mdi',
@@ -60,6 +61,38 @@ export default new Vuetify({
           variant: 'plus',
         },
       },
+      'questlists-alt': {
+        component: QuestListsIcon,
+        props: {
+          variant: 'alt',
+        },
+      },
+      'questlists-alt2': {
+        component: QuestListsIcon,
+        props: {
+          variant: 'alt2',
+        },
+      },
+      'questlists-alt3': {
+        component: QuestListsIcon,
+        props: {
+          variant: 'alt3',
+        },
+      },
+      'questlists-alt4': {
+        component: QuestListsIcon,
+        props: {
+          variant: 'alt4',
+        },
+      },
+      'questlists-alt5': {
+        component: QuestListsIcon,
+        props: {
+          variant: 'alt5',
+        },
+      },
     },
   },
-});
+};
+
+export default new Vuetify(options);
