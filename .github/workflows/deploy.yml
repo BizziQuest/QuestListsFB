@@ -2,12 +2,7 @@ name: Deploy to Firebase Hosting
 
 on:
   push:
-<<<<<<< HEAD
-    branches:
-      - main
-=======
     branches: [ main ]
->>>>>>> main
 
 env:
   CI: true
@@ -30,7 +25,6 @@ jobs:
       matrix:
         node-version: [15.x]
     steps:
-<<<<<<< HEAD
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Install Global Dependencies
@@ -44,35 +38,6 @@ jobs:
         with:
           name: dist
           path: dist
-=======
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn @vue/cli
-    - run: yarn
-    - run: yarn lint
-
-  unit-tests:
-    name: Run Unit Tests
-    runs-on: ubuntu-latest
-    needs: linting
-    strategy:
-      matrix:
-        node-version: [10.x] # only use 10, for firebase-tools compatibility
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn @vue/cli
-    - run: yarn install
-    - run: yarn ci:unit
-    # - run: yarn test:unit --detectOpenHandles --forceExit
-
->>>>>>> main
   deploy:
     name: Deploy to https://questlists.web.app
     needs: unit-tests
