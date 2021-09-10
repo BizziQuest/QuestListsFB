@@ -25,7 +25,7 @@
                 <v-icon ref="icon" name="selected-icon"> {{ localIcon }} </v-icon>
               </div>
               <v-text-field v-model="localIcon"
-              :rules="textFieldRules" required ></v-text-field>
+              :rules="iconNamingRules" required ></v-text-field>
             </v-row>
           </v-card-text>
           <v-card-actions>
@@ -47,7 +47,7 @@ export default {
       localIcon: this.icon,
       dialog: false,
       previousIcon: this.icon,
-      textFieldRules: [
+      iconNamingRules: [
         (v) => !!v || 'icon name is required!',
         (v) => this.$_validateIconName(v) || 'Not a valid icon name',
       ],
@@ -55,13 +55,10 @@ export default {
   },
   methods: {
     $_validateIconName() {
-      const icon1 = document.querySelector('.local-icon [name="selected-icon"]');
-      if (!icon1) return true;
-      const objContent = window.getComputedStyle(icon1, '::before').getPropertyValue('content');
-      return objContent !== 'none';
-    },
-    iconized() {
-      return `mdi-${this.localIcon}`;
+      const selectedIcon = document.querySelector('.local-icon [name="selected-icon"]');
+      if (!selectedIcon) return true;
+      const styleContentValue = window.getComputedStyle(selectedIcon, '::before').getPropertyValue('content');
+      return styleContentValue !== 'none';
     },
     chooseIcon() {
       if (this.$refs.iconForm.validate() === false) return;
@@ -78,7 +75,6 @@ export default {
       window.open('https://material.io/resources/icons/', '_blank');
     },
     openMaterialDesign() {
-      // window.open('https://cdn.materialdesignicons.com/', '_blank');
       window.open('https://materialdesignicons.com/', '_blank');
     },
   },
@@ -90,12 +86,5 @@ export default {
   border: 1px solid green;
   margin: 5px;
   align-self: center;
-}
-#iconHere::before{
-  // background-color: red;
-  content: "\A0631";
-}
-#iconHere::after {
-  content: "\F0132"
 }
 </style>
