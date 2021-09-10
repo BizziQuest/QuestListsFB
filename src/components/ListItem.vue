@@ -1,35 +1,5 @@
 <template>
   <div class="list-item-view">
-<<<<<<< HEAD
-    <v-text-field
-      dense
-      v-model="title"
-      @blur="deactivate"
-      @click.prevent="activate"
-      @input="emitUpdate({ title: $event })"
-      :clearable="!readOnly"
-      :flat="readOnly"
-      :hide-details="readOnly"
-      :outlined="isActive"
-      :placeholder="placeholder"
-      :readonly="readOnly"
-      :single-line="readOnly"
-      :solo="readOnly"
-      :tabindex="tabindex"
-    >
-      <v-icon
-        slot="prepend-inner"
-        class="listitem-icon"
-        :outlined="isActive"
-        @click.prevent="cycleIcon"
-        @blur="deactivate"
-        :title="iconTitle"
-        >{{ icon }}</v-icon
-      >
-      {{ isNewItem ? '' : title }}
-      <v-btn
-        v-if="!readOnly && !subList && title !== null"
-=======
     <v-form ref="form">
       <v-text-field
         dense
@@ -78,7 +48,6 @@
         </v-btn>
         <v-btn
         icon
->>>>>>> main
         slot="append"
         :loading="creatingSubList"
         :disabled="creatingSubList"
