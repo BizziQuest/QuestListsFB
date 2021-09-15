@@ -29,7 +29,7 @@
         >
         {{ isNewItem ? '' : title }}
         <v-btn
-          v-if="(!readOnly && !subList) || title !== null"
+          v-if="!readOnly && ( subList !== null || !isNewItem )"
           slot="append"
           :loading="creatingSubList"
           :disabled="creatingSubList"
@@ -40,23 +40,6 @@
         >
           <v-icon>mdi-shield-plus-outline</v-icon>
         </v-btn>
-        <v-btn icon slot="append"
-            :to="subListPath"
-            title="Edit / View Sublist"
-            v-if="!readOnly && subList">
-          <v-icon>mdi-shield-link-variant-outline</v-icon>
-        </v-btn>
-        <v-btn
-        icon
-        slot="append"
-        :loading="creatingSubList"
-        :disabled="creatingSubList"
-        title="Make a new sublist from this item."
-        icon
-        @click="makeSublist()"
-      >
-        <v-icon>mdi-shield-plus-outline</v-icon>
-      </v-btn>
       <v-btn icon slot="append"
              @click="updateItem({to: subListPath})"
              :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
@@ -153,7 +136,6 @@ export default {
       this.currentStateIdx = nextIdx;
     },
     updateItem({ to } = {}) {
-      console.info('Updating item', to);
       this.$emit('update', {
         ...this.value,
         title: this.title,
@@ -197,7 +179,6 @@ export default {
     if (this.$props.value.state?.value) {
       this.currentStateIdx = parseInt(this.$props.value.state.value, 10);
     }
-    // console.table(this.value);
     if (this.value.subList) {
       await this.computeSubListPath(this.value.subList);
       this.subList = this.value.subList;

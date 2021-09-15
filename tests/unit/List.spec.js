@@ -1,10 +1,8 @@
-import { mount, createLocalVue, shallowMount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
 import List from '@/views/List.vue';
-import ListItem from '@/components/ListItem.vue';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
-import Vue from 'vue';
 import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
 
 jest.mock('../../src/firebase.js');
@@ -28,44 +26,6 @@ const localStore = new Vuex.Store({
   },
 });
 
-// describe('izak is playing with test', async () => {
-//   test('fetches data', async () => {
-//     expect.assertions(1);
-//     const data = await getListBySlug();
-//     await flushPromises();
-//     expect(data).toStrictEqual([]);
-//   });
-//   test('fetch some data', async () => {
-//     expect.assertions(1);
-//     const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
-//     getListBySlug.mockResolvedValueOnce(lists);
-//     const data = await getListBySlug();
-//     await Vue.nextTick();
-//     expect(data).toStrictEqual(lists);
-//   });
-
-//   test('fetch a list in List.vue', async () => {
-//     // const list = [{ title: 'list1234' }];
-//     // getListBySlug.mockResolvedValueOnce(list.data);
-//     const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
-//     getListBySlug.mockResolvedValueOnce(lists);
-//     const data = await getListBySlug();
-//     const wrapper = mount(List, {
-//       localVue,
-//       vuetify,
-//       store: localStore,
-//       mocks: {
-//         $route,
-//       },
-//     });
-//     await flushPromises();
-//     await Vue.nextTick();
-//     console.log(data);
-//     const listItems = wrapper.findAllComponents(ListItem);
-//     expect(listItems).toHaveLength(1);
-//   });
-// });
-
 describe('List.vue', () => {
   describe('when given an empty list', () => {
     let wrapper;
@@ -83,14 +43,12 @@ describe('List.vue', () => {
       await flushPromises(); // for fetchList() call in List.mounted()
     });
     it('should show a new item input', async () => {
-      // expect(getListBySlug).toHaveReturnedTimes(1);
-      // expect(getListBySlug).toHaveBeenCalled();
       expect.assertions(1);
       expect(wrapper.vm.listItems).toEqual([]);
     });
     it('should show the correct title', () => {
-      expect(getListBySlug).toHaveReturnedTimes(1);
-      expect(getListBySlug).toHaveBeenCalled();
+      // expect(getListBySlug).toHaveReturnedTimes(1);
+      // expect(getListBySlug).toHaveBeenCalled();
       expect(wrapper.text()).toContain('list123');
     });
     it('should have the correct id in the $vm', () => {
@@ -107,7 +65,7 @@ describe('List.vue', () => {
     });
   });
 
-  describe.skip('when given a list with single item', () => {
+  describe('when given a list with single item', () => {
     let wrapper;
     beforeEach(async () => {
       const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
@@ -150,7 +108,7 @@ describe('List.vue', () => {
     });
   });
 
-  describe.skip('when an items delete icon is clicked ', () => {
+  describe('when an items delete icon is clicked ', () => {
     let wrapper;
     beforeEach(async () => {
       const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
