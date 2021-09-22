@@ -1,58 +1,58 @@
 <template>
   <div class="list-item-view">
-    <v-form ref="form">
-      <v-text-field
-        dense
-        v-model="title"
-        :rules="titleRules"
-        @blur="deactivate"
-        @click.prevent="activate"
-        @input="emitUpdate({ title: $event })"
-        :clearable="!readOnly"
-        :flat="readOnly"
-        :hide-details="readOnly"
+    <v-text-field
+      ref="input"
+      dense
+      v-model="title"
+      @blur="deactivate"
+      @click.prevent="activate"
+      @keydown.enter.prevent="emitEnterPressed({ title })"
+      @input="emitUpdate({ title: $event })"
+      :clearable="!readOnly"
+      :flat="readOnly"
+      :hide-details="readOnly"
+      :outlined="isActive"
+      :placeholder="placeholder"
+      :readonly="readOnly"
+      :single-line="readOnly"
+      :solo="readOnly"
+      :tabindex="tabindex"
+    >
+      <v-icon
+        slot="prepend-inner"
+        class="listitem-icon"
         :outlined="isActive"
-        :placeholder="placeholder"
-        :readonly="readOnly"
-        :single-line="readOnly"
-        :solo="readOnly"
-        :tabindex="tabindex"
+        @click.prevent="cycleIcon"
+        @blur="deactivate"
+        :title="iconTitle"
+        >{{ icon }}</v-icon
       >
-        <v-icon
-          slot="prepend-inner"
-          class="listitem-icon"
-          :outlined="isActive"
-          @click.prevent="cycleIcon"
-          @blur="deactivate"
-          :title="iconTitle"
-          >{{ icon }}</v-icon
-        >
-        {{ isNewItem ? '' : title }}
-        <v-btn
-          v-if="!readOnly && ( subList !== null || !isNewItem )"
-          slot="append"
-          :loading="creatingSubList"
-          :disabled="creatingSubList"
-          title="Make a new sublist from this item."
-          test-make-sublist
-          icon
-          @click="makeSublist()"
-        >
-          <v-icon>mdi-shield-plus-outline</v-icon>
-        </v-btn>
-      <v-btn icon slot="append"
-             @click="updateItem({to: subListPath})"
-             :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
-             v-if="subList">
+      {{ isNewItem ? '' : title }}
+      <v-btn
+        v-if="showAddSubListButton"
+        slot="append"
+        :loading="creatingSubList"
+        :disabled="creatingSubList"
+        title="Make a new sublist from this item."
+        test-make-sublist
+        icon
+        @click="makeSublist()"
+      >
+        <v-icon>mdi-shield-plus-outline</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        slot="append"
+        @click="updateItem({ to: subListPath })"
+        :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
+        v-if="subList"
+      >
         <v-icon>mdi-shield-link-variant-outline</v-icon>
       </v-btn>
-      <v-btn icon slot="append"
-             title="delete"
-             v-if="!isNewItem && title !== null" @click="emitDelete">
+      <v-btn icon slot="append" title="delete" v-if="!isNewItem && title !== null" @click="emitDelete">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-text-field>
-    </v-form>
   </div>
 </template>
 
@@ -93,13 +93,13 @@ export default {
     subList: null,
     creatingSubList: false,
     listId: '',
-    titleRules: [
-      (v) => !!v || 'Title is required',
-    ],
   }),
   methods: {
     emitUpdate(newValues) {
       this.$emit('input', this.$_makeNewItem(newValues));
+    },
+    emitEnterPressed(newValues) {
+      this.$emit('enterPressed', newValues);
     },
     $_makeNewItem(newValues) {
       const newItem = { ...this.value, ...newValues };
@@ -150,7 +150,6 @@ export default {
       }
     },
     async makeSublist() {
-      if (!this.$refs.form.validate()) return;
       this.creatingSubList = true;
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
       const stateGroup = stateGroupsCollection.doc(stateGroupDoc.id);
@@ -186,6 +185,13 @@ export default {
   },
   computed: {
     ...mapGetters(['itemStates', 'getGlobalPreferences']),
+    showAddSubListButton() {
+      if (this.readOnly) return false;
+      if (this.isNewItem) return false;
+      if (this.subList !== null) return false;
+      if (!this.title || this.title === '') return false;
+      return true;
+    },
     icon() {
       if (this.isNewItem) return 'mdi-plus';
       return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].icon;

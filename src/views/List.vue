@@ -13,13 +13,15 @@
         :duration="{ enter: 200, leave: 200 }"
       >
         <list-item
-          v-for="(item, index) in listItems"
+          v-for="(item, index) in listItemsWithBlank"
+          ref="listItems"
           :key="`${item.title}${index}`"
           :value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
           @update="saveItem(index, $event)"
-          @input="ensureNewEmptyItem(index, $event)"
+          @input="appendItem(index, $event)"
           @delete="delItem(index, $event)"
+          @enterPressed="focusNext(index, $event)"
           :tabindex="index"
         />
       </transition-group>
@@ -59,14 +61,36 @@ export default {
   data() {
     return {
       list: {
-        title: 'Loading...',
+        title: 'Loading...:)',
         id: undefined,
       },
       listItems: [],
       states: [],
     };
   },
+  computed: {
+    listItemsWithBlank() {
+      return [...this.listItems, { title: '', isNewItem: true }];
+    },
+  },
   methods: {
+    appendItem(index, item) {
+      if (index >= this.listItems.length) {
+        this.listItems.push(item);
+        this.$nextTick(() => this.focusNext(index - 1));
+      }
+    },
+    focusNext(index) {
+      // XXX: this isn't really Vue-like. We should use a parameter to set the focus instead.
+      this.$nextTick(() => {
+        const listItemRef = this.$refs.listItems[index + 1];
+        console.table(this.$refs.listItems);
+        console.debug('Focus:', index, listItemRef?.title);
+        if (listItemRef) {
+          listItemRef.$refs.input.focus();
+        }
+      });
+    },
     async fetchList({ slug }) {
       const context = slug.split('/');
       const currentSlug = context[context.length - 1];
@@ -75,44 +99,31 @@ export default {
       foundList = { id: foundList.id, ...foundList.data() };
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
-      const listItemsLength = listItems.length;
-      const theLastItem = listItems[listItemsLength - 1];
-      if (!theLastItem || !theLastItem.isNewItem) {
-        listItems.push({ title: '', isNewItem: true });
-      }
+      // const listItemsLength = listItems.length;
+      // const theLastItem = listItems[listItemsLength - 1];
+      // if (!theLastItem || !theLastItem.isNewItem) {
+      //   listItems.push({ title: '', isNewItem: true });
+      // }
       this.list.id = foundList.id || 'none';
       this.list = foundList;
       this.listItems = listItems;
       this.states = states;
     },
-    async saveItem(idx, item) {
-      const newItem = { ...item };
-      const items = this.listItems.filter((i) => (i.title && i.title !== '') && !i.newItem);
-      items[idx] = newItem;
+    saveItem(idx, item) {
+      const items = [...this.listItems];
+      items[idx] = { ...item };
       updateUserItemStates(this.list.id, items);
       saveListItems(this.list.id, items);
       this.listItems = items;
-      this.ensureNewEmptyItem(idx, newItem);
     },
     delItem(index) {
       const items = this.listItems.filter((_itm, idx) => idx !== index);
       this.listItems = items;
       saveListItems(this.list.id, items);
+      this.ensureNewEmptyItem();
     },
     addNewSubList() {
       this.saveItem();
-    },
-    ensureNewEmptyItem(index, item) {
-      const lastItemIndex = this.listItems.length - 1;
-      if (index < lastItemIndex) return;
-      if (item.length !== 0) {
-        const lastItem = this.listItems[lastItemIndex];
-        delete lastItem.isNewItem;
-        this.listItems.push({
-          title: '',
-          isNewItem: true,
-        });
-      }
     },
   },
   mounted() {
