@@ -14,7 +14,7 @@
       >
         <list-item
           v-for="(item, index) in listItemsWithBlank"
-          ref="listItems"
+          :ref="`listItem${index}`"
           :key="`${item.title}${index}`"
           :value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
@@ -70,6 +70,7 @@ export default {
   },
   computed: {
     listItemsWithBlank() {
+      console.log('listItems is being recomputed');
       return [...this.listItems, { title: '', isNewItem: true }];
     },
   },
@@ -82,14 +83,10 @@ export default {
     },
     focusNext(index) {
       // XXX: this isn't really Vue-like. We should use a parameter to set the focus instead.
-      this.$nextTick(() => {
-        const listItemRef = this.$refs.listItems[index + 1];
-        console.table(this.$refs.listItems);
-        console.debug('Focus:', index, listItemRef?.title);
-        if (listItemRef) {
-          listItemRef.$refs.input.focus();
-        }
-      });
+      const listItemRef = this.$refs[`listItem${index + 1}`];
+      if (listItemRef?.length > 0) {
+        listItemRef[0].$refs.input.focus(); // this will trigger blur(), which will save the items
+      }
     },
     async fetchList({ slug }) {
       const context = slug.split('/');
@@ -120,7 +117,6 @@ export default {
       const items = this.listItems.filter((_itm, idx) => idx !== index);
       this.listItems = items;
       saveListItems(this.list.id, items);
-      this.ensureNewEmptyItem();
     },
     addNewSubList() {
       this.saveItem();

@@ -49,7 +49,10 @@
       >
         <v-icon>mdi-shield-link-variant-outline</v-icon>
       </v-btn>
-      <v-btn icon slot="append" title="delete" v-if="!isNewItem && title !== null" @click="emitDelete">
+      <v-btn icon slot="append"
+             title="delete"
+             v-if="!isNewItem"
+             @click="emitDelete">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-text-field>
