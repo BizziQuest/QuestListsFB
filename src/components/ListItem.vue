@@ -139,13 +139,15 @@ export default {
       this.currentStateIdx = nextIdx;
     },
     updateItem({ to } = {}) {
-      this.$emit('update', {
-        ...this.value,
-        title: this.title,
-        state: this.states[this.currentStateIdx],
-        isNewItem: this.isNewItem,
-        subList: this.subList,
-      });
+      if (!this.isNewItem) {
+        this.$emit('update', {
+          ...this.value,
+          title: this.title,
+          state: this.states[this.currentStateIdx],
+          isNewItem: this.isNewItem,
+          subList: this.subList,
+        });
+      }
       if (to) {
         this.$nextTick(() => {
           this.$router.push(to);

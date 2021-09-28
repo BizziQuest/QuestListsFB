@@ -15,6 +15,7 @@
         <list-item
           v-for="(item, index) in listItemsWithBlank"
           :ref="`listItem${index}`"
+          :autofocus="firstFocus"
           :key="`${item.title}${index}`"
           :value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
@@ -73,6 +74,10 @@ export default {
       console.log('listItems is being recomputed');
       return [...this.listItems, { title: '', isNewItem: true }];
     },
+    firstFocus() {
+      // debugger;
+      return true;
+    },
   },
   methods: {
     appendItem(index, item) {
@@ -96,11 +101,6 @@ export default {
       foundList = { id: foundList.id, ...foundList.data() };
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
-      // const listItemsLength = listItems.length;
-      // const theLastItem = listItems[listItemsLength - 1];
-      // if (!theLastItem || !theLastItem.isNewItem) {
-      //   listItems.push({ title: '', isNewItem: true });
-      // }
       this.list.id = foundList.id || 'none';
       this.list = foundList;
       this.listItems = listItems;
