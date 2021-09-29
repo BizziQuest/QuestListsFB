@@ -15,7 +15,6 @@
         <list-item
           v-for="(item, index) in listItemsWithBlank"
           :ref="`listItem${index}`"
-          :autofocus="firstFocus"
           :key="`${item.title}${index}`"
           :value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
@@ -74,10 +73,6 @@ export default {
       console.log('listItems is being recomputed');
       return [...this.listItems, { title: '', isNewItem: true }];
     },
-    firstFocus() {
-      // debugger;
-      return true;
-    },
   },
   methods: {
     appendItem(index, item) {
@@ -89,6 +84,7 @@ export default {
     focusNext(index) {
       // XXX: this isn't really Vue-like. We should use a parameter to set the focus instead.
       const listItemRef = this.$refs[`listItem${index + 1}`];
+      // debugger;
       if (listItemRef?.length > 0) {
         listItemRef[0].$refs.input.focus(); // this will trigger blur(), which will save the items
       }

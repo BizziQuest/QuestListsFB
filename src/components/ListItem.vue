@@ -27,7 +27,7 @@
         :title="iconTitle"
         >{{ icon }}</v-icon
       >
-      {{ isNewItem ? '' : title }}
+      {{ isNewItem ? "" : title }}
       <v-btn
         v-if="showAddSubListButton"
         slot="append"
@@ -49,10 +49,7 @@
       >
         <v-icon>mdi-shield-link-variant-outline</v-icon>
       </v-btn>
-      <v-btn icon slot="append"
-             title="delete"
-             v-if="!isNewItem"
-             @click="emitDelete">
+      <v-btn icon slot="append" title="delete" v-if="!isNewItem" @click="emitDelete">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-text-field>
@@ -139,15 +136,14 @@ export default {
       this.currentStateIdx = nextIdx;
     },
     updateItem({ to } = {}) {
-      if (!this.isNewItem) {
-        this.$emit('update', {
-          ...this.value,
-          title: this.title,
-          state: this.states[this.currentStateIdx],
-          isNewItem: this.isNewItem,
-          subList: this.subList,
-        });
-      }
+      if (this.isNewItem) return;
+      this.$emit('update', {
+        ...this.value,
+        title: this.title,
+        state: this.states[this.currentStateIdx],
+        isNewItem: this.isNewItem,
+        subList: this.subList,
+      });
       if (to) {
         this.$nextTick(() => {
           this.$router.push(to);
