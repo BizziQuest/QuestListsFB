@@ -22,10 +22,10 @@
             </v-row>
             <v-row>
               <div class="local-icon">
-                <v-icon ref="icon" name="selected-icon"> {{ localIcon }} </v-icon>
+                <v-icon ref="icon" test-icon> {{ localIcon }} </v-icon>
               </div>
               <v-text-field v-model="localIcon"
-              :rules="iconNamingRules" required ></v-text-field>
+              :rules="iconNamingRules" ref="iconInput" test-icon-input required></v-text-field>
             </v-row>
           </v-card-text>
           <v-card-actions>
@@ -55,10 +55,10 @@ export default {
   },
   methods: {
     $_validateIconName() {
-      const selectedIcon = document.querySelector('.local-icon [name="selected-icon"]');
+      const selectedIcon = this.$refs.icon.$el;
       if (!selectedIcon) return true;
       const styleContentValue = window.getComputedStyle(selectedIcon, '::before').getPropertyValue('content');
-      return styleContentValue !== 'none';
+      return styleContentValue !== '' && styleContentValue !== 'none';
     },
     chooseIcon() {
       if (this.$refs.iconForm.validate() === false) return;
