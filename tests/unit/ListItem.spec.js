@@ -57,9 +57,8 @@ describe('default state', () => {
   afterEach(() => {
     wrapper.destroy();
   });
-  it('should not make sub list on empty text filed', async () => {
-    await wrapper.find('[test-make-sublist]').trigger('click');
-    expect(wrapper.html()).toContain('Title is required');
+  it('should not show make sub list icon on empty text filed', async () => {
+    expect(wrapper.find('[test-make-sublist]').exists()).toBe(false);
   });
   it('should make sublist on filled text filed', async () => {
     globalPreferences.mockResolvedValueOnce({ defaultStateGroup: {} });

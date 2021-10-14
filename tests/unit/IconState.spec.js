@@ -65,6 +65,16 @@ describe('IconState.vue', () => {
       expect(wrapper.text()).toContain('asdasdkodhiodhio Not a valid icon name');
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
+    it('should not allow dialog to emit update event when entering a non-valid name', async () => {
+      await wrapper.find('button').trigger('click');
+      const input = wrapper.find('[test-icon-input]');
+      await input.setValue('asdasdkodhiodhio');
+      wrapper.find('[test-cancel-btn]').trigger('click');
+      await wrapper.vm.$nextTick();
+      expect(wrapper.text()).toContain('asdasdkodhiodhio Not a valid icon name');
+      expect(wrapper.emitted('update:icon')).toBe(undefined);
+      expect('Unable to locate target [data-app]').toHaveBeenWarned();
+    });
     it('should error when not entering an icon name', async () => {
       await wrapper.find('button').trigger('click');
       const input = wrapper.find('[test-icon-input]');
@@ -72,12 +82,25 @@ describe('IconState.vue', () => {
       expect(wrapper.text()).toContain('icon name is required!');
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
-    it('should validate when entering a valid icon name', async () => {
+    it('should not allow dialog to emit update event when entering a blank string', async () => {
+      await wrapper.find('button').trigger('click');
+      const input = wrapper.find('[test-icon-input]');
+      await input.setValue('');
+      wrapper.find('[test-cancel-btn]').trigger('click');
+      await wrapper.vm.$nextTick();
+      expect(wrapper.text()).toContain('icon name is required!');
+      expect(wrapper.emitted('update:icon')).toBe(undefined);
+      expect('Unable to locate target [data-app]').toHaveBeenWarned();
+    });
+    it.todo('should validate when entering a valid icon name. NEEDS: testing applied styles');
+    it('should not allow dialog to emit update event when entering a blank string', async () => {
       await wrapper.find('button').trigger('click');
       const input = wrapper.find('[test-icon-input]');
       await input.setValue('mdi-flower');
-      expect(wrapper.text()).not.toContain('mdi-flower Not a valid icon name');
-      expect(wrapper.text()).not.toContain('icon name is required!');
+      wrapper.find('[test-cancel-btn]').trigger('click');
+      await wrapper.vm.$nextTick();
+      expect(wrapper.text()).toContain('icon name is required!');
+      expect(wrapper.emitted('update:icon')).toBe(undefined);
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
   });

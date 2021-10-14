@@ -58,7 +58,7 @@ describe('List.vue', () => {
       expect(wrapper.vm.list.title).toBe('list123');
     });
     it('should have the correct listItems in the $vm', () => {
-      expect(wrapper.vm.listItems).toEqual([{ isNewItem: true, title: '' }]);
+      expect(wrapper.vm.listItems.length).toBe(0);
     });
     it('should have the correct possible list item states in the $vm', () => {
       expect(wrapper.vm.states).toStrictEqual([]);
@@ -98,7 +98,7 @@ describe('List.vue', () => {
       expect(wrapper.vm.list.title).toBe('list123');
     });
     it('should have the correct listItems in the $vm', () => {
-      expect(wrapper.vm.listItems).toEqual([{ title: 'Test Item' }, { isNewItem: true, title: '' }]);
+      expect(wrapper.vm.listItems).toEqual([{ title: 'Test Item' }]);
     });
     it('should have the correct possible list item states in the $vm', () => {
       expect(wrapper.vm.states).toStrictEqual([]);
@@ -127,24 +127,22 @@ describe('List.vue', () => {
       await flushPromises(); // for fetchList() call in List.mounted()
     });
     it('should remove the item', async () => {
-      expect(wrapper.vm.listItems.length).toBe(3);
+      expect(wrapper.vm.listItems.length).toBe(2);
       expect(wrapper.vm.listItems[0].title).toBe('Test Item');
       expect(wrapper.vm.listItems[0].isNewItem).toBeFalsy();
       const itemInput = wrapper.find('.list-item-view');
       await itemInput.find('.v-btn[title="delete"]').trigger('click');
       await wrapper.vm.$nextTick();
       expect(saveListItems).toHaveBeenCalled();
-      expect(wrapper.vm.listItems.length).toBe(2);
+      expect(wrapper.vm.listItems.length).toBe(1);
       expect(wrapper.vm.listItems[0].title).toBe('Test Item 2');
       expect(wrapper.vm.listItems[0].isNewItem).toBe(undefined);
-      expect(wrapper.vm.listItems[1].title).toBe('');
-      expect(wrapper.vm.listItems[1].isNewItem).toBe(true);
     });
     it('should save the new list', async () => {
       const itemInput = wrapper.find('.list-item-view');
       await itemInput.find('.v-btn[title="delete"]').trigger('click');
       await wrapper.vm.$nextTick();
-      expect(saveListItems).toBeCalledWith('1', [{ title: 'Test Item 2' }, { isNewItem: true, title: '' }]);
+      expect(saveListItems).toBeCalledWith('1', [{ title: 'Test Item 2' }]);
     });
   });
 });
