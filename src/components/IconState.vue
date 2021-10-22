@@ -48,12 +48,17 @@ export default {
       dialog: false,
       previousIcon: this.icon,
       iconNamingRules: [
-        (v) => !!v || 'icon name is required!',
+        (v) => this.$_isIconNameNotEmpty(v) || 'icon name is required!',
         (v) => this.$_validateIconName(v) || 'Not a valid icon name',
       ],
     };
   },
   methods: {
+    $_isIconNameNotEmpty(iconName) {
+      if (!iconName) return false;
+      if (iconName.trim() === '') return false;
+      return true;
+    },
     $_validateIconName() {
       const selectedIcon = this.$refs.icon.$el;
       if (!selectedIcon) return true;
@@ -67,7 +72,6 @@ export default {
       this.dialog = false;
     },
     close() {
-      if (this.$refs.iconForm.validate() === false) return;
       this.localIcon = this.previousIcon;
       this.dialog = false;
     },

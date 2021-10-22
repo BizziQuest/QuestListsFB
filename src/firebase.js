@@ -55,6 +55,13 @@ const userStatesCollection = db.collection('userListItemStates');
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
+async function computeSubListPath(subListRef, routePath) {
+  if (!subListRef) return false;
+  const subList = await subListRef.get();
+  const { slug } = subList.data();
+  return `${routePath}/${slug}`;
+}
+
 async function getUserDocumentRef() {
   const userDocument = db.collection('users').doc(auth.currentUser.uid);
   if (!userDocument.get().exists) await userDocument.set({}, { merge: true });
@@ -220,4 +227,5 @@ export {
   createList,
   getListBySlug,
   updateUserItemStates,
+  computeSubListPath,
 };

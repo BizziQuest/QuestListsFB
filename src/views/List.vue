@@ -70,7 +70,6 @@ export default {
   },
   computed: {
     listItemsWithBlank() {
-      console.log('listItems is being recomputed');
       return [...this.listItems, { title: '', isNewItem: true }];
     },
   },

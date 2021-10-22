@@ -1,6 +1,7 @@
 <template>
   <div class="list-item-view">
     <v-text-field
+      test-text-field
       ref="input"
       dense
       v-model="title"
@@ -36,12 +37,13 @@
         title="Make a new sublist from this item."
         test-make-sublist
         icon
-        @click="makeSublist()"
+        @click="makeSublist"
       >
         <v-icon>mdi-shield-plus-outline</v-icon>
       </v-btn>
       <v-btn
         icon
+        test-sublist-link-icon
         slot="append"
         @click="updateItem({ to: subListPath })"
         :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
@@ -49,7 +51,14 @@
       >
         <v-icon>mdi-shield-link-variant-outline</v-icon>
       </v-btn>
-      <v-btn icon slot="append" title="delete" v-if="!isNewItem" @click="emitDelete">
+      <v-btn
+        icon
+        slot="append"
+        title="delete"
+        test-delete-icon
+        v-if="!isNewItem"
+        @click="emitDelete"
+      >
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-text-field>
@@ -58,7 +67,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { createList, stateGroupsCollection } from '../firebase';
+import {
+  createList,
+  stateGroupsCollection,
+  computeSubListPath as computeSubListPathFB,
+} from '../firebase';
 
 export default {
   props: {
@@ -166,10 +179,9 @@ export default {
       this.creatingSubList = false;
     },
     async computeSubListPath(subListRef) {
-      if (!subListRef) return;
-      const subList = await subListRef.get();
-      const { slug } = subList.data();
-      this.subListPath = `${this.$route.path}/${slug}`;
+      const subListPath = computeSubListPathFB(subListRef, this.$route.path);
+      if (!subListPath) return;
+      this.subListPath = subListPath;
     },
   },
   async mounted() {

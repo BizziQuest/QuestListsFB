@@ -69,7 +69,7 @@ describe('IconState.vue', () => {
       await wrapper.find('button').trigger('click');
       const input = wrapper.find('[test-icon-input]');
       await input.setValue('asdasdkodhiodhio');
-      wrapper.find('[test-cancel-btn]').trigger('click');
+      wrapper.find('[test-choose-btn]').trigger('click');
       await wrapper.vm.$nextTick();
       expect(wrapper.text()).toContain('asdasdkodhiodhio Not a valid icon name');
       expect(wrapper.emitted('update:icon')).toBe(undefined);
@@ -86,18 +86,18 @@ describe('IconState.vue', () => {
       await wrapper.find('button').trigger('click');
       const input = wrapper.find('[test-icon-input]');
       await input.setValue('');
-      wrapper.find('[test-cancel-btn]').trigger('click');
+      wrapper.find('[test-choose-btn]').trigger('click');
       await wrapper.vm.$nextTick();
       expect(wrapper.text()).toContain('icon name is required!');
       expect(wrapper.emitted('update:icon')).toBe(undefined);
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it.todo('should validate when entering a valid icon name. NEEDS: testing applied styles');
-    it('should not allow dialog to emit update event when entering a blank string', async () => {
+    it('should not allow dialog to emit update event when entering a blank string (spaces)', async () => {
       await wrapper.find('button').trigger('click');
       const input = wrapper.find('[test-icon-input]');
-      await input.setValue('mdi-flower');
-      wrapper.find('[test-cancel-btn]').trigger('click');
+      await input.setValue('   ');
+      wrapper.find('[test-choose-btn]').trigger('click');
       await wrapper.vm.$nextTick();
       expect(wrapper.text()).toContain('icon name is required!');
       expect(wrapper.emitted('update:icon')).toBe(undefined);
