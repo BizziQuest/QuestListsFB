@@ -17,3 +17,5 @@ export const globalPreferences = jest.fn(() => Promise.resolve({ }));
 export const stateGroupsCollection = { doc: jest.fn(() => Promise.resolve({ }))};
 
 export const createList = jest.fn(() => ({}));
+
+export const computeSubListPath = jest.fn(() => Promise.resolve(''));

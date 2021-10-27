@@ -2,6 +2,14 @@
   "rules": {
     "users": {
       "$uid": {
+        "states": {
+          ".read": "$uid === auth.uid",
+          ".write": "$uid === auth.uid",
+          "$lisId": {
+            ".read": "$uid === auth.uid",
+            ".write": "$uid === auth.uid"
+          }
+        },
         "info": {
           ".read": true,
           ".write": "$uid === auth.uid",

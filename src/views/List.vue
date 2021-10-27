@@ -1,24 +1,30 @@
 <template>
   <div>
+    <user-auth-alert action="edit this list or save any changes" />
     <h1>{{ list.title }}</h1>
-    <user-auth-alert action="edit this list" />
+    <v-btn class="ma-2" color="orange darken-2" dark @click="$router.back()">
+      <v-icon dark left> mdi-arrow-left </v-icon>Back
+    </v-btn>
     <div id="items">
-    <transition-group name="slide-x-transition"
-    hide-on-leave
-    leave-absolute
-    :duration="{ enter: 200, leave: 200 }">
-      <list-item
-        v-for="(item, index) in listItems"
-        :key="`${item.title}${index}`"
-        :listItem="item"
-        :value="item"
-        :states="states || globalPreferences.defaultStateGroup.states"
-        @blur="saveItem(index, $event)"
-        @input="addNewItem(index, $event)"
-        @delete="delItem(index, $event)"
-        :tabindex="index"
-      />
-    </transition-group>
+      <transition-group
+        name="slide-x-transition"
+        hide-on-leave
+        leave-absolute
+        :duration="{ enter: 200, leave: 200 }"
+      >
+        <list-item
+          v-for="(item, index) in listItemsWithBlank"
+          :ref="`listItem${index}`"
+          :key="`${item.title}${index}`"
+          :value="item"
+          :states="states || globalPreferences.defaultStateGroup.states"
+          @update="saveItem(index, $event)"
+          @input="appendItem(index, $event)"
+          @delete="delItem(index, $event)"
+          @enterPressed="focusNext(index, $event)"
+          :tabindex="index"
+        />
+      </transition-group>
     </div>
   </div>
 </template>
@@ -27,7 +33,11 @@ import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import {
-  getListItems, getListStates, getListBySlug, saveListItems,
+  getListItems,
+  getListStates,
+  getListBySlug,
+  saveListItems,
+  updateUserItemStates,
 } from '../firebase';
 
 export default {
@@ -38,6 +48,10 @@ export default {
       default: 'New List', // the default value. if the type is Object, this MUST use a function
       description: 'The title of the list you are displaying. Defaults to "New List".',
     },
+    slug: {
+      type: String,
+      description: 'slug that identifed a list',
+    },
   },
   mixins: [userAuthMixin],
   components: {
@@ -47,40 +61,52 @@ export default {
   data() {
     return {
       list: {
-        title: 'Loading...',
+        title: 'Loading...:)',
         id: undefined,
       },
       listItems: [],
       states: [],
     };
   },
+  computed: {
+    listItemsWithBlank() {
+      return [...this.listItems, { title: '', isNewItem: true }];
+    },
+  },
   methods: {
+    appendItem(index, item) {
+      if (index >= this.listItems.length) {
+        this.listItems.push(item);
+        this.$nextTick(() => this.focusNext(index - 1));
+      }
+    },
+    focusNext(index) {
+      // XXX: this isn't really Vue-like. We should use a parameter to set the focus instead.
+      const listItemRef = this.$refs[`listItem${index + 1}`];
+      // debugger;
+      if (listItemRef?.length > 0) {
+        listItemRef[0].$refs.input.focus(); // this will trigger blur(), which will save the items
+      }
+    },
     async fetchList({ slug }) {
-      const fbList = await getListBySlug(slug);
-      let foundList = fbList[fbList.length - 1];
+      const context = slug.split('/');
+      const currentSlug = context[context.length - 1];
+      const fbList = await getListBySlug(currentSlug);
+      let foundList = fbList.docs[fbList.docs.length - 1];
       foundList = { id: foundList.id, ...foundList.data() };
-
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
-
-      const listItemsLength = listItems.length;
-      const theLastItem = listItems[listItemsLength - 1];
-      if (!theLastItem || !theLastItem.isNewItem) {
-        listItems.push({ title: '', isNewItem: true });
-      }
-
       this.list.id = foundList.id || 'none';
       this.list = foundList;
       this.listItems = listItems;
       this.states = states;
     },
-
-    saveItem(idx, newItem) {
+    saveItem(idx, item) {
       const items = [...this.listItems];
-      items[idx] = newItem;
+      items[idx] = { ...item };
+      updateUserItemStates(this.list.id, items);
       saveListItems(this.list.id, items);
       this.listItems = items;
-      this.addNewItem(idx, newItem);
     },
     delItem(index) {
       const items = this.listItems.filter((_itm, idx) => idx !== index);
@@ -90,18 +116,6 @@ export default {
     addNewSubList() {
       this.saveItem();
     },
-    addNewItem(index, item) {
-      const lastItemIndex = this.listItems.length - 1;
-      if (index < lastItemIndex) return;
-      if (item.length !== 0) {
-        const lastItem = this.listItems[lastItemIndex];
-        delete lastItem.isNewItem;
-        this.listItems.push({
-          title: '',
-          isNewItem: true,
-        });
-      }
-    },
   },
   mounted() {
     const path = this.$route.params.slug.split('/');
@@ -109,7 +123,7 @@ export default {
   },
 };
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 h1 {
   margin-top: 10px;
 }
@@ -117,7 +131,6 @@ h1 {
 .expand-transition-enter-active,
 .expand-transition-leave-active {
   transition-duration: 2s !important;
-  // position: fixed !important;
 }
 
 #items {
