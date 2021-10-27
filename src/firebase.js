@@ -1,7 +1,11 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import 'firebase/analytics';
+import {
+  getAuth, connectAuthEmulator, GoogleAuthProvider, FacebookAuthProvider,
+} from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import {
+  getFirestore, connectFirestoreEmulator, collection,
+} from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
 import slugify from 'slugify';
 
 require('dotenv').config();
@@ -24,36 +28,37 @@ if (process.env.NODE_ENV !== 'development') {
   firebaseConfig.storageBucket = process.env.VUE_APP_FIREBASE_STORAGE_BUCKET;
 }
 // firebase utils
-const fbApp = firebase.initializeApp(firebaseConfig);
+const fbApp = initializeApp(firebaseConfig);
 const nodeEnv = process.env.NODE_ENV;
-const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? firebase.analytics() : null;
-const auth = fbApp.auth();
+const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? getAnalytics() : null;
+const auth = getAuth(fbApp);
 if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
-  auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
+  connectAuthEmulator(auth, process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
 }
-const db = fbApp.firestore();
+const db = getFirestore();
 const { currentUser } = auth;
 
 // // firebase settings go here
 // const settings = { };
 
-// if (process.env.NODE_ENV !== 'production') {
-db.settings({
-  host: process.env.VUE_APP_FIREBASE_DATABASE_URL,
-  ssl: false,
-  merge: true,
-});
-// }
+if (process.env.NODE_ENV !== 'production') {
+  connectFirestoreEmulator(db, 'localhost', 8080);
+  //   db.settings({
+  //   host: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  //   ssl: false,
+  //   merge: true,
+  // });
+}
 
-const globalPreferences = db.collection('globalPreferences');
+const globalPreferences = collection(db, 'globalPreferences');
 
-const listsCollection = db.collection('lists');
-const stateGroupsCollection = db.collection('stateGroups');
-const usersCollection = db.collection('users');
-const userStatesCollection = db.collection('userListItemStates');
+const listsCollection = collection(db, 'lists');
+const stateGroupsCollection = collection(db, 'stateGroups');
+const usersCollection = collection(db, 'users');
+const userStatesCollection = collection(db, 'userListItemStates');
 
-const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
-const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
+const googleOAuthLogin = new GoogleAuthProvider();
+const facebookOAuthLogin = new FacebookAuthProvider();
 
 async function computeSubListPath(subListRef, routePath) {
   if (!subListRef) return false;
@@ -63,7 +68,7 @@ async function computeSubListPath(subListRef, routePath) {
 }
 
 async function getUserDocumentRef() {
-  const userDocument = db.collection('users').doc(auth.currentUser.uid);
+  const userDocument = collection(db, 'users').doc(auth.currentUser.uid);
   if (!userDocument.get().exists) await userDocument.set({}, { merge: true });
   return userDocument;
 }
@@ -86,8 +91,8 @@ async function getListBySlug(slug) {
 }
 
 async function getListItems(fbList) {
-  const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
-  const currentUserStatesCollection = db.collection(`users/${auth.currentUser?.uid}/states`);
+  const listItemsCollection = collection(db, `lists/${fbList.id}/listItems`);
+  const currentUserStatesCollection = collection(db, `users/${auth.currentUser?.uid}/states`);
   let userStates = [];
   if (currentUserStatesCollection.exists) {
     const currentUserStatesDoc = await currentUserStatesCollection.doc(fbList.id).get();
@@ -115,7 +120,7 @@ async function getListItems(fbList) {
 }
 
 async function saveListItems(fbListId, listItems) {
-  const listItemsCollection = db.collection(`lists/${fbListId}/listItems`);
+  const listItemsCollection = collection(db, `lists/${fbListId}/listItems`);
   const listItemDocs = await listItemsCollection.limit(1).get();
   // TODO: see if size is over 900Kb and create as many docs as neccessary
   if (listItemDocs.empty) {
@@ -143,9 +148,9 @@ async function saveListItems(fbListId, listItems) {
  * All items must have an `order` field.
 */
 async function getOrderedCollectionAsList(collectionPath) {
-  const collection = await db.collection(collectionPath).get();
+  const clxn = await collection(db, collectionPath).get();
   const list = [];
-  const items = await collection.get();
+  const items = await clxn.get();
   items.forEach(async (doc) => {
     const item = doc.data();
     item.id = doc.id;
@@ -177,13 +182,13 @@ async function ensureSlugUniqueness(title) {
 }
 
 async function saveUserPreferences(prefs) {
-  const userDocument = db.collection('users').doc(auth.currentUser.uid);
+  const userDocument = collection(db, 'users').doc(auth.currentUser.uid);
   await userDocument.set(prefs, { merge: true });
   return userDocument.get();
 }
 
 async function getUserPreferences() {
-  const userDocumentRef = db.collection('users').doc(auth.currentUser.uid);
+  const userDocumentRef = collection(db, 'users').doc(auth.currentUser.uid);
   const userDocument = await userDocumentRef.get();
   if (userDocument.exists) return userDocument.data();
   console.warn('User Prefs don\'t exist: ', auth.currentUser.uid, userDocument.path);
