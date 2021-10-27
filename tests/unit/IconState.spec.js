@@ -1,9 +1,5 @@
 import IconState from '@/components/IconState.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
-// import Vuex from 'vuex';
-// import store from '@/store';
-// import VueRouter from 'vue-router';
-// import routes from '@/router/routes';
 import Vuetify from 'vuetify';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
@@ -24,9 +20,7 @@ jest.mock('firebase.js', () => ({
 toHaveBeenWarnedInit();
 
 const localVue = createLocalVue();
-// const router = new VueRouter({ routes });
 const vuetify = new Vuetify();
-// localVue.use(VueRouter, Vuetify, Vuex);
 localVue.use(Vuetify);
 
 let wrapper;
@@ -34,9 +28,7 @@ let wrapper;
 beforeEach(() => {
   wrapper = mount(IconState, {
     localVue,
-    // router,
     vuetify,
-    // store,
   });
 });
 
