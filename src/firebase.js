@@ -66,7 +66,6 @@ async function computeSubListPath(subListRef, routePath) {
   if (!subListRef) return false;
   const subList = await getDoc(subListRef);
   const { slug } = subList.data();
-  debugger;
   return `${routePath}/${slug}`;
 }
 
