@@ -10,6 +10,10 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import {
+  onSnapshot, limit, query, getDocs, getDoc,
+} from 'firebase/firestore';
 import { getAvatarForUser } from '../util';
 import {
   auth,
@@ -138,7 +142,7 @@ const store = new Vuex.Store({
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
     async loginUser({ dispatch }, { email = '', password = '' } = {}) {
       try {
-        const userCred = await auth.signInWithEmailAndPassword(email, password);
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
         if (!userCred.user.emailVerified) {
           dispatch('notify', {
             text: 'please do not forget to verify your email',
@@ -158,7 +162,7 @@ const store = new Vuex.Store({
 
     async googleSigninoAuth({ dispatch }) {
       try {
-        const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
+        const googleInfo = await signInWithPopup(auth, googleOAuthLogin);
         if (googleInfo.additionalUserInfo.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
@@ -170,7 +174,7 @@ const store = new Vuex.Store({
     },
     async faceBookSigninoAuth({ dispatch }) {
       try {
-        const facebookInfo = await auth.signInWithPopup(facebookOAuthLogin);
+        const facebookInfo = await signInWithPopup(auth, facebookOAuthLogin);
         if (facebookInfo.additionalUserInfo.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
@@ -183,7 +187,7 @@ const store = new Vuex.Store({
 
     async logOut({ commit, dispatch }) {
       try {
-        await auth.signOut();
+        await signOut(auth);
         commit('setUser', { ...defaultState.user });
         dispatch('notify', { text: 'logged out successfuly', type: 'success' });
       } catch (error) {
@@ -216,16 +220,16 @@ const store = new Vuex.Store({
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);
     },
-    async fetchLists({ commit }, { limit = 10 } = {}) {
-      listsCollection.limit(limit).onSnapshot((fbLists) => {
-        const lists = [];
-        fbLists.forEach(async (doc) => {
-          const list = doc.data();
-          list.id = doc.id;
-          lists.push(list);
-        });
-        commit('setLists', lists);
+    async fetchLists({ commit }, { pageSize = 10 } = {}) {
+      const q = query(listsCollection, limit(pageSize));
+      const docs = await getDocs(q);
+      const lists = [];
+      docs.forEach(async (doc) => {
+        const list = doc.data();
+        list.id = doc.id;
+        lists.push(list);
       });
+      commit('setLists', lists);
     },
     async saveProfile({ commit }, payload) {
       try {
@@ -243,7 +247,7 @@ const store = new Vuex.Store({
 });
 
 // this is how to create a reactive firebase collection.
-export const globalPrefRef = globalPreferences.onSnapshot(async (snapshot) => {
+export const globalPrefRef = onSnapshot(globalPreferences, async (snapshot) => {
   const prefs = [];
   snapshot.forEach((doc) => {
     const pref = doc.data();
@@ -254,7 +258,7 @@ export const globalPrefRef = globalPreferences.onSnapshot(async (snapshot) => {
   if (prefs.length < 1) return;
 
   const { defaultColor, defaultStateGroup } = prefs[0];
-  const stateGroup = await defaultStateGroup.get();
+  const stateGroup = await getDoc(defaultStateGroup);
   store.commit('setGlobalPreferences', {
     defaultColor,
     defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },

@@ -4,6 +4,7 @@ import {
 import { initializeApp } from 'firebase/app';
 import {
   getFirestore, connectFirestoreEmulator, collection,
+  addDoc, getDocs, getDoc, query, where, limit, setDoc, doc,
 } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 import slugify from 'slugify';
@@ -42,7 +43,8 @@ const { currentUser } = auth;
 // const settings = { };
 
 if (process.env.NODE_ENV !== 'production') {
-  connectFirestoreEmulator(db, 'localhost', 8080);
+  connectAuthEmulator(auth, process.env.VUE_APP_FIREBASE_AUTH_HOST);
+  connectFirestoreEmulator(db, process.env.VUE_APP_FIREBASE_DATABASE_HOST, process.env.VUE_APP_FIREBASE_DATABASE_PORT);
   //   db.settings({
   //   host: process.env.VUE_APP_FIREBASE_DATABASE_URL,
   //   ssl: false,
@@ -62,14 +64,15 @@ const facebookOAuthLogin = new FacebookAuthProvider();
 
 async function computeSubListPath(subListRef, routePath) {
   if (!subListRef) return false;
-  const subList = await subListRef.get();
+  const subList = await getDoc(subListRef);
   const { slug } = subList.data();
+  debugger;
   return `${routePath}/${slug}`;
 }
 
 async function getUserDocumentRef() {
-  const userDocument = collection(db, 'users').doc(auth.currentUser.uid);
-  if (!userDocument.get().exists) await userDocument.set({}, { merge: true });
+  const userDocument = doc(db, 'users', auth.currentUser.uid);
+  if (!userDocument.exists) await setDoc(userDocument, {}, { merge: true });
   return userDocument;
 }
 
@@ -80,14 +83,14 @@ async function updateUserItemStates(listId, items) {
     if (!state.value) return states;
     return { ...states, [itemIdx]: { value: state.value, title: item.title } };
   }, {});
-  const userStatesDocument = userDocument.collection('states').doc(listId);
-  await userStatesDocument.set(itemStates);
-  return userStatesDocument.get();
+  const userStatesRef = doc(userDocument, 'states', listId);
+  await setDoc(userStatesRef, itemStates);
+  return getDoc(userStatesRef);
 }
 
 async function getListBySlug(slug) {
-  const doc = listsCollection.where('slug', '==', slug);
-  return doc.get();
+  const docQuery = query(listsCollection, where('slug', '==', slug));
+  return getDocs(docQuery);
 }
 
 async function getListItems(fbList) {
@@ -101,7 +104,7 @@ async function getListItems(fbList) {
   let listItems = [];
   // to accommodate longer lists, we use multiple documents in a
   // listItem collection
-  const listItemsPartials = await listItemsCollection.get();
+  const listItemsPartials = await getDocs(listItemsCollection);
   listItemsPartials.forEach((listItemsPartialObj) => {
     const listItemsPartial = listItemsPartialObj.data();
     listItems = listItems.concat(listItemsPartial?.data || []);
@@ -121,13 +124,14 @@ async function getListItems(fbList) {
 
 async function saveListItems(fbListId, listItems) {
   const listItemsCollection = collection(db, `lists/${fbListId}/listItems`);
-  const listItemDocs = await listItemsCollection.limit(1).get();
+  const listItemDocsQuery = await query(listItemsCollection, limit(1));
+  const listItemDocs = await getDocs(listItemDocsQuery);
   // TODO: see if size is over 900Kb and create as many docs as neccessary
   if (listItemDocs.empty) {
     await listItemsCollection.add({ data: listItems });
   } else {
     let docID = null;
-    listItemDocs.forEach(async (doc) => { docID = doc.id; });
+    listItemDocs.forEach(async (document) => { docID = document.id; });
     const sanitizedItems = [];
     listItems.forEach((listItem) => {
       const sanitizedListItem = { ...listItem };
@@ -140,7 +144,8 @@ async function saveListItems(fbListId, listItems) {
       }
       sanitizedItems.push(sanitizedListItem);
     });
-    await listItemsCollection.doc(docID).set({ data: sanitizedItems });
+    const docRef = doc(listItemsCollection, docID);
+    setDoc(docRef, { data: sanitizedItems });
   }
 }
 
@@ -151,16 +156,16 @@ async function getOrderedCollectionAsList(collectionPath) {
   const clxn = await collection(db, collectionPath).get();
   const list = [];
   const items = await clxn.get();
-  items.forEach(async (doc) => {
-    const item = doc.data();
-    item.id = doc.id;
+  items.forEach(async (document) => {
+    const item = document.data();
+    item.id = document.id;
     list.push(item);
   });
   return list.sort((a, b) => a.order < b.order);
 }
 
 async function getListStates(fbList) {
-  const fbStatesDoc = await fbList.stateGroup.get();
+  const fbStatesDoc = await getDoc(fbList.stateGroup);
   if (!fbStatesDoc) return [];
   const statesDoc = fbStatesDoc.data();
   return statesDoc.states.sort((state) => state.order);
@@ -168,8 +173,8 @@ async function getListStates(fbList) {
 
 async function ensureSlugUniqueness(title) {
   // TODO: sort DESC by created date
-  const allListsWithTitle = listsCollection.where('title', '==', title);
-  let lists = await allListsWithTitle.get();
+  const allListsWithTitle = query(listsCollection, where('title', '==', title));
+  let lists = await getDocs(allListsWithTitle);
   if (lists.size < 2) return slugify(title);
   lists = lists.sort((a, b) => a.created_at < b.created_at);
   const lastList = lists[lists.length - 1];
@@ -188,8 +193,7 @@ async function saveUserPreferences(prefs) {
 }
 
 async function getUserPreferences() {
-  const userDocumentRef = collection(db, 'users').doc(auth.currentUser.uid);
-  const userDocument = await userDocumentRef.get();
+  const userDocument = await getDocs(collection(db, 'users'), auth.currentUser.uid);
   if (userDocument.exists) return userDocument.data();
   console.warn('User Prefs don\'t exist: ', auth.currentUser.uid, userDocument.path);
   return {};
@@ -205,7 +209,7 @@ async function createList(payload) {
   };
   const newPayload = { ...defaultPayload, ...payload };
   newPayload.slug = await ensureSlugUniqueness(payload.title || 'New List');
-  const subList = await listsCollection.add(newPayload);
+  const subList = await addDoc(listsCollection, newPayload);
   return subList;
 }
 

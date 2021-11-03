@@ -28,7 +28,7 @@
         :title="iconTitle"
         >{{ icon }}</v-icon
       >
-      {{ isNewItem ? "" : title }}
+      {{ isNewItem ? '' : title }}
       <v-btn
         v-if="showAddSubListButton"
         slot="append"
@@ -51,14 +51,7 @@
       >
         <v-icon>mdi-shield-link-variant-outline</v-icon>
       </v-btn>
-      <v-btn
-        icon
-        slot="append"
-        title="delete"
-        test-delete-icon
-        v-if="!isNewItem"
-        @click="emitDelete"
-      >
+      <v-btn icon slot="append" title="delete" test-delete-icon v-if="!isNewItem" @click="emitDelete">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-text-field>
@@ -67,11 +60,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import {
-  createList,
-  stateGroupsCollection,
-  computeSubListPath as computeSubListPathFB,
-} from '../firebase';
+import { doc } from 'firebase/firestore';
+import { createList, stateGroupsCollection, computeSubListPath as computeSubListPathFB } from '../firebase';
 
 export default {
   props: {
@@ -166,7 +156,7 @@ export default {
     async makeSublist() {
       this.creatingSubList = true;
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
-      const stateGroup = stateGroupsCollection.doc(stateGroupDoc.id);
+      const stateGroup = doc(stateGroupsCollection, stateGroupDoc.id);
       const payload = {
         title: this.title,
         description: `sublist of ${this.title}`, // same as title
@@ -179,7 +169,7 @@ export default {
       this.creatingSubList = false;
     },
     async computeSubListPath(subListRef) {
-      const subListPath = computeSubListPathFB(subListRef, this.$route.path);
+      const subListPath = await computeSubListPathFB(subListRef, this.$route.path);
       if (!subListPath) return;
       this.subListPath = subListPath;
     },
