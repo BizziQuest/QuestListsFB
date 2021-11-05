@@ -123,11 +123,11 @@ async function getListItems(fbList) {
 
 async function saveListItems(fbListId, listItems) {
   const listItemsCollection = collection(db, `lists/${fbListId}/listItems`);
-  const listItemDocsQuery = await query(listItemsCollection, limit(1));
+  const listItemDocsQuery = query(listItemsCollection, limit(1));
   const listItemDocs = await getDocs(listItemDocsQuery);
   // TODO: see if size is over 900Kb and create as many docs as neccessary
   if (listItemDocs.empty) {
-    await listItemsCollection.add({ data: listItems });
+    await addDoc(listItemsCollection, { data: listItems });
   } else {
     let docID = null;
     listItemDocs.forEach(async (document) => { docID = document.id; });

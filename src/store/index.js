@@ -12,7 +12,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
 import {
-  onSnapshot, limit, query, getDocs, getDoc,
+  db, onSnapshot, limit, query, getDocs, getDoc, addDoc, collection,
 } from 'firebase/firestore';
 import { getAvatarForUser } from '../util';
 import {
@@ -204,18 +204,18 @@ const store = new Vuex.Store({
       // TODO: refactor this to handle actual states
       const states = stateGroupData.states.map((stateBody) => ({ ...stateSkeleton, ...stateBody }));
       const payload = { ...stateGroupData, states };
-      const stateGroupRef = await stateGroupsCollection.add(payload);
+      const stateGroupRef = await addDoc(stateGroupsCollection, payload);
 
       commit('addState', stateGroupData);
       return stateGroupRef;
     },
     async createList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      listsCollection.add({ ...listData, stateGroup: stateGroupRef });
+      addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
     },
     async createSubList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      listsCollection.add({ ...listData, stateGroup: stateGroupRef });
+      addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
     },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);
@@ -247,7 +247,8 @@ const store = new Vuex.Store({
 });
 
 // this is how to create a reactive firebase collection.
-export const globalPrefRef = onSnapshot(globalPreferences, async (snapshot) => {
+const prefDoc = query(collection(db, 'globalPreferences'), limit(1));
+export const globalPrefRef = onSnapshot(prefDoc, async (snapshot) => {
   const prefs = [];
   snapshot.forEach((doc) => {
     const pref = doc.data();

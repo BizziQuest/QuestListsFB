@@ -28,7 +28,7 @@
         :title="iconTitle"
         >{{ icon }}</v-icon
       >
-      {{ isNewItem ? "" : title }}
+      {{ isNewItem ? '' : title }}
       <v-btn
         v-if="showAddSubListButton"
         slot="append"
@@ -51,14 +51,7 @@
       >
         <v-icon>mdi-shield-link-variant-outline</v-icon>
       </v-btn>
-      <v-btn
-        icon
-        slot="append"
-        title="delete"
-        test-delete-icon
-        v-if="!isNewItem"
-        @click="emitDelete"
-      >
+      <v-btn icon slot="append" title="delete" test-delete-icon v-if="!isNewItem" @click="emitDelete">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-text-field>
@@ -66,58 +59,54 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { doc } from "firebase/firestore";
-import {
-  createList,
-  stateGroupsCollection,
-  computeSubListPath as computeSubListPathFB,
-} from "../firebase";
+import { mapGetters } from 'vuex';
+import { doc } from 'firebase/firestore';
+import { createList, stateGroupsCollection, computeSubListPath as computeSubListPathFB } from '../firebase';
 
 export default {
   props: {
     value: {
       type: Object,
       default: () => ({}),
-      description: "List Item is an object in the form: {title, state}",
+      description: 'List Item is an object in the form: {title, state}',
     },
     states: {
       type: Array,
       default: () => [],
-      description: "The list of states that this item should have.",
+      description: 'The list of states that this item should have.',
     },
     readOnly: {
       type: Boolean,
       default: false,
-      description: "Whether to allow editing of the content or only view it.",
+      description: 'Whether to allow editing of the content or only view it.',
     },
     tabindex: {
       type: Number,
       default: null,
-      description: "The html tabindex to use for tab navigation.",
+      description: 'The html tabindex to use for tab navigation.',
     },
   },
   data: () => ({
-    title: "",
+    title: '',
     isActive: false,
     isNewItem: false,
     currentStateIdx: 0,
-    subListSlug: "",
-    subListPath: "",
+    subListSlug: '',
+    subListPath: '',
     subList: null,
     creatingSubList: false,
-    listId: "",
+    listId: '',
   }),
   methods: {
     emitUpdate(newValues) {
-      this.$emit("input", this.$_makeNewItem(newValues));
+      this.$emit('input', this.$_makeNewItem(newValues));
     },
     emitEnterPressed(newValues) {
-      this.$emit("enterPressed", newValues);
+      this.$emit('enterPressed', newValues);
     },
     $_makeNewItem(newValues) {
       const newItem = { ...this.value, ...newValues };
-      if (newValues?.title !== "") this.isNewItem = false;
+      if (newValues?.title !== '') this.isNewItem = false;
       if (this.subList && !newItem.subList) {
         newItem.subList = this.subList;
       } else {
@@ -127,13 +116,13 @@ export default {
       return newItem;
     },
     invalidateNewItem(newValue) {
-      if (this.isNewItem && (newValue !== "" || !!newValue)) {
+      if (this.isNewItem && (newValue !== '' || !!newValue)) {
         this.isNewItem = false;
         this.emitUpdate({ title: newValue, isNewItem: false });
       }
     },
     emitDelete() {
-      this.$emit("delete");
+      this.$emit('delete');
     },
     deactivate() {
       this.isActive = false;
@@ -151,7 +140,7 @@ export default {
     },
     updateItem({ to } = {}) {
       if (this.isNewItem) return;
-      this.$emit("update", {
+      this.$emit('update', {
         ...this.value,
         title: this.title,
         state: this.states[this.currentStateIdx],
@@ -198,26 +187,26 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["itemStates", "getGlobalPreferences"]),
+    ...mapGetters(['itemStates', 'getGlobalPreferences']),
     showAddSubListButton() {
       if (this.readOnly) return false;
       if (this.isNewItem) return false;
       if (this.subList !== null) return false;
-      if (!this.title || this.title === "") return false;
+      if (!this.title || this.title === '') return false;
       return true;
     },
     icon() {
-      if (this.isNewItem) return "mdi-plus";
+      if (this.isNewItem) return 'mdi-plus';
       return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].icon;
     },
     iconTitle() {
       return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].name;
     },
     placeholder() {
-      return this.isNewItem ? "New Item" : "";
+      return this.isNewItem ? 'New Item' : '';
     },
     haveParent() {
-      return this.listId !== "none";
+      return this.listId !== 'none';
     },
   },
 };
