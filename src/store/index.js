@@ -10,14 +10,17 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
 import {
-  db, onSnapshot, limit, query, getDocs, getDoc, addDoc, collection,
+  signInWithEmailAndPassword, signInWithPopup, signOut, getAdditionalUserInfo,
+  createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
+} from 'firebase/auth';
+import {
+  onSnapshot, limit, query, getDocs, getDoc, addDoc, collection,
 } from 'firebase/firestore';
 import { getAvatarForUser } from '../util';
 import {
+  db,
   auth,
-  globalPreferences,
   listsCollection,
   stateGroupsCollection,
   googleOAuthLogin,
@@ -127,11 +130,12 @@ const store = new Vuex.Store({
     },
     async signupUser({ dispatch }, payload) {
       try {
-        const userCred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-        if (userCred.additionalUserInfo.isNewUser) {
+        const userCred = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
+        const additionalUserInfo = getAdditionalUserInfo(userCred);
+        if (additionalUserInfo.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
           if (auth.currentUser) {
-            await auth.currentUser.sendEmailVerification();
+            await sendEmailVerification(auth.currentUser);
           }
         }
       } catch (error) {
@@ -163,7 +167,8 @@ const store = new Vuex.Store({
     async googleSigninoAuth({ dispatch }) {
       try {
         const googleInfo = await signInWithPopup(auth, googleOAuthLogin);
-        if (googleInfo.additionalUserInfo.isNewUser) {
+        const additionalUserInfo = getAdditionalUserInfo(googleInfo);
+        if (additionalUserInfo?.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
           dispatch('notify', { text: 'successful sign in', type: 'info' });
@@ -175,7 +180,8 @@ const store = new Vuex.Store({
     async faceBookSigninoAuth({ dispatch }) {
       try {
         const facebookInfo = await signInWithPopup(auth, facebookOAuthLogin);
-        if (facebookInfo.additionalUserInfo.isNewUser) {
+        const additionalUserInfo = getAdditionalUserInfo(facebookInfo);
+        if (additionalUserInfo?.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
           dispatch('notify', { text: 'successful sign in', type: 'info' });
@@ -233,7 +239,7 @@ const store = new Vuex.Store({
     },
     async saveProfile({ commit }, payload) {
       try {
-        await auth.currentUser.updateProfile({
+        await updateProfile(auth.currentUser, {
           displayName: payload.displayName,
           photoURL: payload.avatar,
         });
@@ -253,7 +259,6 @@ export const globalPrefRef = onSnapshot(prefDoc, async (snapshot) => {
   snapshot.forEach((doc) => {
     const pref = doc.data();
     pref.id = doc.id;
-
     prefs.push(pref);
   });
   if (prefs.length < 1) return;

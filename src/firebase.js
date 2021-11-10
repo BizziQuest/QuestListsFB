@@ -186,9 +186,9 @@ async function ensureSlugUniqueness(title) {
 }
 
 async function saveUserPreferences(prefs) {
-  const userDocument = collection(db, 'users').doc(auth.currentUser.uid);
-  await userDocument.set(prefs, { merge: true });
-  return userDocument.get();
+  const userDocument = doc(db, 'users', auth.currentUser.uid);
+  await setDoc(userDocument, prefs, { merge: true });
+  return getDoc(userDocument);
 }
 
 async function getUserPreferences() {
