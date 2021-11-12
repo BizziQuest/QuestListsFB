@@ -6,10 +6,11 @@ export default {
   argTypes: {
     // backgroundColor: { control: 'color' },
     variant: { control: { type: 'select', options: [undefined, 'plus', 'alt', 'alt2', 'alt3', 'alt4', 'alt5'] } },
+    decoration: { control: { type: 'select', options: [undefined, 'plus', 'alt', 'alt2', 'alt3', 'alt4', 'alt5'] } },
   },
   args: {
     variant: '',
-    size: 24,
+    size: 60,
     color: 'secondary',
   },
 };

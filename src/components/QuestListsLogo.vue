@@ -4,6 +4,7 @@
   </svg>
   <svg v-else :width="size" :height="size" viewbox="0 0 26 26">
     <path :d="variant ? variants[variant] : size24" :transform="`scale(${size/26})`"></path>
+    <path v-if="decoration" :d="decoration ? decorations[decoration] : null" :transform="`scale(${size/26})`"></path>
   </svg>
 </template>
 
@@ -19,6 +20,7 @@ export default {
       description: 'Size of the logo in pixels',
     },
     variant: null,
+    decoration: null,
   },
   data: () => ({
     relativePath: 'm 150 350 c 50 0 50 -50 50 -50 a 50 50 0 0 1 100 0 a 50 50 0 0 0 100 0 a 50 50 0 1 0 -100 0',
@@ -34,7 +36,11 @@ export default {
       alt2: 'm 11 6 a 1 1 0 0 0 -10 0 a 1 1 0 0 0 10 0 a 1 1 0 0 1 7 0 a 1 1 0 0 1 5 0',
       alt3: 'm 11 6 a 1 1 0 0 0 -10 0 a 1 1 0 0 0 10 0 a 1 1 0 0 0 7 0 a 1 1 0 0 1 5 0',
       alt4: 'm 11 6 a 1 1 0 0 0 -10 0 a 1 1 0 0 0 10 0 a 1 1 0 0 0 7 0 a 1 1 0 0 0 5 0',
-      alt5: 'm 11 12 a 1 1 0 0 0 -10 0 a 1 1 0 0 0 10 0 M 6 12 a 1 1 0 0 0 10 0 a 1 1 0 0 1 7 0',
+      alt5: 'm 11 12 a 1 1 0 0 0 -10 0 a 1 1 0 0 0 10 0 m -5 0 a 1 1 0 0 0 10 0 a 1 1 0 0 1 7 0',
+    },
+    decorations: {
+      // eslint-disable-next-line max-len
+      plus: 'm -3 -3 l 6 0',
     },
   }),
   methods: {},
