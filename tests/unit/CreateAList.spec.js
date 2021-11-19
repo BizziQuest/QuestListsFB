@@ -14,6 +14,7 @@ jest.mock('firebase.js', () => ({
     },
   },
   ensureSlugUniqueness: jest.fn(),
+  reactToPrefsChange: jest.fn(),
 }));
 
 // now we can say: expect(mockFirebase.ensureSlugUniqueness).toHaveBeenCalled();

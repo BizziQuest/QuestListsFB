@@ -16,6 +16,7 @@ jest.mock('firebase.js', () => ({
   globalPreferences: {
     onSnapshot: jest.fn(),
   },
+  reactToPrefsChange: jest.fn(),
   ensureSlugUniqueness: jest.fn(),
 }));
 
