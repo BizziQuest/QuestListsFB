@@ -4,7 +4,7 @@ import {
 import { initializeApp } from 'firebase/app';
 import {
   getFirestore, connectFirestoreEmulator, collection,
-  addDoc, getDocs, getDoc, query, where, limit, setDoc, doc,
+  addDoc, getDocs, getDoc, query, where, limit, setDoc, doc, onSnapshot,
 } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 import slugify from 'slugify';
@@ -212,6 +212,27 @@ async function createList(payload) {
   return subList;
 }
 
+function reactToPrefsChange(store) {
+  // this is how to create a reactive firebase collection.
+  const prefDoc = query(collection(db, 'globalPreferences'), limit(1));
+  return onSnapshot(prefDoc, async (snapshot) => {
+    const prefs = [];
+    snapshot.forEach((snapdoc) => {
+      const pref = snapdoc.data();
+      pref.id = snapdoc.id;
+      prefs.push(pref);
+    });
+    if (prefs.length < 1) return;
+
+    const { defaultColor, defaultStateGroup } = prefs[0];
+    const stateGroup = await getDoc(defaultStateGroup);
+    store.commit('setGlobalPreferences', {
+      defaultColor,
+      defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },
+    });
+  });
+}
+
 export {
   fbApp,
   fbAnalytics,
@@ -236,4 +257,5 @@ export {
   getListBySlug,
   updateUserItemStates,
   computeSubListPath,
+  reactToPrefsChange,
 };

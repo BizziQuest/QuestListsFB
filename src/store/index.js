@@ -15,11 +15,11 @@ import {
   createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
 } from 'firebase/auth';
 import {
-  onSnapshot, limit, query, getDocs, getDoc, addDoc, collection,
+  limit, query, getDocs, addDoc,
 } from 'firebase/firestore';
 import { getAvatarForUser } from '../util';
 import {
-  db,
+  reactToPrefsChange,
   auth,
   listsCollection,
   stateGroupsCollection,
@@ -252,23 +252,6 @@ const store = new Vuex.Store({
   },
 });
 
-// this is how to create a reactive firebase collection.
-const prefDoc = query(collection(db, 'globalPreferences'), limit(1));
-export const globalPrefRef = onSnapshot(prefDoc, async (snapshot) => {
-  const prefs = [];
-  snapshot.forEach((doc) => {
-    const pref = doc.data();
-    pref.id = doc.id;
-    prefs.push(pref);
-  });
-  if (prefs.length < 1) return;
-
-  const { defaultColor, defaultStateGroup } = prefs[0];
-  const stateGroup = await getDoc(defaultStateGroup);
-  store.commit('setGlobalPreferences', {
-    defaultColor,
-    defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },
-  });
-});
+export const globalPrefRef = reactToPrefsChange(store);
 
 export default store;
