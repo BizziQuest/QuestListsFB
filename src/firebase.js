@@ -31,17 +31,19 @@ if (process.env.NODE_ENV !== 'development') {
 }
 // firebase utils
 const fbApp = initializeApp(firebaseConfig);
+
 const nodeEnv = process.env.NODE_ENV;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? getAnalytics() : null;
+
+const appCheck = initializeAppCheck(fbApp, {
+  provider: new ReCaptchaV3Provider(process.env.VUE_APP_RECAPTCHA_SITE_KEY),
+  isTokenAutoRefreshEnabled: true, // refresh app tokens as needed?
+});
+
 const auth = getAuth(fbApp);
 if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
   connectAuthEmulator(auth, process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
 }
-
-const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider(process.env.VUE_APP_RECAPTCHA_SITE_KEY),
-  isTokenAutoRefreshEnabled: true, // refresh app tokens as needed?
-});
 
 const db = getFirestore();
 const { currentUser } = auth;
