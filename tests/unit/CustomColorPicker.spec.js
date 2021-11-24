@@ -1,6 +1,6 @@
-import CustomColorPicker from '@/components/CustomColorPicker.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
+import CustomColorPicker from '@/components/CustomColorPicker.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 toHaveBeenWarnedInit();

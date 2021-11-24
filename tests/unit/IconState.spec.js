@@ -1,6 +1,6 @@
-import IconState from '@/components/IconState.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
+import IconState from '@/components/IconState.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 jest.mock('firebase.js', () => ({

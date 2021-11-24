@@ -4,7 +4,7 @@ import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import store from '@/store';
 import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
-import routes from '@/router/routes.js';
+import routes from '@/router/routes';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 jest.mock('firebase.js', () => ({

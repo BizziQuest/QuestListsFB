@@ -5,7 +5,7 @@ import VueRouter from 'vue-router';
 import ListItem from '@/components/ListItem.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 import {
-  globalPreferences, stateGroupsCollection, createList, computeSubListPath,
+  globalPreferences, createList, computeSubListPath,
 } from '../../src/firebase';
 
 jest.mock('../../src/firebase.js');

@@ -120,7 +120,7 @@ async function saveListItems(fbListId, listItems) {
   const listItemsCollection = collection(db, `lists/${fbListId}/listItems`);
   const listItemDocsQuery = query(listItemsCollection, limit(1));
   const listItemDocs = await getDocs(listItemDocsQuery);
-  // TODO: see if size is over 900Kb and create as many docs as neccessary
+  // TODO: see if size is over 900Kb and create as many docs as necessary
   if (listItemDocs.empty) {
     await addDoc(listItemsCollection, { data: listItems });
   } else {
@@ -206,8 +206,8 @@ async function createList(payload) {
   const subList = await addDoc(listsCollection, newPayload);
   return subList;
 }
-function getStateGroup(stateGroupsCollection, id) {
-  return doc(stateGroupsCollection, stateGroupDoc.id);
+function getStateGroup(stateGroupsCollectionRef, id) {
+  return doc(stateGroupsCollectionRef, id);
 }
 function reactToPrefsChange(store) {
   // this is how to create a reactive firebase collection.
