@@ -157,7 +157,6 @@ export default {
     async makeSublist() {
       this.creatingSubList = true;
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
-      // const stateGroup = doc(stateGroupsCollection, stateGroupDoc.id);
       const stateGroup = getStateGroup(stateGroupsCollection, stateGroupDoc.id);
       const payload = {
         title: this.title,

@@ -45,11 +45,6 @@ const { currentUser } = auth;
 if (process.env.NODE_ENV !== 'production') {
   connectAuthEmulator(auth, process.env.VUE_APP_FIREBASE_AUTH_HOST);
   connectFirestoreEmulator(db, process.env.VUE_APP_FIREBASE_DATABASE_HOST, process.env.VUE_APP_FIREBASE_DATABASE_PORT);
-  //   db.settings({
-  //   host: process.env.VUE_APP_FIREBASE_DATABASE_URL,
-  //   ssl: false,
-  //   merge: true,
-  // });
 }
 
 const globalPreferences = collection(db, 'globalPreferences');
