@@ -1,8 +1,8 @@
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import Vuetify from 'vuetify';
-import App from '@/App.vue';
 import VueRouter from 'vue-router';
+import App from '@/App.vue';
 import routes from '@/router/routes';
 
 jest.mock('../../src/firebase.js');

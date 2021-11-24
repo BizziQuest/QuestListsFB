@@ -1,8 +1,8 @@
 import { mount, createLocalVue } from '@vue/test-utils';
-import List from '@/views/List.vue';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
+import List from '@/views/List.vue';
 import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
 
 jest.mock('../../src/firebase.js');

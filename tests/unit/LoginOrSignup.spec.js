@@ -1,7 +1,7 @@
-import LogInOrSignUp from '@/components/Menus/LoginOrSignup.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import Vuetify from 'vuetify';
+import LogInOrSignUp from '@/components/Menus/LoginOrSignup.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 jest.mock('../../src/firebase.js');

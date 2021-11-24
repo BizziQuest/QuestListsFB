@@ -1,6 +1,6 @@
-import IconState from '@/components/IconState.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
+import IconState from '@/components/IconState.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 jest.mock('firebase.js', () => ({
@@ -54,6 +54,9 @@ describe('IconState.vue', () => {
       await wrapper.find('button').trigger('click');
       const input = wrapper.find('[test-icon-input]');
       await input.setValue('asdasdkodhiodhio');
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.$_isIconNameNotEmpty('asdasdkodhiodhio')).toBe(true);
+      expect(wrapper.vm.$_validateIconName('asdasdkodhiodhio')).toBe(false);
       expect(wrapper.text()).toContain('asdasdkodhiodhio Not a valid icon name');
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
