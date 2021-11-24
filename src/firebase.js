@@ -2,6 +2,7 @@ import {
   getAuth, connectAuthEmulator, GoogleAuthProvider, FacebookAuthProvider,
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 import {
   getFirestore, connectFirestoreEmulator, collection,
   addDoc, getDocs, getDoc, query, where, limit, setDoc, doc, onSnapshot,
@@ -30,12 +31,20 @@ if (process.env.NODE_ENV !== 'development') {
 }
 // firebase utils
 const fbApp = initializeApp(firebaseConfig);
+
 const nodeEnv = process.env.NODE_ENV;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? getAnalytics() : null;
+
+const appCheck = initializeAppCheck(fbApp, {
+  provider: new ReCaptchaV3Provider(process.env.VUE_APP_RECAPTCHA_SITE_KEY),
+  isTokenAutoRefreshEnabled: true, // refresh app tokens as needed?
+});
+
 const auth = getAuth(fbApp);
 if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
   connectAuthEmulator(auth, process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
 }
+
 const db = getFirestore();
 const { currentUser } = auth;
 
@@ -233,6 +242,7 @@ function reactToPrefsChange(store) {
 export {
   fbApp,
   fbAnalytics,
+  appCheck,
   db,
   auth,
   currentUser,
