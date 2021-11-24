@@ -211,7 +211,9 @@ async function createList(payload) {
   const subList = await addDoc(listsCollection, newPayload);
   return subList;
 }
-
+function getStateGroup(stateGroupsCollection, id) {
+  return doc(stateGroupsCollection, stateGroupDoc.id);
+}
 function reactToPrefsChange(store) {
   // this is how to create a reactive firebase collection.
   const prefDoc = query(collection(db, 'globalPreferences'), limit(1));
@@ -258,4 +260,5 @@ export {
   updateUserItemStates,
   computeSubListPath,
   reactToPrefsChange,
+  getStateGroup,
 };

@@ -71,9 +71,8 @@ describe('default state', () => {
   it('should not show the sublist link icon on empty, non-new text filed', async () => {
     expect(wrapper.find('[test-sublist-link-icon]').exists()).toBe(false);
   });
-  it('should make sublist on filled text filed', async () => {
+  it('should make sublist on filled text field', async () => {
     globalPreferences.mockResolvedValueOnce({ defaultStateGroup: {} });
-    stateGroupsCollection.doc.mockResolvedValueOnce({});
     createList.mockResolvedValueOnce({
       slug: 'abc123',
       get: jest.fn(() => Promise.resolve({
@@ -91,7 +90,6 @@ describe('default state', () => {
   });
   it('should show the loading icon when sublist is created', async () => {
     globalPreferences.mockResolvedValueOnce({ defaultStateGroup: {} });
-    stateGroupsCollection.doc.mockResolvedValueOnce({});
     createList.mockResolvedValueOnce({
       slug: 'abc123',
       get: jest.fn(() => Promise.resolve({
@@ -255,16 +253,20 @@ describe('ListItem.vue', () => {
       });
     });
     it('should not show make sub list icon', async () => {
+      await wrapper.vm.$nextTick();
       expect(wrapper.find('[test-make-sublist]').exists()).toBe(false);
     });
     it('should show the delete icon', async () => {
+      await wrapper.vm.$nextTick();
       expect(wrapper.find('[test-delete-icon]').exists()).toBe(true);
     });
     it('should show the sublist link icon', async () => {
+      await wrapper.vm.$nextTick();
       expect(wrapper.find('[test-sublist-link-icon]').exists()).toBe(true);
     });
     describe('when clicking on go to sublist icon', () => {
       it('emits the update event', async () => {
+        await wrapper.vm.$nextTick();
         await wrapper.find('[test-sublist-link-icon]').trigger('click');
         expect(wrapper.emitted().update[0]).toEqual([{
           title: item.title,

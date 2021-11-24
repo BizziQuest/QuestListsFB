@@ -14,7 +14,9 @@ export const globalPrefRef = jest.fn(() => Promise.resolve({ currentUser: {} }))
 
 export const globalPreferences = jest.fn(() => Promise.resolve({ }));
 
-export const stateGroupsCollection = { doc: jest.fn(() => Promise.resolve({ }))};
+export const stateGroupsCollection = jest.fn(() => Promise.resolve({ }));
+
+export const getStateGroup = jest.fn(() => Promise.resolve({ }));
 
 export const createList = jest.fn(() => ({}));
 

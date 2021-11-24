@@ -60,8 +60,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { doc } from 'firebase/firestore';
-import { createList, stateGroupsCollection, computeSubListPath as computeSubListPathFB } from '../firebase';
+import {
+  createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB,
+} from '../firebase';
 
 export default {
   props: {
@@ -156,7 +157,8 @@ export default {
     async makeSublist() {
       this.creatingSubList = true;
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
-      const stateGroup = doc(stateGroupsCollection, stateGroupDoc.id);
+      // const stateGroup = doc(stateGroupsCollection, stateGroupDoc.id);
+      const stateGroup = getStateGroup(stateGroupsCollection, stateGroupDoc.id);
       const payload = {
         title: this.title,
         description: `sublist of ${this.title}`, // same as title
