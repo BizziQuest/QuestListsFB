@@ -46,6 +46,15 @@
 import ListState from './ListState.vue';
 import DragNDrop from '../mixins/DragNDrop.vue';
 
+function getNextUnusedValue(items) {
+  let newValue = items.length;
+  const allValues = new Set(items.map((item) => item.value));
+  while (allValues.has(newValue)) {
+    newValue += 1;
+  }
+  return newValue.toString();
+}
+
 export default {
   name: 'StatesEditor',
   mixins: [DragNDrop],
@@ -66,6 +75,7 @@ export default {
         {
           text: 'New State',
           icon: 'mdi-plus',
+          value: getNextUnusedValue(this.stateGroup.states),
         },
       ],
       rowItems: [],
@@ -85,6 +95,7 @@ export default {
           this.items.push({
             icon: 'mdi-plus',
             text: 'New Item',
+            value: getNextUnusedValue(this.items),
           });
         }
       }
