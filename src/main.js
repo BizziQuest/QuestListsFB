@@ -1,3 +1,4 @@
+import { onAuthStateChanged } from 'firebase/auth';
 import Vue from 'vue';
 import App from './App.vue';
 import './registerServiceWorker';
@@ -13,7 +14,7 @@ import i18n from './i18n';
 
 Vue.config.productionTip = false;
 
-auth.onAuthStateChanged((user) => {
+onAuthStateChanged(auth, (user) => {
   if (user) {
     // TODO: payload is only from firebase, not firecloud db,
     //   so we should load profile daata from DB.

@@ -18,7 +18,7 @@
         <v-list-item-content class="ml-3">
           <v-list-item-title class="text-truncate">{{currentUser.displayName}}</v-list-item-title>
         </v-list-item-content>
-        <v-icon icon small v-if="currentUser.uid" @click.stop.prevent="logoutAndGoHome">
+        <v-icon icon small v-if="currentUser.uid" @click.stop.prevent="logoutAndGoHome" title="Logout">
           mdi-exit-to-app
         </v-icon>
       </v-list-item>

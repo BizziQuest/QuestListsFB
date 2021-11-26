@@ -12,22 +12,28 @@ const routes = [
     path: '/Lists/:slug+',
     name: 'List',
     component: List,
+    props: true,
   },
   {
     path: '/about',
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
-  {
-    path: '/tos',
-    name: 'TOS',
-    component: () => import(/* webpackChunkName: "tos" */ '../views/Tos.vue'),
-  },
-  {
-    path: '/conduct',
-    name: 'Conduct',
-    component: () => import(/* webpackChunkName: "conduct" */ '../views/Conduct.vue'),
-  },
+  // {
+  //   path: '/about/terms',
+  //   name: 'Terms',
+  //   component: () => import(/* webpackChunkName: "tos" */ '../views/about/Terms.vue'),
+  // },
+  // {
+  //   path: '/about/conduct',
+  //   name: 'Conduct',
+  //   component: () => import(/* webpackChunkName: "conduct" */ '../views/about/Conduct.vue'),
+  // },
+  // {
+  //   path: '/about/privacy',
+  //   name: 'Privacy',
+  //   component: () => import(/* webpackChunkName: "privacy" */ '../views/about/Privacy.vue'),
+  // },
   {
     path: '/editinfo',
     name: 'EditInfo',

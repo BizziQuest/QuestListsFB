@@ -1,10 +1,13 @@
 <template>
   <div class="list-item-view">
     <v-text-field
+      test-text-field
+      ref="input"
       dense
       v-model="title"
       @blur="deactivate"
       @click.prevent="activate"
+      @keydown.enter.prevent="emitEnterPressed({ title })"
       @input="emitUpdate({ title: $event })"
       :clearable="!readOnly"
       :flat="readOnly"
@@ -15,39 +18,51 @@
       :single-line="readOnly"
       :solo="readOnly"
       :tabindex="tabindex"
+    >
+      <v-icon
+        slot="prepend-inner"
+        class="listitem-icon"
+        :outlined="isActive"
+        @click.prevent="cycleIcon"
+        @blur="deactivate"
+        :title="iconTitle"
+        >{{ icon }}</v-icon
       >
-        <v-icon
-          slot="prepend-inner"
-          class="listitem-icon"
-          :outlined="isActive"
-          @click.prevent="cycleIcon"
-          @blur="deactivate"
-          :title="iconTitle"
-        >{{icon}}</v-icon>
-        {{ isNewItem ? '' : title }}
-        <v-btn v-if="!readOnly && !subList" slot="append"
-          :loading="creatingSubList"
-          :disabled="creatingSubList"
-          title="Make a new sublist from this item."
-          icon
-          @click='makeSublist()'>
-          <v-icon>mdi-shield-plus-outline</v-icon>
-        </v-btn>
-        <v-btn
-          icon
-          slot="append"
-          :to="subListPath"
-          title="Edit / View Sublist"
-          v-if="!readOnly && subList">
-            <v-icon>mdi-shield-link-variant-outline</v-icon>
-        </v-btn>
+      {{ isNewItem ? '' : title }}
+      <v-btn
+        v-if="showAddSubListButton"
+        slot="append"
+        :loading="creatingSubList"
+        :disabled="creatingSubList"
+        title="Make a new sublist from this item."
+        test-make-sublist
+        icon
+        @click="makeSublist"
+      >
+        <v-icon>mdi-shield-plus-outline</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        test-sublist-link-icon
+        slot="append"
+        @click="updateItem({ to: subListPath })"
+        :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
+        v-if="subList"
+      >
+        <v-icon>mdi-shield-link-variant-outline</v-icon>
+      </v-btn>
+      <v-btn icon slot="append" title="delete" test-delete-icon v-if="!isNewItem" @click="emitDelete">
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
     </v-text-field>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { createList, stateGroupsCollection } from '../firebase';
+import {
+  createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB,
+} from '../firebase';
 
 export default {
   props: {
@@ -87,6 +102,9 @@ export default {
     emitUpdate(newValues) {
       this.$emit('input', this.$_makeNewItem(newValues));
     },
+    emitEnterPressed(newValues) {
+      this.$emit('enterPressed', newValues);
+    },
     $_makeNewItem(newValues) {
       const newItem = { ...this.value, ...newValues };
       if (newValues?.title !== '') this.isNewItem = false;
@@ -100,16 +118,16 @@ export default {
     },
     invalidateNewItem(newValue) {
       if (this.isNewItem && (newValue !== '' || !!newValue)) {
-        // console.log('invalidating', newValue);
         this.isNewItem = false;
         this.emitUpdate({ title: newValue, isNewItem: false });
       }
     },
+    emitDelete() {
+      this.$emit('delete');
+    },
     deactivate() {
       this.isActive = false;
-      this.$emit('blur', {
-        ...this.value, title: this.title, isNewItem: this.isNewItem, subList: this.subList,
-      });
+      this.updateItem();
     },
     activate() {
       this.isActive = !this.readOnly;
@@ -121,10 +139,25 @@ export default {
       if (nextIdx > this.states.length - 1) nextIdx = 0;
       this.currentStateIdx = nextIdx;
     },
+    updateItem({ to } = {}) {
+      if (this.isNewItem) return;
+      this.$emit('update', {
+        ...this.value,
+        title: this.title,
+        state: this.states[this.currentStateIdx],
+        isNewItem: this.isNewItem,
+        subList: this.subList,
+      });
+      if (to) {
+        this.$nextTick(() => {
+          this.$router.push(to);
+        });
+      }
+    },
     async makeSublist() {
       this.creatingSubList = true;
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
-      const stateGroup = stateGroupsCollection.doc(stateGroupDoc.id);
+      const stateGroup = getStateGroup(stateGroupsCollection, stateGroupDoc.id);
       const payload = {
         title: this.title,
         description: `sublist of ${this.title}`, // same as title
@@ -132,27 +165,37 @@ export default {
       };
       this.subList = await createList(payload);
       this.subListSlug = this.subList.slug;
-      this.emitUpdate();
       await this.computeSubListPath(this.subList);
+      this.updateItem();
       this.creatingSubList = false;
     },
     async computeSubListPath(subListRef) {
-      if (!subListRef) return;
-      const subList = await subListRef.get();
-      const { slug } = subList.data();
-      this.subListPath = `${this.$route.path}/${slug}`;
+      const subListPath = await computeSubListPathFB(subListRef, this.$route.path);
+      if (!subListPath) return;
+      this.subListPath = subListPath;
     },
   },
   async mounted() {
     this.title = this.$props.value.title;
     this.isNewItem = this.$props.value.isNewItem;
     this.listId = this.$props.value.listId;
-    if (this.$props.value.subList) {
-      await this.computeSubListPath(this.$props.subList);
+    if (this.$props.value.state?.value) {
+      this.currentStateIdx = parseInt(this.$props.value.state.value, 10);
+    }
+    if (this.value.subList) {
+      await this.computeSubListPath(this.value.subList);
+      this.subList = this.value.subList;
     }
   },
   computed: {
     ...mapGetters(['itemStates', 'getGlobalPreferences']),
+    showAddSubListButton() {
+      if (this.readOnly) return false;
+      if (this.isNewItem) return false;
+      if (this.subList !== null) return false;
+      if (!this.title || this.title === '') return false;
+      return true;
+    },
     icon() {
       if (this.isNewItem) return 'mdi-plus';
       return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].icon;
