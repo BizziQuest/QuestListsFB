@@ -49,7 +49,7 @@ export default {
   computed: {
     ...mapState(['lists']),
     showNoListsInfo() {
-      return !this.isLoading && this.lists.length < 1;
+      return !this.isLoading && this.lists?.length < 1;
     },
     loaderNumber() {
       return this.isLoading ? 3 : 0;
