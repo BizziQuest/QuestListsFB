@@ -1,11 +1,24 @@
-import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
-import routes from '@/router/routes';
 import Vuetify from 'vuetify';
 import store from '@/store';
+import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
+import routes from '@/router/routes';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
+
+jest.mock('firebase.js', () => ({
+  auth: {
+    currentUser: {
+      uid: 'alskdaslkd',
+    },
+  },
+  globalPreferences: {
+    onSnapshot: jest.fn(),
+  },
+  reactToPrefsChange: jest.fn(),
+  ensureSlugUniqueness: jest.fn(),
+}));
 
 toHaveBeenWarnedInit();
 

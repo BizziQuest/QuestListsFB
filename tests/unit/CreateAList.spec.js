@@ -1,10 +1,10 @@
-import CreateAList from '@/components/CreateAList.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
-import store from '@/store';
 import VueRouter from 'vue-router';
-import routes from '@/router/routes';
 import Vuetify from 'vuetify';
+import store from '@/store';
+import routes from '@/router/routes';
+import CreateAList from '@/components/CreateAList.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 jest.mock('firebase.js', () => ({
@@ -13,10 +13,8 @@ jest.mock('firebase.js', () => ({
       uid: 'alskdaslkd',
     },
   },
-  globalPreferences: {
-    onSnapshot: jest.fn(),
-  },
   ensureSlugUniqueness: jest.fn(),
+  reactToPrefsChange: jest.fn(),
 }));
 
 // now we can say: expect(mockFirebase.ensureSlugUniqueness).toHaveBeenCalled();
@@ -37,6 +35,10 @@ beforeEach(() => {
     vuetify,
     store,
   });
+});
+
+afterEach(() => {
+  wrapper.destroy();
 });
 
 describe('default state', () => {

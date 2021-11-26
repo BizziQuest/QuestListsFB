@@ -12,6 +12,7 @@ const routes = [
     path: '/Lists/:slug+',
     name: 'List',
     component: List,
+    props: true,
   },
   {
     path: '/about',
