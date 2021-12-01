@@ -54,6 +54,7 @@ describe('IconState.vue', () => {
       await wrapper.find('button').trigger('click');
       const input = wrapper.find('[test-icon-input]');
       await input.setValue('asdasdkodhiodhio');
+      await wrapper.vm.$nextTick();
       expect(wrapper.text()).toContain('asdasdkodhiodhio Not a valid icon name');
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });

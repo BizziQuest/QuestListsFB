@@ -1,8 +1,8 @@
-import ListItem from '@/components/ListItem.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
+import ListItem from '../../src/components/ListItem.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 import {
   globalPreferences, stateGroupsCollection, createList, computeSubListPath,

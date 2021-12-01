@@ -59,7 +59,7 @@ describe('default state with unverified 0Auth user', () => {
       state: {
         currentUser: {
           avatar: '/path/to/image.jpg',
-          displayName: '0Auth Dispaly Name',
+          displayName: '0Auth Display Name',
           email: 'tersterson3@test.com',
           emailVerified: false,
           uid: 'UUID123456',
