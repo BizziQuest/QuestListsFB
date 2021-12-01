@@ -12,31 +12,41 @@ const firebaseConfig = {
   appId: process.env.VUE_APP_FIREBASE_APP_ID,
   authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
-  measurementId: process.env.VUE_APP_FIREBASE_APP_ID,
-  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  // measurementId: process.env.VUE_APP_FIREBASE_APP_ID,
+  // messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
   projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  // storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
 };
 
+if (process.env.NODE_ENV !== 'development') {
+  firebaseConfig.measurementId = process.env.VUE_APP_FIREBASE_APP_ID;
+  firebaseConfig.messagingSenderId = process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID;
+  firebaseConfig.storageBucket = process.env.VUE_APP_FIREBASE_STORAGE_BUCKET;
+}
 // firebase utils
 const fbApp = firebase.initializeApp(firebaseConfig);
 const nodeEnv = process.env.NODE_ENV;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? firebase.analytics() : null;
 const auth = fbApp.auth();
-if (process.env.VUE_APP_FIREBASE_AUTH_HOST) auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST);
+if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
+  auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
+}
 const db = fbApp.firestore();
 const { currentUser } = auth;
 
-// firebase settings go here
-const settings = {};
+// // firebase settings go here
+// const settings = { };
 
-if (process.env.NODE_ENV === 'development') {
-  settings.host = process.env.VUE_APP_FIREBASE_DATABASE_URL;
-  settings.ssl = false;
-}
-db.settings(settings);
+// if (process.env.NODE_ENV !== 'production') {
+db.settings({
+  host: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  ssl: false,
+  merge: true,
+});
+// }
 
 const globalPreferences = db.collection('globalPreferences');
+
 const listsCollection = db.collection('lists');
 const stateGroupsCollection = db.collection('stateGroups');
 const usersCollection = db.collection('users');
@@ -45,16 +55,61 @@ const userStatesCollection = db.collection('userListItemStates');
 const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
 const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
 
+async function computeSubListPath(subListRef, routePath) {
+  if (!subListRef) return false;
+  const subList = await subListRef.get();
+  const { slug } = subList.data();
+  return `${routePath}/${slug}`;
+}
+
+async function getUserDocumentRef() {
+  const userDocument = db.collection('users').doc(auth.currentUser.uid);
+  if (!userDocument.get().exists) await userDocument.set({}, { merge: true });
+  return userDocument;
+}
+
+async function updateUserItemStates(listId, items) {
+  const userDocument = await getUserDocumentRef();
+  const itemStates = items.reduce((states, item, itemIdx) => {
+    const state = { ...item.state };
+    if (!state.value) return states;
+    return { ...states, [itemIdx]: { value: state.value, title: item.title } };
+  }, {});
+  const userStatesDocument = userDocument.collection('states').doc(listId);
+  await userStatesDocument.set(itemStates);
+  return userStatesDocument.get();
+}
+
+async function getListBySlug(slug) {
+  const doc = listsCollection.where('slug', '==', slug);
+  return doc.get();
+}
+
 async function getListItems(fbList) {
   const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
+  const currentUserStatesCollection = db.collection(`users/${auth.currentUser?.uid}/states`);
+  let userStates = [];
+  if (currentUserStatesCollection.exists) {
+    const currentUserStatesDoc = await currentUserStatesCollection.doc(fbList.id).get();
+    userStates = currentUserStatesDoc.data();
+  }
   let listItems = [];
-  const items = await listItemsCollection.get();
-  items.forEach(async (doc) => {
-    const item = doc.data();
-    item.id = doc.id;
-    if (Object.hasOwnProperty.call(item, 'data')) {
-      listItems = listItems.concat(item.data);
-    }
+  // to accommodate longer lists, we use multiple documents in a
+  // listItem collection
+  const listItemsPartials = await listItemsCollection.get();
+  listItemsPartials.forEach((listItemsPartialObj) => {
+    const listItemsPartial = listItemsPartialObj.data();
+    listItems = listItems.concat(listItemsPartial?.data || []);
+  });
+  listItems.forEach((listItem, listItemIndex) => {
+    Object.entries(userStates).find(([userStateIndex, userState]) => {
+      if (listItem.title === userState.title) {
+        listItems[listItemIndex].state = { ...userState };
+        delete userStates[userStateIndex];
+        return true;
+      }
+      return false;
+    });
   });
   return listItems.sort((a, b) => a.order < b.order);
 }
@@ -68,7 +123,19 @@ async function saveListItems(fbListId, listItems) {
   } else {
     let docID = null;
     listItemDocs.forEach(async (doc) => { docID = doc.id; });
-    await listItemsCollection.doc(docID).set({ data: listItems });
+    const sanitizedItems = [];
+    listItems.forEach((listItem) => {
+      const sanitizedListItem = { ...listItem };
+      const listItemProps = Object.keys(listItem);
+      if (listItemProps.includes('isNewItem')) {
+        delete sanitizedListItem.isNewItem;
+      }
+      if (listItemProps.includes('subList') && !sanitizedListItem.subList) {
+        delete sanitizedListItem.subList;
+      }
+      sanitizedItems.push(sanitizedListItem);
+    });
+    await listItemsCollection.doc(docID).set({ data: sanitizedItems });
   }
 }
 
@@ -158,4 +225,7 @@ export {
   saveUserPreferences,
   getUserPreferences,
   createList,
+  getListBySlug,
+  updateUserItemStates,
+  computeSubListPath,
 };

@@ -2,17 +2,10 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);
-// source
-// https://medium.com/@d007dav/how-to-test-your-vuetify-project-with-jest-vue-test-utils-and-vue-cli-step-by-step-guide-da22347f2343#id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6IjQ2Mjk0OTE3NGYxZWVkZjRmOWY5NDM0ODc3YmU0ODNiMzI0MTQwZjUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2Mjg3MTc3NDcsImF1ZCI6IjIxNjI5NjAzNTgzNC1rMWs2cWUwNjBzMnRwMmEyamFtNGxqZGNtczAwc3R0Zy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjExMjU5MDM4NjE1NzM4MDg4NTMxMSIsImVtYWlsIjoicGF6cGF6MjVAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjIxNjI5NjAzNTgzNC1rMWs2cWUwNjBzMnRwMmEyamFtNGxqZGNtczAwc3R0Zy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsIm5hbWUiOiJraWNrIGJ1dHRvd3NraSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQU9oMTRHaERLNWRseEN0N1huM1F5TWstRWNMYjNjbnJzaDl2Nmo2Vy1nQ0NIWEk9czk2LWMiLCJnaXZlbl9uYW1lIjoia2ljayIsImZhbWlseV9uYW1lIjoiYnV0dG93c2tpIiwiaWF0IjoxNjI4NzE4MDQ3LCJleHAiOjE2Mjg3MjE2NDcsImp0aSI6IjQ2NTZiZjRmYmQyZWEyMjY5MmVkMmEwMGIzNDUwYzg5YWNmZWQxZjMifQ.W0ogUGNhf1orjQ06_J5UpMiEEkb4erXLffI0pYPPHPch0M-9rUTKeS57y9ZWjzprBYbJXwT-vrFHoXP1bxy0kE6AGPmVl66u920OeZpH_TxiV6zwa6Q-4w32JJ9ZJ7JR6TrT0Shs9_OzreGO5TE3n6ckErsVioXFsGcpa4OyepsbDpBNcXyzjDq57KVVlaSHxZZ9noUPasPpCaM3XfCTKi02hGxaNH54GtLb5WINIXCMIUcNE96gvkluPH2aGekwhpFT6MkJr0yB5TTjJ0fOEvX8FZeD3kwk9td7Tk3h3xhXbHr4peO8aTnDvdBJ9RSVQtpMmpBSoSEmxfA1kz-Niw
-Vue.config.productionTip = false;
-// Required for Vuetify
-// const app = document.createElement('div');
-// app.setAttribute('data-app', 'true');
-// document.body.appendChild(app);
 process.on('unhandledRejection', () => {
-  // console.log('REJECTION', reason);
+  // XXX: console.log('REJECTION', reason);
 });
 
 export default async () => {
-  // toHaveBeenWarnedInit();
+  // XXX: toHaveBeenWarnedInit();
 };

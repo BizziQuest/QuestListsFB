@@ -14,7 +14,7 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
     '^.+\\.vue$': 'vue-jest',
   },
-  collectCoverage: false,
+  collectCoverage: true,
   collectCoverageFrom: ['**/*.{js,vue}', '!**/node_modules/**'],
   setupFiles: ['<rootDir>tests/setupJest.js'],
   snapshotSerializers: ['jest-serializer-vue'],

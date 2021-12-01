@@ -5,6 +5,8 @@ import App from '@/App.vue';
 import VueRouter from 'vue-router';
 import routes from '@/router/routes';
 
+jest.mock('../../src/firebase.js');
+
 const localVue = createLocalVue();
 const router = new VueRouter({ routes });
 const vuetify = new Vuetify();

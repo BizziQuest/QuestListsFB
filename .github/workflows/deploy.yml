@@ -16,46 +16,40 @@ env:
   VUE_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.VUE_APP_GOOGLE_ANALYTICS_ID }}
   VUE_APP_I18N_LOCALE: en
   VUE_APP_I18N_FALLBACK_LOCALE: en
-  FIREBASE_TOKEN: ${{ secrets.CI_FIREBASE_TOKEN }}
 
 jobs:
   linting:
+    name: Run Linter
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
+        node-version: [15.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn @vue/cli
-    - run: yarn
-    - run: yarn lint
-
-  unit-tests:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [10.x] # only use 10, for firebase-tools compatibility
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn @vue/cli
-    - run: yarn
-    - run: CI=true yarn ci:unit
-
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install Global Dependencies
+        run: npm install -g yarn @vue/cli
+      - name: Install Local Dependencies
+        run: yarn
+      - name: Build
+        run: yarn build
+      - name: Archive Production Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: dist
+          path: dist
   deploy:
-    name: Deploy
+    name: Deploy to https://questlists.web.app
     needs: unit-tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [15.x] # only use 10, for firebase-tools compatibility
+    env:
+        NODE_ENV: production
+        CI: false
+        VUE_APP_FIREBASE_DATABASE_URL: ${{ secrets.PROD_VUE_APP_FIREBASE_DATABASE_URL }}
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -63,7 +57,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install -g yarn @vue/cli
-    - run: yarn
+    - run: yarn install --production=false
     - run: yarn build
     - name: Deploy to Firebase
       uses: w9jds/firebase-action@master
