@@ -19,7 +19,11 @@ export default {
       type: Number,
       description: 'Size of the logo in pixels',
     },
-    variant: null,
+    variant: {
+      default: 'alt5',
+      type: String,
+      description: 'which variant of the logo to use',
+    },
     decoration: null,
   },
   data: () => ({
@@ -40,7 +44,7 @@ export default {
     },
     decorations: {
       // eslint-disable-next-line max-len
-      plus: 'm -3 -3 l 6 0',
+      plus: 'M 21 14 L 21 20 M 18 17 L 24 17',
     },
   }),
   methods: {},

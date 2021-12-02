@@ -54,14 +54,11 @@ export const options = {
     values: {
       questlists: {
         component: QuestListsIcon,
-        props: {
-          variant: 'alt5',
-        },
       },
       'questlists-plus': {
         component: QuestListsIcon,
         props: {
-          variant: 'plus',
+          decoration: 'plus',
         },
       },
       'questlists-alt': {
