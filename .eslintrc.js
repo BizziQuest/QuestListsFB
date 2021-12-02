@@ -1,5 +1,17 @@
 module.exports = {
   root: true,
+  settings: {
+    'import/extensions': [
+      '.js',
+      '.jsx',
+    ],
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        moduleDirectory: ['node_modules', 'src/'],
+      },
+    },
+  },
   env: {
     node: true,
   },

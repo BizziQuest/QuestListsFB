@@ -1,12 +1,12 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
+import Vuetify from 'vuetify';
 import Lists from '@/views/Lists.vue';
 import List from '@/views/List.vue';
 import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
 import EditInfo from '@/components/EditInfo.vue';
 import App from '@/App.vue';
-import Vuetify from 'vuetify';
 import router from '@/router';
 // import About from '@/views/About.vue';
 // import Terms from '@/views/Terms.vue';

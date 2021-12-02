@@ -1,8 +1,8 @@
 import { mount, createLocalVue } from '@vue/test-utils';
-import List from '@/views/List.vue';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
+import List from '@/views/List.vue';
 import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
 
 jest.mock('../../src/firebase.js');
@@ -30,8 +30,8 @@ describe('List.vue', () => {
   describe('when given an empty list', () => {
     let wrapper;
     beforeEach(async () => {
-      const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
-      getListBySlug.mockResolvedValueOnce(lists);
+      const lists = [{ id: '1', slug: 'list123', data: () => ({ title: 'list123' }) }];
+      getListBySlug.mockResolvedValueOnce({ docs: lists });
       wrapper = mount(List, {
         localVue,
         vuetify,
@@ -40,13 +40,15 @@ describe('List.vue', () => {
           $route,
         },
       });
-      expect(getListBySlug).toHaveBeenCalled();
       await flushPromises(); // for fetchList() call in List.mounted()
     });
-    it('should show a new item input', () => {
-      expect(wrapper.vm.listItems).toEqual([{ isNewItem: true, title: '' }]);
+    it('should show a new item input', async () => {
+      expect.assertions(1);
+      expect(wrapper.vm.listItems).toEqual([]);
     });
     it('should show the correct title', () => {
+      // expect(getListBySlug).toHaveReturnedTimes(1);
+      // expect(getListBySlug).toHaveBeenCalled();
       expect(wrapper.text()).toContain('list123');
     });
     it('should have the correct id in the $vm', () => {
@@ -56,7 +58,7 @@ describe('List.vue', () => {
       expect(wrapper.vm.list.title).toBe('list123');
     });
     it('should have the correct listItems in the $vm', () => {
-      expect(wrapper.vm.listItems).toEqual([{ isNewItem: true, title: '' }]);
+      expect(wrapper.vm.listItems.length).toBe(0);
     });
     it('should have the correct possible list item states in the $vm', () => {
       expect(wrapper.vm.states).toStrictEqual([]);
@@ -67,7 +69,7 @@ describe('List.vue', () => {
     let wrapper;
     beforeEach(async () => {
       const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
-      getListBySlug.mockResolvedValueOnce(lists);
+      getListBySlug.mockResolvedValueOnce({ docs: lists });
       const listItems = [{ title: 'Test Item' }];
       getListItems.mockResolvedValueOnce(listItems);
       wrapper = mount(List, {
@@ -96,7 +98,7 @@ describe('List.vue', () => {
       expect(wrapper.vm.list.title).toBe('list123');
     });
     it('should have the correct listItems in the $vm', () => {
-      expect(wrapper.vm.listItems).toEqual([{ title: 'Test Item' }, { isNewItem: true, title: '' }]);
+      expect(wrapper.vm.listItems).toEqual([{ title: 'Test Item' }]);
     });
     it('should have the correct possible list item states in the $vm', () => {
       expect(wrapper.vm.states).toStrictEqual([]);
@@ -110,7 +112,7 @@ describe('List.vue', () => {
     let wrapper;
     beforeEach(async () => {
       const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
-      getListBySlug.mockResolvedValueOnce(lists);
+      getListBySlug.mockResolvedValueOnce({ docs: lists });
       const listItems = [{ title: 'Test Item' }, { title: 'Test Item 2' }];
       getListItems.mockResolvedValueOnce(listItems);
       saveListItems.mockResolvedValueOnce([]);
@@ -125,24 +127,22 @@ describe('List.vue', () => {
       await flushPromises(); // for fetchList() call in List.mounted()
     });
     it('should remove the item', async () => {
-      expect(wrapper.vm.listItems.length).toBe(3);
+      expect(wrapper.vm.listItems.length).toBe(2);
       expect(wrapper.vm.listItems[0].title).toBe('Test Item');
       expect(wrapper.vm.listItems[0].isNewItem).toBeFalsy();
       const itemInput = wrapper.find('.list-item-view');
       await itemInput.find('.v-btn[title="delete"]').trigger('click');
       await wrapper.vm.$nextTick();
       expect(saveListItems).toHaveBeenCalled();
-      expect(wrapper.vm.listItems.length).toBe(2);
+      expect(wrapper.vm.listItems.length).toBe(1);
       expect(wrapper.vm.listItems[0].title).toBe('Test Item 2');
       expect(wrapper.vm.listItems[0].isNewItem).toBe(undefined);
-      expect(wrapper.vm.listItems[1].title).toBe('');
-      expect(wrapper.vm.listItems[1].isNewItem).toBe(true);
     });
     it('should save the new list', async () => {
       const itemInput = wrapper.find('.list-item-view');
       await itemInput.find('.v-btn[title="delete"]').trigger('click');
       await wrapper.vm.$nextTick();
-      expect(saveListItems).toBeCalledWith('1', [{ title: 'Test Item 2' }, { isNewItem: true, title: '' }]);
+      expect(saveListItems).toBeCalledWith('1', [{ title: 'Test Item 2' }]);
     });
   });
 });

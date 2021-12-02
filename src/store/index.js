@@ -10,10 +10,17 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import {
+  signInWithEmailAndPassword, signInWithPopup, signOut, getAdditionalUserInfo,
+  createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
+} from 'firebase/auth';
+import {
+  limit, query, getDocs, addDoc,
+} from 'firebase/firestore';
 import { getAvatarForUser } from '../util';
 import {
+  reactToPrefsChange,
   auth,
-  globalPreferences,
   listsCollection,
   stateGroupsCollection,
   googleOAuthLogin,
@@ -123,11 +130,12 @@ const store = new Vuex.Store({
     },
     async signupUser({ dispatch }, payload) {
       try {
-        const userCred = await auth.createUserWithEmailAndPassword(payload.email, payload.password);
-        if (userCred.additionalUserInfo.isNewUser) {
+        const userCred = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
+        const additionalUserInfo = getAdditionalUserInfo(userCred);
+        if (additionalUserInfo.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
           if (auth.currentUser) {
-            await auth.currentUser.sendEmailVerification();
+            await sendEmailVerification(auth.currentUser);
           }
         }
       } catch (error) {
@@ -138,7 +146,7 @@ const store = new Vuex.Store({
     // example: [one, _, three, _, _, six] = [1,2,3, 4,5,6]
     async loginUser({ dispatch }, { email = '', password = '' } = {}) {
       try {
-        const userCred = await auth.signInWithEmailAndPassword(email, password);
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
         if (!userCred.user.emailVerified) {
           dispatch('notify', {
             text: 'please do not forget to verify your email',
@@ -158,8 +166,9 @@ const store = new Vuex.Store({
 
     async googleSigninoAuth({ dispatch }) {
       try {
-        const googleInfo = await auth.signInWithPopup(googleOAuthLogin);
-        if (googleInfo.additionalUserInfo.isNewUser) {
+        const googleInfo = await signInWithPopup(auth, googleOAuthLogin);
+        const additionalUserInfo = getAdditionalUserInfo(googleInfo);
+        if (additionalUserInfo?.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
           dispatch('notify', { text: 'successful sign in', type: 'info' });
@@ -170,8 +179,9 @@ const store = new Vuex.Store({
     },
     async faceBookSigninoAuth({ dispatch }) {
       try {
-        const facebookInfo = await auth.signInWithPopup(facebookOAuthLogin);
-        if (facebookInfo.additionalUserInfo.isNewUser) {
+        const facebookInfo = await signInWithPopup(auth, facebookOAuthLogin);
+        const additionalUserInfo = getAdditionalUserInfo(facebookInfo);
+        if (additionalUserInfo?.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
           dispatch('notify', { text: 'successful sign in', type: 'info' });
@@ -183,7 +193,7 @@ const store = new Vuex.Store({
 
     async logOut({ commit, dispatch }) {
       try {
-        await auth.signOut();
+        await signOut(auth);
         commit('setUser', { ...defaultState.user });
         dispatch('notify', { text: 'logged out successfuly', type: 'success' });
       } catch (error) {
@@ -200,36 +210,36 @@ const store = new Vuex.Store({
       // TODO: refactor this to handle actual states
       const states = stateGroupData.states.map((stateBody) => ({ ...stateSkeleton, ...stateBody }));
       const payload = { ...stateGroupData, states };
-      const stateGroupRef = await stateGroupsCollection.add(payload);
+      const stateGroupRef = await addDoc(stateGroupsCollection, payload);
 
       commit('addState', stateGroupData);
       return stateGroupRef;
     },
     async createList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      listsCollection.add({ ...listData, stateGroup: stateGroupRef });
+      addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
     },
     async createSubList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      listsCollection.add({ ...listData, stateGroup: stateGroupRef });
+      addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
     },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);
     },
-    async fetchLists({ commit }, { limit = 10 } = {}) {
-      listsCollection.limit(limit).onSnapshot((fbLists) => {
-        const lists = [];
-        fbLists.forEach(async (doc) => {
-          const list = doc.data();
-          list.id = doc.id;
-          lists.push(list);
-        });
-        commit('setLists', lists);
+    async fetchLists({ commit }, { pageSize = 10 } = {}) {
+      const q = query(listsCollection, limit(pageSize));
+      const docs = await getDocs(q);
+      const lists = [];
+      docs.forEach(async (doc) => {
+        const list = doc.data();
+        list.id = doc.id;
+        lists.push(list);
       });
+      commit('setLists', lists);
     },
     async saveProfile({ commit }, payload) {
       try {
-        await auth.currentUser.updateProfile({
+        await updateProfile(auth.currentUser, {
           displayName: payload.displayName,
           photoURL: payload.avatar,
         });
@@ -242,23 +252,6 @@ const store = new Vuex.Store({
   },
 });
 
-// this is how to create a reactive firebase collection.
-export const globalPrefRef = globalPreferences.onSnapshot(async (snapshot) => {
-  const prefs = [];
-  snapshot.forEach((doc) => {
-    const pref = doc.data();
-    pref.id = doc.id;
-
-    prefs.push(pref);
-  });
-  if (prefs.length < 1) return;
-
-  const { defaultColor, defaultStateGroup } = prefs[0];
-  const stateGroup = await defaultStateGroup.get();
-  store.commit('setGlobalPreferences', {
-    defaultColor,
-    defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },
-  });
-});
+export const globalPrefRef = reactToPrefsChange(store);
 
 export default store;

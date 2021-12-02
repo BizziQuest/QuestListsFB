@@ -1,10 +1,8 @@
 <template>
-  <v-text-field :value.sync="item.text"
-                @input="isChanging($event)"
-                @blur="updateText">
-    <v-icon v-if="isDraggable"  slot="prepend" class="drag-handle">drag_indicator</v-icon>
-    <icon-state  slot="prepend-inner" :icon.sync="item.icon"></icon-state>
-  </v-text-field>
+    <v-text-field :value.sync="item.text" @input="isChanging($event)" @blur="updateText">
+      <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
+      <icon-state slot="prepend-inner" :icon.sync="item.icon"></icon-state>
+    </v-text-field>
 </template>
 <script>
 import IconState from './IconState.vue';
@@ -41,5 +39,4 @@ export default {
 .drag-handle {
   padding-right: 10px;
 }
-
 </style>

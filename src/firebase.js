@@ -1,7 +1,13 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import 'firebase/analytics';
+import {
+  getAuth, connectAuthEmulator, GoogleAuthProvider, FacebookAuthProvider,
+} from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import {
+  getFirestore, connectFirestoreEmulator, collection,
+  addDoc, getDocs, getDoc, query, where, limit, setDoc, doc, onSnapshot,
+} from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
 import slugify from 'slugify';
 
 require('dotenv').config();
@@ -24,66 +30,125 @@ if (process.env.NODE_ENV !== 'development') {
   firebaseConfig.storageBucket = process.env.VUE_APP_FIREBASE_STORAGE_BUCKET;
 }
 // firebase utils
-const fbApp = firebase.initializeApp(firebaseConfig);
+const fbApp = initializeApp(firebaseConfig);
+
 const nodeEnv = process.env.NODE_ENV;
-const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? firebase.analytics() : null;
-const auth = fbApp.auth();
+const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? getAnalytics() : null;
+
+const appCheck = initializeAppCheck(fbApp, {
+  provider: new ReCaptchaV3Provider(process.env.VUE_APP_RECAPTCHA_SITE_KEY),
+  isTokenAutoRefreshEnabled: true, // refresh app tokens as needed?
+});
+
+const auth = getAuth(fbApp);
 if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
-  auth.useEmulator(process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
+  connectAuthEmulator(auth, process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
 }
-const db = fbApp.firestore();
+
+const db = getFirestore();
 const { currentUser } = auth;
 
 // // firebase settings go here
 // const settings = { };
 
-// if (process.env.NODE_ENV !== 'production') {
-db.settings({
-  host: process.env.VUE_APP_FIREBASE_DATABASE_URL,
-  ssl: false,
-  merge: true,
-});
-// }
+if (process.env.NODE_ENV !== 'production') {
+  connectAuthEmulator(auth, process.env.VUE_APP_FIREBASE_AUTH_HOST);
+  connectFirestoreEmulator(db, process.env.VUE_APP_FIREBASE_DATABASE_HOST, process.env.VUE_APP_FIREBASE_DATABASE_PORT);
+}
 
-const globalPreferences = db.collection('globalPreferences');
+const globalPreferences = collection(db, 'globalPreferences');
 
-const listsCollection = db.collection('lists');
-const stateGroupsCollection = db.collection('stateGroups');
-const usersCollection = db.collection('users');
-const userStatesCollection = db.collection('userListItemStates');
+const listsCollection = collection(db, 'lists');
+const stateGroupsCollection = collection(db, 'stateGroups');
+const usersCollection = collection(db, 'users');
+const userStatesCollection = collection(db, 'userListItemStates');
 
-const googleOAuthLogin = new firebase.auth.GoogleAuthProvider();
-const facebookOAuthLogin = new firebase.auth.FacebookAuthProvider();
+const googleOAuthLogin = new GoogleAuthProvider();
+const facebookOAuthLogin = new FacebookAuthProvider();
+
+async function computeSubListPath(subListRef, routePath) {
+  if (!subListRef) return false;
+  const subList = await getDoc(subListRef);
+  const { slug } = subList.data();
+  return `${routePath}/${slug}`;
+}
+
+async function getUserDocumentRef() {
+  const userDocument = doc(db, 'users', auth.currentUser.uid);
+  if (!userDocument.exists) await setDoc(userDocument, {}, { merge: true });
+  return userDocument;
+}
+
+async function updateUserItemStates(listId, items) {
+  const userDocument = await getUserDocumentRef();
+  const itemStates = items.reduce((states, item, itemIdx) => {
+    const state = { ...item.state };
+    if (!state.value) return states;
+    return { ...states, [itemIdx]: { value: state.value, title: item.title } };
+  }, {});
+  const userStatesRef = doc(userDocument, 'states', listId);
+  await setDoc(userStatesRef, itemStates);
+  return getDoc(userStatesRef);
+}
 
 async function getListBySlug(slug) {
-  const doc = listsCollection.where('slug', '==', slug);
-  return doc.get();
+  const docQuery = query(listsCollection, where('slug', '==', slug));
+  return getDocs(docQuery);
 }
 
 async function getListItems(fbList) {
-  const listItemsCollection = db.collection(`lists/${fbList.id}/listItems`);
+  const listItemsCollection = collection(db, `lists/${fbList.id}/listItems`);
+  const currentUserStatesCollection = collection(db, `users/${auth.currentUser?.uid}/states`);
+  let userStates = [];
+  if (currentUserStatesCollection.exists) {
+    const currentUserStatesDoc = await currentUserStatesCollection.doc(fbList.id).get();
+    userStates = currentUserStatesDoc.data();
+  }
   let listItems = [];
-  const items = await listItemsCollection.get();
-  items.forEach(async (doc) => {
-    const item = doc.data();
-    item.id = doc.id;
-    if (Object.hasOwnProperty.call(item, 'data')) {
-      listItems = listItems.concat(item.data);
-    }
+  // to accommodate longer lists, we use multiple documents in a
+  // listItem collection
+  const listItemsPartials = await getDocs(listItemsCollection);
+  listItemsPartials.forEach((listItemsPartialObj) => {
+    const listItemsPartial = listItemsPartialObj.data();
+    listItems = listItems.concat(listItemsPartial?.data || []);
+  });
+  listItems.forEach((listItem, listItemIndex) => {
+    Object.entries(userStates).find(([userStateIndex, userState]) => {
+      if (listItem.title === userState.title) {
+        listItems[listItemIndex].state = { ...userState };
+        delete userStates[userStateIndex];
+        return true;
+      }
+      return false;
+    });
   });
   return listItems.sort((a, b) => a.order < b.order);
 }
 
 async function saveListItems(fbListId, listItems) {
-  const listItemsCollection = db.collection(`lists/${fbListId}/listItems`);
-  const listItemDocs = await listItemsCollection.limit(1).get();
-  // TODO: see if size is over 900Kb and create as many docs as neccessary
+  const listItemsCollection = collection(db, `lists/${fbListId}/listItems`);
+  const listItemDocsQuery = query(listItemsCollection, limit(1));
+  const listItemDocs = await getDocs(listItemDocsQuery);
+  // TODO: see if size is over 900Kb and create as many docs as necessary
   if (listItemDocs.empty) {
-    await listItemsCollection.add({ data: listItems });
+    await addDoc(listItemsCollection, { data: listItems });
   } else {
     let docID = null;
-    listItemDocs.forEach(async (doc) => { docID = doc.id; });
-    await listItemsCollection.doc(docID).set({ data: listItems });
+    listItemDocs.forEach(async (document) => { docID = document.id; });
+    const sanitizedItems = [];
+    listItems.forEach((listItem) => {
+      const sanitizedListItem = { ...listItem };
+      const listItemProps = Object.keys(listItem);
+      if (listItemProps.includes('isNewItem')) {
+        delete sanitizedListItem.isNewItem;
+      }
+      if (listItemProps.includes('subList') && !sanitizedListItem.subList) {
+        delete sanitizedListItem.subList;
+      }
+      sanitizedItems.push(sanitizedListItem);
+    });
+    const docRef = doc(listItemsCollection, docID);
+    setDoc(docRef, { data: sanitizedItems });
   }
 }
 
@@ -91,19 +156,19 @@ async function saveListItems(fbListId, listItems) {
  * All items must have an `order` field.
 */
 async function getOrderedCollectionAsList(collectionPath) {
-  const collection = await db.collection(collectionPath).get();
+  const clxn = await collection(db, collectionPath).get();
   const list = [];
-  const items = await collection.get();
-  items.forEach(async (doc) => {
-    const item = doc.data();
-    item.id = doc.id;
+  const items = await clxn.get();
+  items.forEach(async (document) => {
+    const item = document.data();
+    item.id = document.id;
     list.push(item);
   });
   return list.sort((a, b) => a.order < b.order);
 }
 
 async function getListStates(fbList) {
-  const fbStatesDoc = await fbList.stateGroup.get();
+  const fbStatesDoc = await getDoc(fbList.stateGroup);
   if (!fbStatesDoc) return [];
   const statesDoc = fbStatesDoc.data();
   return statesDoc.states.sort((state) => state.order);
@@ -111,8 +176,8 @@ async function getListStates(fbList) {
 
 async function ensureSlugUniqueness(title) {
   // TODO: sort DESC by created date
-  const allListsWithTitle = listsCollection.where('title', '==', title);
-  let lists = await allListsWithTitle.get();
+  const allListsWithTitle = query(listsCollection, where('title', '==', title));
+  let lists = await getDocs(allListsWithTitle);
   if (lists.size < 2) return slugify(title);
   lists = lists.sort((a, b) => a.created_at < b.created_at);
   const lastList = lists[lists.length - 1];
@@ -125,14 +190,13 @@ async function ensureSlugUniqueness(title) {
 }
 
 async function saveUserPreferences(prefs) {
-  const userDocument = db.collection('users').doc(auth.currentUser.uid);
-  await userDocument.set(prefs, { merge: true });
-  return userDocument.get();
+  const userDocument = doc(db, 'users', auth.currentUser.uid);
+  await setDoc(userDocument, prefs, { merge: true });
+  return getDoc(userDocument);
 }
 
 async function getUserPreferences() {
-  const userDocumentRef = db.collection('users').doc(auth.currentUser.uid);
-  const userDocument = await userDocumentRef.get();
+  const userDocument = await getDocs(collection(db, 'users'), auth.currentUser.uid);
   if (userDocument.exists) return userDocument.data();
   console.warn('User Prefs don\'t exist: ', auth.currentUser.uid, userDocument.path);
   return {};
@@ -148,13 +212,37 @@ async function createList(payload) {
   };
   const newPayload = { ...defaultPayload, ...payload };
   newPayload.slug = await ensureSlugUniqueness(payload.title || 'New List');
-  const subList = await listsCollection.add(newPayload);
+  const subList = await addDoc(listsCollection, newPayload);
   return subList;
+}
+function getStateGroup(stateGroupsCollectionRef, id) {
+  return doc(stateGroupsCollectionRef, id);
+}
+function reactToPrefsChange(store) {
+  // this is how to create a reactive firebase collection.
+  const prefDoc = query(collection(db, 'globalPreferences'), limit(1));
+  return onSnapshot(prefDoc, async (snapshot) => {
+    const prefs = [];
+    snapshot.forEach((snapdoc) => {
+      const pref = snapdoc.data();
+      pref.id = snapdoc.id;
+      prefs.push(pref);
+    });
+    if (prefs.length < 1) return;
+
+    const { defaultColor, defaultStateGroup } = prefs[0];
+    const stateGroup = await getDoc(defaultStateGroup);
+    store.commit('setGlobalPreferences', {
+      defaultColor,
+      defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },
+    });
+  });
 }
 
 export {
   fbApp,
   fbAnalytics,
+  appCheck,
   db,
   auth,
   currentUser,
@@ -174,4 +262,8 @@ export {
   getUserPreferences,
   createList,
   getListBySlug,
+  updateUserItemStates,
+  computeSubListPath,
+  reactToPrefsChange,
+  getStateGroup,
 };

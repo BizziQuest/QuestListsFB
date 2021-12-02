@@ -1,10 +1,10 @@
-import EditInfo from '@/components/EditInfo.vue';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
-import routes from '@/router/routes';
 import Vuetify from 'vuetify';
 import md5 from 'md5';
+import routes from '@/router/routes';
+import EditInfo from '@/components/EditInfo.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 jest.mock('../../src/firebase.js');
