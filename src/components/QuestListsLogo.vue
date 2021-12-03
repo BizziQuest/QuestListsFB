@@ -45,6 +45,7 @@ export default {
     decorations: {
       // eslint-disable-next-line max-len
       plus: 'M 21 14 L 21 20 M 18 17 L 24 17',
+      link: 'M 18 17 L 23 17 M 21 15 Q 29 17 21 19 M 20 19 Q 12 17 20 15',
     },
   }),
   methods: {},

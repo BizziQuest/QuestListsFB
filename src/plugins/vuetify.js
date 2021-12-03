@@ -4,7 +4,8 @@ import '@mdi/font/css/materialdesignicons.css'; // for the default material desi
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import { preset as replyPreset } from 'vue-cli-plugin-vuetify-preset-reply/preset';
 import { preset as rallyPreset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
-import QuestListsIcon from '@/components/QuestListsLogo.vue';
+// import QuestListsIcon from '@/components/QuestListsLogo.vue';
+import '../assets/questlistsicons.css';
 // import QuestlistsSVG from '../assets/questlists-stroke-optimized.svg';
 
 /**
@@ -50,49 +51,55 @@ export const options = {
       // https://codepen.io/anthonydugois/pen/mewdyZ?editors=1010
     },
   },
-  icons: {
-    values: {
-      questlists: {
-        component: QuestListsIcon,
-      },
-      'questlists-plus': {
-        component: QuestListsIcon,
-        props: {
-          decoration: 'plus',
-        },
-      },
-      'questlists-alt': {
-        component: QuestListsIcon,
-        props: {
-          variant: 'alt',
-        },
-      },
-      'questlists-alt2': {
-        component: QuestListsIcon,
-        props: {
-          variant: 'alt2',
-        },
-      },
-      'questlists-alt3': {
-        component: QuestListsIcon,
-        props: {
-          variant: 'alt3',
-        },
-      },
-      'questlists-alt4': {
-        component: QuestListsIcon,
-        props: {
-          variant: 'alt4',
-        },
-      },
-      'questlists-alt5': {
-        component: QuestListsIcon,
-        props: {
-          variant: 'alt5',
-        },
-      },
-    },
-  },
+  // icons: {
+  //   values: {
+  //     questlists: {
+  //       component: QuestListsIcon,
+  //     },
+  //     'questlists-plus': {
+  //       component: QuestListsIcon,
+  //       props: {
+  //         decoration: 'plus',
+  //       },
+  //     },
+  //     'questlists-link': {
+  //       component: QuestListsIcon,
+  //       props: {
+  //         decoration: 'link',
+  //       },
+  //     },
+  //     'questlists-alt': {
+  //       component: QuestListsIcon,
+  //       props: {
+  //         variant: 'alt',
+  //       },
+  //     },
+  //     'questlists-alt2': {
+  //       component: QuestListsIcon,
+  //       props: {
+  //         variant: 'alt2',
+  //       },
+  //     },
+  //     'questlists-alt3': {
+  //       component: QuestListsIcon,
+  //       props: {
+  //         variant: 'alt3',
+  //       },
+  //     },
+  //     'questlists-alt4': {
+  //       component: QuestListsIcon,
+  //       props: {
+  //         variant: 'alt4',
+  //       },
+  //     },
+  //     'questlists-alt5': {
+  //       component: QuestListsIcon,
+  //       props: {
+  //         variant: 'alt5',
+  //       },
+  //     },
+  // },
+  // },
 };
 
 export default new Vuetify(options);

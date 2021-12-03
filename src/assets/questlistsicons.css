@@ -1,0 +1,49 @@
+@font-face {
+  font-family: "QuestLists Icons";
+  src: url("./QuestLists-font/QuestLists-Icons.woff2");
+  src: url("./QuestLists-font/QuestLists-Icons.woff2") format("woff2"), url("./QuestLists-font/QuestLists-Icons.woff") format("woff"), url("./QuestLists-font/QuestLists-Icons.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.ql:before,
+.ql-set {
+  display: inline-block;
+  font: normal normal normal 32px/1 "QuestLists Icons";
+  font-size: 160%;
+  text-rendering: auto;
+  line-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ql.questlists::before {
+  content: "\27b0";
+}➰
+.ql.questlists::before {
+  content: "➰";
+}
+.ql.ql-plus::before {
+  content: "+";
+}
+.ql.ql-minus::before {
+  content: "-";
+}
+.ql.ql-gear::before {
+  content: "⚙";
+}
+.ql.ql-heart::before {
+  content: "❦";
+}
+.ql.ql-link::before {
+  content: "🔗";
+}
+.ql.ql-plus::before {
+  content: "+";
+}
+.ql.ql-plus::before {
+  content: "+";
+}
+.ql.ql-plus::before {
+  content: "+";
+}

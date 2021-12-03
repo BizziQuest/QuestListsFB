@@ -39,7 +39,7 @@
         icon
         @click="makeSublist"
       >
-        <v-icon>$questlists</v-icon>
+        <i class="ql ql-plus" style="font-size:140%"></i>
       </v-btn>
       <v-btn
         icon
@@ -49,7 +49,7 @@
         :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
         v-if="subList"
       >
-        <v-icon>$questlists-link</v-icon>
+        <i class="ql ql-link"></i>
       </v-btn>
       <v-btn icon slot="append" title="delete" test-delete-icon v-if="!isNewItem" @click="emitDelete">
         <v-icon>mdi-delete</v-icon>
@@ -219,10 +219,21 @@ export default {
   margin-right: 10px;
 }
 .listitem-text {
-  display: inline-block;
+  // display: inline-block;
 }
 ::v-deep .theme--light.v-text-field--solo > .v-input__control > .v-input__slot,
 ::v-deep .theme--dark.v-text-field--solo > .v-input__control > .v-input__slot {
   background: none;
+  align-items: center;
+}
+::v-deep v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__prefix,
+::v-deep .v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__suffix,
+::v-deep .v-text-field.v-input--dense:not(.v-text-field--outlined) input {
+    padding: 0;
+  align-items: center;
+  margin-top: -10px;
+}
+::v-deep .v-input__append-inner button {
+  margin-top: -3px;
 }
 </style>

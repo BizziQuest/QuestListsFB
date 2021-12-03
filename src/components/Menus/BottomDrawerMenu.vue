@@ -15,7 +15,7 @@
           @click="$emit('update:drawer', !drawer)"
         >
           <span>QuestLists</span>
-          <v-icon style="d-inline">$questlists</v-icon>
+          <i style="font-size: 140%" class="ql questlists"></i>
         </v-btn>
         <v-btn value="search" icon to="/search" :color="menuHighlightColor">
           <span>Search</span>
@@ -35,7 +35,7 @@
               class="rounded-circle main-fab"
               v-on="slotProps.on"
             >
-              <v-icon>$questlists-plus</v-icon>
+              <i style="font-size: 230%" class="ql ql-plus"></i>
             </v-btn>
           </template>
         </CreateAList>
@@ -43,7 +43,7 @@
           <span>Favorites</span>
           <v-icon>mdi-heart</v-icon>
         </v-btn>
-        <user-menu-item :dark="!isDark" :light="isDark" class="d-flex flex-column align-center">
+        <user-menu-item :dark="!isDark" :light="isDark" class="d-flex flex-row align-center">
           <template v-slot:login="slotProps">
             <v-btn value="signIn" v-on="slotProps.on" icon :color="menuHighlightColor">
               <span>Sign In</span>
