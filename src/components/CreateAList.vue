@@ -1,25 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="600px" class="primary" :dark="dark" :light="light">
-    <template v-slot:activator="{ on }">
-      <slot :on="on">
-        <v-list-item
-          test-default-create-list-item
-          link
-          v-on="on"
-          :color="highlightColor"
-          :dark="dark"
-          :light="light"
-          title="Create A New Quest"
-        >
-          <v-list-item-action>
-            <v-icon :color="highlightColor">add</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title test-activate-item :class="`${highlightColor}--text`">New Quest</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </slot>
-    </template>
+  <div>
     <v-card>
       <v-card-title>
         <span class="headline">Create A List</span>
@@ -50,7 +30,13 @@
                   test-color-input
                 >
                   <template v-slot:append>
-                    <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
+                    <v-menu
+                      :close-on-content-click="false"
+                      :close-on-click="false"
+                      v-model="colorPickerShown"
+                      left
+                      top
+                    >
                       <template v-slot:activator="{ on }">
                         <div :style="swatchStyle()" v-on="on" />
                       </template>
@@ -80,18 +66,20 @@
               </v-col>
             </v-row>
           </v-form>
-          <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup" @list:updated="listUpdated" />
+          <states-editor
+            :stateGroup="getGlobalPreferences.defaultStateGroup"
+            @list:updated="listUpdated"
+          />
         </v-container>
         <small>*indicates required field</small>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="resetForm">Close</v-btn>
         <v-btn color="blue darken-1" name="submit" text @click="createAList">Create</v-btn>
       </v-card-actions>
     </v-card>
     <v-snackbar type="info" v-model="showStateWarning">{{ warning }}</v-snackbar>
-  </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -190,17 +178,6 @@ export default {
         parent: 'none',
       };
       this.createList(payload);
-      this.resetForm();
-    },
-    resetForm() {
-      this.$refs.addTitleAndColorForm.resetValidation();
-      this.listColor = defaultFormData.listColor;
-      this.title = defaultFormData.title;
-      this.description = defaultFormData.description;
-      this.newState = defaultFormData.newState;
-      this.statesPicked = defaultFormData.statesPicked;
-      this.updatedListStatesItems = defaultFormData.updatedListStatesItems;
-      this.dialog = false;
     },
     swatchStyle() {
       return {

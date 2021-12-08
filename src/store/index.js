@@ -10,6 +10,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+
 import {
   signInWithEmailAndPassword, signInWithPopup, signOut, getAdditionalUserInfo,
   createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
@@ -17,6 +18,7 @@ import {
 import {
   limit, query, getDocs, addDoc,
 } from 'firebase/firestore';
+import router from '../router';
 import { getAvatarForUser } from '../util';
 import {
   reactToPrefsChange,
@@ -217,7 +219,8 @@ const store = new Vuex.Store({
     },
     async createList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
+      await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
+      router.push(`/lists/${listData.slug}`);
     },
     async createSubList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
