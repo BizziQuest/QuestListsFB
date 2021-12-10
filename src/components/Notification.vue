@@ -1,5 +1,4 @@
 <template>
-  <div>
     <v-snackbar
       v-if="messages[0]"
       v-model="showSnackbar"
@@ -17,7 +16,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-  </div>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex';
@@ -30,6 +28,8 @@ export default {
   computed: {
     ...mapState({
       messages(state) {
+        // debugger;
+        console.info(state);
         if (state.messages.length < 1) return [];
         this.showSnackbar = true;
         return state.messages;

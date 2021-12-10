@@ -78,7 +78,6 @@
         <v-btn color="blue darken-1" name="submit" text @click="createAList">Create</v-btn>
       </v-card-actions>
     </v-card>
-    <v-snackbar type="info" v-model="showStateWarning">{{ warning }}</v-snackbar>
   </div>
 </template>
 
@@ -113,8 +112,6 @@ export default {
     return {
       ...defaultFormData,
       dialog: false,
-      warning: undefined,
-      showStateWarning: false,
       formIsValid: false,
       titleRules: [
         (v) => !!v || 'Title is required',
@@ -154,7 +151,6 @@ export default {
       this.updatedListStatesItems = $event;
     },
     async createAList() {
-      this.warning = undefined;
       if (this.$refs.addTitleAndColorForm.validate() === false) return;
       // TODO: add an input for the name and description for this stateGroup
       let stateGroup = this.getGlobalPreferences.defaultStateGroup;
