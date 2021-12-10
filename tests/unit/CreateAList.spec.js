@@ -41,33 +41,7 @@ afterEach(() => {
   wrapper.destroy();
 });
 
-describe('default state', () => {
-  it('should render "New Quest"', () => {
-    expect(wrapper.findComponent({ name: 'VListItem' }).text()).toBe('add New Quest');
-  });
-  it('should not show the dialog', () => {
-    expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(false);
-  });
-});
-
-describe('clicking on the link', () => {
-  beforeEach(() => {
-    wrapper = mount(CreateAList, {
-      localVue,
-      router,
-      vuetify,
-      store,
-    });
-  });
-  it('should show the correct dialog', async () => {
-    expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(false);
-    await wrapper.findComponent({ name: 'VListItem' }).trigger('click');
-    expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(true);
-    expect('Unable to locate target [data-app]').toHaveBeenWarned();
-  });
-});
-
-describe('entering information in the dialog', () => {
+describe('entering information in the page', () => {
   beforeEach(async () => {
     wrapper = mount(CreateAList, {
       localVue,
@@ -75,21 +49,18 @@ describe('entering information in the dialog', () => {
       vuetify,
       store,
     });
-    expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(false);
-    await wrapper.findComponent({ name: 'VListItem' }).trigger('click');
+
   });
   describe('the title field', () => {
     it('should set the vm title from the title input', async () => {
       expect(wrapper.vm.title).toBe('');
       await wrapper.find('input[test-title-input]').setValue('A New Title');
       expect(wrapper.vm.title).toBe('A New Title');
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should not allow empty titles', async () => {
       wrapper.find('input[test-title-input]').setValue('');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).toContain('Title is required');
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
   });
   describe('the color field', () => {
@@ -97,31 +68,26 @@ describe('entering information in the dialog', () => {
       await wrapper.find('input[test-color-input]').setValue('HELLO');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should allow 6-digit hexadecimal color strings', async () => {
       await wrapper.find('input[test-color-input]').setValue('#ABC123');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).not.toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should allow 6-digit mixed-case hexadecimal color strings', async () => {
       await wrapper.find('input[test-color-input]').setValue('#AbCd23');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).not.toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should allow 3 digit hexadecimal color strings', async () => {
       await wrapper.find('input[test-color-input]').setValue('#ABC');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).not.toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should allow 3 digit mixed-case hexadecimal color strings', async () => {
       await wrapper.find('input[test-color-input]').setValue('#Abc');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).not.toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
   });
   describe('the description field', () => {
@@ -130,14 +96,12 @@ describe('entering information in the dialog', () => {
       await wrapper.find('input[test-description-input]').setValue('');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).toMatch(/Description\s+Possible/);
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should allow simple text', async () => {
       await wrapper.find('input[test-title-input]').setValue('A Tile');
       await wrapper.find('input[test-description-input]').setValue('I am a description');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).toMatch(/Description\s+Possible/);
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should allow complex text (this is to make sure our tools support complex inputs)', async () => {
       const unicodeString = 'ʕノ•ᴥ•ʔノ ︵ ┻━┻ ✌.ʕʘ‿ʘʔ.✌ 😀';
@@ -146,7 +110,6 @@ describe('entering information in the dialog', () => {
       expect(wrapper.vm.description).toEqual(unicodeString);
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).toMatch(/Description\s+Possible/);
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
   });
   it.todo('should not allow empty states');
@@ -204,27 +167,21 @@ describe('list creation', () => {
         },
       },
     });
-    await wrapper.findComponent({ name: 'VListItem' }).trigger('click');
   });
   it('should do nothing if the title and color form does not validate', () => {
     wrapper.vm.title = '123';
     wrapper.vm.listColor = 'kajsbfkajsb';
     wrapper.vm.createAList();
     expect(actions.createList).not.toHaveBeenCalled();
-    // the following needs to be commented when testing this independently.
-    expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
-  it('should notify users when there are no states given.', async () => {
-    wrapper.find('[test-activate-item]').trigger('click');
-    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
+  it('should notify users when there are no states given.', async () => {    
     await wrapper.vm.$nextTick();
-    await wrapper.vm.createAList();
-    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(false);
+    await wrapper.vm.createAList();    
     expect(actions.notify.mock.calls[0][1]).toEqual([
       { type: 'info', text: 'No states configured. Using default states.' },
     ]);
     expect(actions.createList).toHaveBeenCalled();
-    expect('Unable to locate target [data-app]').toHaveBeenWarned();
+   
   });
 });
 
