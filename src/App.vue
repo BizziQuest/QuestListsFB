@@ -1,8 +1,11 @@
 <template>
   <v-app id="app" @keyup.ctrl.102="handleFind">
+    <script type="application/javascript" async src="https://cse.google.com/cse.js?cx=f690e206925bb45a9"></script>
+    <div class="gcse-search"></div>
+    <br /><br /><br />
     <drawer-menu :drawer.sync="drawer" />
     <v-main>
-      <transition  name="router-anim">
+      <transition name="router-anim">
         <router-view :key="$route.path"></router-view>
       </transition>
     </v-main>
@@ -10,9 +13,7 @@
     <notification />
     <v-snackbar test-update-notification bottom :value="updateExists" :timeout="-1" color="primary">
       An update is available
-      <v-btn text @click="refreshApp">
-        Update
-      </v-btn>
+      <v-btn text @click="refreshApp"> Update </v-btn>
     </v-snackbar>
   </v-app>
 </template>
