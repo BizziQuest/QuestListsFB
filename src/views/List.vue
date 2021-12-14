@@ -1,8 +1,18 @@
 <template>
   <div>
-    <user-auth-alert action="edit this list or save any changes" />
-    <h1>{{ list.title }}</h1>
-    <v-btn class="ma-2" color="orange darken-2" dark @click="$router.back()">
+    <user-auth-alert action="edit this list or save any changes" />+
+    <h1  style="display:inline-flex;">{{ list.title }}</h1>
+    <v-chip
+      class="ma-2"
+      color="green"
+      text-color="white"
+      v-if="!!list.adultContent"
+    >
+      Adult Content
+    </v-chip>
+    <v-btn
+    style="display:block"
+    class="ma-2" color="orange darken-2" dark @click="$router.back()">
       <v-icon dark left> mdi-arrow-left </v-icon>Back
     </v-btn>
     <div id="items">
