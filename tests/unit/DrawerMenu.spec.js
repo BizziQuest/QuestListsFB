@@ -55,7 +55,7 @@ describe('Drawer Menu', () => {
     expect(wrapper.find('[test-questlists-link]').text()).toBe('QuestLists');
   });
   it('component include link to add new list', () => {
-    expect(wrapper.find('[test-default-create-list-item]').text()).toBe('add New Quest');
+    expect(wrapper.find('[test-default-create-list-item]').text()).toBe('New Quest');
   });
   it('component include search button', () => {
     expect(wrapper.find('[test-search-link]').text()).toBe('Search');

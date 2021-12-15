@@ -43,7 +43,7 @@ afterEach(() => {
 
 describe('default state', () => {
   it('should render "New Quest"', () => {
-    expect(wrapper.findComponent({ name: 'VListItem' }).text()).toBe('add New Quest');
+    expect(wrapper.findComponent({ name: 'VListItem' }).text()).toBe('New Quest');
   });
   it('should not show the dialog', () => {
     expect(wrapper.findComponent({ name: 'VCard' }).exists()).toBe(false);
