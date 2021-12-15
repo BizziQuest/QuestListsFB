@@ -29,6 +29,8 @@ import {
   getUserPreferences,
 } from '../firebase';
 
+import { algoliaIndex } from '../algolia';
+
 Vue.use(Vuex);
 
 const defaultState = {
@@ -123,7 +125,7 @@ const store = new Vuex.Store({
   },
   actions: {
     notify({ state, commit }, message) {
-      const { text, type, timeout = 2000 } = message;
+      const { text, type, timeout = 2000 } = message[0];
       const messageArray = [];
       messageArray.push({ text, type, timeout });
       commit('setMessages', [...state.messages, ...messageArray]);
@@ -217,7 +219,13 @@ const store = new Vuex.Store({
     },
     async createList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
+      const doc = await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
+      const idx = algoliaIndex;
+      debugger;
+      const obj = await idx.saveObject(
+        { ...listData, objectID: doc.id },
+      );
+      console.info('ALG OBJ', obj);
     },
     async createSubList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);

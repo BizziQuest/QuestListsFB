@@ -34,6 +34,7 @@
     "@firebase/auth": "0.18.3",
     "@mdi/font": "6.4.95",
     "@vue/babel-preset-app": "^4.5.10",
+    "algoliasearch": "^4.11.0",
     "babel": "^6.23.0",
     "core-js": "^3.8.2",
     "dotenv": "^10.0.0",
