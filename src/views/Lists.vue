@@ -1,5 +1,21 @@
 <template>
   <v-container fluid class='lists-view'>
+    <v-autocomplete
+        :items="algoliaSuggestions"
+        :loading="isLoading"
+        :search-input.sync="searchTerm"
+        @input="getSuggestions($event)"
+        @keydown.enter="search($event)"
+        color="white"
+        hide-no-data
+        hide-selected
+        item-text="Description"
+        item-value="API"
+        label="Search Quests"
+        placeholder="Start typing to Search"
+        prepend-icon="mdi-database-search"
+        return-object
+      ></v-autocomplete>
     <transition-group tag="div" class="row" name="fade">
       <v-col v-if="lists === null" key="skeleton" class='mt-5'>
         <v-skeleton-loader v-for="i in 6" :key="i"
@@ -24,14 +40,31 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import ListCard from '../components/ListCard.vue';
+import { algoliaIndex } from '../algolia';
 
 export default {
   name: 'Lists',
   components: {
     ListCard,
   },
+  data: () => ({
+    algoliaSuggestions: [],
+    searchTerm: '',
+    isLoading: false,
+  }),
   methods: {
     ...mapActions(['fetchLists']),
+    async search() {
+      this.isLoading = true;
+      console.debug('Search:', this.searchTerm);
+      const results = await algoliaIndex.search(this.searchTerm);
+      console.table(results);
+      this.isLoading = false;
+    },
+    async getSuggestions() {
+      console.debug('Suggest:', this.searchTerm);
+      this.algoliaSuggestions = ['suggestions', this.searchTerm];
+    },
   },
   computed: {
     ...mapState(['lists']),

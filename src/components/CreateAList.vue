@@ -177,7 +177,7 @@ export default {
           states: this.updatedListStatesItems,
         };
       } else {
-        this.notify([{ type: 'info', text: 'No states configured. Using default states.' }]);
+        this.notify({ type: 'info', text: 'No states configured. Using default states.' });
       }
       const payload = {
         title: this.title,
