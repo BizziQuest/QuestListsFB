@@ -88,6 +88,21 @@ async function computeSubListPath(subListRef, routePath) {
   return `${routePath}/${slug}`;
 }
 
+async function fetchQuestLists({ pageSize = 10, slugs = null } = {}) {
+  let q = query(listsCollection, limit(pageSize));
+  if (slugs && slugs.length > 0) {
+    q = query(q, where('slug', 'in', slugs));
+  }
+  const fbDocs = await getDocs(q);
+  const lists = [];
+  fbDocs.forEach(async (fbDoc) => {
+    const list = fbDoc.data();
+    list.id = fbDoc.id;
+    lists.push(list);
+  });
+  return lists;
+}
+
 async function getUserDocumentRef() {
   const userDocument = doc(db, 'users', auth.currentUser.uid);
   if (!userDocument.exists) await setDoc(userDocument, {}, { merge: true });
@@ -283,4 +298,5 @@ export {
   computeSubListPath,
   reactToPrefsChange,
   getStateGroup,
+  fetchQuestLists,
 };

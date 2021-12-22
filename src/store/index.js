@@ -15,7 +15,7 @@ import {
   createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
 } from 'firebase/auth';
 import {
-  limit, query, getDocs, addDoc,
+  addDoc,
 } from 'firebase/firestore';
 import { getAvatarForUser } from '../util';
 import {
@@ -27,6 +27,7 @@ import {
   facebookOAuthLogin,
   saveUserPreferences,
   getUserPreferences,
+  fetchQuestLists,
 } from '../firebase';
 
 import { algoliaIndex } from '../algolia';
@@ -227,15 +228,8 @@ const store = new Vuex.Store({
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);
     },
-    async fetchLists({ commit }, { pageSize = 10 } = {}) {
-      const q = query(listsCollection, limit(pageSize));
-      const docs = await getDocs(q);
-      const lists = [];
-      docs.forEach(async (doc) => {
-        const list = doc.data();
-        list.id = doc.id;
-        lists.push(list);
-      });
+    async fetchLists({ commit }, options = {}) {
+      const lists = await fetchQuestLists(options);
       commit('setLists', lists);
     },
     async saveProfile({ commit }, payload) {
