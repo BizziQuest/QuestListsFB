@@ -31,15 +31,11 @@ describe('default state', () => {
   it('should render the correct text', async () => {
     expect(wrapper.text()).toBe('exit_to_app');
   });
-  it('should show the correct tooltip when hovering over the log out icon', async (done) => {
-    let AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
-    const AllTheButtons = wrapper.findAllComponents({ name: 'VBtn' });
-    await AllTheButtons.wrappers[0].trigger('mouseenter');
-    requestAnimationFrame(() => {
-      AllTheTooltip = wrapper.findAllComponents({ name: 'VTooltip' });
-      expect(AllTheTooltip.wrappers[0].html()).toContain('Log Out');
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
-      done();
-    });
+  it('should show the correct tooltip when hovering over the log out icon', async () => {
+    let logoutButton = wrapper.find('[test-logout-button]');
+    await logoutButton.trigger('mouseenter');
+    await logoutButton.trigger('mouseover');
+    const tooltip = wrapper.find('[test-logout-tooltip]');
+    expect(tooltip.exists()).toBe(true);
   });
 });

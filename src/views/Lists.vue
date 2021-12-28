@@ -1,20 +1,23 @@
 <template>
   <v-container fluid class="lists-view">
     <v-autocomplete
+      class="search-box"
+      solo filled rounded clearable
+      hide-no-data
+      hide-selected
+      return-object
       :items="algoliaSuggestions"
       :loading="isLoading"
       :search-input.sync="searchTerm"
       @input="getSuggestions($event)"
       @keydown.enter="search($event)"
       color="white"
-      hide-no-data
-      hide-selected
-      item-text="Description"
+      :height="22"
+      item-text="Search for"
       item-value="API"
       label="Search Quests"
       placeholder="Start typing to Search"
-      prepend-icon="mdi-database-search"
-      return-object
+      prepend-inner-icon="mdi-database-search"
     ></v-autocomplete>
     <transition-group tag="div" class="row" name="fade">
       <v-col v-if="lists === null" key="skeleton" class="mt-5">
@@ -113,5 +116,10 @@ ul {
 .fade-enter,
 .fade-leave-active {
   opacity: 0;
+}
+
+.search-box >>> .v-text-field.v-text-field--solo .v-input__control {
+    min-height: 22px;
+    padding: 0;
 }
 </style>
