@@ -3,9 +3,10 @@ import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
 import Lists from '@/views/Lists.vue';
-import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
+import { saveListItems, fetchQuestLists, getListItems } from '../../src/firebase';
 
 jest.mock('../../src/firebase.js');
+jest.mock('../../src/algolia.js');
 
 const localVue = createLocalVue();
 const vuetify = new Vuetify();
@@ -23,6 +24,7 @@ const localStore = new Vuex.Store({
       uid: 'UUID123456',
       useGravatar: false,
     },
+    lists: [],
   },
 });
 
@@ -30,8 +32,6 @@ describe('Lists.vue', () => {
   describe('when there are no lists', () => {
     let wrapper;
     beforeEach(async () => {
-      const lists = [{ id: '1', slug: 'list123', data: () => ({ title: 'list123' }) }];
-      getListBySlug.mockResolvedValueOnce({ docs: lists });
       wrapper = mount(Lists, {
         localVue,
         vuetify,
@@ -40,18 +40,18 @@ describe('Lists.vue', () => {
           $route,
         },
       });
+      await flushPromises()
     });
-    it('should show an alert saying there are no lists', async () => {
+    it('should show an alert saying there are no lists', () => {
+      expect(wrapper.html()).toContain('Welcome to Quest Lists!')
     });
   });
 
   describe('when there is a list', () => {
-    let wrapper;
+    let wrapper, lists;
     beforeEach(async () => {
-      const lists = [{ id: '1', data: () => ({ title: 'list123' }) }];
-      getListBySlug.mockResolvedValueOnce({ docs: lists });
-      const listItems = [{ title: 'Test Item' }];
-      getListItems.mockResolvedValueOnce(listItems);
+      lists = [{ id: '1',  title: 'list123'  }];
+      localStore.state.lists = lists;
       wrapper = mount(Lists, {
         localVue,
         vuetify,
@@ -63,8 +63,13 @@ describe('Lists.vue', () => {
       await flushPromises(); // for fetchList() call in List.mounted()
     });
     it('should show the list card', () => {
+      expect(wrapper.findAll(".list-card").wrappers.length).toBe(1)
     });
     it('should not show the no lists warning', () => {
+      expect(wrapper.html()).not.toContain('Welcome to Quest Lists!')
+    });
+    it('should show the name of the list', () => {
+      expect(wrapper.findAll(".list-card").wrappers[0].text()).toContain(lists[0].title)
     });
   });
 
