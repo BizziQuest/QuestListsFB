@@ -23,8 +23,6 @@ import {
 import { getAnalytics } from 'firebase/analytics';
 import slugify from 'slugify';
 
-// import algoliaIndex from './algolia';
-
 require('dotenv').config();
 
 // firebase init goes here

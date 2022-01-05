@@ -78,7 +78,6 @@ export default {
       this.isLoading = false;
     },
     async getSuggestions() {
-      console.debug('Suggest:', this.searchTerm);
       this.algoliaSuggestions = ['suggestions', this.searchTerm];
     },
   },

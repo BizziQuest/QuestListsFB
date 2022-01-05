@@ -32,7 +32,7 @@ describe('default state', () => {
     expect(wrapper.text()).toBe('exit_to_app');
   });
   it('should show the correct tooltip when hovering over the log out icon', async () => {
-    let logoutButton = wrapper.find('[test-logout-button]');
+    const logoutButton = wrapper.find('[test-logout-button]');
     await logoutButton.trigger('mouseenter');
     await logoutButton.trigger('mouseover');
     const tooltip = wrapper.find('[test-logout-tooltip]');

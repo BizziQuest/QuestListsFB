@@ -10,7 +10,6 @@ import {
 
 jest.mock('../../src/firebase.js');
 
-
 const localVue = createLocalVue();
 const vuetify = new Vuetify();
 
