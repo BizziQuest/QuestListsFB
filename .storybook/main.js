@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+  "framework": "@storybook/vue",
   "stories": [
     "../src/**/*.stories.mdx",
     "../src/**/*.stories.@(js|jsx|ts|tsx)"
@@ -22,7 +23,7 @@ module.exports = {
 
     // THIS is the tricky stuff!
     config.module.rules.push({
-      test: /\.sass$/,
+      test: /\.s[ac]ss$/,
       use: [
         'style-loader',
         'css-loader',
