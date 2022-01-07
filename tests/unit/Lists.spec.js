@@ -83,21 +83,6 @@ describe('Lists.vue', () => {
     });
   });
   describe('when there is a list with adult content', () => {
-    let wrapper;
-    let lists;
-    beforeEach(async () => {
-      lists = [{ id: '1', title: 'list123', adultContent: true }, { id: '2', title: 'list456' }];
-      localStore.state.lists = lists;
-      wrapper = mount(Lists, {
-        localVue,
-        vuetify,
-        store: localStore,
-        mocks: {
-          $route,
-        },
-      });
-      await flushPromises(); // for fetchList() call in List.mounted()
-    });
     it.todo('should show the adult content badge when appropriate. (jest can\'t test)');
     it.todo('should not show the adult content badge when appropriate. (jest can\'t test)');
   });
