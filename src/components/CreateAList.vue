@@ -81,15 +81,16 @@
             </v-row>
           </v-form>
           <v-row>
-            <v-checkbox v-model="adultContent" class="mx-5" label="Adult Content" hide-details> </v-checkbox>
+            <v-checkbox v-model="adultContent" test-adult-content class="mx-5" label="Adult Content" hide-details>
+            </v-checkbox>
             <v-tooltip right max-width="200">
               <template v-slot:activator="{ on, attrs }">
                 <v-icon class="ml-4 mt-3" color="info" dark v-bind="attrs" v-on="on">help</v-icon>
               </template>
-              <span>Adult-oriented content is content which may include nudity,
-                 strong sexual themes, or strong descriptions of violence.
-                 Examples include Questlists for Cyberpunk 2077 or Grand Theft Auto;
-                  Questlists of adult web sites or subreddits;
+              <span
+                >Adult-oriented content is content which may include nudity, strong sexual themes, or strong
+                descriptions of violence. Examples include Questlists for Cyberpunk 2077 or Grand Theft Auto; Questlists
+                of adult web sites or subreddits;
               </span>
             </v-tooltip>
           </v-row>

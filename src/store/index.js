@@ -126,7 +126,7 @@ const store = new Vuex.Store({
   },
   actions: {
     notify({ state, commit }, message) {
-      const { text, type, timeout = 2000 } = message[0];
+      const { text, type, timeout = 2000 } = message;
       const messageArray = [];
       messageArray.push({ text, type, timeout });
       commit('setMessages', [...state.messages, ...messageArray]);

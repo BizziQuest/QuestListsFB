@@ -1,7 +1,7 @@
 <template>
   <v-badge overlap
-           offset-x="100" content="adult content"
-           :value="!!updatedList.adultContent" color="green">
+           offset-x="100" class="list-card-badge" content="adult content"
+           :value="!!updatedList.adultContent" color="red">
      <v-card
       light
       :color="updatedList.color"

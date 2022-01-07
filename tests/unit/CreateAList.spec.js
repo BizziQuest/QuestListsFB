@@ -7,6 +7,8 @@ import routes from '@/router/routes';
 import CreateAList from '@/components/CreateAList.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
+jest.mock('../../src/algolia.js');
+
 jest.mock('firebase.js', () => ({
   auth: {
     currentUser: {
@@ -214,6 +216,21 @@ describe('list creation', () => {
     // the following needs to be commented when testing this independently.
     expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
+  it('should create the list with the proper parameters', async () => {
+    wrapper.find('[test-adult-content]').trigger('click');
+    wrapper.find('[test-activate-item]').trigger('click');
+    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.createAList();
+    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(false);
+    expect(actions.notify.mock.calls[0][1]).toEqual(
+      { type: 'info', text: 'No states configured. Using default states.' },
+    );
+    const createParams = actions.createList.mock.calls[0][1];
+    expect(createParams.stateGroup).toStrictEqual({ states: [] });
+    expect(createParams.adultContent).toStrictEqual(true);
+    expect('Unable to locate target [data-app]').toHaveBeenWarned();
+  });
   it('should notify users when there are no states given.', async () => {
     wrapper.find('[test-activate-item]').trigger('click');
     expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
@@ -223,7 +240,8 @@ describe('list creation', () => {
     expect(actions.notify.mock.calls[0][1]).toEqual(
       { type: 'info', text: 'No states configured. Using default states.' },
     );
-    expect(actions.createList).toHaveBeenCalled();
+    const createParams = actions.createList.mock.calls[0][1];
+    expect(createParams.stateGroup).toStrictEqual({ states: [] });
     expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });
 });
