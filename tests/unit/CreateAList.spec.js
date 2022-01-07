@@ -220,9 +220,9 @@ describe('list creation', () => {
     await wrapper.vm.$nextTick();
     await wrapper.vm.createAList();
     expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(false);
-    expect(actions.notify.mock.calls[0][1]).toEqual([
+    expect(actions.notify.mock.calls[0][1]).toEqual(
       { type: 'info', text: 'No states configured. Using default states.' },
-    ]);
+    );
     expect(actions.createList).toHaveBeenCalled();
     expect('Unable to locate target [data-app]').toHaveBeenWarned();
   });

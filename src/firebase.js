@@ -1,11 +1,24 @@
 import {
-  getAuth, connectAuthEmulator, GoogleAuthProvider, FacebookAuthProvider,
+  getAuth,
+  connectAuthEmulator,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 import {
-  getFirestore, connectFirestoreEmulator, collection,
-  addDoc, getDocs, getDoc, query, where, limit, setDoc, doc, onSnapshot,
+  getFirestore,
+  connectFirestoreEmulator,
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  query,
+  where,
+  limit,
+  setDoc,
+  doc,
+  onSnapshot,
 } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 import slugify from 'slugify';
@@ -73,6 +86,21 @@ async function computeSubListPath(subListRef, routePath) {
   return `${routePath}/${slug}`;
 }
 
+async function fetchQuestLists({ pageSize = 10, slugs = null } = {}) {
+  let q = query(listsCollection, limit(pageSize));
+  if (slugs && slugs.length > 0) {
+    q = query(q, where('slug', 'in', slugs));
+  }
+  const fbDocs = await getDocs(q);
+  const lists = [];
+  fbDocs.forEach(async (fbDoc) => {
+    const list = fbDoc.data();
+    list.id = fbDoc.id;
+    lists.push(list);
+  });
+  return lists;
+}
+
 async function getUserDocumentRef() {
   const userDocument = doc(db, 'users', auth.currentUser.uid);
   if (!userDocument.exists) await setDoc(userDocument, {}, { merge: true });
@@ -134,7 +162,9 @@ async function saveListItems(fbListId, listItems) {
     await addDoc(listItemsCollection, { data: listItems });
   } else {
     let docID = null;
-    listItemDocs.forEach(async (document) => { docID = document.id; });
+    listItemDocs.forEach(async (document) => {
+      docID = document.id;
+    });
     const sanitizedItems = [];
     listItems.forEach((listItem) => {
       const sanitizedListItem = { ...listItem };
@@ -154,7 +184,7 @@ async function saveListItems(fbListId, listItems) {
 
 /** Returns all items in a collection as an ordered list.
  * All items must have an `order` field.
-*/
+ */
 async function getOrderedCollectionAsList(collectionPath) {
   const clxn = await collection(db, collectionPath).get();
   const list = [];
@@ -198,7 +228,7 @@ async function saveUserPreferences(prefs) {
 async function getUserPreferences() {
   const userDocument = await getDocs(collection(db, 'users'), auth.currentUser.uid);
   if (userDocument.exists) return userDocument.data();
-  console.warn('User Prefs don\'t exist: ', auth.currentUser.uid, userDocument.path);
+  console.warn("User Prefs don't exist: ", auth.currentUser.uid, userDocument.path);
   return {};
 }
 
@@ -266,4 +296,5 @@ export {
   computeSubListPath,
   reactToPrefsChange,
   getStateGroup,
+  fetchQuestLists,
 };

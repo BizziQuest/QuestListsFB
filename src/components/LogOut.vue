@@ -1,9 +1,10 @@
 <template>
   <div>
-    <v-tooltip left>
+    <v-tooltip left test-logout-tooltip>
       <template v-slot:activator="{ on, attrs }">
         <v-btn class="primary--text"
           text
+          test-logout-button
           v-bind="attrs"
           v-on="on"
           v-on:click="logoutUser">
