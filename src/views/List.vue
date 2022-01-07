@@ -4,7 +4,7 @@
     <h1  style="display:inline-flex;">{{ list.title }}</h1>
     <v-chip
       class="ma-2"
-      color="green"
+      color="red"
       text-color="white"
       v-if="!!list.adultContent"
     >
