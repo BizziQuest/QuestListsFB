@@ -82,6 +82,10 @@ describe('Lists.vue', () => {
       expect(wrapper.findAll('.list-card').wrappers[0].text()).toContain(lists[0].title);
     });
   });
+  describe('when there is a list with adult content', () => {
+    it.todo('should show the adult content badge when appropriate. (jest can\'t test)');
+    it.todo('should not show the adult content badge when appropriate. (jest can\'t test)');
+  });
 
   describe('when searching for an item', () => {
     let wrapper;
