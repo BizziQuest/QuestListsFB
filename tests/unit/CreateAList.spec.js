@@ -129,14 +129,14 @@ describe('entering information in the dialog', () => {
       await wrapper.find('input[test-title-input]').setValue('A Title');
       await wrapper.find('input[test-description-input]').setValue('');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
-      expect(wrapper.text()).toMatch(/Description\s+Possible/);
+      expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help\s+Possible/);
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should allow simple text', async () => {
       await wrapper.find('input[test-title-input]').setValue('A Tile');
       await wrapper.find('input[test-description-input]').setValue('I am a description');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
-      expect(wrapper.text()).toMatch(/Description\s+Possible/);
+      expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help\s+Possible/);
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
     it('should allow complex text (this is to make sure our tools support complex inputs)', async () => {
@@ -145,7 +145,7 @@ describe('entering information in the dialog', () => {
       await wrapper.find('input[test-description-input]').setValue(unicodeString);
       expect(wrapper.vm.description).toEqual(unicodeString);
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
-      expect(wrapper.text()).toMatch(/Description\s+Possible/);
+      expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help\s+Possible/);
       expect('Unable to locate target [data-app]').toHaveBeenWarned();
     });
   });
