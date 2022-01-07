@@ -188,13 +188,11 @@ describe('Lists.vue', () => {
         lists.filter((list) => list.title === 'list123').forEach((l) => expect(wrapper.text()).toContain(l.title));
       });
       it('should not show the cards are not matched with the search box', async () => {
-        // const spy = jest.spyOn(localStore.commit('setLists'), 'setLists')
         await wrapper.find('.search-box input[type="text"]').setValue('list123');
         await wrapper.find('.search-box input[type="text"]').trigger('keydown.enter');
         await wrapper.vm.$nextTick();
         expect(fetchQuestLists).toBeCalledWith({ slugs: ['list123'] });
         await flushPromises();
-        // expect(spy).toBeCalledWith(lists.filter((list) => list.title === 'list123'));
         lists.filter((list) => list.title !== 'list123').forEach((l) => expect(wrapper.text()).not.toContain(l.title));
       });
     });
