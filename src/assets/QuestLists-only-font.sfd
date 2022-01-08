@@ -25,7 +25,7 @@ OS2Version: 1
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1638458673
-ModificationTime: 1638504573
+ModificationTime: 1641594251
 PfmFamily: 17
 TTFWeight: 400
 TTFWidth: 5
@@ -54,7 +54,7 @@ NameList: AGL For New Fonts
 DisplaySize: -72
 AntiAlias: 1
 FitToEm: 0
-WinInfo: 0 16 5
+WinInfo: 0 13 5
 BeginPrivate: 1
 BlueValues 23 [8 114 606 606 621 621]
 EndPrivate
@@ -257,7 +257,7 @@ SplineSet
  474 463 393 543 295 543 c 0
  197 543 117 463 117 365 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: x
@@ -492,7 +492,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: uni2718
+StartChar: HeavyBallotX
 Encoding: 8 10008 8
 Width: 1024
 Flags: W
@@ -501,60 +501,60 @@ VStem: 43 77<286.932 458.191> 361 58<251.184 295.168> 485 66<287.703 458.191> 56
 LayerCount: 4
 Fore
 SplineSet
-120 374 m 0x7fc0
- 120 274 202 191 302 191 c 0
- 334 191 364 200 391 214 c 1
+120 374 m 4x7fc0
+ 120 274 202 191 302 191 c 4
+ 334 191 364 200 391 214 c 5
  376 237 365.994492776 261.917648836 361 288 c 5
- 389 316 l 1
- 385 320 l 1
- 419 318 l 1
- 419 293.531160566 425.174342315 270.46558075 436.035127793 250.233932811 c 1
- 466.331636203 282.972168307 485 326.574263764 485 374 c 0
- 485 474 402 556 302 556 c 0
- 202 556 120 474 120 374 c 0x7fc0
-43 378 m 0
- 43 512 162 621 301 621 c 0
- 440 621 551 512 551 378 c 0
- 551 312 525 248 481 199 c 1
- 505 183 534 173 565 173 c 0
- 645 173 712 238 712 318 c 1
- 764 322 l 1
- 764 214 678 114 566 114 c 0xbfc0
- 518 114 474 132 438 161 c 1
- 400 134 354 118 304 118 c 0
- 165 118 43 244 43 378 c 0
-631 255 m 1
- 631 335 697 400 777 400 c 0
- 857 400 924 335 924 255 c 1
- 976 252 l 1
- 976 360 890 460 778 460 c 0
- 666 460 569 360 569 252 c 1
- 631 255 l 1
-389 410 m 1
- 358 440 l 1
- 311 394 l 1
- 265 440 l 1
- 234 410 l 1
- 281 364 l 1
- 234 316 l 1
- 265 286 l 1
- 311 333 l 1
- 358 286 l 1
- 359 287 l 1
- 359 287 358.690344458 286.605823186 358.666734694 286.444489796 c 1
- 361 288 l 2
- 360.899125031 288.55481233 360.800794002 289.020586765 360.705006912 289.406305001 c 2
- 385 320 l 1
- 342 364 l 1
- 389 410 l 1
-358.666734694 286.444489796 m 1
- 358.222244898 283.407142857 358 280.814285714 358 286 c 1
- 358.666734694 286.444489796 l 1
+ 389 316 l 5
+ 385 320 l 5
+ 419 318 l 5
+ 419 293.531160566 425.174342315 270.46558075 436.035127793 250.233932811 c 5
+ 466.331636203 282.972168307 485 326.574263764 485 374 c 4
+ 485 474 402 556 302 556 c 4
+ 202 556 120 474 120 374 c 4x7fc0
+43 378 m 4
+ 43 512 162 621 301 621 c 4
+ 440 621 551 512 551 378 c 4
+ 551 312 525 248 481 199 c 5
+ 505 183 534 173 565 173 c 4
+ 645 173 712 238 712 318 c 5
+ 764 322 l 5
+ 764 214 678 114 566 114 c 4xbfc0
+ 518 114 474 132 438 161 c 5
+ 400 134 354 118 304 118 c 4
+ 165 118 43 244 43 378 c 4
+631 255 m 5
+ 631 335 697 400 777 400 c 4
+ 857 400 924 335 924 255 c 5
+ 976 252 l 5
+ 976 360 890 460 778 460 c 4
+ 666 460 569 360 569 252 c 5
+ 631 255 l 5
+389 410 m 5
+ 358 440 l 5
+ 311 394 l 5
+ 265 440 l 5
+ 234 410 l 5
+ 281 364 l 5
+ 234 316 l 5
+ 265 286 l 5
+ 311 333 l 5
+ 358 286 l 5
+ 359 287 l 5
+ 359 287 358.690344458 286.605823186 358.666734694 286.444489796 c 5
+ 361 288 l 6
+ 360.899125031 288.55481233 360.800794002 289.020586765 360.705006912 289.406305001 c 6
+ 385 320 l 5
+ 342 364 l 5
+ 389 410 l 5
+358.666734694 286.444489796 m 5
+ 358.222244898 283.407142857 358 280.814285714 358 286 c 5
+ 358.666734694 286.444489796 l 5
 EndSplineSet
-Validated: 524293
+Validated: 5
 EndChar
 
-StartChar: uni274C
+StartChar: CrossMarkEmoji
 Encoding: 9 10060 9
 Width: 1024
 Flags: W
@@ -608,7 +608,7 @@ SplineSet
  485 474 402 556 302 556 c 0
  202 556 120 474 120 374 c 0
 EndSplineSet
-Validated: 524293
+Validated: 5
 EndChar
 
 StartChar: n
@@ -660,10 +660,10 @@ SplineSet
  270.222234148 556 240.416785489 548.11073123 214.542273832 533.311503596 c 1
  464.022661525 289.045336224 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: uni27B0
+StartChar: CurlyLoopEmoji
 Encoding: 11 10160 11
 Width: 1024
 Flags: W
@@ -700,10 +700,10 @@ SplineSet
  924 335 857 400 777 400 c 0
  697 400 631 335 631 255 c 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: uni2699
+StartChar: GearEmoji
 Encoding: 12 9881 12
 Width: 1024
 Flags: W
@@ -787,10 +787,10 @@ SplineSet
  304 337 312 341 318 347 c 0
  324 353 328 361 328 370 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: uni2705
+StartChar: WhiteHeavyCheckMarkEmoji
 Encoding: 13 9989 13
 Width: 1024
 Flags: W
@@ -834,10 +834,10 @@ SplineSet
  281 372 l 1
  358 451 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: uni2714
+StartChar: HeavyCheckMarkEmoji
 Encoding: 14 10004 14
 Width: 1024
 Flags: W
@@ -881,10 +881,10 @@ SplineSet
  281 372 l 1
  358 451 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: uni2A37
+StartChar: MultiplicationSignInDoubleCircl
 Encoding: 15 10807 15
 Width: 1024
 Flags: W
@@ -931,10 +931,10 @@ SplineSet
  270.344058289 556 240.491894141 547.782791106 214.473739638 533.378605403 c 1
  463.791672597 289.271497409 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: uni270D
+StartChar: WritingHandEmoji
 Encoding: 16 9997 16
 Width: 1024
 Flags: W
@@ -986,10 +986,10 @@ SplineSet
  189 278 l 1
  189 322 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: NameMe.17
+StartChar: PencilEmoji
 Encoding: 17 9999 17
 Width: 1024
 Flags: W
@@ -1041,13 +1041,13 @@ SplineSet
  189 278 l 1
  189 322 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: uni2710
+StartChar: UpperRightPencil
 Encoding: 18 10000 18
 Width: 1024
-Flags: W
+Flags: HW
 HStem: 114 59<487.752 640.196> 118 73<215.899 388.248> 400 60<702.176 852.196> 556 65<217.539 388.043>
 VStem: 43 77<286.932 458.191> 357 62<251.184 318> 485 66<287.605 458.191> 569 62<255 330.062> 712 52<243.938 318> 924 52<255 330.062>
 LayerCount: 4
@@ -1080,26 +1080,25 @@ SplineSet
  924 255 l 1
  924 335 857 400 777 400 c 0
  697 400 631 335 631 255 c 1
-404 464 m 2
- 407 461 409 458 409 455 c 0
- 409 452 407 449 404 447 c 2
- 384 426 l 1
- 339 471 l 1
- 360 493 l 2
- 362 495 365 496 368 496 c 0
- 371 496 374 495 376 493 c 2
- 404 464 l 2
-189 322 m 1
- 324 456 l 1
- 369 411 l 1
- 234 278 l 1
- 189 278 l 1
- 189 322 l 1
+174.444335938 317.663085938 m 2
+ 171.490234375 320.708007812 169.536132812 323.73828125 169.581054688 326.73828125 c 0
+ 169.626953125 329.737304688 171.671875 332.70703125 174.702148438 334.661132812 c 2
+ 195.017578125 355.35546875 l 1
+ 239.331054688 309.6796875 l 1
+ 218 288 l 2
+ 215.969726562 286.030273438 212.955078125 285.076171875 209.955078125 285.12109375 c 0
+ 206.956054688 285.166992188 203.971679688 286.211914062 202.001953125 288.2421875 c 2
+ 174.444335938 317.663085938 l 2
+391.571289062 456.389648438 m 1
+ 254.556640625 324.450195312 l 1
+ 210.243164062 370.126953125 l 1
+ 347.243164062 501.06640625 l 1
+ 392.237304688 500.384765625 l 1
+ 391.571289062 456.389648438 l 1
 EndSplineSet
-Validated: 524289
 EndChar
 
-StartChar: uni2712
+StartChar: BlackNibEmoji
 Encoding: 19 10002 19
 Width: 1024
 Flags: W
@@ -1151,10 +1150,10 @@ SplineSet
  189 278 l 1
  189 322 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: uni25B7
+StartChar: WhiteRightPointingTriangle
 Encoding: 20 9655 20
 Width: 1024
 Flags: W
@@ -1195,13 +1194,13 @@ SplineSet
  381 368 l 1
  260 282 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: NameMe.21
 Encoding: 21 9654 21
 Width: 1024
-Flags: W
+Flags: HW
 HStem: 114 59<487.752 640.196> 118 73<215.899 388.248> 400 60<702.176 852.196> 556 65<217.539 388.043>
 VStem: 43 77<286.932 458.191> 357 62<251.184 318> 485 66<287.605 458.191> 569 62<255 330.062> 712 52<243.938 318> 924 52<255 330.062>
 LayerCount: 4
@@ -1239,10 +1238,9 @@ SplineSet
  381 368 l 1
  260 282 l 1
 EndSplineSet
-Validated: 524289
 EndChar
 
-StartChar: uni25BB
+StartChar: WhiteRightPointingPointer
 Encoding: 22 9659 22
 Width: 1024
 Flags: W
@@ -1283,10 +1281,10 @@ SplineSet
  381 368 l 1
  260 282 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
-StartChar: uni26ED
+StartChar: GearWithoutHub
 Encoding: 23 9965 23
 Width: 1024
 Flags: W
@@ -1338,7 +1336,7 @@ SplineSet
  239 370 l 1
  195 370 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: BlackStar
@@ -1393,7 +1391,7 @@ SplineSet
  348 353 l 1
  396 394 l 1
 EndSplineSet
-Validated: 524293
+Validated: 5
 EndChar
 
 StartChar: key
@@ -1458,7 +1456,7 @@ SplineSet
  383 360 371 352 358 348 c 0
  345 344 333 344 320 349 c 1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: arrowdown
@@ -1506,7 +1504,7 @@ SplineSet
  324 494 l 1
  324 407 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: arrowleft
@@ -1554,7 +1552,7 @@ SplineSet
  485 474 402 556 302 556 c 0
  202 556 120 474 120 374 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: arrowright
@@ -1602,7 +1600,7 @@ SplineSet
  216 439 l 1
  303 439 l 1x2fe0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: arrowup
@@ -1650,7 +1648,7 @@ SplineSet
  284 362 l 1
  284 450 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: RightMagnifyingGlass
@@ -1782,7 +1780,7 @@ SplineSet
  284 376 286 382 290 386 c 0
  294 390 299 392 306 392 c 0
 EndSplineSet
-Validated: 524293
+Validated: 5
 EndChar
 
 StartChar: FleuronCenter
@@ -1839,7 +1837,7 @@ SplineSet
  485 474 402 556 302 556 c 0
  202 556 120 474 120 374 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: HighVoltageSign
@@ -2067,7 +2065,7 @@ SplineSet
  485 474 402 556 302 556 c 0
  202 556 120 474 120 374 c 0
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: lock
@@ -2133,7 +2131,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: uni27F3
+StartChar: ClockwiseGappedCircleArrow
 Encoding: 31 10227 39
 Width: 1024
 Flags: W
@@ -2193,7 +2191,7 @@ SplineSet
  306 374 l 1
  393 374 l 1
 EndSplineSet
-Validated: 524293
+Validated: 5
 EndChar
 
 StartChar: ClockFaceEightOClock
@@ -2363,7 +2361,7 @@ SplineSet
  391 382 388 388 383 394 c 0
  378 400 372 402 365 402 c 2
 EndSplineSet
-Validated: 524293
+Validated: 5
 EndChar
 
 StartChar: GraduationCap
@@ -2417,7 +2415,7 @@ SplineSet
  485 474 402 556 302 556 c 0
  202 556 120 474 120 374 c 0
 EndSplineSet
-Validated: 524293
+Validated: 5
 EndChar
 
 StartChar: GraduationCapAlt
@@ -2469,7 +2467,7 @@ SplineSet
  299 511 l 1
  419 445 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: ClockwiseSemicircleArrows
@@ -2583,7 +2581,7 @@ SplineSet
  317 330 l 1
  186 395 l 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: NameMe.51
@@ -2663,7 +2661,7 @@ SplineSet
  924 335 857 400 777 400 c 0
  697 400 631 335 631 255 c 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 
 StartChar: NameMe.49
@@ -2866,7 +2864,7 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: u1F517
+StartChar: LinkSymbolEmoji
 Encoding: 44 128279 54
 Width: 1024
 Flags: W
@@ -2951,7 +2949,7 @@ SplineSet
  924 335 857 400 777 400 c 0
  697 400 631 335 631 255 c 1
 EndSplineSet
-Validated: 524289
+Validated: 1
 EndChar
 EndChars
 EndSplineFont
