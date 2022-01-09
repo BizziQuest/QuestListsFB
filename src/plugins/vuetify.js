@@ -4,7 +4,7 @@ import '@mdi/font/css/materialdesignicons.css'; // for the default material desi
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import { preset as replyPreset } from 'vue-cli-plugin-vuetify-preset-reply/preset';
 import { preset as rallyPreset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
-import '../assets/questlistsicons.css';
+import '../assets/QuestLists-font/questlistsicons.scss';
 
 /**
  * We are using two different preset themes. Reply and Rally. See the material presets for more.

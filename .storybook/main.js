@@ -31,7 +31,7 @@ module.exports = {
           loader: 'sass-loader',
           options: {
             sassOptions: {
-              indentedSyntax: true,
+              // indentedSyntax: true,
             },
             // prependData: "@import '@/sass/variables.sass'", // for app-level sass
           },

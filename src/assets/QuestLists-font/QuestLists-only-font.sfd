@@ -25,7 +25,7 @@ OS2Version: 1
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 1
 CreationTime: 1638458673
-ModificationTime: 1641594251
+ModificationTime: 1641620591
 PfmFamily: 17
 TTFWeight: 400
 TTFWidth: 5
@@ -1047,7 +1047,7 @@ EndChar
 StartChar: UpperRightPencil
 Encoding: 18 10000 18
 Width: 1024
-Flags: HW
+Flags: W
 HStem: 114 59<487.752 640.196> 118 73<215.899 388.248> 400 60<702.176 852.196> 556 65<217.539 388.043>
 VStem: 43 77<286.932 458.191> 357 62<251.184 318> 485 66<287.605 458.191> 569 62<255 330.062> 712 52<243.938 318> 924 52<255 330.062>
 LayerCount: 4
@@ -1197,10 +1197,10 @@ EndSplineSet
 Validated: 1
 EndChar
 
-StartChar: NameMe.21
+StartChar: BlackRightPointingTriangle
 Encoding: 21 9654 21
 Width: 1024
-Flags: HW
+Flags: W
 HStem: 114 59<487.752 640.196> 118 73<215.899 388.248> 400 60<702.176 852.196> 556 65<217.539 388.043>
 VStem: 43 77<286.932 458.191> 357 62<251.184 318> 485 66<287.605 458.191> 569 62<255 330.062> 712 52<243.938 318> 924 52<255 330.062>
 LayerCount: 4
