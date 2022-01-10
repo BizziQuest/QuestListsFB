@@ -18,6 +18,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+// We are trying to get three variations here:
+//  1. the unicode number for the glyph
+//  2. the written version of the glyph. 
+//       there can be more to align with other common names, but should be at least the same as the name in the .sfd file
+//  3. the unicode symbol such that .ql-<symbol> works
 $glyphs: (
   // plain logo
   "questlists": "➰",
@@ -40,15 +45,12 @@ $glyphs: (
 
   "ql-0078": "\0078",
   "ql-x": "x",
-  // "ql-x": "x",
 
   "ql-0051": "\0051",
   "ql-Q": "Q",
-  // "ql-Q": "Q",
 
   "ql-0070": "\0070",
   "ql-p": "p",
-  // "ql-p": "p",
 
   "ql-2713": "\2713",
   "ql-checkmark": "✓",
@@ -64,7 +66,6 @@ $glyphs: (
 
   "ql-006E": "\006E",
   "ql-n": "n",
-  // "ql-n": "n",
 
   "ql-27B0": "\27B0",
   "ql-CurlyLoopEmoji": "➰",
@@ -176,7 +177,9 @@ $glyphs: (
 
   "ql-0021": "\0021",
   "ql-exclam": "!",
-  // "ql-!": "!",
+  "ql-exclamation": "!",
+  "ql-exclaim": "!",
+  // "ql-!": "!",  // invalid "!"
 
   "ql-1F513": "\1F513",
   "ql-OpenLock": "🔓",
