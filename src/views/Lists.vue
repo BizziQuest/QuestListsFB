@@ -1,8 +1,29 @@
 <template>
-  <v-container fluid class='lists-view'>
+  <v-container fluid class="lists-view">
+    <v-autocomplete
+      class="search-box"
+      solo filled rounded clearable
+      hide-no-data
+      hide-selected
+      return-object
+      :items="algoliaSuggestions"
+      :loading="isLoading"
+      :search-input.sync="searchTerm"
+      @input="getSuggestions($event)"
+      @keydown.enter="search($event)"
+      color="white"
+      :height="22"
+      item-text="Search for"
+      item-value="API"
+      label="Search Quests"
+      placeholder="Start typing to Search"
+      prepend-inner-icon="mdi-database-search"
+    ></v-autocomplete>
     <transition-group tag="div" class="row" name="fade">
-      <v-col v-if="lists === null" key="skeleton" class='mt-5'>
-        <v-skeleton-loader v-for="i in 6" :key="i"
+      <v-col v-if="lists === null" key="skeleton" class="mt-5">
+        <v-skeleton-loader
+          v-for="i in 6"
+          :key="i"
           class="mx-auto"
           max-width="800"
           type="list-item-avatar, divider, list-item-three-line, card-heading, image, actions"
@@ -14,7 +35,15 @@
           <v-icon>$questlists-plus</v-icon> icon on the left to get started!
         </v-alert>
       </v-row>
-      <v-col v-else v-for="list in lists" :key="list.id" md="4" sm="6" xs="12" class="d-flex align-stretch">
+      <v-col
+        v-else
+        v-for="list in lists"
+        :key="list.objectID || list.id"
+        md="4"
+        sm="6"
+        xs="12"
+        class="d-flex align-stretch"
+      >
         <ListCard :list="list"></ListCard>
       </v-col>
     </transition-group>
@@ -22,19 +51,42 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import ListCard from '../components/ListCard.vue';
+import { algoliaIndex } from '../algolia';
+import { fetchQuestLists } from '../firebase';
 
 export default {
   name: 'Lists',
   components: {
     ListCard,
   },
+  data: () => ({
+    algoliaSuggestions: [],
+    searchTerm: '',
+    isLoading: false,
+  }),
   methods: {
     ...mapActions(['fetchLists']),
+    ...mapMutations(['setLists']),
+    async search() {
+      this.isLoading = true;
+      const { hits } = await algoliaIndex.search(this.searchTerm);
+      const resultsSlugs = hits.map((hit) => hit.slug);
+      const fbResults = await fetchQuestLists({ slugs: resultsSlugs });
+      this.setLists(fbResults);
+      this.isLoading = false;
+    },
+    async getSuggestions() {
+      this.algoliaSuggestions = ['suggestions', this.searchTerm];
+    },
   },
   computed: {
     ...mapState(['lists']),
+    filteredList() {
+      if (!this.searchTerm) return this.lists;
+      return this.searchResults;
+    },
   },
   mounted() {
     this.fetchLists();
@@ -62,6 +114,11 @@ ul {
 
 .fade-enter,
 .fade-leave-active {
-  opacity: 0
+  opacity: 0;
+}
+
+.search-box >>> .v-text-field.v-text-field--solo .v-input__control {
+    min-height: 22px;
+    padding: 0;
 }
 </style>

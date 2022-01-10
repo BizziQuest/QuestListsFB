@@ -15,7 +15,7 @@ import {
   createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
 } from 'firebase/auth';
 import {
-  limit, query, getDocs, addDoc,
+  addDoc,
 } from 'firebase/firestore';
 import { getAvatarForUser } from '../util';
 import {
@@ -27,7 +27,10 @@ import {
   facebookOAuthLogin,
   saveUserPreferences,
   getUserPreferences,
+  fetchQuestLists,
 } from '../firebase';
+
+import { algoliaIndex } from '../algolia';
 
 Vue.use(Vuex);
 
@@ -217,24 +220,16 @@ const store = new Vuex.Store({
     },
     async createList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
-    },
-    async createSubList({ dispatch }, listData) {
-      const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
+      const doc = await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
+      algoliaIndex.saveObject(
+        { ...listData, objectID: doc.id },
+      );
     },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);
     },
-    async fetchLists({ commit }, { pageSize = 10 } = {}) {
-      const q = query(listsCollection, limit(pageSize));
-      const docs = await getDocs(q);
-      const lists = [];
-      docs.forEach(async (doc) => {
-        const list = doc.data();
-        list.id = doc.id;
-        lists.push(list);
-      });
+    async fetchLists({ commit }, options = {}) {
+      const lists = await fetchQuestLists(options);
       commit('setLists', lists);
     },
     async saveProfile({ commit }, payload) {
