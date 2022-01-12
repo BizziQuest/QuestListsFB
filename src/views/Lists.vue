@@ -94,11 +94,6 @@ export default {
   },
   computed: {
     ...mapState(['lists']),
-    // this part has not been used anywhere inside the code?!!
-    // filteredList() {
-    //   if (!this.searchTerm) return this.lists;
-    //   return this.searchResults;
-    // },
   },
   mounted() {
     this.fetchLists();
