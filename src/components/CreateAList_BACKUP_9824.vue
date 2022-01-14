@@ -66,6 +66,12 @@
               </v-col>
             </v-row>
           </v-form>
+<<<<<<< HEAD
+          <states-editor
+            :stateGroup="getGlobalPreferences.defaultStateGroup"
+            @list:updated="listUpdated"
+          />
+=======
           <v-row>
             <v-checkbox v-model="adultContent" test-adult-content class="mx-5" label="Adult Content" hide-details>
             </v-checkbox>
@@ -81,6 +87,7 @@
             </v-tooltip>
           </v-row>
           <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup" @list:updated="listUpdated" />
+>>>>>>> main
         </v-container>
         <small>*indicates required field</small>
       </v-card-text>

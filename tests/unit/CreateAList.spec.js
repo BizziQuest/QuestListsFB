@@ -7,6 +7,8 @@ import routes from '@/router/routes';
 import CreateAList from '@/components/CreateAList.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
+jest.mock('../../src/algolia.js');
+
 jest.mock('firebase.js', () => ({
   auth: {
     currentUser: {
@@ -95,13 +97,13 @@ describe('entering information in the page', () => {
       await wrapper.find('input[test-title-input]').setValue('A Title');
       await wrapper.find('input[test-description-input]').setValue('');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
-      expect(wrapper.text()).toMatch(/Description\s+Possible/);
+      expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help\s+Possible/);
     });
     it('should allow simple text', async () => {
       await wrapper.find('input[test-title-input]').setValue('A Tile');
       await wrapper.find('input[test-description-input]').setValue('I am a description');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
-      expect(wrapper.text()).toMatch(/Description\s+Possible/);
+      expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help\s+Possible/);
     });
     it('should allow complex text (this is to make sure our tools support complex inputs)', async () => {
       const unicodeString = 'ʕノ•ᴥ•ʔノ ︵ ┻━┻ ✌.ʕʘ‿ʘʔ.✌ 😀';
@@ -109,7 +111,7 @@ describe('entering information in the page', () => {
       await wrapper.find('input[test-description-input]').setValue(unicodeString);
       expect(wrapper.vm.description).toEqual(unicodeString);
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
-      expect(wrapper.text()).toMatch(/Description\s+Possible/);
+      expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help\s+Possible/);
     });
   });
   it.todo('should not allow empty states');
@@ -174,16 +176,44 @@ describe('list creation', () => {
     wrapper.vm.createAList();
     expect(actions.createList).not.toHaveBeenCalled();
   });
-  it('should notify users when there are no states given.', async () => {    
+  it('should notify users when there are no states given.', async () => {
     await wrapper.vm.$nextTick();
-    await wrapper.vm.createAList();    
+    await wrapper.vm.createAList();
     expect(actions.notify.mock.calls[0][1]).toEqual([
       { type: 'info', text: 'No states configured. Using default states.' },
     ]);
     expect(actions.createList).toHaveBeenCalled();
-   
+  
+    it('should create the list with the proper parameters', async () => {
+      wrapper.find('[test-adult-content]').trigger('click');
+      wrapper.find('[test-activate-item]').trigger('click');
+      expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
+      await wrapper.vm.$nextTick();
+      await wrapper.vm.createAList();
+      expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(false);
+      expect(actions.notify.mock.calls[0][1]).toEqual(
+        { type: 'info', text: 'No states configured. Using default states.' },
+      );
+      const createParams = actions.createList.mock.calls[0][1];
+      expect(createParams.stateGroup).toStrictEqual({ states: [] });
+      expect(createParams.adultContent).toStrictEqual(true);
+      expect('Unable to locate target [data-app]').toHaveBeenWarned();
+    });
+    it('should notify users when there are no states given.', async () => {
+      wrapper.find('[test-activate-item]').trigger('click');
+      expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
+      await wrapper.vm.$nextTick();
+      await wrapper.vm.createAList();
+      expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(false);
+      expect(actions.notify.mock.calls[0][1]).toEqual(
+        { type: 'info', text: 'No states configured. Using default states.' },
+      );
+      const createParams = actions.createList.mock.calls[0][1];
+      expect(createParams.stateGroup).toStrictEqual({ states: [] });
+      expect('Unable to locate target [data-app]').toHaveBeenWarned();
+    });
   });
-});
 
-it.todo('should show the color picker when the color picker icon is clicked.');
-it.todo('should set the color of the color picker icon when the color picker menu is closed.');
+  it.todo('should show the color picker when the color picker icon is clicked.');
+  it.todo('should set the color of the color picker icon when the color picker menu is closed.');
+});

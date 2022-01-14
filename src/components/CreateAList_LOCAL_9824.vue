@@ -66,21 +66,10 @@
               </v-col>
             </v-row>
           </v-form>
-          <v-row>
-            <v-checkbox v-model="adultContent" test-adult-content class="mx-5" label="Adult Content" hide-details>
-            </v-checkbox>
-            <v-tooltip right max-width="200">
-              <template v-slot:activator="{ on, attrs }">
-                <v-icon class="ml-4 mt-3" color="info" dark v-bind="attrs" v-on="on">help</v-icon>
-              </template>
-              <span
-                >Adult-oriented content is content which may include nudity, strong sexual themes, or strong
-                descriptions of violence. Examples include Questlists for Cyberpunk 2077 or Grand Theft Auto; Questlists
-                of adult web sites or subreddits;
-              </span>
-            </v-tooltip>
-          </v-row>
-          <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup" @list:updated="listUpdated" />
+          <states-editor
+            :stateGroup="getGlobalPreferences.defaultStateGroup"
+            @list:updated="listUpdated"
+          />
         </v-container>
         <small>*indicates required field</small>
       </v-card-text>
@@ -122,7 +111,6 @@ export default {
   data() {
     return {
       ...defaultFormData,
-      adultContent: false,
       dialog: false,
       formIsValid: false,
       titleRules: [
@@ -173,10 +161,9 @@ export default {
           states: this.updatedListStatesItems,
         };
       } else {
-        this.notify({ type: 'info', text: 'No states configured. Using default states.' });
+        this.notify([{ type: 'info', text: 'No states configured. Using default states.' }]);
       }
       const payload = {
-        adultContent: this.adultContent,
         title: this.title,
         slug: await ensureSlugUniqueness(this.title),
         color: this.listColor,

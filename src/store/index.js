@@ -16,7 +16,7 @@ import {
   createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
 } from 'firebase/auth';
 import {
-  limit, query, getDocs, addDoc,
+  addDoc,
 } from 'firebase/firestore';
 import router from '../router';
 import { getAvatarForUser } from '../util';
@@ -29,7 +29,10 @@ import {
   facebookOAuthLogin,
   saveUserPreferences,
   getUserPreferences,
+  fetchQuestLists,
 } from '../firebase';
+
+import { algoliaIndex } from '../algolia';
 
 Vue.use(Vuex);
 
@@ -125,7 +128,7 @@ const store = new Vuex.Store({
   },
   actions: {
     notify({ state, commit }, message) {
-      const { text, type, timeout = 2000 } = message[0];
+      const { text, type, timeout = 2000 } = message;
       const messageArray = [];
       messageArray.push({ text, type, timeout });
       commit('setMessages', [...state.messages, ...messageArray]);
@@ -219,26 +222,23 @@ const store = new Vuex.Store({
     },
     async createList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
+      const doc = await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
+      debugger;
+      algoliaIndex.saveObject(
+        { ...listData, objectID: doc.id },
+      );
       router.push(`/lists/${listData.slug}`);
-    },
-    async createSubList({ dispatch }, listData) {
-      const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
     },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);
     },
-    async fetchLists({ commit }, { pageSize = 10 } = {}) {
-      const q = query(listsCollection, limit(pageSize));
-      const docs = await getDocs(q);
-      const lists = [];
-      docs.forEach(async (doc) => {
-        const list = doc.data();
-        list.id = doc.id;
-        lists.push(list);
+    async fetchLists({ commit }, options = {}) {
+      fetchQuestLists({
+        ...options,
+        callback: (lists) => {
+          commit('setLists', lists);
+        },
       });
-      commit('setLists', lists);
     },
     async saveProfile({ commit }, payload) {
       try {
