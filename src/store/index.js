@@ -229,8 +229,12 @@ const store = new Vuex.Store({
       commit('updateUserInfo', payload);
     },
     async fetchLists({ commit }, options = {}) {
-      const lists = await fetchQuestLists(options);
-      commit('setLists', lists);
+      fetchQuestLists({
+        ...options,
+        callback: (lists) => {
+          commit('setLists', lists);
+        },
+      });
     },
     async saveProfile({ commit }, payload) {
       try {

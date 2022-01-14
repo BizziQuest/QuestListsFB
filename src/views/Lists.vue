@@ -2,7 +2,10 @@
   <v-container fluid class="lists-view">
     <v-autocomplete
       class="search-box"
-      solo filled rounded clearable
+      solo
+      filled
+      rounded
+      clearable
       hide-no-data
       hide-selected
       return-object
@@ -69,13 +72,21 @@ export default {
   methods: {
     ...mapActions(['fetchLists']),
     ...mapMutations(['setLists']),
-    async search() {
+    async search(e) {
+      if (e.target.value === '') {
+        this.setLists(this.fetchLists());
+        return;
+      }
       this.isLoading = true;
       const { hits } = await algoliaIndex.search(this.searchTerm);
       const resultsSlugs = hits.map((hit) => hit.slug);
-      const fbResults = await fetchQuestLists({ slugs: resultsSlugs });
-      this.setLists(fbResults);
-      this.isLoading = false;
+      fetchQuestLists({
+        slugs: resultsSlugs,
+        callback: (lists) => {
+          this.setLists(lists);
+          this.isLoading = false;
+        },
+      });
     },
     async getSuggestions() {
       this.algoliaSuggestions = ['suggestions', this.searchTerm];
@@ -83,10 +94,6 @@ export default {
   },
   computed: {
     ...mapState(['lists']),
-    filteredList() {
-      if (!this.searchTerm) return this.lists;
-      return this.searchResults;
-    },
   },
   mounted() {
     this.fetchLists();
@@ -118,7 +125,7 @@ ul {
 }
 
 .search-box >>> .v-text-field.v-text-field--solo .v-input__control {
-    min-height: 22px;
-    padding: 0;
+  min-height: 22px;
+  padding: 0;
 }
 </style>
