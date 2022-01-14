@@ -197,11 +197,11 @@ describe('Lists.vue', () => {
         await wrapper.find('.search-box input[type="text"]').setValue('list123');
         await wrapper.find('.search-box input[type="text"]').trigger('keydown.enter');
         await wrapper.vm.$nextTick();
-        const f = fetchQuestLists
-        expect(f.mock.calls[0][0].slugs).toStrictEqual( ['list123'] );
-        expect(f.mock.calls[0][0].callback).not.toStrictEqual(undefined)
-        //TODO: figure out to mock a callback
-        // lists.filter((list) => list.title !== 'list123').forEach((l) => expect(wrapper.text()).not.toContain(l.title));
+        const f = fetchQuestLists;
+        expect(f.mock.calls[0][0].slugs).toStrictEqual(['list123']);
+        expect(f.mock.calls[0][0].callback).not.toStrictEqual(undefined);
+        // TODO: figure out to mock a callback
+        // lists.filter((list) =>list.title!=='list123').forEach((l)=>expect(wrapper.text()).not.toContain(l.title));
       });
     });
   });
