@@ -178,40 +178,39 @@ describe('list creation', () => {
   it('should notify users when there are no states given.', async () => {
     await wrapper.vm.$nextTick();
     await wrapper.vm.createAList();
-    expect(actions.notify.mock.calls[0][1]).toEqual([
+    expect(actions.notify.mock.calls[0][1]).toEqual(
       { type: 'info', text: 'No states configured. Using default states.' },
-    ]);
+    );
     expect(actions.createList).toHaveBeenCalled();
-
-    it('should create the list with the proper parameters', async () => {
-      wrapper.find('[test-adult-content]').trigger('click');
-      wrapper.find('[test-activate-item]').trigger('click');
-      expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
-      await wrapper.vm.$nextTick();
-      await wrapper.vm.createAList();
-      expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(false);
-      expect(actions.notify.mock.calls[0][1]).toEqual(
-        { type: 'info', text: 'No states configured. Using default states.' },
-      );
-      const createParams = actions.createList.mock.calls[0][1];
-      expect(createParams.stateGroup).toStrictEqual({ states: [] });
-      expect(createParams.adultContent).toStrictEqual(true);
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
-    });
-    it('should notify users when there are no states given.', async () => {
-      wrapper.find('[test-activate-item]').trigger('click');
-      expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
-      await wrapper.vm.$nextTick();
-      await wrapper.vm.createAList();
-      expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(false);
-      expect(actions.notify.mock.calls[0][1]).toEqual(
-        { type: 'info', text: 'No states configured. Using default states.' },
-      );
-      const createParams = actions.createList.mock.calls[0][1];
-      expect(createParams.stateGroup).toStrictEqual({ states: [] });
-      expect('Unable to locate target [data-app]').toHaveBeenWarned();
-    });
   });
+
+  it('should create the list with the proper parameters', async () => {
+    wrapper.find('[test-adult-content]').trigger('click');
+    await wrapper.find('input[test-title-input]').setValue('A New Title');
+    wrapper.find('[test-submit-form]').trigger('click');
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.createAList();
+    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
+    expect(actions.notify.mock.calls[0][1]).toEqual(
+      { type: 'info', text: 'No states configured. Using default states.' },
+    );
+    const createParams = actions.createList.mock.calls[0][1];
+    expect(createParams.stateGroup).toStrictEqual({ states: [] });
+    expect(createParams.adultContent).toStrictEqual( true);
+  });
+  it('should notify users when there are no states given.', async () => {
+    await wrapper.find('input[test-title-input]').setValue('A New Title');
+    wrapper.find('[test-submit-form]').trigger('click');
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.createAList();
+    expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
+    expect(actions.notify.mock.calls[0][1]).toEqual(
+      { type: 'info', text: 'No states configured. Using default states.' },
+    );
+    const createParams = actions.createList.mock.calls[0][1];
+    expect(createParams.stateGroup).toStrictEqual({ states: [] }); 
+  });
+
 
   it.todo('should show the color picker when the color picker icon is clicked.');
   it.todo('should set the color of the color picker icon when the color picker menu is closed.');

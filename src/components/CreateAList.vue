@@ -30,13 +30,7 @@
                   test-color-input
                 >
                   <template v-slot:append>
-                    <v-menu
-                      :close-on-content-click="false"
-                      :close-on-click="false"
-                      v-model="colorPickerShown"
-                      left
-                      top
-                    >
+                    <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
                       <template v-slot:activator="{ on }">
                         <div :style="swatchStyle()" v-on="on" />
                       </template>
@@ -86,7 +80,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" name="submit" text @click="createAList">Create</v-btn>
+        <v-btn color="blue darken-1" name="submit" test-submit-form text @click="createAList">Create</v-btn>
       </v-card-actions>
     </v-card>
   </div>
