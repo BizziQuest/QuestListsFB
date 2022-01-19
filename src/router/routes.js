@@ -41,7 +41,7 @@ const routes = [
     component: EditInfo,
   },
   {
-    path: '/newlist',
+    path: '/new',
     name: 'New QuestList',
     component: CreateAList,
   },

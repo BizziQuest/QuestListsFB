@@ -28,8 +28,6 @@ export default {
   computed: {
     ...mapState({
       messages(state) {
-        // debugger;
-        console.info(state);
         if (state.messages.length < 1) return [];
         this.showSnackbar = true;
         return state.messages;

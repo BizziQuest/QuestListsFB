@@ -51,7 +51,6 @@ describe('entering information in the page', () => {
       vuetify,
       store,
     });
-
   });
   describe('the title field', () => {
     it('should set the vm title from the title input', async () => {
@@ -183,7 +182,7 @@ describe('list creation', () => {
       { type: 'info', text: 'No states configured. Using default states.' },
     ]);
     expect(actions.createList).toHaveBeenCalled();
-  
+
     it('should create the list with the proper parameters', async () => {
       wrapper.find('[test-adult-content]').trigger('click');
       wrapper.find('[test-activate-item]').trigger('click');

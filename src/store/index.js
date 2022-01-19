@@ -223,7 +223,6 @@ const store = new Vuex.Store({
     async createList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
       const doc = await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
-      debugger;
       algoliaIndex.saveObject(
         { ...listData, objectID: doc.id },
       );
