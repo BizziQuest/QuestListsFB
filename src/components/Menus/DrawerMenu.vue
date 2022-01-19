@@ -30,7 +30,7 @@
       </v-list-item>
       <v-list-item
         test-default-create-list-item
-        to="/newlist"
+        to="/new"
         link
         :color="menuHighlightColor"
         title="Create A New Quest"

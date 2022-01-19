@@ -30,7 +30,7 @@
       center
       medium
       class="rounded-circle main-fab"
-      to='/newlist'
+      to='/new'
     >
       <v-icon>mdi-shield-plus-outline</v-icon>
     </v-btn>

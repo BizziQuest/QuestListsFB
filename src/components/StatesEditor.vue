@@ -29,6 +29,7 @@
             :draggable="index !== items.length - 1"
             :isDraggable="index !== items.length - 1"
             @update:item="ensureNewState(index, $event)"
+            @delete:item="deleteListState(index, $event)"
             @blur="updateItem(index, $event)"
             :class="{
               changed: updatedRows.find(e => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
@@ -76,6 +77,7 @@ export default {
           text: 'New State',
           icon: 'mdi-plus',
           value: getNextUnusedValue(this.stateGroup.states),
+          isNewItem: true,
         },
       ],
       rowItems: [],
@@ -90,15 +92,21 @@ export default {
     ensureNewState(index, state) {
       const lastStateIndex = this.items.length - 1;
       this.items[lastStateIndex].icon = 'mdi-checkbox-blank-outline';
+      this.items[lastStateIndex].isNewItem = false;
       if (index === lastStateIndex) {
         if (state.text.length !== 0) {
           this.items.push({
             icon: 'mdi-plus',
             text: 'New Item',
             value: getNextUnusedValue(this.items),
+            isNewItem: true,
           });
         }
       }
+    },
+    deleteListState(index) {
+      const newItems = [...this.items];
+      this.items = newItems.filter((_item, idx) => idx !== index);
     },
   },
 };
