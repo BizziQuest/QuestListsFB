@@ -53,11 +53,13 @@ describe('StatesEditor.vue', () => {
     expect(wrapper.props().stateGroup).toEqual(stateGroup)
   })
 
-  it('clicking on corss icon should delete the list item', async () => {
+  it('should remove the item from the list on item delete', async () => {
     const allDefultListItem = wrapper.findAll('[test-list-item]');
     expect(allDefultListItem.length).toBe(2)
     await allDefultListItem.wrappers[0].trigger('delete:item')
     expect(allDefultListItem.length).toBe(1)
   })
-
+  it.todo('should add new items when typing in the new item field');
+  it.todo('should update the icon in the list when updating an icon in an item editor');
+  it.todo('should save with the correct data');
 })
