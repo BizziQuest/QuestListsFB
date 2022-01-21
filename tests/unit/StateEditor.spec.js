@@ -2,8 +2,10 @@ import { mount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
-import StateEditor from '@/components/StateEditor.vue';
-import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
+import StatesEditor from '../../src/components/StatesEditor.vue';
+// import IconState from '../../src/components/IconState.vue';
+import ListState from '../../src/components/ListState.vue';
+// import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
 
 jest.mock('../../src/firebase.js');
 
@@ -25,3 +27,37 @@ const localStore = new Vuex.Store({
     },
   },
 });
+
+describe('StatesEditor.vue', () => {
+  let wrapper;
+  let stateGroup ={ states: [ {
+    text: 'New State',
+    icon: 'mdi-plus',
+    value: 'whatever',
+  }]};
+  beforeEach( () => {
+    wrapper = mount(StatesEditor, {
+      localVue,
+      vuetify,
+      store: localStore,
+      propsData: {
+        stateGroup
+      },
+    });
+    // await flushPromises(); // for fetchList() call in List.mounted()
+  });
+
+  it('should show the defaults states and new item', () => {
+    const allDefultListItem = wrapper.findAll('[test-list-item]');
+    expect(allDefultListItem.length).toBe(2)
+    expect(wrapper.props().stateGroup).toEqual(stateGroup)
+  })
+
+  it('clicking on corss icon should delete the list item', async () => {
+    const allDefultListItem = wrapper.findAll('[test-list-item]');
+    expect(allDefultListItem.length).toBe(2)
+    await allDefultListItem.wrappers[0].trigger('delete:item')
+    expect(allDefultListItem.length).toBe(1)
+  })
+
+})

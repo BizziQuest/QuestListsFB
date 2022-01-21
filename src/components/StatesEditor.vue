@@ -22,6 +22,7 @@
         class="item-row"
         ref="row"
         :data-key="`${item.text}${index}${numForceRedraws}`"
+        test-list-item
       >
         <v-row class="justify-start align-center">
           <list-state
@@ -105,6 +106,7 @@ export default {
       }
     },
     deleteListState(index) {
+      debugger;
       const newItems = [...this.items];
       this.items = newItems.filter((_item, idx) => idx !== index);
     },
