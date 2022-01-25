@@ -26,6 +26,7 @@
       >
         <v-row class="justify-start align-center">
           <list-state
+            list-state-test
             :item="item"
             :draggable="index !== items.length - 1"
             :isDraggable="index !== items.length - 1"
@@ -87,10 +88,12 @@ export default {
 
   methods: {
     updateItem(index, state) {
+      debugger;
       this.items[index].text = state.text;
       this.$emit('list:updated', this.items.slice(0, -1));
     },
     ensureNewState(index, state) {
+      debugger;
       const lastStateIndex = this.items.length - 1;
       this.items[lastStateIndex].icon = 'mdi-checkbox-blank-outline';
       this.items[lastStateIndex].isNewItem = false;
@@ -113,7 +116,6 @@ export default {
   },
 };
 </script>
-
 <style lang="scss" scoped>
 #drop-zone {
   min-height: 300px;

@@ -30,12 +30,14 @@ const localStore = new Vuex.Store({
 
 describe('StatesEditor.vue', () => {
   let wrapper;
-  let stateGroup ={ states: [ {
-    text: 'New State',
-    icon: 'mdi-plus',
-    value: 'whatever',
-  }]};
-  beforeEach( () => {
+  let stateGroup = {
+    states: [{
+      text: 'New State',
+      icon: 'mdi-plus',
+      value: 'whatever',
+    }]
+  };
+  beforeEach(() => {
     wrapper = mount(StatesEditor, {
       localVue,
       vuetify,
@@ -44,7 +46,6 @@ describe('StatesEditor.vue', () => {
         stateGroup
       },
     });
-    // await flushPromises(); // for fetchList() call in List.mounted()
   });
 
   it('should show the defaults states and new item', () => {
@@ -59,7 +60,16 @@ describe('StatesEditor.vue', () => {
     await allDefultListItem.wrappers[0].trigger('delete:item')
     expect(allDefultListItem.length).toBe(1)
   })
-  it.todo('should add new items when typing in the new item field');
+  it('should add new items when typing in the new item field', async () => {
+    const AllListItems = wrapper.findAll('[list-state-test]');
+    expect(AllListItems.length).toBe(2)
+    const newItem = wrapper.find('[draggable="false"]')
+    await newItem.find('[test-text-field]').setValue('something something')
+    await newItem.trigger('update:item')
+    // newItem.vm.isChanging()
+    // await wrapper.vm.$nextTick(); 
+    expect(AllListItems.length).toBe(3)
+  });
   it.todo('should update the icon in the list when updating an icon in an item editor');
   it.todo('should save with the correct data');
 })
