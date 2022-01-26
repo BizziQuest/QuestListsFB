@@ -88,12 +88,10 @@ export default {
 
   methods: {
     updateItem(index, state) {
-      debugger;
       this.items[index].text = state.text;
       this.$emit('list:updated', this.items.slice(0, -1));
     },
     ensureNewState(index, state) {
-      debugger;
       const lastStateIndex = this.items.length - 1;
       this.items[lastStateIndex].icon = 'mdi-checkbox-blank-outline';
       this.items[lastStateIndex].isNewItem = false;

@@ -1,4 +1,4 @@
-import { mount, createLocalVue } from '@vue/test-utils';
+import { mount, createLocalVue, shallowMount } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
@@ -34,7 +34,6 @@ describe('StatesEditor.vue', () => {
     states: [{
       text: 'New State',
       icon: 'mdi-plus',
-      value: 'whatever',
     }]
   };
   beforeEach(() => {
@@ -61,15 +60,21 @@ describe('StatesEditor.vue', () => {
     expect(allDefultListItem.length).toBe(1)
   })
   it('should add new items when typing in the new item field', async () => {
-    const AllListItems = wrapper.findAll('[list-state-test]');
-    expect(AllListItems.length).toBe(2)
+    let allListItems = wrapper.findAll('[list-state-test]');
+    expect(allListItems.length).toBe(2)
     const newItem = wrapper.find('[draggable="false"]')
     await newItem.find('[test-text-field]').setValue('something something')
     await newItem.trigger('update:item')
-    // newItem.vm.isChanging()
-    // await wrapper.vm.$nextTick(); 
-    expect(AllListItems.length).toBe(3)
+    allListItems = wrapper.findAll('[list-state-test]');
+    expect(allListItems.length).toBe(3)
   });
-  it.todo('should update the icon in the list when updating an icon in an item editor');
+  it('should update the icon and text in the list when updating an icon in an item editor', async () => {
+    let firstListState = wrapper.findAll('[list-state-test]').wrappers[0];
+    await firstListState.setData({item: { text: 'some text', icon: 'mdi-flower' }});
+    await firstListState.find('input').trigger('blur');
+    expect(wrapper.emitted()['list:updated'][0][0][0].icon).toEqual('mdi-flower')
+    expect(wrapper.emitted()['list:updated'][0][0][0].text).toEqual('some text')
+
+  });
   it.todo('should save with the correct data');
 })
