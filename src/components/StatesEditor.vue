@@ -89,6 +89,7 @@ export default {
   methods: {
     updateItem(index, state) {
       this.items[index].text = state.text;
+      if (state?.icon) this.items[index].icon = state.icon;
       this.$emit('list:updated', this.items.slice(0, -1));
     },
     ensureNewState(index, state) {
@@ -107,7 +108,6 @@ export default {
       }
     },
     deleteListState(index) {
-      debugger;
       const newItems = [...this.items];
       this.items = newItems.filter((_item, idx) => idx !== index);
     },
