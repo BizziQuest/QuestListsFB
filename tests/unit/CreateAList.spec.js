@@ -196,7 +196,7 @@ describe('list creation', () => {
     );
     const createParams = actions.createList.mock.calls[0][1];
     expect(createParams.stateGroup).toStrictEqual({ states: [] });
-    expect(createParams.adultContent).toStrictEqual( true);
+    expect(createParams.adultContent).toStrictEqual(true);
   });
   it('should notify users when there are no states given.', async () => {
     await wrapper.find('input[test-title-input]').setValue('A New Title');
@@ -208,9 +208,8 @@ describe('list creation', () => {
       { type: 'info', text: 'No states configured. Using default states.' },
     );
     const createParams = actions.createList.mock.calls[0][1];
-    expect(createParams.stateGroup).toStrictEqual({ states: [] }); 
+    expect(createParams.stateGroup).toStrictEqual({ states: [] });
   });
-
 
   it.todo('should show the color picker when the color picker icon is clicked.');
   it.todo('should set the color of the color picker icon when the color picker menu is closed.');

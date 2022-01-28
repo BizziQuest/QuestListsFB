@@ -1,7 +1,8 @@
 <template>
-    <v-text-field :value.sync="item.text" @input="isChanging($event)" @blur="updateText">
+    <v-text-field test-text-field :value.sync="item.text" @input="isChanging($event)" @blur="updateText">
       <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
       <icon-state slot="prepend-inner" :icon.sync="item.icon"></icon-state>
+      <v-icon test-delete-icon v-if="!item.isNewItem" slot="append-outer" @click="del(item)">close_thick</v-icon>
     </v-text-field>
 </template>
 <script>
@@ -23,6 +24,9 @@ export default {
     },
     isChanging(evt) {
       this.$emit('update:item', { icon: this.item.icon, text: evt });
+    },
+    del(item) {
+      this.$emit('delete:item', item);
     },
   },
 };

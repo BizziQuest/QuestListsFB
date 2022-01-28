@@ -22,13 +22,16 @@
         class="item-row"
         ref="row"
         :data-key="`${item.text}${index}${numForceRedraws}`"
+        test-list-item
       >
         <v-row class="justify-start align-center">
           <list-state
+            list-state-test
             :item="item"
             :draggable="index !== items.length - 1"
             :isDraggable="index !== items.length - 1"
             @update:item="ensureNewState(index, $event)"
+            @delete:item="deleteListState(index, $event)"
             @blur="updateItem(index, $event)"
             :class="{
               changed: updatedRows.find(e => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
@@ -76,6 +79,7 @@ export default {
           text: 'New State',
           icon: 'mdi-plus',
           value: getNextUnusedValue(this.stateGroup.states),
+          isNewItem: true,
         },
       ],
       rowItems: [],
@@ -85,25 +89,31 @@ export default {
   methods: {
     updateItem(index, state) {
       this.items[index].text = state.text;
+      if (state?.icon) this.items[index].icon = state.icon;
       this.$emit('list:updated', this.items.slice(0, -1));
     },
     ensureNewState(index, state) {
       const lastStateIndex = this.items.length - 1;
       this.items[lastStateIndex].icon = 'mdi-checkbox-blank-outline';
+      this.items[lastStateIndex].isNewItem = false;
       if (index === lastStateIndex) {
         if (state.text.length !== 0) {
           this.items.push({
             icon: 'mdi-plus',
             text: 'New Item',
             value: getNextUnusedValue(this.items),
+            isNewItem: true,
           });
         }
       }
     },
+    deleteListState(index) {
+      const newItems = [...this.items];
+      this.items = newItems.filter((_item, idx) => idx !== index);
+    },
   },
 };
 </script>
-
 <style lang="scss" scoped>
 #drop-zone {
   min-height: 300px;
