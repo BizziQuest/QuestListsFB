@@ -8,7 +8,6 @@ jest.mock('../../src/firebase.js');
 
 const localVue = createLocalVue();
 const vuetify = new Vuetify();
-const $route = { params: { slug: 'list123' } };
 
 localVue.use(Vuex);
 
@@ -51,13 +50,13 @@ describe('ListState.vue', () => {
   });
   it('del emits return right object to the parent', () => {
     wrapper.vm.del(wrapper.props().item);
-    expect(wrapper.emitted()['delete:item'][0]).toEqual([item]); // emitted() uses arrays
+    expect(wrapper.emitted()['delete:item'][0]).toEqual([item]);
   });
 
   it('chaging text will emitt a change event', async () => {
     jest.spyOn(wrapper.vm, 'isChanging');
     await wrapper.find('[test-text-field]').setValue('the text is changed');
-    expect(wrapper.emitted()['update:item'][0]).toEqual([{ icon: undefined, text: 'the text is changed' }]); // emitted() uses arrays
+    expect(wrapper.emitted()['update:item'][0]).toEqual([{ icon: undefined, text: 'the text is changed' }]);
   });
 
   it('update text will emitt a change event', async () => {
@@ -65,6 +64,6 @@ describe('ListState.vue', () => {
     const txtField = wrapper.find('[test-text-field]');
     await txtField.setValue('blured text value');
     await txtField.trigger('blur');
-    expect(wrapper.emitted().blur[0]).toEqual([{ icon: undefined, text: 'blured text value' }]); // emitted() uses arrays
+    expect(wrapper.emitted().blur[0]).toEqual([{ icon: undefined, text: 'blured text value' }]);
   });
 });
