@@ -31,15 +31,6 @@
           :highlightColor="menuHighlightColor"
         />
 
-        <v-list-item test-search-link link title="Look for a particular quest" to="/search">
-          <v-list-item-action>
-            <v-icon>mdi-magnify</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Search</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
         <v-list-item test-fav-header>
             <v-divider class="my-4"></v-divider>
             <v-subheader>Favorite Quests</v-subheader>
@@ -48,7 +39,7 @@
         <v-list-item test-fav-link v-for="item in favoriteQuests"
         :key="item.id" link :title="item.name" :to="`/lists/${item.id}`">
           <v-list-item-action>
-            <v-icon>{{item.icon}}</v-icon>
+            <v-icon>{{item.icon || '$questlists'}}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>{{item.name}}</v-list-item-title>

@@ -2,7 +2,7 @@
   <v-container fluid class="lists-view">
     <v-autocomplete
       class="search-box"
-      solo filled rounded clearable
+      solo filled rounded clearable dense
       hide-no-data
       hide-selected
       return-object
@@ -12,12 +12,12 @@
       @input="getSuggestions($event)"
       @keydown.enter="search($event)"
       color="white"
-      :height="22"
+      :height="19"
       item-text="Search for"
       item-value="API"
       label="Search Quests"
       placeholder="Start typing to Search"
-      prepend-inner-icon="mdi-database-search"
+      prepend-inner-icon="$questlists-search"
     ></v-autocomplete>
     <transition-group tag="div" class="row" name="fade">
       <v-col v-if="lists === null" key="skeleton" class="mt-5">
@@ -116,9 +116,12 @@ ul {
 .fade-leave-active {
   opacity: 0;
 }
-
+.search-box >>> .v-select__slot{
+  margin-left: 10px;
+}
 .search-box >>> .v-text-field.v-text-field--solo .v-input__control {
-    min-height: 22px;
+    // min-height: 22px;
     padding: 0;
+    margin-left: 10px;
 }
 </style>
