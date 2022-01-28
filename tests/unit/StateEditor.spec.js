@@ -1,17 +1,12 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
-// import flushPromises from 'flush-promises';
 import StatesEditor from '../../src/components/StatesEditor.vue';
-// import IconState from '../../src/components/IconState.vue';
-// import ListState from '../../src/components/ListState.vue';
-// import { saveListItems, getListBySlug, getListItems } from '../../src/firebase';
 
 jest.mock('../../src/firebase.js');
 
 const localVue = createLocalVue();
 const vuetify = new Vuetify();
-// const $route = { params: { slug: 'list123' } };
 
 localVue.use(Vuex);
 
@@ -31,10 +26,12 @@ const localStore = new Vuex.Store({
 describe('StatesEditor.vue', () => {
   let wrapper;
   const stateGroup = {
-    states: [{
-      text: 'Sample State For Test',
-      icon: 'mdi-plus',
-    }],
+    states: [
+      {
+        text: 'Sample State For Test',
+        icon: 'mdi-plus',
+      },
+    ],
   };
   beforeEach(() => {
     wrapper = mount(StatesEditor, {
