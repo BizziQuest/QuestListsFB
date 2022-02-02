@@ -117,7 +117,6 @@ export default {
     return {
       ...defaultFormData,
       adultContent: false,
-      dialog: false,
       formIsValid: false,
       titleRules: [
         (v) => !!v || 'Title is required',
@@ -130,9 +129,6 @@ export default {
     };
   },
   props: {
-    highlightColor: {
-      default: undefined,
-    },
     dark: {
       default: true,
       type: Boolean,
@@ -148,9 +144,6 @@ export default {
     },
   },
   methods: {
-    closeMenu() {
-      this.closeOnClick = true;
-    },
     ...mapMutations(['setItemStates']),
     ...mapActions(['createList', 'notify']),
     listUpdated($event) {
@@ -203,26 +196,6 @@ export default {
   },
   computed: {
     ...mapGetters(['getGlobalPreferences']),
-  },
-  mounted() {
-    if (this.$route.query?.newQuest) {
-      this.dialog = true;
-    }
-  },
-  watch: {
-    dialog(showDialog) {
-      const newQuery = { ...this.$route.query };
-      if (!showDialog) {
-        // this.resetForm();  // when user clicks outside dialog, reset form?
-        delete newQuery.newQuest;
-      } else {
-        newQuery.newQuest = 'true';
-      }
-      if (this.$route.query.newQuest !== newQuery.newQuest) {
-        this.$router.push({ query: newQuery });
-      }
-      this.verifyUser();
-    },
   },
 };
 </script>

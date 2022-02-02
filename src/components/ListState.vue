@@ -1,32 +1,63 @@
 <template>
-    <v-text-field test-text-field :value.sync="item.text" @input="isChanging($event)" @blur="updateText">
+  <div class="state-block">
+    <v-text-field test-text-field v-model="text" @input="updateItem" :background-color="listColor">
       <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
-      <icon-state slot="prepend-inner" :icon.sync="item.icon"></icon-state>
-      <v-icon test-delete-icon v-if="!item.isNewItem" slot="append-outer" @click="del(item)">close_thick</v-icon>
+      <icon-state slot="prepend-inner" :icon.sync="icon"></icon-state>
     </v-text-field>
+    <ColorSwatch v-if="!item.isNewItem" @colorChange="changeColor($event)" />
+    <v-icon test-delete-icon v-if="!isNewItem" slot="append-outer" @click="del(item)">close_thick</v-icon>
+  </div>
 </template>
 <script>
 import IconState from './IconState.vue';
+import ColorSwatch from './ColorSwatch.vue';
 
 export default {
-  props: ['item', 'isDraggable'],
+  props: {
+    item: {
+      type: Object,
+      description: 'The initial state of this component.',
+    },
+    isDraggable: {
+      type: Boolean,
+      description: 'Whether this item should be draggable',
+    },
+    isNewItem: {
+      type: Boolean,
+      description: 'Whether this item is a new item field.',
+      default: false,
+    },
+  },
   components: {
     IconState,
+    ColorSwatch,
   },
   data() {
     return {
       text: this.item.text,
+      listColor: this.item.color,
+      icon: this.item.icon,
     };
   },
+  mounted() {
+    this.text = this.item.text;
+    this.listColor = this.item.color;
+    this.icon = this.item.icon;
+  },
   methods: {
-    updateText($event) {
-      this.$emit('blur', { icon: this.item.icon, text: $event.target.value });
-    },
-    isChanging(evt) {
-      this.$emit('update:item', { icon: this.item.icon, text: evt });
+    updateItem() {
+      this.$emit('update:item', {
+        ...this.item,
+        icon: this.icon,
+        text: this.text,
+        color: this.listColor,
+      });
     },
     del(item) {
       this.$emit('delete:item', item);
+    },
+    changeColor($event) {
+      this.listColor = $event;
     },
   },
 };
@@ -42,5 +73,8 @@ export default {
 }
 .drag-handle {
   padding-right: 10px;
+}
+.state-block {
+  display: inline-flex;
 }
 </style>

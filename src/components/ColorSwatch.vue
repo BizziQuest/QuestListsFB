@@ -1,0 +1,62 @@
+<template>
+  <v-text-field
+    label="Color*"
+    v-model="listColor"
+    placeholder="#FFFFFF"
+    outlined
+    test-color-input
+  >
+    <template v-slot:append>
+      <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
+        <template v-slot:activator="{ on }">
+          <div :style="swatchStyle()" v-on="on" />
+        </template>
+        <v-card>
+          <v-card-text>
+            <CustomColorPicker v-model="listColor" />
+            <v-row align="center">
+              <v-btn @click="closeSwatch" class="mx-auto mt-3">Close</v-btn>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-menu>
+    </template>
+  </v-text-field>
+</template>
+<script>
+import CustomColorPicker from './CustomColorPicker.vue';
+
+export default {
+  name: 'ColorSwatch',
+  components: {
+    CustomColorPicker,
+  },
+  data() {
+    return {
+      listColor: '#1236AF',
+      colorPickerShown: false,
+    };
+  },
+  methods: {
+    swatchStyle() {
+      return {
+        backgroundColor: this.listColor,
+        cursor: 'pointer',
+        height: '30px',
+        width: '30px',
+        borderRadius: '4px',
+        transition: 'border-radius 200ms ease-in-out',
+      };
+    },
+    closeSwatch() {
+      this.$emit('colorChange', this.listColor);
+      this.colorPickerShown = false;
+    },
+  },
+};
+</script>
+<style scoped>
+.v-input input {
+    max-width: 170px;
+}
+</style>
