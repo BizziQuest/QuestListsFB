@@ -1,12 +1,19 @@
 <template>
-  <div class="state-block">
-    <v-text-field test-text-field v-model="text" @input="updateItem" :background-color="listColor">
-      <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
-      <icon-state slot="prepend-inner" :icon.sync="icon"></icon-state>
-    </v-text-field>
-    <ColorSwatch v-if="!item.isNewItem" @colorChange="changeColor($event)" />
-    <v-icon test-delete-icon v-if="!isNewItem" slot="append-outer" @click="del(item)">close_thick</v-icon>
-  </div>
+  <v-text-field test-text-field v-model="text" @input="updateItem" :background-color="listColor">
+    <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
+    <icon-state slot="prepend-inner" :icon.sync="icon"></icon-state>
+    <ColorSwatch slot="append"
+                 :outline="false"
+                 v-if="!item.isNewItem"
+                 @colorChange="changeColor($event)" />
+    <v-btn icon
+          slot="append-outer"
+          v-if="!item.isNewItem"
+          test-delete-icon
+          @click="del(item)">
+      <v-icon>mdi-delete</v-icon>
+    </v-btn>
+  </v-text-field>
 </template>
 <script>
 import IconState from './IconState.vue';
@@ -63,18 +70,18 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.list-state {
-  align-items: center;
-}
-.icon-state {
-  width: 30px;
-  margin-right: 10px;
-  display: inline-block;
-}
-.drag-handle {
-  padding-right: 10px;
-}
-.state-block {
-  display: inline-flex;
-}
+// .list-state {
+//   align-items: center;
+// }
+// .icon-state {
+//   width: 30px;
+//   margin-right: 10px;
+//   display: inline-block;
+// }
+// .drag-handle {
+//   padding-right: 10px;
+// }
+// .v-row {
+//   display: inline-flex;
+// }
 </style>

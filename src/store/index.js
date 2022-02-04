@@ -66,14 +66,14 @@ const store = new Vuex.Store({
         description: 'NOTE: the default state has not loaded from the server yet.',
         states: [
           {
-            color: '#00ff00',
+            color: '#ffffff',
             icon: 'mdi-checkbox-blank-outline',
             name: 'Not Done',
             shortName: 'notDone',
             value: '0',
             order: 0,
           }, {
-            color: '#00ff00',
+            color: '#ffffff',
             icon: 'mdi-checkbox-marked-outline',
             name: 'Done',
             shortName: 'done',

@@ -21,30 +21,7 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  label="Color*"
-                  :rules="colorPickerRules"
-                  v-model="listColor"
-                  placeholder="#FFFFFF"
-                  outlined
-                  test-color-input
-                >
-                  <template v-slot:append>
-                    <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
-                      <template v-slot:activator="{ on }">
-                        <div :style="swatchStyle()" v-on="on" />
-                      </template>
-                      <v-card>
-                        <v-card-text>
-                          <CustomColorPicker v-model="listColor" />
-                          <v-row align="center">
-                            <v-btn @click="colorPickerShown = false" class="mx-auto mt-3">Close</v-btn>
-                          </v-row>
-                        </v-card-text>
-                      </v-card>
-                    </v-menu>
-                  </template>
-                </v-text-field>
+                <color-input :outline="true" v-model="listColor" />
               </v-col>
             </v-row>
             <v-row>
@@ -91,7 +68,8 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
-import CustomColorPicker from './CustomColorPicker.vue';
+import ColorInput from './ColorInput.vue';
+
 import { ensureSlugUniqueness, auth } from '../firebase';
 
 const defaultFormData = {
@@ -111,7 +89,7 @@ export default {
   components: {
     StatesEditor,
     UserAuthAlert,
-    CustomColorPicker,
+    ColorInput,
   },
   data() {
     return {
