@@ -62,6 +62,7 @@ describe('default state', () => {
   afterEach(() => {
     wrapper.destroy();
   });
+  it.todo('should be the same color as the default state\'s color');
   it('should not show make sub list icon on empty text filed', async () => {
     expect(wrapper.find('[test-make-sublist]').exists()).toBe(false);
   });
@@ -291,6 +292,11 @@ describe('ListItem.vue', () => {
       });
     });
   });
+});
+
+describe('user changes the item\'s state', () => {
+  it.todo('should change the background color to the current state\'s color');
+  it.todo('should send the updated state to the database');
 });
 
 describe('user is not logged in', () => {

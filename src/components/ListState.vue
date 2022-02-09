@@ -2,15 +2,8 @@
   <v-text-field test-text-field v-model="text" @input="updateItem">
     <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
     <icon-state slot="prepend-inner" :icon.sync="icon"></icon-state>
-    <ColorSwatch slot="append"
-                 :outline="false"
-                 v-if="!item.isNewItem"
-                 @colorChange="changeColor($event)" />
-    <v-btn icon
-          slot="append-outer"
-          v-if="!item.isNewItem"
-          test-delete-icon
-          @click="del(item)">
+    <ColorSwatch slot="append" :outline="false" v-if="!item.isNewItem" @colorChange="changeColor($event)" />
+    <v-btn icon slot="append-outer" v-if="!item.isNewItem" test-delete-icon @click="del(item)">
       <v-icon>mdi-delete</v-icon>
     </v-btn>
   </v-text-field>

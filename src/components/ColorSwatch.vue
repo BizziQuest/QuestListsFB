@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      listColor: '#1236AF',
+      listColor: '',
       colorPickerShown: false,
     };
   },
@@ -40,6 +40,7 @@ export default {
         cursor: 'pointer',
         height: '30px',
         width: '30px',
+        border: '1px solid black',
         borderRadius: '4px',
         transition: 'border-radius 200ms ease-in-out',
       };
