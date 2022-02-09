@@ -1,5 +1,5 @@
 <template>
-  <v-text-field test-text-field v-model="text" @input="updateItem" :background-color="listColor">
+  <v-text-field test-text-field v-model="text" @input="updateItem">
     <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
     <icon-state slot="prepend-inner" :icon.sync="icon"></icon-state>
     <ColorSwatch slot="append"
