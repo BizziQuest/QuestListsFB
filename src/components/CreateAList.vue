@@ -21,14 +21,8 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  label="Color*"
-                  :rules="colorPickerRules"
-                  v-model="listColor"
-                  placeholder="#FFFFFF"
-                  outlined
-                  test-color-input
-                >
+                <!-- :rules="colorPickerRules" -->
+                <v-text-field label="Color*" v-model="listColor" placeholder="#FFFFFF" outlined test-color-input>
                   <template v-slot:append>
                     <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
                       <template v-slot:activator="{ on }">
@@ -80,7 +74,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" name="submit" test-submit-form text @click="createAList">Create</v-btn>
+        <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="createAList">Create</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -92,6 +86,7 @@ import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import CustomColorPicker from './CustomColorPicker.vue';
+// ensureSlugUniqueness,
 import { ensureSlugUniqueness, auth } from '../firebase';
 
 const defaultFormData = {
@@ -124,6 +119,7 @@ export default {
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
       ],
       colorPickerRules: [
+        // there is default color here so no need for rules for it?
         (v) => !!v || 'Color is required',
         (v) => /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
       ],
@@ -156,7 +152,12 @@ export default {
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
+    // async
     async createAList() {
+      if (this.$refs.addTitleAndColorForm.$children[0].valid === false) {
+        console.log('scrolling');
+        this.$refs.addTitleAndColorForm.$el[0].scrollIntoView();
+      }
       if (this.$refs.addTitleAndColorForm.validate() === false) return;
       // TODO: add an input for the name and description for this stateGroup
       let stateGroup = this.getGlobalPreferences.defaultStateGroup;
