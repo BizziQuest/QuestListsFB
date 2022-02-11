@@ -21,8 +21,14 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <!-- :rules="colorPickerRules" -->
-                <v-text-field label="Color*" v-model="listColor" placeholder="#FFFFFF" outlined test-color-input>
+                <v-text-field
+                  label="Color"
+                  :rules="colorPickerRules"
+                  v-model="listColor"
+                  placeholder="#FFFFFF"
+                  outlined
+                  test-color-input
+                >
                   <template v-slot:append>
                     <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
                       <template v-slot:activator="{ on }">
@@ -86,7 +92,6 @@ import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import CustomColorPicker from './CustomColorPicker.vue';
-// ensureSlugUniqueness,
 import { ensureSlugUniqueness, auth } from '../firebase';
 
 const defaultFormData = {
@@ -96,7 +101,7 @@ const defaultFormData = {
   statesPicked: '',
   updatedListStatesItems: [],
   description: '',
-  listColor: '#1236AF',
+  listColor: '',
   colorPickerShown: false,
 };
 
@@ -119,9 +124,7 @@ export default {
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
       ],
       colorPickerRules: [
-        // there is default color here so no need for rules for it?
-        (v) => !!v || 'Color is required',
-        (v) => /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
+        (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
       ],
     };
   },
@@ -152,13 +155,12 @@ export default {
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
-    // async
     async createAList() {
-      if (this.$refs.addTitleAndColorForm.$children[0].valid === false) {
-        console.log('scrolling');
+      if (this.$refs.addTitleAndColorForm.validate() === false) {
         this.$refs.addTitleAndColorForm.$el[0].scrollIntoView();
+        this.notify({ type: 'error', text: 'There were problems creating your QuestList.' });
+        return;
       }
-      if (this.$refs.addTitleAndColorForm.validate() === false) return;
       // TODO: add an input for the name and description for this stateGroup
       let stateGroup = this.getGlobalPreferences.defaultStateGroup;
       if (this.updatedListStatesItems.length > 0) {
