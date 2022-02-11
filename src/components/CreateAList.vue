@@ -157,7 +157,7 @@ export default {
     },
     async createAList() {
       if (this.$refs.addTitleAndColorForm.validate() === false) {
-        this.$refs.addTitleAndColorForm.$el[0].scrollIntoView();
+        this.$refs.addTitleAndColorForm.$el.scrollIntoView();
         this.notify({ type: 'error', text: 'There were problems creating your QuestList.' });
         return;
       }
