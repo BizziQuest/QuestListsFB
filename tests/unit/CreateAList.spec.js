@@ -7,6 +7,9 @@ import routes from '@/router/routes';
 import CreateAList from '@/components/CreateAList.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
+let scrollIntoViewMock = jest.fn();
+window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
 jest.mock('../../src/algolia.js');
 
 jest.mock('firebase.js', () => ({
@@ -69,6 +72,11 @@ describe('entering information in the page', () => {
       await wrapper.find('input[test-color-input]').setValue('HELLO');
       await wrapper.find('.v-btn[name="submit"]').trigger('click');
       expect(wrapper.text()).toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
+    });
+    it('should allow blank/no colors', async () => {
+      await wrapper.find('input[test-color-input]').setValue('');
+      await wrapper.find('.v-btn[name="submit"]').trigger('click');
+      expect(wrapper.text()).toContain('Color ​Description');
     });
     it('should allow 6-digit hexadecimal color strings', async () => {
       await wrapper.find('input[test-color-input]').setValue('#ABC123');
