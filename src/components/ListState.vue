@@ -1,9 +1,11 @@
 <template>
-    <v-text-field test-text-field :value.sync="item.text" @input="isChanging($event)" @blur="updateText">
-      <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
-      <icon-state slot="prepend-inner" :icon.sync="item.icon"></icon-state>
-      <v-icon test-delete-icon v-if="!item.isNewItem" slot="append-outer" @click="del(item)">close_thick</v-icon>
-    </v-text-field>
+  <v-text-field test-text-field :value.sync="item.text" @input="isChanging($event)" @blur="updateText">
+    <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
+    <icon-state slot="prepend-inner" :icon.sync="item.icon"></icon-state>
+    <v-btn icon slot="append" title="delete" test-delete-icon v-if="!item.isNewItem" @click="del(item)">
+      <v-icon>mdi-delete</v-icon>
+    </v-btn>
+  </v-text-field>
 </template>
 <script>
 import IconState from './IconState.vue';
