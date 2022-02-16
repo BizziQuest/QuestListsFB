@@ -116,7 +116,7 @@ ul {
 .fade-leave-active {
   opacity: 0;
 }
-.search-box >>> .v-select__slot{
+.lists-view::v-deep .search-box .v-label {
   margin-left: 10px;
 }
 .search-box >>> .v-text-field.v-text-field--solo .v-input__control {
