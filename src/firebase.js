@@ -86,17 +86,20 @@ async function computeSubListPath(subListRef, routePath) {
   return `${routePath}/${slug}`;
 }
 
-async function fetchQuestLists({ pageSize = 10, slugs = null } = {}) {
+async function fetchQuestLists({ pageSize = 10, slugs = null, callback = () => { } } = {}) {
   let q = query(listsCollection, limit(pageSize));
   if (slugs && slugs.length > 0) {
     q = query(q, where('slug', 'in', slugs));
   }
-  const fbDocs = await getDocs(q);
-  const lists = [];
-  fbDocs.forEach(async (fbDoc) => {
-    const list = fbDoc.data();
-    list.id = fbDoc.id;
-    lists.push(list);
+  let lists = [];
+  onSnapshot(q, (querySnapshot) => {
+    lists = [];
+    querySnapshot.docs.forEach((fbDoc) => {
+      const list = fbDoc.data();
+      list.id = fbDoc.id;
+      lists.push(list);
+    });
+    callback(lists);
   });
   return lists;
 }

@@ -21,24 +21,15 @@
           <span>Search</span>
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <CreateAList
-          :dark="!isDark"
-          :light="isDark"
-          :showDialog="showCreateList"
-          :highlightColor="menuHighlightColor"
-          fab>
-          <template v-slot:default="slotProps">
-            <v-btn fab
-              :dark="!isDark" :color="menuHighlightColor"
-              absolute top center
-              medium
-              class="rounded-circle main-fab"
-              v-on="slotProps.on"
-            >
-              <i style="font-size: 230%" class="ql ql-plus"></i>
-            </v-btn>
-          </template>
-        </CreateAList>
+        <v-btn fab
+          :dark="!isDark" :color="menuHighlightColor"
+          absolute top center
+          medium
+          to="/new"
+          class="rounded-circle main-fab"
+        >
+          <i style="font-size: 230%" class="ql ql-plus"></i>
+        </v-btn>
         <v-btn value="favorite" icon to="/favorites" :color="menuHighlightColor">
           <span>Favorites</span>
           <v-icon>mdi-heart</v-icon>
@@ -67,7 +58,6 @@
 </template>
 
 <script>
-import CreateAList from '../CreateAList.vue';
 import { auth } from '../../firebase';
 import UserMenuItem from './UserMenuItem.vue';
 
@@ -75,7 +65,6 @@ export default {
   name: 'BottomDrawerMenu',
   props: ['drawer'],
   components: {
-    CreateAList,
     UserMenuItem,
   },
   data() {

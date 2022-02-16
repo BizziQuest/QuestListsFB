@@ -4,7 +4,7 @@ export const getListBySlug = jest.fn(() => Promise.resolve([]));
 
 export const getListItems = jest.fn(() => Promise.resolve([]));
 
-export const fetchQuestLists = jest.fn(() => Promise.resolve([]));
+export const fetchQuestLists = jest.fn((obj) => Promise.resolve([obj.callback()]));
 
 export const getListStates = jest.fn(() => Promise.resolve([]));
 

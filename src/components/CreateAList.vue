@@ -1,25 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="600px" class="primary" :dark="dark" :light="light">
-    <template v-slot:activator="{ on }">
-      <slot :on="on">
-        <v-list-item
-          test-default-create-list-item
-          link
-          v-on="on"
-          :color="highlightColor"
-          :dark="dark"
-          :light="light"
-          title="Create A New Quest"
-        >
-          <v-list-item-action>
-            <i  :class="`${highlightColor}--text`"  style="font-size: 140%; margin-left: -2px;" class="ql ql-plus"></i>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title test-activate-item :class="`${highlightColor}--text`">New Quest</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </slot>
-    </template>
+  <div>
     <v-card>
       <v-card-title>
         <span class="headline">Create A List</span>
@@ -42,7 +22,7 @@
               </v-col>
               <v-col cols="12" sm="6" md="6">
                 <v-text-field
-                  label="Color*"
+                  label="Color"
                   :rules="colorPickerRules"
                   v-model="listColor"
                   placeholder="#FFFFFF"
@@ -100,12 +80,10 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="resetForm">Close</v-btn>
-        <v-btn color="blue darken-1" name="submit" text @click="createAList">Create</v-btn>
+        <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="createAList">Create</v-btn>
       </v-card-actions>
     </v-card>
-    <v-snackbar type="info" v-model="showStateWarning">{{ warning }}</v-snackbar>
-  </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -123,7 +101,7 @@ const defaultFormData = {
   statesPicked: '',
   updatedListStatesItems: [],
   description: '',
-  listColor: '#1236AF',
+  listColor: '',
   colorPickerShown: false,
 };
 
@@ -140,16 +118,13 @@ export default {
       ...defaultFormData,
       adultContent: false,
       dialog: false,
-      warning: undefined,
-      showStateWarning: false,
       formIsValid: false,
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
       ],
       colorPickerRules: [
-        (v) => !!v || 'Color is required',
-        (v) => /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
+        (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
       ],
     };
   },
@@ -181,8 +156,11 @@ export default {
       this.updatedListStatesItems = $event;
     },
     async createAList() {
-      this.warning = undefined;
-      if (this.$refs.addTitleAndColorForm.validate() === false) return;
+      if (this.$refs.addTitleAndColorForm.validate() === false) {
+        this.$refs.addTitleAndColorForm.$el.scrollIntoView();
+        this.notify({ type: 'error', text: 'There were problems creating your QuestList.' });
+        return;
+      }
       // TODO: add an input for the name and description for this stateGroup
       let stateGroup = this.getGlobalPreferences.defaultStateGroup;
       if (this.updatedListStatesItems.length > 0) {
@@ -206,17 +184,6 @@ export default {
         parent: 'none',
       };
       this.createList(payload);
-      this.resetForm();
-    },
-    resetForm() {
-      this.$refs.addTitleAndColorForm.resetValidation();
-      this.listColor = defaultFormData.listColor;
-      this.title = defaultFormData.title;
-      this.description = defaultFormData.description;
-      this.newState = defaultFormData.newState;
-      this.statesPicked = defaultFormData.statesPicked;
-      this.updatedListStatesItems = defaultFormData.updatedListStatesItems;
-      this.dialog = false;
     },
     swatchStyle() {
       return {

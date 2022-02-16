@@ -10,6 +10,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+
 import {
   signInWithEmailAndPassword, signInWithPopup, signOut, getAdditionalUserInfo,
   createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
@@ -17,6 +18,7 @@ import {
 import {
   addDoc,
 } from 'firebase/firestore';
+import router from '../router';
 import { getAvatarForUser } from '../util';
 import {
   reactToPrefsChange,
@@ -224,13 +226,18 @@ const store = new Vuex.Store({
       algoliaIndex.saveObject(
         { ...listData, objectID: doc.id },
       );
+      router.push(`/lists/${listData.slug}`);
     },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);
     },
     async fetchLists({ commit }, options = {}) {
-      const lists = await fetchQuestLists(options);
-      commit('setLists', lists);
+      fetchQuestLists({
+        ...options,
+        callback: (lists) => {
+          commit('setLists', lists);
+        },
+      });
     },
     async saveProfile({ commit }, payload) {
       try {
