@@ -94,10 +94,9 @@ export default {
     },
     ensureNewState(index, state) {
       const lastStateIndex = this.items.length - 1;
-      this.items[lastStateIndex].icon = 'mdi-checkbox-blank-outline';
-      this.items[lastStateIndex].isNewItem = false;
       if (index === lastStateIndex) {
         if (state.text.length !== 0) {
+          this.items[lastStateIndex].isNewItem = false;
           this.items.push({
             icon: 'mdi-plus',
             text: 'New Item',
