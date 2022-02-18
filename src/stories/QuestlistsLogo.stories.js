@@ -201,7 +201,7 @@ const VuetifyIcons = (args, { argTypes }) => ({
   components: { QuestlistsLogo },
   template:
     '<span :style="`font-size: 33px`">Look at this logo: <v-icon :color="color">'
-    + '$questlists{{variant ? `-${variant}` : ""}}</v-icon></span>',
+    + '$questlists{{variant ? `-${variant}` : ""}}</v-icon></span>',    // eslint-disable-line
 });
 
 const LogoTemplate = (args, { argTypes }) => ({
