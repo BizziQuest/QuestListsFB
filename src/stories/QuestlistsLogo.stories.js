@@ -200,7 +200,8 @@ const VuetifyIcons = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { QuestlistsLogo },
   template:
-    '<span :style="`font-size: 33px`">Look at this logo: <v-icon :color="color">$questlists{{variant ? `-${variant}` : ""}}</v-icon></span>',
+    '<span :style="`font-size: 33px`">Look at this logo: <v-icon :color="color">'
+    + '$questlists{{variant ? `-${variant}` : ""}}</v-icon></span>',
 });
 
 const LogoTemplate = (args, { argTypes }) => ({
