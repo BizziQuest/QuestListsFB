@@ -13,21 +13,15 @@
   >
     <v-list dense nav>
       <user-menu-item :dark="!isDark" :light="isDark" />
+        <v-list-item test-questlists-link link :color="menuHighlightColor" title="View All QuestLists" to="/">
+          <v-list-item-action style="margin-right: 15px;">
+            <v-icon>ql-0</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title style="margin-left: 0px;">QuestLists</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-      <v-list-item
-        test-questlists-link
-        link
-        :color="menuHighlightColor"
-        title="View All QuestLists"
-        to="/"
-      >
-        <v-list-item-action>
-          <v-icon>mdi-shield-check-outline</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>QuestLists</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
       <v-list-item
         test-default-create-list-item
         to="/new"
@@ -35,35 +29,21 @@
         :color="menuHighlightColor"
         title="Create A New Quest"
       >
-        <v-list-item-action>
-          <v-icon>add</v-icon>
+        <v-list-item-action style="margin-right: 15px;">
+          <v-icon>ql-plus</v-icon>
         </v-list-item-action>
         <v-list-item-content>
           <v-list-item-title>New Quest</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
-        <v-list-item test-questlists-link link :color="menuHighlightColor" title="View All QuestLists" to="/">
-          <v-list-item-action>
-            <i class="ql questlists" style="font-size: 140%; margin-left: -2px;"></i>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>QuestLists</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
       <v-list-item test-fav-header>
         <v-divider class="my-4"></v-divider>
         <v-subheader>Favorite Quests</v-subheader>
       </v-list-item>
 
-        <v-list-item test-fav-header>
-            <v-divider class="my-4"></v-divider>
-            <v-subheader>Favorite Quests</v-subheader>
-        </v-list-item>
-
         <v-list-item test-fav-link v-for="item in favoriteQuests"
-        :key="item.id" link :title="item.name" :to="`/lists/${item.id}`">
+        :key="`${item.id}${item.name}`" link :title="item.name" :to="`/lists/${item.id}`">
           <v-list-item-action>
             <v-icon>{{item.icon || '$questlists'}}</v-icon>
           </v-list-item-action>
@@ -71,21 +51,6 @@
             <v-list-item-title>{{item.name}}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      <v-list-item
-        test-fav-link
-        v-for="item in favoriteQuests"
-        :key="item.id"
-        link
-        :title="item.name"
-        :to="`/lists/${item.id}`"
-      >
-        <v-list-item-action>
-          <v-icon>{{item.icon || '$questlists'}}</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>{{item.name}}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
 
       <v-list-item>
         <v-divider class="my-4"></v-divider>
