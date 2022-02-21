@@ -15,12 +15,12 @@
       @input="getSuggestions($event)"
       @keydown.enter="search($event)"
       color="white"
-      :height="22"
+      :height="19"
       item-text="Search for"
       item-value="API"
       label="Search Quests"
       placeholder="Start typing to Search"
-      prepend-inner-icon="mdi-database-search"
+      prepend-inner-icon="$questlists-search"
     ></v-autocomplete>
     <transition-group tag="div" class="row" name="fade">
       <v-col v-if="lists === null" key="skeleton" class="mt-5">
@@ -32,10 +32,10 @@
           type="list-item-avatar, divider, list-item-three-line, card-heading, image, actions"
         ></v-skeleton-loader>
       </v-col>
-      <v-row v-if="lists && lists.length < 1" key="sad" class="ml-5 mr-5 mt-10">
-        <v-alert prominent icon="mdi-shield-plus-outline" type="info" class="col-12">
+      <v-row v-if="lists && lists.length < 1" key="sad" class='ml-5 mr-5 mt-10'>
+        <v-alert prominent icon="$questlists-plus" type="info" class="col-12">
           Welcome to Quest Lists! You don't have any Quests yet, but have no fear, simply click on the
-          <v-icon>mdi-shield-plus-outline</v-icon> icon on the left to get started!
+          <v-icon>$questlists-plus</v-icon> icon on the left to get started!
         </v-alert>
       </v-row>
       <v-col
@@ -123,9 +123,7 @@ ul {
 .fade-leave-active {
   opacity: 0;
 }
-
-.search-box >>> .v-text-field.v-text-field--solo .v-input__control {
-  min-height: 22px;
-  padding: 0;
+.lists-view::v-deep .search-box .v-label {
+  margin-left: 10px;
 }
 </style>

@@ -46,6 +46,7 @@ afterEach(() => {
   wrapper.destroy();
 });
 
+
 describe('entering information in the page', () => {
   beforeEach(async () => {
     wrapper = mount(CreateAList, {
