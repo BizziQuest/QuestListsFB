@@ -13,7 +13,7 @@
     </v-btn-toggle>
     <v-color-picker
       :value="value"
-      @input="$emit('input', $event)"
+      @input="$emit('input', $event.slice(0,7))"
       :hide-inputs="!colorPickerState.includes(0)"
       :hide-canvas="!colorPickerState.includes(2)"
       :hide-sliders="!colorPickerState.includes(1)"

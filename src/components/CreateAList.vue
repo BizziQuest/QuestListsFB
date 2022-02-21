@@ -32,7 +32,7 @@
                   <template v-slot:append>
                     <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
                       <template v-slot:activator="{ on }">
-                        <div :style="swatchStyle()" v-on="on" />
+                        <div :style="swatchStyle()" class="color-picker-swatch" v-on="on" />
                       </template>
                       <v-card>
                         <v-card-text>
@@ -229,7 +229,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 #availableListStates {
   height: 100px;
   overflow: auto;
@@ -240,4 +240,8 @@ export default {
 .theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
   color: #ffffff !important;
 }
+.color-picker-swatch {
+  border: #797979 1px solid;
+}
+
 </style>
