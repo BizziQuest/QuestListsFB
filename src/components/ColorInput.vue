@@ -1,14 +1,14 @@
 <template>
   <v-text-field
-    label="Color*"
+    label="Color"
     :value="value"
     @input="$emit('input', $event)"
-    placeholder="#FFFFFF"
+    placeholder="enter color"
     :outlined="outline"
     test-color-input
   >
     <template v-slot:append>
-      <color-swatch />
+      <color-swatch :value="value" @input="$emit('input', $event)"/>
     </template>
   </v-text-field>
 </template>

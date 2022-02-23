@@ -1,8 +1,8 @@
 <template>
   <v-text-field test-text-field v-model="text" @input="updateItem">
     <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
-    <icon-state slot="prepend-inner" :icon.sync="icon"></icon-state>
-    <ColorSwatch slot="append" :outline="false" v-if="!item.isNewItem" @colorChange="changeColor($event)" />
+    <icon-state slot="prepend-inner"  :color="listColor"  :icon.sync="icon"></icon-state>
+    <color-swatch slot="append" :outline="false" v-if="!item.isNewItem" v-model="listColor" />
     <v-btn icon slot="append-outer" v-if="!item.isNewItem" test-delete-icon @click="del(item)">
       <v-icon>mdi-delete</v-icon>
     </v-btn>
@@ -13,6 +13,10 @@ import IconState from './IconState.vue';
 import ColorSwatch from './ColorSwatch.vue';
 
 export default {
+  components: {
+    IconState,
+    ColorSwatch,
+  },
   props: {
     item: {
       type: Object,
@@ -28,10 +32,6 @@ export default {
       default: false,
     },
   },
-  components: {
-    IconState,
-    ColorSwatch,
-  },
   data() {
     return {
       text: this.item.text,
@@ -40,9 +40,14 @@ export default {
     };
   },
   mounted() {
-    this.text = this.item.text;
-    this.listColor = this.item.color;
-    this.icon = this.item.icon;
+    // this.text = this.item.text;
+    // this.listColor = this.item.color;
+    // this.icon = this.item.icon;
+  },
+  watch: {
+    item(val) {
+      this.listColor = val.color;
+    },
   },
   methods: {
     updateItem() {

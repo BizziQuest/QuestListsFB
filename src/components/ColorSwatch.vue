@@ -5,7 +5,7 @@
     </template>
     <v-card>
       <v-card-text>
-        <CustomColorPicker v-model="listColor" />
+        <CustomColorPicker :value="value" @input="$emit('input', $event)" />
         <v-row align="center">
           <v-btn @click="closeSwatch" class="mx-auto mt-3">Close</v-btn>
         </v-row>
@@ -25,18 +25,23 @@ export default {
     outline: {
       type: Boolean,
       description: 'show the outline on the text field',
+      required: false,
+    },
+    value: {
+      type: String,
+      description: 'the value of the color, in hex',
+      // default: '#000000',
     },
   },
   data() {
     return {
-      listColor: '',
       colorPickerShown: false,
     };
   },
   methods: {
     swatchStyle() {
       return {
-        backgroundColor: this.listColor,
+        backgroundColor: this.value,
         cursor: 'pointer',
         height: '30px',
         width: '30px',
@@ -46,7 +51,7 @@ export default {
       };
     },
     closeSwatch() {
-      this.$emit('colorChange', this.listColor);
+      this.$emit('input', this.value);
       this.colorPickerShown = false;
     },
   },

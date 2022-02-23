@@ -51,7 +51,7 @@
               </span>
             </v-tooltip>
           </v-row>
-          <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup" @list:updated="listUpdated" />
+          <states-editor :stateGroup="defaultStateGroup" @list:updated="listUpdated" />
         </v-container>
         <small>*indicates required field</small>
       </v-card-text>
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
@@ -176,7 +176,11 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getGlobalPreferences']),
+    ...mapState(['globalPreferences']),
+    defaultStateGroup() {
+      return this.globalPreferences.defaultStateGroup;
+    },
+
   },
 };
 </script>

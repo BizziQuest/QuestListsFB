@@ -72,26 +72,30 @@ export default {
   },
   data() {
     return {
-      items: [
-        ...this.stateGroup.states,
-        {
-          text: 'New State',
-          icon: 'mdi-plus',
-          value: getNextUnusedValue(this.stateGroup.states),
-          isNewItem: true,
-        },
-      ],
+      items: [],
       rowItems: [],
     };
   },
-
+  mounted() {
+    this.items = this.stateGroup.states;
+    this.ensureNewState();
+  },
+  watch: {
+    stateGroup(val) {
+      this.items = val.states;
+      this.ensureNewState();
+    },
+  },
   methods: {
     updateItem(index, state) {
       this.items[index].text = state.text;
       this.items[index].isNewItem = false;
       if (state?.icon) this.items[index].icon = state.icon;
       this.ensureNewState(index, state);
-      this.$emit('list:updated', this.items.filter((item) => !item.isNewState));
+      this.$emit(
+        'list:updated',
+        this.items.filter((item) => !item.isNewState),
+      );
     },
     ensureNewState() {
       const newItems = this.items.filter((item) => item.isNewItem);
