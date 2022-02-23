@@ -1,3 +1,7 @@
+/**
+ * Respectfully stolen from https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip
+ */
+
 export default {
   data() {
     return {

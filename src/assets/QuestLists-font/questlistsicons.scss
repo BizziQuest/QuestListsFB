@@ -1,0 +1,217 @@
+
+@font-face {
+  font-family: "QuestLists Icons";
+  src: url("./QuestLists-Icons.woff2");
+  src: url("./QuestLists-Icons.woff2") format("woff2"), url("./QuestLists-Icons.woff") format("woff"), url("./QuestLists-Icons.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.ql:before,
+.ql-set {
+  display: inline-block;
+  font: normal normal normal 32px/1 "QuestLists Icons";
+  font-size: 160%;
+  text-rendering: auto;
+  line-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// We are trying to get three variations here:
+//  1. the unicode number for the glyph
+//  2. the written version of the glyph. 
+//       there can be more to align with other common names, but should be at least the same as the name in the .sfd file
+//  3. the unicode symbol such that .ql-<symbol> works
+$glyphs: (
+  // plain logo
+  "questlists": "➰",
+
+  "ql-002B": "\002B",
+  "ql-plus": "+",
+  "ql-+": "+",
+
+  "ql-0030": "\0030",
+  "ql-zero": "0",
+  "ql-0": "0",
+
+  "ql-2717": "\2717",
+  "ql-ballotx": "✗",
+  "ql-✗": "✗",
+
+  "ql-002D": "\002D",
+  "ql-hyphen": "-",
+  "ql--": "-",
+
+  "ql-0078": "\0078",
+  "ql-x": "x",
+
+  "ql-0051": "\0051",
+  "ql-Q": "Q",
+
+  "ql-0070": "\0070",
+  "ql-p": "p",
+
+  "ql-2713": "\2713",
+  "ql-checkmark": "✓",
+  "ql-✓": "✓",
+
+  "ql-2718": "\2718",
+  "ql-HeavyBallotX": "✘",
+  "ql-✘": "✘",
+
+  "ql-274C": "\274C",
+  "ql-CrossMarkEmoji": "❌",
+  "ql-❌": "❌",
+
+  "ql-006E": "\006E",
+  "ql-n": "n",
+
+  "ql-27B0": "\27B0",
+  "ql-CurlyLoopEmoji": "➰",
+  "ql-➰": "➰",
+
+  "ql-2699": "\2699",
+  "ql-GearEmoji": "⚙",
+  "ql-⚙": "⚙",
+
+  "ql-2705": "\2705",
+  "ql-WhiteHeavyCheckMarkEmoji": "✅",
+  "ql-✅": "✅",
+
+  "ql-2714": "\2714",
+  "ql-HeavyCheckMarkEmoji": "✔",
+  "ql-✔": "✔",
+
+  "ql-2A37": "\2A37",
+  "ql-MultiplicationSignInDoubleCircle": "⨷",
+  "ql-⨷": "⨷",
+
+  "ql-270D": "\270D",
+  "ql-WritingHandEmoji": "✍",
+  "ql-✍": "✍",
+
+  "ql-270F": "\270F",
+  "ql-PencilEmoji": "✏",
+  "ql-✏": "✏",
+
+  "ql-2710": "\2710",
+  "ql-UpperRightPencil": "✐",
+  "ql-✐": "✐",
+
+  "ql-2712": "\2712",
+  "ql-BlackNibEmoji": "✒",
+  "ql-✒": "✒",
+
+  "ql-25B7": "\25B7",
+  "ql-WhiteRightPointingTriangle": "▷",
+  "ql-▷": "▷",
+
+  "ql-25B6": "\25B6",
+  "ql-BlackRightPointingTriangle": "▶",
+  "ql-▶": "▶",
+
+  "ql-25BB": "\25BB",
+  "ql-WhiteRightPointingPointer": "▻",
+  "ql-▻": "▻",
+
+  "ql-26ED": "\26ED",
+  "ql-GearWithoutHub": "⛭",
+  "ql-⛭": "⛭",
+
+  "ql-2605": "\2605",
+  "ql-BlackStar": "★",
+  "ql-★": "★",
+
+  "ql-1F511": "\1F511",
+  "ql-key": "🔑",
+  "ql-🔑": "🔑",
+
+  "ql-2193": "\2193",
+  "ql-arrowdown": "↓",
+  "ql-↓": "↓",
+
+  "ql-2190": "\2190",
+  "ql-arrowleft": "←",
+  "ql-←": "←",
+
+  "ql-2192": "\2192",
+  "ql-arrowright": "→",
+  "ql-→": "→",
+
+  "ql-2191": "\2191",
+  "ql-arrowup": "↑",
+  "ql-↑": "↑",
+
+  "ql-1F50E": "\1F50E",
+  "ql-RightMagnifyingGlass": "🔎",
+  "ql-🔎": "🔎",
+
+  "ql-23FF": "\23FF",
+  "ql-ObserverEye": "⏿",
+  "ql-⏿": "⏿",
+
+  "ql-2766": "\2766",
+  "ql-FleuronCenter": "❦",
+  "ql-❦": "❦",
+
+  "ql-26A1": "\26A1",
+  "ql-HighVoltageSign": "⚡",
+  "ql-⚡": "⚡",
+
+  "ql-1F4CD": "\1F4CD",
+  "ql-RoundPushpin": "📍",
+  "ql-📍": "📍",
+
+  "ql-1F512": "\1F512",
+  "ql-lock": "🔒",
+  "ql-🔒": "🔒",
+
+  "ql-27F3": "\27F3",
+  "ql-ClockwiseGappedCircleArrow": "⟳",
+  "ql-⟳": "⟳",
+
+  "ql-1F557": "\1F557",
+  "ql-ClockFaceEightOClock": "🕗",
+  "ql-🕗": "🕗",
+
+  "ql-0021": "\0021",
+  "ql-exclam": "!",
+  "ql-exclamation": "!",
+  "ql-exclaim": "!",
+  // "ql-!": "!",  // invalid "!"
+
+  "ql-1F513": "\1F513",
+  "ql-OpenLock": "🔓",
+  "ql-🔓": "🔓",
+
+  "ql-1F393": "\1F393",
+  "ql-GraduationCap": "🎓",
+  "ql-🎓": "🎓",
+
+  "ql-1F3A9": "\1F3A9",
+  "ql-GraduationCapAlt": "🎩",
+  "ql-🎩": "🎩",
+
+  "ql-1F5D8": "\1F5D8",
+  "ql-ClockwiseSemicircleArrows": "🗘",
+  "ql-🗘": "🗘",
+
+  "ql-1F5F2": "\1F5F2",
+  "ql-LightningMood": "🗲",
+  "ql-lightning": "🗲",
+  "ql-🗲": "🗲",
+
+  "ql-1F517": "\1F517",
+  "ql-LinkSymbolEmoji": "🔗",
+  "ql-link": "🔗",
+  "ql-🔗": "🔗",
+
+
+  );
+
+@each $name, $glyph in $glyphs {
+  .ql.#{$name}:before {
+    content: $glyph;
+  }
+}

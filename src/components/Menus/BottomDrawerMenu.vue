@@ -1,67 +1,60 @@
 <template>
-  <v-bottom-navigation
-    fixed
-    v-if="isMobile"
-    :app="isMobile"
-    :input-value="isMobile"
-    :dark="!isDark"
-    :light="isDark"
-    grow
-  >
-    <v-btn
-      :color="menuHighlightColor"
-      icon
-      title="View App Menu"
-      @click="$emit('update:drawer', !drawer)"
-    >
-      <span>QuestLists</span>
-      <v-icon style="d-inline">mdi-shield-check-outline</v-icon>
-    </v-btn>
-    <v-btn value="search" icon to="/search" :color="menuHighlightColor">
-      <span>Search</span>
-      <v-icon>mdi-magnify</v-icon>
-    </v-btn>
-    <v-btn
-      fab
+    <v-bottom-navigation
+      fixed
+      v-if="isMobile"
+      :app="isMobile"
+      :input-value="isMobile"
       :dark="!isDark"
-      :color="menuHighlightColor"
-      absolute
-      top
-      center
-      medium
-      class="rounded-circle main-fab"
-      to='/new'
-    >
-      <v-icon>mdi-shield-plus-outline</v-icon>
-    </v-btn>
-    <v-btn value="favorite" icon to="/favorites" :color="menuHighlightColor">
-      <span>Favorites</span>
-      <v-icon>mdi-heart</v-icon>
-    </v-btn>
-    <user-menu-item :dark="!isDark" :light="isDark" class="d-flex flex-column align-center">
-      <template v-slot:login="slotProps">
-        <v-btn value="signIn" v-on="slotProps.on" icon :color="menuHighlightColor">
-          <span>Sign In</span>
-          <v-icon>mdi-account-arrow-right</v-icon>
-        </v-btn>
-      </template>
-      <template v-slot:avatar="slotProps">
+      :light="isDark"
+      grow
+      >
         <v-btn
-          value="viewProfile"
-          class="d-flex flex-column text-truncate align-center"
-          icon
-          to="/EditInfo"
           :color="menuHighlightColor"
+          icon
+          title="View App Menu"
+          @click="$emit('update:drawer', !drawer)"
         >
-          <span class="text-truncate d-inline-block" style="max-width:100px">{{slotProps.username}}</span>
-          <v-avatar size="24">
-            <v-img v-if="slotProps.avatar" :src="slotProps.avatar" />
-            <v-icon v-else>mdi-account</v-icon>
-          </v-avatar>
+          <span>QuestLists</span>
+          <i style="font-size: 140%" class="ql questlists"></i>
         </v-btn>
-      </template>
-    </user-menu-item>
-  </v-bottom-navigation>
+        <v-btn value="search" icon to="/search" :color="menuHighlightColor">
+          <span>Search</span>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+        <v-btn fab
+          :dark="!isDark" :color="menuHighlightColor"
+          absolute top center
+          medium
+          to="/new"
+          class="rounded-circle main-fab"
+        >
+          <i style="font-size: 230%" class="ql ql-plus"></i>
+        </v-btn>
+        <v-btn value="favorite" icon to="/favorites" :color="menuHighlightColor">
+          <span>Favorites</span>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+        <user-menu-item :dark="!isDark" :light="isDark" class="d-flex flex-row align-center">
+          <template v-slot:login="slotProps">
+            <v-btn value="signIn" v-on="slotProps.on" icon :color="menuHighlightColor">
+              <span>Sign In</span>
+              <v-icon>mdi-account-arrow-right</v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:avatar="slotProps">
+            <v-btn value="viewProfile"
+              class="d-flex flex-column text-truncate align-center"
+              icon to="/EditInfo" :color="menuHighlightColor"
+            >
+              <span class="text-truncate d-inline-block" style="max-width:100px">{{slotProps.username}}</span>
+              <v-avatar size="24">
+                <v-img v-if="slotProps.avatar" :src="slotProps.avatar"/>
+                <v-icon v-else>mdi-account</v-icon>
+              </v-avatar>
+            </v-btn>
+          </template>
+        </user-menu-item>
+    </v-bottom-navigation>
 </template>
 
 <script>
@@ -81,7 +74,7 @@ export default {
       auth,
       favoriteQuests: [
         {
-          name: "Sample Favorite Quest with amazingly long title and now that's about it",
+          name: 'Sample Favorite Quest with amazingly long title and now that\'s about it',
           icon: 'mdi-heart',
           id: 0,
         },

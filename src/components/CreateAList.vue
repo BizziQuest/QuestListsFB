@@ -57,7 +57,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" name="submit" test-submit-form text @click="createAList">Create</v-btn>
+        <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="createAList">Create</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -79,7 +79,7 @@ const defaultFormData = {
   statesPicked: '',
   updatedListStatesItems: [],
   description: '',
-  listColor: '#1236AF',
+  listColor: '',
   colorPickerShown: false,
 };
 
@@ -101,8 +101,7 @@ export default {
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
       ],
       colorPickerRules: [
-        (v) => !!v || 'Color is required',
-        (v) => /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
+        (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
       ],
     };
   },
@@ -128,7 +127,11 @@ export default {
       this.updatedListStatesItems = $event;
     },
     async createAList() {
-      if (this.$refs.addTitleAndColorForm.validate() === false) return;
+      if (this.$refs.addTitleAndColorForm.validate() === false) {
+        this.$refs.addTitleAndColorForm.$el.scrollIntoView();
+        this.notify({ type: 'error', text: 'There were problems creating your QuestList.' });
+        return;
+      }
       // TODO: add an input for the name and description for this stateGroup
       let stateGroup = this.getGlobalPreferences.defaultStateGroup;
       if (this.updatedListStatesItems.length > 0) {
@@ -177,7 +180,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 #availableListStates {
   height: 100px;
   overflow: auto;
@@ -188,4 +191,8 @@ export default {
 .theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
   color: #ffffff !important;
 }
+.color-picker-swatch {
+  border: #797979 1px solid;
+}
+
 </style>
