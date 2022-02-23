@@ -13,7 +13,7 @@
     </v-btn-toggle>
     <v-color-picker
       :value="value"
-      @input="$emit('input', $event)"
+      @input="updateColor"
       :hide-inputs="!colorPickerState.includes(0)"
       :hide-canvas="!colorPickerState.includes(2)"
       :hide-sliders="!colorPickerState.includes(1)"
@@ -36,6 +36,15 @@ export default {
         ['#9868b5', '#d6513f', '#1f2028', '#f234ab', '#a29e51'],
       ],
     };
+  },
+  methods: {
+    updateColor($event) {
+      if (typeof $event === 'string') {
+        this.$emit('input', $event.slice(0, 7));
+        return;
+      }
+      this.$emit('input', $event.hex);
+    },
   },
 };
 </script>
