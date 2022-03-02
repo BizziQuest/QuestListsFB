@@ -262,9 +262,9 @@ function reactToPrefsChange(store) {
       prefs.push(pref);
     });
     if (prefs.length < 1) return;
-
     const { defaultColor, defaultStateGroup } = prefs[0];
     const stateGroup = await getDoc(defaultStateGroup);
+    console.log(stateGroup.data());
     store.commit('setGlobalPreferences', {
       defaultColor,
       defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },

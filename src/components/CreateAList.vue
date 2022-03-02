@@ -51,7 +51,7 @@
               </span>
             </v-tooltip>
           </v-row>
-          <states-editor :stateGroup="defaultStateGroup" @list:updated="listUpdated" />
+          <states-editor :reset="reset" :stateGroup="defaultStateGroup" @list:updated="listUpdated" />
         </v-container>
         <small>*indicates required field</small>
       </v-card-text>
@@ -96,6 +96,7 @@ export default {
       ...defaultFormData,
       adultContent: false,
       formIsValid: false,
+      reset: 0,
       titleRules: [
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
@@ -133,7 +134,7 @@ export default {
         return;
       }
       // TODO: add an input for the name and description for this stateGroup
-      let stateGroup = this.getGlobalPreferences.defaultStateGroup;
+      let stateGroup = this.defaultStateGroup;
       if (this.updatedListStatesItems.length > 0) {
         stateGroup = {
           name: this.updatedListStatesItems.map((s) => s.text).join(', '),
@@ -155,6 +156,7 @@ export default {
         parent: 'none',
       };
       this.createList(payload);
+      this.reset += 1;
     },
     swatchStyle() {
       return {
@@ -166,19 +168,11 @@ export default {
         transition: 'border-radius 200ms ease-in-out',
       };
     },
-    ensureNewState(index, state) {
-      const lastStateIndex = this.itemStates.length - 1;
-      if (index === lastStateIndex) {
-        if (state.length !== 0) {
-          this.itemStates.push({ icon: 'mdi-plus', text: 'New Item' });
-        }
-      }
-    },
   },
   computed: {
     ...mapState(['globalPreferences']),
     defaultStateGroup() {
-      return this.globalPreferences.defaultStateGroup;
+      return { ...this.globalPreferences.defaultStateGroup };
     },
 
   },

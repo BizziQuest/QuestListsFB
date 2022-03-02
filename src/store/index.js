@@ -54,6 +54,7 @@ const defaultState = {
 
 const store = new Vuex.Store({
   state: {
+    pageBackgroundColor: null,
     currentUser: defaultState.currentUser,
     lists: defaultState.lists,
     messages: [],
@@ -91,6 +92,9 @@ const store = new Vuex.Store({
     getGlobalPreferences: (state) => state.globalPreferences,
   },
   mutations: {
+    setPageBackgroundColor(state, color) {
+      state.pageBackgroundColor = color;
+    },
     setUser(state, user) {
       state.currentUser = {
         uid: user.uid,

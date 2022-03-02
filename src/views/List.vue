@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <user-auth-alert action="edit this list or save any changes" />+
+  <div class="mx-5 w-full h-full" :style="`width: 100%; height: 100%;background-color: ${list.color}`">
+    <user-auth-alert action="edit this list or save any changes" />
     <h1  style="display:inline-flex;">{{ list.title }}</h1>
     <v-chip
       class="ma-2"
@@ -39,6 +39,7 @@
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
@@ -78,12 +79,16 @@ export default {
       states: [],
     };
   },
+  beforeRouteLeave() {
+    this.setPageBackgroundColor(null);
+  },
   computed: {
     listItemsWithBlank() {
       return [...this.listItems, { title: '', isNewItem: true }];
     },
   },
   methods: {
+    ...mapMutations(['setPageBackgroundColor']),
     appendItem(index, item) {
       if (index >= this.listItems.length) {
         this.listItems.push(item);
@@ -106,6 +111,7 @@ export default {
       foundList = { id: foundList.id, ...foundList.data() };
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
+      this.setPageBackgroundColor(foundList.color);
       this.list.id = foundList.id || 'none';
       this.list = foundList;
       this.listItems = listItems;

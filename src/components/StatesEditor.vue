@@ -69,6 +69,11 @@ export default {
       default: () => ({}),
       description: 'The list of states we want to manage.',
     },
+    reset: {
+      type: Number,
+      default: 0,
+      description: 'Increment to reset the form.',
+    },
   },
   data() {
     return {
@@ -77,13 +82,16 @@ export default {
     };
   },
   mounted() {
-    this.items = this.stateGroup.states;
+    this.items = [...this.stateGroup.states];
     this.ensureNewState();
   },
   watch: {
     stateGroup(val) {
-      this.items = val.states;
+      this.items = [...val.states];
       this.ensureNewState();
+    },
+    reset() {
+      this.items = [...this.stateGroup.states];
     },
   },
   methods: {

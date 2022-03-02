@@ -1,7 +1,7 @@
 <template>
   <v-app id="app" @keyup.ctrl.102="handleFind">
     <drawer-menu :drawer.sync="drawer" />
-    <v-main>
+    <v-main :style="`max-width: 100%; background-color: ${pageBackgroundColor}`">
       <transition  name="router-anim">
         <router-view :key="$route.path"></router-view>
       </transition>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import DrawerMenu from './components/Menus/DrawerMenu.vue';
 import BottomDrawerMenu from './components/Menus/BottomDrawerMenu.vue';
 import Notification from './components/Notification.vue';
@@ -36,17 +37,20 @@ export default {
     };
   },
   mixins: [appUpdate],
+  computed: {
+    ...mapState(['pageBackgroundColor']),
+  },
   methods: {
     handleFind() {
       console.warn('Search Not Implemented');
     },
   },
   mounted() {
-    this.$watch('$vuetify.breakpoint.name', (from, to) => {
-      if (from !== 'sm' && to === 'sm') {
-        this.drawer = false;
-      }
-    });
+    // this.$watch('$vuetify.breakpoint.name', (from, to) => {
+    //   if (from !== 'sm' && to === 'sm') {
+    //     this.drawer = false;
+    //   }
+    // });
   },
 };
 </script>

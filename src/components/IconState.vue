@@ -4,7 +4,7 @@
     <v-dialog v-model="dialog" persistent max-width="400">
       <v-card>
         <v-card-title class="headline">Please choose your Icon</v-card-title>
-        <v-form ref="iconForm">
+        <v-form ref="iconForm" @submit.prevent.stop="chooseIcon">
           <v-card-text>
             <v-row>
               <div class="pa-5 mb-5 rounded-t-xl" color="info">
