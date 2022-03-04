@@ -155,6 +155,9 @@ describe('list creation', () => {
           emailVerified: true,
           uid: 'UUID1',
         },
+        globalPreferences: {
+          defaultStateGroup: { states: [{ icon: 'default', name: 'default' }] },
+        },
       },
     });
     wrapper = mount(CreateAList, {
@@ -180,19 +183,10 @@ describe('list creation', () => {
   });
   it('should do nothing if the title and color form does not validate', () => {
     wrapper.vm.title = '123';
-    wrapper.vm.listColor = 'kajsbfkajsb';
+    wrapper.vm.listColor = 'HELLO';
     wrapper.vm.createAList();
     expect(actions.createList).not.toHaveBeenCalled();
   });
-  it('should notify users when there are no states given.', async () => {
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.createAList();
-    expect(actions.notify.mock.calls[0][1]).toEqual(
-      { type: 'info', text: 'No states configured. Using default states.' },
-    );
-    expect(actions.createList).toHaveBeenCalled();
-  });
-
   it('should create the list with the proper parameters', async () => {
     wrapper.find('[test-adult-content]').trigger('click');
     await wrapper.find('input[test-title-input]').setValue('A New Title');
@@ -204,7 +198,7 @@ describe('list creation', () => {
       { type: 'info', text: 'No states configured. Using default states.' },
     );
     const createParams = actions.createList.mock.calls[0][1];
-    expect(createParams.stateGroup).toStrictEqual({ states: [] });
+    expect(createParams.stateGroup).toStrictEqual({ states: [{ icon: 'default', name: 'default' }] });
     expect(createParams.adultContent).toStrictEqual(true);
   });
   it('should notify users when there are no states given.', async () => {
@@ -217,9 +211,10 @@ describe('list creation', () => {
       { type: 'info', text: 'No states configured. Using default states.' },
     );
     const createParams = actions.createList.mock.calls[0][1];
-    expect(createParams.stateGroup).toStrictEqual({ states: [] });
+    expect(createParams.stateGroup).toStrictEqual({ states: [{ icon: 'default', name: 'default' }] });
   });
 
+  // TODO: move this into ColorPicker
   it.todo('should show the color picker when the color picker icon is clicked.');
   it.todo('should set the color of the color picker icon when the color picker menu is closed.');
 });

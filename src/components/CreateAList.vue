@@ -101,9 +101,6 @@ export default {
         (v) => !!v || 'Title is required',
         (v) => (v && v.length > 5) || 'Title must be longer than 5 characters',
       ],
-      colorPickerRules: [
-        (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
-      ],
     };
   },
   props: {
@@ -129,7 +126,7 @@ export default {
     },
     async createAList() {
       if (this.$refs.addTitleAndColorForm.validate() === false) {
-        this.$refs.addTitleAndColorForm.$el.scrollIntoView();
+        this.$refs.addTitleAndColorForm.$el.scrollIntoView({ behavior: 'smooth' });
         this.notify({ type: 'error', text: 'There were problems creating your QuestList.' });
         return;
       }
