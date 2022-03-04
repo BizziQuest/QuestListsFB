@@ -4,9 +4,9 @@
     :floating="isMobile"
     :expand-on-hover="!isMobile && !$vuetify.breakpoint.lgAndUp"
     :app="!isMobile"
-    :permanent="!isMobile || $vuetify.breakpoint.lgAndUp"
+    :permanent="!isMobile"
     v-model="showDrawer"
-    :fixed="isMobile || $vuetify.breakpoint.lgAndUp"
+    :fixed="isMobile"
     :dark="!isDark"
     :light="isDark"
     test-navigation-drawer

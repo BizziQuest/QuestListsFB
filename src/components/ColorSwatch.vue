@@ -30,7 +30,6 @@ export default {
     value: {
       type: String,
       description: 'the value of the color, in hex',
-      // default: '#000000',
     },
   },
   data() {

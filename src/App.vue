@@ -46,11 +46,11 @@ export default {
     },
   },
   mounted() {
-    // this.$watch('$vuetify.breakpoint.name', (from, to) => {
-    //   if (from !== 'sm' && to === 'sm') {
-    //     this.drawer = false;
-    //   }
-    // });
+    this.$watch('$vuetify.breakpoint.name', (from, to) => {
+      if (from !== 'sm' && to === 'sm') {
+        this.drawer = false;
+      }
+    });
   },
 };
 </script>
