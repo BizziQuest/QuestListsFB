@@ -7,7 +7,7 @@ import routes from '@/router/routes';
 import CreateAList from '@/components/CreateAList.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
-let scrollIntoViewMock = jest.fn();
+const scrollIntoViewMock = jest.fn();
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
 jest.mock('../../src/algolia.js');

@@ -8,10 +8,6 @@ import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
 import EditInfo from '@/components/EditInfo.vue';
 import App from '@/App.vue';
 import router from '@/router';
-import About from '@/views/About.vue';
-import Terms from '@/views/about/Terms.vue';
-import Privacy from '@/views/about/Privacy.vue';
-import Conduct from '@/views/about/Conduct.vue';
 
 jest.setTimeout(8000);
 jest.mock('../../src/firebase.js', () => ({
