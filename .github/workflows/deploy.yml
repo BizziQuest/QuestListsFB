@@ -31,12 +31,17 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
+      - name: Setup Node w/cache
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - name: Install Global Dependencies
-        run: npm install -g yarn @vue/cli
+        run: npm install -g pnpm @vue/cli
       - name: Install Local Dependencies
-        run: yarn
+        run: pnpm install
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:

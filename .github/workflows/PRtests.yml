@@ -36,6 +36,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
     - run: npm install -g pnpm @vue/cli
     - run: pnpm install
     - run: pnpm lint
@@ -52,6 +53,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
     - run: npm install -g pnpm @vue/cli
     - run: pnpm install
     - run: CI=true pnpm test:unit
