@@ -48,12 +48,7 @@ afterEach(() => {
 
 describe('smoother ux transition', () => {
   it('has a transition component', () => {
-    const wrapper1 = shallowMount(App, {
-      localVue,
-      router,
-      vuetify,
-    });
-    expect(wrapper1.find('transition-stub[name="router-anim"]').exists()).toBe(true);
+    expect(wrapper.find('transition-stub[name="router-anim"]').exists()).toBe(true);
   });
 
   describe('transitioning between lists view and edit info page (should be less than 0.3 seconds)', () => {
