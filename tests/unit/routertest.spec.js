@@ -8,12 +8,13 @@ import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
 import EditInfo from '@/components/EditInfo.vue';
 import App from '@/App.vue';
 import router from '@/router';
-// import About from '@/views/About.vue';
-// import Terms from '@/views/Terms.vue';
-// import Privacy from '@/views/Privacy.vue';
-// import Conduct from '@/views/Conduct.vue';
 
-jest.mock('../../src/firebase.js');
+jest.setTimeout(8000);
+jest.mock('../../src/firebase.js', () => ({
+  auth: { currentUser: { emailVerified: true } },
+  getListBySlug: jest.fn(() => ({ docs: [] })),
+}));
+jest.mock('../../src/algolia.js');
 
 const localVue = createLocalVue();
 const vuetify = new Vuetify();
@@ -39,7 +40,7 @@ beforeEach(() => {
   const localStore = new Vuex.Store({
     getters: { getGlobalPreferences: (s) => s.globalPreferences },
     state,
-    actions: { fetchLists: jest.fn() },
+    actions: { fetchLists: jest.fn(), fetchList: jest.fn() },
   });
 
   wrapper = mount(App, {
@@ -54,41 +55,44 @@ afterEach(() => {
   wrapper.destroy();
 });
 
+/**
+ * NOTE: There is an issue here where the last test (List routing) is causing the
+ *  following tests to fail. I suspect there is an async method somewhere that is
+ *  not being resolved, probably in a support lib like firebase.js.
+ */
+
 describe('Router', () => {
-  it('render Lists component via routing', async () => {
+  it('render Lists component via routing', () => {
     expect(wrapper.findComponent(DrawerMenu).exists()).toBe(true);
     expect(wrapper.findComponent(Lists).exists()).toBe(true);
   });
-  it('renders a single List component via routing', async () => {
-    // since we are testing for the presence of a component, we only need to check if that component renders
-    await wrapper.vm.$router.push('/lists/abc123');
-    expect(wrapper.findComponent(List).exists()).toBe(true);
-  });
   it('renders the profile component via routing', async () => {
-    expect(wrapper.findComponent(EditInfo).exists()).not.toBe(true);
     await wrapper.vm.$router.push('/editinfo');
     expect(wrapper.findComponent(EditInfo).exists()).toBe(true);
   });
-  // it('renders the about page via routing', async () => {
-  //   await wrapper.vm.$router.push('/about');
-  //   expect(wrapper.findComponent(About).exists()).toBe(true);
-  //   expect(wrapper.text()).toContain('About QuestLists');
-  // });
-  // it('renders the terms of service page via routing', async () => {
-  //   expect(wrapper.text()).not.toContain('QuestLists Terms and Conditions');
-  //   await wrapper.vm.$router.push('/about/terms');
-  //   expect(wrapper.findComponent(Terms).exists()).toBe(true);
-  //   expect(wrapper.text()).toContain('QuestLists Terms and Conditions');
-  // });
-  // it('renders the privacy policy page via routing', async () => {
-  //   await wrapper.vm.$router.push('/about/privacy');
-  //   expect(wrapper.findComponent(Privacy).exists()).toBe(true);
-  //   expect(wrapper.text()).toContain('QuestLists Privacy Policy');
-  // });
-  // it('renders the code of conduct page via routing', async () => {
-  //   await wrapper.vm.$router.push('/about/conduct');
-  //   expect(wrapper.findComponent(Conduct).exists()).toBe(true);
-  //   expect(wrapper.text()).toContain('QuestLists Code of Conduct');
-  // });
+  it('renders the about page via routing', async () => {
+    expect(wrapper.text()).not.toContain('Grab the Source or Contribute on Github');
+    await wrapper.vm.$router.push('/about');
+    expect(wrapper.text()).toContain('Grab the Source or Contribute on Github');
+  });
+  it('renders the terms of service page via routing', async () => {
+    expect(wrapper.text()).not.toContain('QuestLists Terms and Conditions');
+    await wrapper.vm.$router.push('/about/terms-of-service');
+    expect(wrapper.text()).toContain('QuestLists Terms and Conditions');
+  });
+  it('renders the privacy policy page via routing', async () => {
+    await wrapper.vm.$router.push('/about/privacy-policy');
+    expect(wrapper.findComponent('.privacy-policy').exists()).toBe(true);
+    expect(wrapper.text()).toContain('QuestLists Privacy Policy');
+  });
+  it('renders the code of conduct page via routing', async () => {
+    await wrapper.vm.$router.push('/about/code-of-conduct');
+    expect(wrapper.findComponent('.code-of-conduct').exists()).toBe(true);
+    expect(wrapper.text()).toContain('QuestLists Code of Conduct');
+  });
+  it('renders a single List component via routing', async () => {
+    await wrapper.vm.$router.push('/lists/abc123');
+    expect(wrapper.findComponent(List).exists()).toBe(true);
+  });
   it.todo('should not allow anonymous users to visit the edit user page.');
 });

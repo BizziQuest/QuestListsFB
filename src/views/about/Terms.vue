@@ -1,5 +1,5 @@
 <template>
-  <v-container class="about">
+  <v-container class="terms">
     <v-card elevation="3">
       <v-card-title>QuestLists Terms and Conditions</v-card-title>
       <v-card-text>

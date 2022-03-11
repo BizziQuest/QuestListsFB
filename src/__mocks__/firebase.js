@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-export const getListBySlug = jest.fn(() => Promise.resolve([]));
+export const getListBySlug = jest.fn(() => Promise.resolve({}));
 
 export const getListItems = jest.fn(() => Promise.resolve([]));
 

@@ -12,7 +12,7 @@
     >
       <span
         v-for="(item, index) in items"
-        :key="`${item.text}${index}${numForceRedraws}`"
+        :key="`${item.text}${index}`"
         :data-index="index"
         :id="index"
         @drop="onDrop"
@@ -21,7 +21,7 @@
         @touchstart="startTouch"
         class="item-row"
         ref="row"
-        :data-key="`${item.text}${index}${numForceRedraws}`"
+        :data-key="`${item.text}${index}`"
         test-list-item
       >
         <v-row class="justify-start align-center">
@@ -30,13 +30,12 @@
             :item="item"
             :draggable="index !== items.length - 1"
             :isDraggable="index !== items.length - 1"
-            @update:item="ensureNewState(index, $event)"
+            @update:item="updateItem(index, $event)"
             @delete:item="deleteListState(index, $event)"
-            @blur="updateItem(index, $event)"
             :class="{
-              changed: updatedRows.find(e => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
-              endDrag: updatedRows[0] && updatedRows[0].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
-              startDrag: updatedRows[1] && updatedRows[1].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0
+              changed: updatedRows.find((e) => e && e.localeCompare(`${item.text}${index}`) === 0),
+              endDrag: updatedRows[0] && updatedRows[0].localeCompare(`${item.text}${index}`) === 0,
+              startDrag: updatedRows[1] && updatedRows[1].localeCompare(`${item.text}${index}`) === 0,
             }"
           />
         </v-row>
@@ -70,40 +69,51 @@ export default {
       default: () => ({}),
       description: 'The list of states we want to manage.',
     },
+    reset: {
+      type: Number,
+      default: 0,
+      description: 'Increment to reset the form.',
+    },
   },
   data() {
     return {
-      items: [
-        ...this.stateGroup.states,
-        {
-          text: 'New State',
-          icon: 'mdi-plus',
-          value: getNextUnusedValue(this.stateGroup.states),
-          isNewItem: true,
-        },
-      ],
+      items: [],
       rowItems: [],
     };
   },
-
+  mounted() {
+    this.items = [...this.stateGroup.states];
+    this.ensureNewState();
+  },
+  watch: {
+    stateGroup(val) {
+      this.items = [...val.states];
+      this.ensureNewState();
+    },
+    reset() {
+      this.items = [...this.stateGroup.states];
+    },
+  },
   methods: {
     updateItem(index, state) {
       this.items[index].text = state.text;
+      delete this.items[index].isNewItem;
       if (state?.icon) this.items[index].icon = state.icon;
-      this.$emit('list:updated', this.items.slice(0, -1));
+      this.ensureNewState(index, state);
+      this.$emit(
+        'list:updated',
+        this.items.filter((item) => !item.isNewState),
+      );
     },
-    ensureNewState(index, state) {
-      const lastStateIndex = this.items.length - 1;
-      if (index === lastStateIndex) {
-        if (state.text.length !== 0) {
-          this.items[lastStateIndex].isNewItem = false;
-          this.items.push({
-            icon: 'mdi-plus',
-            text: 'New Item',
-            value: getNextUnusedValue(this.items),
-            isNewItem: true,
-          });
-        }
+    ensureNewState() {
+      const newItems = this.items.filter((item) => item.isNewItem);
+      if (newItems.length < 1) {
+        this.items.push({
+          icon: 'mdi-plus',
+          text: '',
+          value: getNextUnusedValue(this.items),
+          isNewItem: true,
+        });
       }
     },
     deleteListState(index) {

@@ -53,17 +53,15 @@ describe('ListState.vue', () => {
     expect(wrapper.emitted()['delete:item'][0]).toEqual([item]);
   });
 
-  it('chaging text will emitt a change event', async () => {
-    jest.spyOn(wrapper.vm, 'isChanging');
+  it('changing text will emit a change event', async () => {
     await wrapper.find('[test-text-field]').setValue('the text is changed');
     expect(wrapper.emitted()['update:item'][0]).toEqual([{ icon: undefined, text: 'the text is changed' }]);
   });
 
-  it('update text will emitt a change event', async () => {
-    jest.spyOn(wrapper.vm, 'updateText');
+  it('update text will emit a change event', async () => {
     const txtField = wrapper.find('[test-text-field]');
-    await txtField.setValue('blured text value');
+    await txtField.setValue('blurred text value');
     await txtField.trigger('blur');
-    expect(wrapper.emitted().blur[0]).toEqual([{ icon: undefined, text: 'blured text value' }]);
+    expect(wrapper.emitted()['update:item'][0]).toEqual([{ icon: undefined, text: 'blurred text value' }]);
   });
 });
