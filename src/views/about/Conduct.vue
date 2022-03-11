@@ -1,5 +1,5 @@
 <template>
-  <v-container class="about">
+  <v-container class="code-of-conduct">
     <v-card elevation="3">
       <v-card-title>QuestLists Code of Conduct</v-card-title>
       <v-card-text>

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="about">
+  <v-container class="privacy-policy">
     <v-card elevation="3">
       <v-card-title>QuestLists Privacy Policy</v-card-title>
       <v-card-subtitle>Effective Date: April 18th, 2021</v-card-subtitle>
