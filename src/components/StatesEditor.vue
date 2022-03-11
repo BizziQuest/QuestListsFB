@@ -97,7 +97,7 @@ export default {
   methods: {
     updateItem(index, state) {
       this.items[index].text = state.text;
-      this.items[index].isNewItem = false;
+      delete this.items[index].isNewItem;
       if (state?.icon) this.items[index].icon = state.icon;
       this.ensureNewState(index, state);
       this.$emit(
