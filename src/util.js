@@ -1,10 +1,9 @@
 import md5 from 'md5';
 import pSBC, { toColor } from './pSBC';
 
-function getGravatarForEmail(email, username) {
+function getGravatarForEmail(email) {
   const emailHash = md5(email);
-  const escapedName = encodeURIComponent(username);
-  return `https://www.gravatar.com/avatar/${emailHash}?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/${escapedName}/128`;
+  return `https://www.gravatar.com/avatar/${emailHash}?d=robohash`;
 }
 
 function getAvatarForUser(user) {

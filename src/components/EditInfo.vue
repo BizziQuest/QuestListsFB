@@ -4,12 +4,12 @@
       <v-card-text class="d-flex flex-column align-center mt-10">
         <h1 class="mt-10">Edit Profile</h1>
         <v-avatar class="my-4" size="96">
-          <v-img :src="avatarPreview" test-avatar-image/>
+          <v-img :src="avatarPreview" test-avatar-image />
         </v-avatar>
-        <h4 class="">{{currentUser.email}}</h4>
+        <h4 class="">{{ currentUser.email }}</h4>
       </v-card-text>
       <v-card-actions>
-        <v-form ref="infoForm">
+        <v-form ref="infoForm" class="w-100 center px-3">
           <v-container>
             <v-row>
               <v-text-field
@@ -41,14 +41,7 @@
               <label style="color: rgba(0, 0, 0, 0.6)" class="pt-5 pl-2">
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-icon
-                      color="primary"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      mdi mdi-help-circle
-                    </v-icon>
+                    <v-icon color="primary" dark v-bind="attrs" v-on="on"> mdi mdi-help-circle </v-icon>
                   </template>
                   <div style="width: 20vw">
                     Gravatar is a service for matching emails with avatars. Click sign-up to sign up for yours!
@@ -65,26 +58,15 @@
             <v-row>
               <v-col class="d-flex align-center justify-center">
                 <v-btn
-                  class="success"
+                  class="warning mr-5 text-large"
                   color="darken-1"
                   elevation="2"
-                  x-large
-                  rounded
-                  text
                   test-save-button
-                  v-on:click="saveForm"
-                  >Save Profile</v-btn
+                  v-on:click="loadFormData"
+                  ><i class="mdi mdi-content-save-off"></i> Reset</v-btn
                 >
-                <v-btn
-                  test-cancel-button
-                  class="success"
-                  color="darken-1"
-                  elevation="2"
-                  x-large
-                  rounded
-                  text
-                  v-on:click="cancelForm"
-                  >Cancel Changes</v-btn
+                <v-btn class="success" color="darken-1" elevation="2" test-save-button v-on:click="saveForm"
+                  ><i class="mdi mdi-content-save"></i> Update</v-btn
                 >
               </v-col>
             </v-row>
@@ -97,8 +79,7 @@
 
 <script>
 import { mapState } from 'vuex';
-// import { getAvatarForUser } from '../util';
-import md5 from 'md5';
+import { getGravatarForEmail } from '../util';
 
 export default {
   name: 'EditInfo',
@@ -115,25 +96,28 @@ export default {
     ...mapState({
       currentUser(state) {
         if (!state.currentUser || !Object.prototype.hasOwnProperty.call(state.currentUser, 'uid')) return {};
-        const {
-          displayName, email, avatar, uid, useGravatar,
-        } = state.currentUser;
-        this.userId = uid;
-        this.displayName = displayName;
-        this.email = email;
-        this.avatar = avatar;
-        this.useGravatar = useGravatar || false;
+        this.loadFormData();
         return state.currentUser;
       },
     }),
     avatarPreview() {
       if (this.useGravatar) {
-        return `https://www.gravatar.com/avatar/${md5(this.email)}`;
+        return getGravatarForEmail(this.email);
       }
       return this.avatar || '/img/unknown_user.svg';
     },
   },
   methods: {
+    loadFormData() {
+      const {
+        displayName, email, avatar, uid, useGravatar,
+      } = this.$store.state.currentUser;
+      this.userId = uid;
+      this.displayName = displayName;
+      this.email = email;
+      this.avatar = avatar;
+      this.useGravatar = useGravatar || false;
+    },
     saveForm() {
       const userInfo = {
         uid: this.currentUser.uid,
@@ -144,18 +128,11 @@ export default {
       };
       this.$store.dispatch('saveProfile', userInfo);
     },
-    cancelForm() {
-      const {
-        displayName, email, avatar, uid,
-      } = this.$store.state.currentUser;
-      if (uid) {
-        this.userId = uid;
-        this.displayName = displayName || this.displayName;
-        this.email = email;
-        this.avatar = avatar || this.avatar;
-        this.useGravatar = false;
-      }
-    },
   },
 };
 </script>
+<style>
+.w-100 {
+  width: 100%;
+}
+</style>
