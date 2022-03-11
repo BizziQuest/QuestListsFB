@@ -39,11 +39,6 @@ export default {
       icon: this.item.icon,
     };
   },
-  mounted() {
-    // this.text = this.item.text;
-    // this.listColor = this.item.color;
-    // this.icon = this.item.icon;
-  },
   watch: {
     item(val) {
       this.listColor = val.color;
@@ -68,18 +63,4 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-// .list-state {
-//   align-items: center;
-// }
-// .icon-state {
-//   width: 30px;
-//   margin-right: 10px;
-//   display: inline-block;
-// }
-// .drag-handle {
-//   padding-right: 10px;
-// }
-// .v-row {
-//   display: inline-flex;
-// }
 </style>
