@@ -1,6 +1,7 @@
 <template>
   <div class="mx-5 w-full h-full" :style="`width: 100%; height: 100%;background-color: ${list.color}`">
     <user-auth-alert action="edit this list or save any changes" />
+
     <h1  style="display:inline-flex;">{{ list.title }}</h1>
     <v-chip
       class="ma-2"
@@ -15,6 +16,9 @@
     class="ma-2" color="orange darken-2" dark @click="$router.back()">
       <v-icon dark left> mdi-arrow-left </v-icon>Back
     </v-btn>
+    <v-alert v-if="errors" type="danger">
+      {{errors}}
+    </v-alert>
     <div id="items">
       <transition-group
         name="slide-x-transition"
@@ -77,6 +81,7 @@ export default {
       },
       listItems: [],
       states: [],
+      errors: null,
     };
   },
   beforeRouteLeave() {
@@ -107,6 +112,10 @@ export default {
       const context = slug.split('/');
       const currentSlug = context[context.length - 1];
       const fbList = await getListBySlug(currentSlug);
+      if (!fbList || !fbList.docs || fbList.docs.length < 1) {
+        this.errors = 'Could not locate list.';
+        return;
+      }
       let foundList = fbList.docs[fbList.docs.length - 1];
       foundList = { id: foundList.id, ...foundList.data() };
       const listItems = await getListItems(foundList);
