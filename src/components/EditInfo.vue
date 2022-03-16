@@ -61,7 +61,7 @@
                   class="warning mr-5 text-large"
                   color="darken-1"
                   elevation="2"
-                  test-save-button
+                  test-reset-button
                   v-on:click="loadFormData"
                   ><i class="mdi mdi-content-save-off"></i> Reset</v-btn
                 >
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { getGravatarForEmail } from '../util';
 
 export default {
@@ -108,6 +108,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['saveProfile']),
     loadFormData() {
       const {
         displayName, email, avatar, uid, useGravatar,
@@ -126,7 +127,7 @@ export default {
         avatar: this.avatar || '/img/unknown_user.svg',
         useGravatar: this.useGravatar || false,
       };
-      this.$store.dispatch('saveProfile', userInfo);
+      this.saveProfile(userInfo);
     },
   },
 };
