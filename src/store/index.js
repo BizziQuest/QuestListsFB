@@ -249,16 +249,20 @@ export const storeConfig = {
     },
     async saveProfile({ commit, dispatch }, payload) {
       try {
-        await updateProfile(auth.currentUser, {
+        const res = await updateProfile(auth.currentUser, {
           displayName: payload.displayName,
           photoURL: payload.avatar,
+        }).catch((err) => {
+          throw new Error(err);
         });
+        console.dir(res);
         await saveUserPreferences(payload);
         commit('setUser', payload);
         dispatch('notify', { text: 'Profile has been saved.', type: 'info' });
       } catch (error) {
         dispatch('notify', {
           text: 'There was an error saving profile. Please try again later.',
+          error,
           timeout: 10000,
           type: 'danger',
         });
