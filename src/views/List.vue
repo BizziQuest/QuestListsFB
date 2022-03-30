@@ -15,6 +15,7 @@
     class="ma-2" color="orange darken-2" dark @click="$router.back()">
       <v-icon dark left> mdi-arrow-left </v-icon>Back
     </v-btn>
+    <list-preferences ></list-preferences>
     <div id="items">
       <transition-group
         name="slide-x-transition"
@@ -49,6 +50,7 @@ import {
   saveListItems,
   updateUserItemStates,
 } from '../firebase';
+import ListPreferences from '../components/ListPreferences.vue';
 
 export default {
   name: 'List',
@@ -67,6 +69,7 @@ export default {
   components: {
     ListItem,
     UserAuthAlert,
+    ListPreferences,
   },
   data() {
     return {
