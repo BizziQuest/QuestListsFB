@@ -97,7 +97,7 @@ describe('saving a user', () => {
       state: {
         currentUser: {
           avatar: '/path/to/image.jpg',
-          displayName: '0Auth Dispaly Name',
+          displayName: '0Auth Display Name',
           email: 'tersterson3@test.com',
           emailVerified: false,
           uid: 'UUID123456',
@@ -117,7 +117,7 @@ describe('saving a user', () => {
       await wrapper.find('[test-useGravatar-checkbox]').trigger('click');
       expect(wrapper.vm.useGravatar).toBe(true);
       const avatarImage = wrapper.find('.v-image[test-avatar-image]');
-      const gravatarLink = `https://www.gravatar.com/avatar/${md5('tersterson3@test.com')}`;
+      const gravatarLink = `https://www.gravatar.com/avatar/${md5('tersterson3@test.com')}?d=robohash`;
       expect(avatarImage.vm.src).toBe(gravatarLink);
       expect(wrapper.vm.avatarPreview).toBe(gravatarLink);
     });
@@ -131,7 +131,7 @@ describe('saving a user', () => {
       await wrapper.find('[test-useGravatar-checkbox]').trigger('click');
       expect(wrapper.vm.useGravatar).toBe(true);
       avatarImage = wrapper.find('.v-image[test-avatar-image]');
-      const gravatarLink = `https://www.gravatar.com/avatar/${md5('tersterson3@test.com')}`;
+      const gravatarLink = `https://www.gravatar.com/avatar/${md5('tersterson3@test.com')}?d=robohash`;
       expect(avatarImage.vm.src).toBe(gravatarLink);
       expect(wrapper.vm.avatarPreview).toBe(gravatarLink);
 
@@ -146,7 +146,7 @@ describe('saving a user', () => {
       await wrapper.find('[test-useGravatar-checkbox]').trigger('click');
       expect(wrapper.vm.useGravatar).toBe(true);
       let avatarImage = wrapper.find('.v-image[test-avatar-image]');
-      const gravatarLink = `https://www.gravatar.com/avatar/${md5('tersterson3@test.com')}`;
+      const gravatarLink = `https://www.gravatar.com/avatar/${md5('tersterson3@test.com')}?d=robohash`;
       expect(avatarImage.vm.src).toBe(gravatarLink);
       expect(wrapper.vm.avatarPreview).toBe(gravatarLink);
 
@@ -160,7 +160,7 @@ describe('saving a user', () => {
       await wrapper.find('[test-useGravatar-checkbox]').trigger('click');
       expect(wrapper.vm.useGravatar).toBe(true);
       const avatarImage = wrapper.find('.v-image[test-avatar-image]');
-      const gravatarLink = `https://www.gravatar.com/avatar/${md5('tersterson3@test.com')}`;
+      const gravatarLink = `https://www.gravatar.com/avatar/${md5('tersterson3@test.com')}?d=robohash`;
       expect(avatarImage.vm.src).toBe(gravatarLink);
       expect(wrapper.vm.avatarPreview).toBe(gravatarLink);
 

@@ -25,19 +25,24 @@
   },
   "emulators": {
     "auth": {
-      "port": 9099
+      "port": 9099,
+      "host": "192.168.0.196"
     },
     "hub": {
-      "port": 4500
+      "port": 4500,
+      "host": "192.168.0.196"
     },
     "functions": {
-      "port": 5001
+      "port": 5001,
+      "host": "192.168.0.196"
     },
     "firestore": {
-      "port": 8888
+      "port": 8888,
+      "host": "192.168.0.196"
     },
     "database": {
-      "port": 9009
+      "port": 9009,
+      "host": "192.168.0.196"
     },
     "hosting": {
       "port": 5000

@@ -229,8 +229,9 @@ async function saveUserPreferences(prefs) {
 }
 
 async function getUserPreferences() {
-  const userDocument = await getDocs(collection(db, 'users'), auth.currentUser.uid);
-  if (userDocument.exists) return userDocument.data();
+  const userDocument = doc(db, 'users', auth.currentUser.uid);
+  const userData = await getDoc(userDocument);
+  if (userData.exists) return userData.data();
   console.warn("User Prefs don't exist: ", auth.currentUser.uid, userDocument.path);
   return {};
 }

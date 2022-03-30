@@ -12,12 +12,15 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import {
-  signInWithEmailAndPassword, signInWithPopup, signOut, getAdditionalUserInfo,
-  createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  getAdditionalUserInfo,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
 } from 'firebase/auth';
-import {
-  addDoc,
-} from 'firebase/firestore';
+import { addDoc } from 'firebase/firestore';
 import router from '../router';
 import { getAvatarForUser } from '../util';
 import {
@@ -36,7 +39,7 @@ import { algoliaIndex } from '../algolia';
 
 Vue.use(Vuex);
 
-const defaultState = {
+export const defaultState = {
   currentUser: {
     avatar: null,
     displayName: null,
@@ -46,13 +49,14 @@ const defaultState = {
     useGravatar: false,
   },
   lists: [],
-  message: [{
-    text: '',
-    type: 'none', // it can be error, info, or warning
-  }],
+  message: [
+    {
+      text: '',
+      type: 'none', // it can be error, info, or warning
+    },
+  ],
 };
-
-const store = new Vuex.Store({
+export const storeConfig = {
   state: {
     pageBackgroundColor: null,
     currentUser: defaultState.currentUser,
@@ -73,14 +77,16 @@ const store = new Vuex.Store({
             shortName: 'notDone',
             value: '0',
             order: 0,
-          }, {
+          },
+          {
             color: '#ffffff',
             icon: 'mdi-checkbox-marked-outline',
             name: 'Done',
             shortName: 'done',
             value: '1',
             order: 1,
-          }],
+          },
+        ],
       },
     },
   },
@@ -227,9 +233,7 @@ const store = new Vuex.Store({
     async createList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
       const doc = await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
-      algoliaIndex.saveObject(
-        { ...listData, objectID: doc.id },
-      );
+      algoliaIndex.saveObject({ ...listData, objectID: doc.id });
       router.push(`/lists/${listData.slug}`);
     },
     updateUserInfo({ commit }, payload) {
@@ -243,20 +247,32 @@ const store = new Vuex.Store({
         },
       });
     },
-    async saveProfile({ commit }, payload) {
+    async saveProfile({ commit, dispatch }, payload) {
       try {
-        await updateProfile(auth.currentUser, {
+        const res = await updateProfile(auth.currentUser, {
           displayName: payload.displayName,
           photoURL: payload.avatar,
+        }).catch((err) => {
+          throw new Error(err);
         });
+        console.dir(res);
         await saveUserPreferences(payload);
         commit('setUser', payload);
+        dispatch('notify', { text: 'Profile has been saved.', type: 'info' });
       } catch (error) {
+        dispatch('notify', {
+          text: 'There was an error saving profile. Please try again later.',
+          error,
+          timeout: 10000,
+          type: 'danger',
+        });
         console.warn('saveProfile', error);
       }
     },
   },
-});
+};
+
+const store = new Vuex.Store(storeConfig);
 
 export const globalPrefRef = reactToPrefsChange(store);
 
