@@ -1,28 +1,24 @@
 <template>
   <div>
-    <user-auth-alert action="edit this list or save any changes" />+
-    <h1  style="display:inline-flex;">{{ list.title }}</h1>
-    <v-chip
-      class="ma-2"
-      color="red"
-      text-color="white"
-      v-if="!!list.adultContent"
-    >
-      Adult Content
-    </v-chip>
-    <v-btn
-    style="display:block"
-    class="ma-2" color="orange darken-2" dark @click="$router.back()">
+    <user-auth-alert action="edit this list or save any changes" />
+
+    <h1 class="d-flex">
+      {{ list.title }}
+      <v-icon class="justify-self-end ml-auto mr-2" @click="showPreferences = !showPreferences"
+        title="Configure QuestList">
+        mdi mdi-cog
+      </v-icon>
+    </h1>
+    <h3>{{ list.description }}</h3>
+    <v-chip class="ma-2" color="red" text-color="white" v-if="!!list.adultContent"> Adult Content </v-chip>
+    <v-btn style="display: block" class="ma-2" color="orange darken-2" dark @click="$router.back()">
       <v-icon dark left> mdi-arrow-left </v-icon>Back
     </v-btn>
-    <list-preferences ></list-preferences>
+    <div v-if="showPreferences" class="border-1">
+      <list-preferences :list="list" @update:list="updateListPreferences" saveButtonText="Update"></list-preferences>
+    </div>
     <div id="items">
-      <transition-group
-        name="slide-x-transition"
-        hide-on-leave
-        leave-absolute
-        :duration="{ enter: 200, leave: 200 }"
-      >
+      <transition-group name="slide-x-transition" hide-on-leave leave-absolute :duration="{ enter: 200, leave: 200 }">
         <list-item
           v-for="(item, index) in listItemsWithBlank"
           :ref="`listItem${index}`"
@@ -44,11 +40,7 @@ import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
 import {
-  getListItems,
-  getListStates,
-  getListBySlug,
-  saveListItems,
-  updateUserItemStates,
+  getListItems, getListStates, getListBySlug, saveListItems, updateUserItemStates, saveList,
 } from '../firebase';
 import ListPreferences from '../components/ListPreferences.vue';
 
@@ -79,6 +71,7 @@ export default {
       },
       listItems: [],
       states: [],
+      showPreferences: false,
     };
   },
   computed: {
@@ -87,6 +80,10 @@ export default {
     },
   },
   methods: {
+    updateListPreferences(newPrefs) {
+      this.list = { ...this.list, ...newPrefs };
+      saveList(this.list);
+    },
     appendItem(index, item) {
       if (index >= this.listItems.length) {
         this.listItems.push(item);
@@ -96,7 +93,6 @@ export default {
     focusNext(index) {
       // XXX: this isn't really Vue-like. We should use a parameter to set the focus instead.
       const listItemRef = this.$refs[`listItem${index + 1}`];
-      // debugger;
       if (listItemRef?.length > 0) {
         listItemRef[0].$refs.input.focus(); // this will trigger blur(), which will save the items
       }

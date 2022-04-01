@@ -4,7 +4,7 @@ import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import store from '@/store';
 import routes from '@/router/routes';
-import CreateAList from '@/components/CreateAList.vue';
+import CreateList from '@/components/CreateList.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 let scrollIntoViewMock = jest.fn();
@@ -34,7 +34,7 @@ localVue.use(VueRouter, Vuetify, Vuex);
 let wrapper;
 
 beforeEach(() => {
-  wrapper = mount(CreateAList, {
+  wrapper = mount(CreateList, {
     localVue,
     router,
     vuetify,
@@ -49,7 +49,7 @@ afterEach(() => {
 
 describe('entering information in the page', () => {
   beforeEach(async () => {
-    wrapper = mount(CreateAList, {
+    wrapper = mount(CreateList, {
       localVue,
       router,
       vuetify,
@@ -157,7 +157,7 @@ describe('list creation', () => {
         },
       },
     });
-    wrapper = mount(CreateAList, {
+    wrapper = mount(CreateList, {
       data() {
         return {
           title: 'Test List',
@@ -181,12 +181,12 @@ describe('list creation', () => {
   it('should do nothing if the title and color form does not validate', () => {
     wrapper.vm.title = '123';
     wrapper.vm.listColor = 'kajsbfkajsb';
-    wrapper.vm.createAList();
+    wrapper.vm.createList();
     expect(actions.createList).not.toHaveBeenCalled();
   });
   it('should notify users when there are no states given.', async () => {
     await wrapper.vm.$nextTick();
-    await wrapper.vm.createAList();
+    await wrapper.vm.createList();
     expect(actions.notify.mock.calls[0][1]).toEqual(
       { type: 'info', text: 'No states configured. Using default states.' },
     );
@@ -198,7 +198,7 @@ describe('list creation', () => {
     await wrapper.find('input[test-title-input]').setValue('A New Title');
     wrapper.find('[test-submit-form]').trigger('click');
     await wrapper.vm.$nextTick();
-    await wrapper.vm.createAList();
+    await wrapper.vm.createList();
     expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
     expect(actions.notify.mock.calls[0][1]).toEqual(
       { type: 'info', text: 'No states configured. Using default states.' },
@@ -211,7 +211,7 @@ describe('list creation', () => {
     await wrapper.find('input[test-title-input]').setValue('A New Title');
     wrapper.find('[test-submit-form]').trigger('click');
     await wrapper.vm.$nextTick();
-    await wrapper.vm.createAList();
+    await wrapper.vm.createList();
     expect(wrapper.vm.$refs.addTitleAndColorForm.validate()).toBe(true);
     expect(actions.notify.mock.calls[0][1]).toEqual(
       { type: 'info', text: 'No states configured. Using default states.' },

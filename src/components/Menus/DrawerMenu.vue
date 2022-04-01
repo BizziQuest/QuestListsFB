@@ -95,7 +95,7 @@ export default {
     },
   },
   components: {
-    // CreateAList,
+    // CreateList,
     UserMenuItem,
   },
   data() {

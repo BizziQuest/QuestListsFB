@@ -14,7 +14,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="createAList">Create</v-btn>
+        <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="createList">Create</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -40,7 +40,7 @@ const defaultFormData = {
 };
 
 export default {
-  name: 'CreateAList',
+  name: 'CreateList',
   mixins: [userAuthMixin],
   components: {
     StatesEditor,
@@ -89,7 +89,7 @@ export default {
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
-    async createAList() {
+    async createList() {
       if (this.$refs.addTitleAndColorForm.validate() === false) {
         this.$refs.addTitleAndColorForm.$el.scrollIntoView();
         this.notify({ type: 'error', text: 'There were problems creating your QuestList.' });

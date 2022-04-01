@@ -1,5 +1,5 @@
 import EditInfo from '../components/EditInfo.vue';
-import CreateAList from '../components/CreateAList.vue';
+import CreateList from '../components/CreateList.vue';
 import Lists from '../views/Lists.vue';
 import List from '../views/List.vue';
 
@@ -43,7 +43,7 @@ const routes = [
   {
     path: '/new',
     name: 'New QuestList',
-    component: CreateAList,
+    component: CreateList,
   },
 ];
 

@@ -7,7 +7,7 @@
             label="List Title*"
             :rules="titleRules"
             :value="title"
-            @change="title"
+            @change="$emit('update:title', $event)"
             required
             placeholder="Your Title"
             outlined
@@ -19,6 +19,7 @@
             label="Color"
             :rules="colorPickerRules"
             :value="listColor"
+            @change="$emit('update:ListColor', $event)"
             placeholder="#FFFFFF"
             outlined
             test-color-input
@@ -46,7 +47,7 @@
           <v-text-field
             label="Description"
             :value="description"
-            @input="this.$emit('update:description', $event)"
+            @input="$emit('update:description', $event)"
             required
             placeholder="Describe your list purpose."
             outlined
@@ -118,6 +119,7 @@ export default {
       (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
     ],
     colorPickerShown: false,
+    formIsValid: false,
   }),
   methods: {
     updateAdultContent(newValue) {

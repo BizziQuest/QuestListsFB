@@ -248,6 +248,15 @@ async function createList(payload) {
   const subList = await addDoc(listsCollection, newPayload);
   return subList;
 }
+async function saveList(payload) {
+  const safePayload = { ...payload };
+  if (!safePayload.listColor) {
+    delete safePayload.listColor;
+  }
+  const listDocument = doc(db, 'lists', payload.id);
+  await setDoc(listDocument, safePayload, { merge: true });
+  return getDoc(listDocument);
+}
 function getStateGroup(stateGroupsCollectionRef, id) {
   return doc(stateGroupsCollectionRef, id);
 }
@@ -273,31 +282,32 @@ function reactToPrefsChange(store) {
 }
 
 export {
-  fbApp,
-  fbAnalytics,
   appCheck,
-  db,
   auth,
+  computeSubListPath,
+  createList,
   currentUser,
-  globalPreferences,
-  listsCollection,
-  stateGroupsCollection,
-  usersCollection,
-  userStatesCollection,
+  db,
+  ensureSlugUniqueness,
+  facebookOAuthLogin,
+  fbAnalytics,
+  fbApp,
+  fetchQuestLists,
+  getListBySlug,
   getListItems,
   getListStates,
   getOrderedCollectionAsList,
-  saveListItems,
-  googleOAuthLogin,
-  facebookOAuthLogin,
-  ensureSlugUniqueness,
-  saveUserPreferences,
-  getUserPreferences,
-  createList,
-  getListBySlug,
-  updateUserItemStates,
-  computeSubListPath,
-  reactToPrefsChange,
   getStateGroup,
-  fetchQuestLists,
+  getUserPreferences,
+  globalPreferences,
+  googleOAuthLogin,
+  listsCollection,
+  reactToPrefsChange,
+  saveList,
+  saveListItems,
+  saveUserPreferences,
+  stateGroupsCollection,
+  updateUserItemStates,
+  usersCollection,
+  userStatesCollection,
 };
