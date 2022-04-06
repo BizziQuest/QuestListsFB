@@ -18,8 +18,8 @@
           <v-text-field
             label="Color"
             :rules="colorPickerRules"
-            :value="listColor"
-            @change="$emit('update:ListColor', $event)"
+            :value="color"
+            @change="$emit('update:color', $event)"
             placeholder="#FFFFFF"
             outlined
             test-color-input
@@ -31,7 +31,7 @@
                 </template>
                 <v-card>
                   <v-card-text>
-                    <CustomColorPicker :value="listColor" @input="updateListColor"/>
+                    <CustomColorPicker :value="color" @input="updateListColor"/>
                     <v-row align="center">
                       <v-btn @click="colorPickerShown = false" class="mx-auto mt-3">Close</v-btn>
                     </v-row>
@@ -59,7 +59,7 @@
     <v-row>
       <v-checkbox
         :value="adultContent"
-        @change="updateAdultContent"
+        @change="$emit('update:adultContent', $event || false)"
         test-adult-content
         class="mx-5"
         label="Adult Content"
@@ -93,7 +93,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    listColor: {
+    color: {
       description: 'The color of the list',
       type: String,
       default: null,
@@ -126,11 +126,11 @@ export default {
       this.$emit('adultContentChanged', newValue);
     },
     updateListColor(newValue) {
-      this.$emit('update:listColor', newValue);
+      this.$emit('update:color', newValue);
     },
     swatchStyle() {
       return {
-        backgroundColor: this.listColor,
+        backgroundColor: this.color,
         cursor: 'pointer',
         height: '30px',
         width: '30px',

@@ -7,26 +7,22 @@
       <v-card-text>
         <v-container>
           <user-auth-alert />
-          <list-metadata-preferences></list-metadata-preferences>
-          <states-editor :stateGroup="getGlobalPreferences.defaultStateGroup" @list:updated="listUpdated" />
+          <list-preferences @update:list="createList" saveButtonText="Create"></list-preferences>
         </v-container>
         <small>*indicates required field</small>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="createList">Create</v-btn>
-      </v-card-actions>
     </v-card>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import StatesEditor from './StatesEditor.vue';
+// import StatesEditor from './StatesEditor.vue';
 import UserAuthAlert from './UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
-import { ensureSlugUniqueness, auth } from '../firebase';
-import ListMetadataPreferences from './preferences/ListMetadataPreferences.vue';
+// import { ensureSlugUniqueness, auth } from '../firebase';
+// import ListMetadataPreferences from './preferences/ListMetadataPreferences.vue';
+import ListPreferences from './ListPreferences.vue';
 
 const defaultFormData = {
   title: '',
@@ -35,7 +31,7 @@ const defaultFormData = {
   statesPicked: '',
   updatedListStatesItems: [],
   description: '',
-  listColor: '',
+  color: '',
   colorPickerShown: false,
 };
 
@@ -43,9 +39,10 @@ export default {
   name: 'CreateList',
   mixins: [userAuthMixin],
   components: {
-    StatesEditor,
+    ListPreferences,
+    // StatesEditor,
     UserAuthAlert,
-    ListMetadataPreferences,
+    // ListMetadataPreferences,
   },
   data() {
     return {
@@ -89,39 +86,9 @@ export default {
     listUpdated($event) {
       this.updatedListStatesItems = $event;
     },
-    async createList() {
-      if (this.$refs.addTitleAndColorForm.validate() === false) {
-        this.$refs.addTitleAndColorForm.$el.scrollIntoView();
-        this.notify({ type: 'error', text: 'There were problems creating your QuestList.' });
-        return;
-      }
-      // TODO: add an input for the name and description for this stateGroup
-      let stateGroup = this.getGlobalPreferences.defaultStateGroup;
-      if (this.updatedListStatesItems.length > 0) {
-        stateGroup = {
-          name: this.updatedListStatesItems.map((s) => s.text).join(', '),
-          description: '',
-          states: this.updatedListStatesItems,
-        };
-      } else {
-        this.notify({ type: 'info', text: 'No states configured. Using default states.' });
-      }
-      const payload = {
-        adultContent: this.adultContent,
-        title: this.title,
-        slug: await ensureSlugUniqueness(this.title),
-        color: this.listColor,
-        stateGroup,
-        description: this.description,
-        createdAt: Date.now(),
-        createdBy: auth.currentUser.uid,
-        parent: 'none',
-      };
-      this.createList(payload);
-    },
     swatchStyle() {
       return {
-        backgroundColor: this.listColor,
+        backgroundColor: this.color,
         cursor: 'pointer',
         height: '30px',
         width: '30px',
@@ -177,5 +144,4 @@ export default {
 .color-picker-swatch {
   border: #797979 1px solid;
 }
-
 </style>

@@ -1,8 +1,5 @@
 import {
-  getAuth,
-  connectAuthEmulator,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
+  getAuth, connectAuthEmulator, GoogleAuthProvider, FacebookAuthProvider,
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
@@ -86,7 +83,7 @@ async function computeSubListPath(subListRef, routePath) {
   return `${routePath}/${slug}`;
 }
 
-async function fetchQuestLists({ pageSize = 10, slugs = null, callback = () => { } } = {}) {
+async function fetchQuestLists({ pageSize = 10, slugs = null, callback = () => {} } = {}) {
   let q = query(listsCollection, limit(pageSize));
   if (slugs && slugs.length > 0) {
     q = query(q, where('slug', 'in', slugs));
@@ -234,8 +231,27 @@ async function getUserPreferences() {
   console.warn("User Prefs don't exist: ", auth.currentUser.uid, userDocument.path);
   return {};
 }
+async function createStateGroup(stateGroupData, defaultStateGroup) {
+  if (!stateGroupData) return defaultStateGroup;
+  // TODO: check for groups that have the current values and use that one instead.
+  const defaultStateData = defaultStateGroup.states[0];
+  // TODO: refactor this to handle actual states
+  const newStateGroupData = {
+    name: stateGroupData.name || stateGroupData.map((s) => s.text).join(', '),
+    description: stateGroupData.description || '',
+    states:
+      (stateGroupData.states || stateGroupData).map((stateBody) => ({ ...defaultStateData, ...stateBody }))
+      || defaultStateGroup.states,
+  };
 
-async function createList(payload) {
+  // debugger;
+  // const payload = { ...stateGroupData, states };
+
+  const stateGroupRef = await addDoc(stateGroupsCollection, newStateGroupData);
+  return stateGroupRef;
+}
+
+async function createList(payload, defaultStateGroup) {
   const defaultPayload = {
     title: 'New List',
     color: '#333333',
@@ -243,16 +259,21 @@ async function createList(payload) {
     createdAt: Date.now(),
     createdBy: auth.currentUser.uid,
   };
-  const newPayload = { ...defaultPayload, ...payload };
-  newPayload.slug = await ensureSlugUniqueness(payload.title || 'New List');
+  let newPayload = { ...defaultPayload, ...payload };
+  newPayload.slug = await ensureSlugUniqueness(payload.title || defaultPayload.title);
+  newPayload.stateGroup = await createStateGroup(newPayload.stateGroup, defaultStateGroup);
+  newPayload = Object.entries(newPayload).reduce((newObj, [k, v]) => {
+    if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
+    return newObj;
+  }, {});
   const subList = await addDoc(listsCollection, newPayload);
   return subList;
 }
 async function saveList(payload) {
-  const safePayload = { ...payload };
-  if (!safePayload.listColor) {
-    delete safePayload.listColor;
-  }
+  const safePayload = Object.entries(payload).reduce((newObj, [k, v]) => {
+    if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
+    return newObj;
+  }, {});
   const listDocument = doc(db, 'lists', payload.id);
   await setDoc(listDocument, safePayload, { merge: true });
   return getDoc(listDocument);
@@ -310,4 +331,5 @@ export {
   updateUserItemStates,
   usersCollection,
   userStatesCollection,
+  createStateGroup,
 };

@@ -1,7 +1,7 @@
 <template>
   <div>
     <list-metadata-preferences v-bind.sync="metadataPrefs"></list-metadata-preferences>
-    <states-editor :stateGroup="globalPreferences.defaultStateGroup" @list:updated="listUpdated" />
+    <states-editor :stateGroup="globalPreferences.defaultStateGroup" @list:updated="updateStateGroup" />
     <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="updateListPreferences">{{
       saveButtonText
     }}</v-btn>
@@ -20,7 +20,8 @@ const defaultFormData = {
   statesPicked: '',
   updatedListStatesItems: [],
   description: '',
-  listColor: '',
+  color: '',
+  adultContent: false,
 };
 
 export default {
@@ -43,9 +44,9 @@ export default {
       metadataPrefs: {
         title: this.list.title,
         description: this.list.description,
-        listColor: this.list.listColor,
+        color: this.list.color,
+        adultContent: false,
       },
-      adultContent: false,
     };
   },
   computed: {
@@ -56,13 +57,14 @@ export default {
       this.metadataPrefs = {
         title: newValue.title,
         description: newValue.description,
-        listColor: newValue.listColor,
+        color: newValue.color,
+        adultContent: newValue.adultContent,
       };
     },
   },
   methods: {
-    listUpdated(listItems) {
-      this.updatedListStatesItems = listItems;
+    updateStateGroup(stateGroup) {
+      this.metadataPrefs.stateGroup = stateGroup;
     },
     updateListPreferences() {
       this.$emit('update:list', this.metadataPrefs);
@@ -72,7 +74,8 @@ export default {
     this.metadataPrefs = {
       title: this.list.title,
       description: this.list.description,
-      listColor: this.list.listColor,
+      color: this.list.color,
+      adultContent: this.list.adultContent,
     };
   },
 };

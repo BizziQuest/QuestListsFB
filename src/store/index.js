@@ -15,16 +15,13 @@ import {
   signInWithEmailAndPassword, signInWithPopup, signOut, getAdditionalUserInfo,
   createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
 } from 'firebase/auth';
-import {
-  addDoc,
-} from 'firebase/firestore';
 import router from '../router';
 import { getAvatarForUser } from '../util';
 import {
   reactToPrefsChange,
   auth,
-  listsCollection,
-  stateGroupsCollection,
+  createList,
+  createStateGroup,
   googleOAuthLogin,
   facebookOAuthLogin,
   saveUserPreferences,
@@ -209,20 +206,12 @@ const store = new Vuex.Store({
       const userPrefs = await getUserPreferences();
       commit('setUser', { ...payload, ...userPrefs });
     },
-    async addStateGroup({ commit, state }, stateGroupData) {
-      // TODO: check for groups that have the current values and use that one instead.
-      const stateSkeleton = state.globalPreferences.defaultStateGroup.states[0];
-      // TODO: refactor this to handle actual states
-      const states = stateGroupData.states.map((stateBody) => ({ ...stateSkeleton, ...stateBody }));
-      const payload = { ...stateGroupData, states };
-      const stateGroupRef = await addDoc(stateGroupsCollection, payload);
-
-      commit('addState', stateGroupData);
-      return stateGroupRef;
+    async addStateGroup({ commit }, stateGroupData) {
+      const stateGroupRef = createStateGroup(stateGroupData);
+      commit('addState', stateGroupRef);
     },
-    async createList({ dispatch }, listData) {
-      const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      const doc = await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
+    async createList({ state }, listData) {
+      const doc = await createList(listData, state.globalPreferences.defaultStateGroup);
       algoliaIndex.saveObject(
         { ...listData, objectID: doc.id },
       );

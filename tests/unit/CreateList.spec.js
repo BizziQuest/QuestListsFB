@@ -162,7 +162,7 @@ describe('list creation', () => {
         return {
           title: 'Test List',
           description: 'Rando Description',
-          listColor: '#fff',
+          color: '#fff',
         };
       },
       localVue,
@@ -180,7 +180,7 @@ describe('list creation', () => {
   });
   it('should do nothing if the title and color form does not validate', () => {
     wrapper.vm.title = '123';
-    wrapper.vm.listColor = 'kajsbfkajsb';
+    wrapper.vm.color = 'kajsbfkajsb';
     wrapper.vm.createList();
     expect(actions.createList).not.toHaveBeenCalled();
   });
