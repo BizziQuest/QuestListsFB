@@ -188,7 +188,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['itemStates', 'getGlobalPreferences']),
+    ...mapGetters(['getGlobalPreferences']),
     showAddSubListButton() {
       if (this.readOnly) return false;
       if (this.isNewItem) return false;

@@ -19,18 +19,10 @@
     </div>
     <div id="items">
       <transition-group name="slide-x-transition" hide-on-leave leave-absolute :duration="{ enter: 200, leave: 200 }">
-        <list-item
-          v-for="(item, index) in listItemsWithBlank"
-          :ref="`listItem${index}`"
-          :key="`${item.title}${index}`"
-          :value="item"
-          :states="states || globalPreferences.defaultStateGroup.states"
-          @update="saveItem(index, $event)"
-          @input="appendItem(index, $event)"
-          @delete="delItem(index, $event)"
-          @enterPressed="focusNext(index, $event)"
-          :tabindex="index"
-        />
+        <list-item v-for="(item, index) in listItemsWithBlank" :ref="`listItem${index}`" :key="`${item.title}${index}`"
+          :value="item" :states="states || globalPreferences.defaultStateGroup.states" @update="saveItem(index, $event)"
+          @input="appendItem(index, $event)" @delete="delItem(index, $event)" @enterPressed="focusNext(index, $event)"
+          :tabindex="index" />
       </transition-group>
     </div>
   </div>
@@ -81,7 +73,12 @@ export default {
   },
   methods: {
     updateListPreferences(newPrefs) {
-      this.list = { ...this.list, ...newPrefs };
+      const updatedPrefs = { ...newPrefs };
+      if (Array.isArray(updatedPrefs.stateGroup)) {
+        updatedPrefs.newStateGroup = updatedPrefs.stateGroup;
+        updatedPrefs.stateGroup = this.list.stateGroup;
+      }
+      this.list = { ...this.list, ...updatedPrefs };
       saveList(this.list);
     },
     appendItem(index, item) {

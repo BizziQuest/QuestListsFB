@@ -1,7 +1,7 @@
 <template>
   <div>
     <list-metadata-preferences v-bind.sync="metadataPrefs"></list-metadata-preferences>
-    <states-editor :stateGroup="globalPreferences.defaultStateGroup" @list:updated="updateStateGroup" />
+    <states-editor :stateGroup="list.stateGroup" @list:updated="updateStateGroup" />
     <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="updateListPreferences">{{
       saveButtonText
     }}</v-btn>

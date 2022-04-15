@@ -48,8 +48,10 @@
 <script>
 import ListState from './ListState.vue';
 import DragNDrop from '../mixins/DragNDrop.vue';
+import { getDocRefData } from '../firebase';
 
 function getNextUnusedValue(items) {
+  if (!items || items.length < 1) return '';
   let newValue = items.length;
   const allValues = new Set(items.map((item) => item.value));
   while (allValues.has(newValue)) {
@@ -73,20 +75,35 @@ export default {
   },
   data() {
     return {
+      stateGroupObject: {
+        states: [],
+      },
       items: [
-        ...this.stateGroup.states,
+        ...(this.stateGroupObject?.states || []),
         {
           text: 'New State',
           icon: 'mdi-plus',
-          value: getNextUnusedValue(this.stateGroup.states),
+          value: getNextUnusedValue(this.stateGroupObject?.states),
           isNewItem: true,
         },
       ],
       rowItems: [],
     };
   },
-
+  watch: {
+    stateGroup() {
+      this.dereferenceStateGroup();
+    },
+  },
+  mounted() {
+    this.dereferenceStateGroup();
+  },
   methods: {
+    async dereferenceStateGroup() {
+      if (this.stateGroup?.states) this.stateGroupObject = this.stateGroup;
+      this.stateGroupObject = await getDocRefData(this.stateGroup);
+      this.items[this.items.length - 1].value = getNextUnusedValue(this.stateGroupObject.states);
+    },
     updateItem(index, state) {
       this.items[index].text = state.text;
       if (state?.icon) this.items[index].icon = state.icon;

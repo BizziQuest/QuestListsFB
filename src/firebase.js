@@ -225,6 +225,10 @@ async function saveUserPreferences(prefs) {
   return getDoc(userDocument);
 }
 
+async function getDocRefData(ref) {
+  return (await getDoc(ref)).data();
+}
+
 async function getUserPreferences() {
   const userDocument = await getDocs(collection(db, 'users'), auth.currentUser.uid);
   if (userDocument.exists) return userDocument.data();
@@ -247,7 +251,18 @@ async function createStateGroup(stateGroupData, defaultStateGroup) {
   const stateGroupRef = await addDoc(stateGroupsCollection, newStateGroupData);
   return stateGroupRef;
 }
-
+async function updateStateGroup(stateGroupRef, newStateGroupData) {
+  if (!newStateGroupData) return stateGroupRef;
+  const stateGroupData = (await getDoc(stateGroupRef)).data();
+  const updatedStateGroupData = {
+    name: newStateGroupData.name || stateGroupData.name || newStateGroupData.map((s) => s.text).join(', '),
+    description: newStateGroupData.description || stateGroupData.description || '',
+    states: newStateGroupData.states || newStateGroupData || stateGroupData.states,
+  };
+  debugger;
+  await setDoc(stateGroupRef, updatedStateGroupData);
+  return stateGroupRef;
+}
 async function createList(payload, defaultStateGroup) {
   const defaultPayload = {
     title: 'New List',
@@ -268,6 +283,11 @@ async function createList(payload, defaultStateGroup) {
   return subList;
 }
 async function saveList(payload) {
+  const newPayload = { ...payload };
+  debugger;
+  if (newPayload.newStateGroup) {
+    newPayload.stateGroup = await updateStateGroup(newPayload.stateGroup, newPayload.newStateGroup);
+  }
   const safePayload = Object.entries(payload).reduce((newObj, [k, v]) => {
     if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
     return newObj;
@@ -330,4 +350,5 @@ export {
   usersCollection,
   userStatesCollection,
   createStateGroup,
+  getDocRefData,
 };
