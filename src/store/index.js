@@ -10,6 +10,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { getDoc } from 'firebase/firestore';
 
 import {
   signInWithEmailAndPassword, signInWithPopup, signOut, getAdditionalUserInfo,
@@ -211,11 +212,12 @@ const store = new Vuex.Store({
       commit('addState', stateGroupRef);
     },
     async createList({ state }, listData) {
-      const doc = await createList(listData, state.globalPreferences.defaultStateGroup);
+      const docRef = await createList(listData, state.globalPreferences.defaultStateGroup);
+      const createdDocData = (await getDoc(docRef)).data();
       algoliaIndex.saveObject(
-        { ...listData, objectID: doc.id },
+        { ...createdDocData, objectID: docRef.id },
       );
-      router.push(`/lists/${listData.slug}`);
+      router.push(`/lists/${createdDocData.slug}`);
     },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);

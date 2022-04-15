@@ -244,9 +244,6 @@ async function createStateGroup(stateGroupData, defaultStateGroup) {
       || defaultStateGroup.states,
   };
 
-  // debugger;
-  // const payload = { ...stateGroupData, states };
-
   const stateGroupRef = await addDoc(stateGroupsCollection, newStateGroupData);
   return stateGroupRef;
 }
@@ -256,6 +253,7 @@ async function createList(payload, defaultStateGroup) {
     title: 'New List',
     color: '#333333',
     description: 'Newly Created List',
+    stateGroup: defaultStateGroup,
     createdAt: Date.now(),
     createdBy: auth.currentUser.uid,
   };
