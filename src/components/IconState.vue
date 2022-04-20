@@ -4,7 +4,7 @@
     <v-dialog v-model="dialog" persistent max-width="400">
       <v-card>
         <v-card-title class="headline">Please choose your Icon</v-card-title>
-        <v-form ref="iconForm">
+        <v-form ref="iconForm" @submit.prevent="chooseIcon">
           <v-card-text>
             <v-row>
               <div class="pa-5 mb-5 rounded-t-xl" color="info">
@@ -16,7 +16,7 @@
                 </v-chip>
                 <v-chip class="mr-2" rounded @click="openMaterialDesign">
                   <v-icon class="mr-2">mdi-material-design</v-icon>
-                  Material desgin
+                  Material Design
                 </v-chip>
               </div>
             </v-row>
