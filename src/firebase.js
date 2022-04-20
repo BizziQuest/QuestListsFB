@@ -259,7 +259,6 @@ async function updateStateGroup(stateGroupRef, newStateGroupData) {
     description: newStateGroupData.description || stateGroupData.description || '',
     states: newStateGroupData.states || newStateGroupData || stateGroupData.states,
   };
-  debugger;
   await setDoc(stateGroupRef, updatedStateGroupData);
   return stateGroupRef;
 }
@@ -284,7 +283,6 @@ async function createList(payload, defaultStateGroup) {
 }
 async function saveList(payload) {
   const newPayload = { ...payload };
-  debugger;
   if (newPayload.newStateGroup) {
     newPayload.stateGroup = await updateStateGroup(newPayload.stateGroup, newPayload.newStateGroup);
   }
