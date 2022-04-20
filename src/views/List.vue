@@ -88,7 +88,6 @@ export default {
       }
     },
     focusNext(index) {
-      // XXX: this isn't really Vue-like. We should use a parameter to set the focus instead.
       const listItemRef = this.$refs[`listItem${index + 1}`];
       if (listItemRef?.length > 0) {
         listItemRef[0].$refs.input.focus(); // this will trigger blur(), which will save the items
