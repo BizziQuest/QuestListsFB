@@ -3,12 +3,12 @@
     <span>Possible Item States:</span>
     <div id="drop-zone" @drop="onDrop" @dragover="allowDrop" @touchmove="moveTouch" @touchend="endTouch"
       @dragleave="mouseLeave" @dragenter="mouseEnter">
-      <span v-for="(item, index) in items" :key="`${item.text}${index}${numForceRedraws}`" :data-index="index"
+      <span v-for="(item, index) in items" :key="item.value" :data-index="index"
         :id="index" @drop="onDrop" @dragstart="startDrag" @dragend="endDrag" @touchstart="startTouch" class="item-row"
-        ref="row" :data-key="`${item.text}${index}${numForceRedraws}`" test-list-item>
+        ref="row" test-list-item>
         <v-row class="justify-start align-center">
-          <list-state list-state-test :ref="`stateItem${index}`" :item="item" :draggable="index !== states.length - 1"
-            :isDraggable="index !== states.length - 1" @update:item="updateThisState(index, $event)"
+          <list-state list-state-test :ref="`stateItem${index}`" :item="item" :draggable="index !== items.length - 1"
+            :isDraggable="index !== items.length - 1" @update:item="updateThisState(index, $event)"
             @enterPressed="focusListItem(index + 1, $event)"
             @delete:item="deleteListState(index, $event)" @blur="updateItem(index, $event)" :class="{
               changed: updatedRows.find(e => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
@@ -26,14 +26,19 @@ import ListState from './ListState.vue';
 import DragNDrop from '../mixins/DragNDrop.vue';
 import { getDocRefData } from '../firebase';
 
-function getNextUnusedValue(items) {
-  if (!items || items.length < 1) return '';
-  let newValue = items.length;
-  const allValues = new Set(items.map((item) => item.value));
-  while (allValues.has(newValue)) {
-    newValue += 1;
-  }
-  return newValue.toString();
+function getNextUnusedValue(unsortedItems) {
+  if (!unsortedItems || unsortedItems.length < 1) return 0;
+  const sortedItems = [...unsortedItems];
+  sortedItems.sort((a, b) => parseInt(a.value, 10) - parseInt(b.value, 10));
+  const newValue = parseInt(sortedItems[sortedItems.length - 1].value, 10) + 1;
+  // console.log(newValue, sortedItems);
+  // debugger;
+  // debugger;
+  // const allValues = new Set(items.map((item) => item.value));
+  // while (allValues.has(newValue)) {
+  //   newValue += 1;
+  // }
+  return newValue;
 }
 
 export default {
@@ -46,16 +51,22 @@ export default {
     stateGroup: {
       type: Object,
       default: () => ({}),
-      description: 'The list of states we want to manage.',
+      description: 'The default StateGroup object we want to manage. It can be a reference or an object.',
     },
   },
   data() {
     return {
+      // This is the actual object we are modifying. it is our local state.
       stateGroupObject: {
+        states: [],
+      },
+      // our internal representation that is updated, but not used for updating DOM.
+      updatedStateGroup: {
         states: [],
       },
       states: this.$props.stateGroup.states,
       rowItems: [],
+      addingItem: false,
     };
   },
   watch: {
@@ -66,11 +77,12 @@ export default {
   computed: {
     items() {
       return [
-        ...(this.stateGroupObject?.states || []),
+        ...(this.states || []),
         {
           icon: 'mdi-plus',
-          value: getNextUnusedValue(this.stateGroupObject?.states),
+          value: 'new',
           isNewItem: true,
+          text: '',
         }];
     },
   },
@@ -83,19 +95,35 @@ export default {
       this.stateGroupObject = await getDocRefData(this.stateGroup);
       console.log(this.stateGroupObject);
       this.states = this.stateGroupObject.states;
-      this.states[this.items.length - 1].value = getNextUnusedValue(this.stateGroupObject.states);
+      this.states[this.states.length - 1].value = getNextUnusedValue(this.states);
     },
     updateItem(index, state) {
       this.updateThisState(index, state);
-      this.$emit('list:updated', this.stateGroupObject);
+      this.$emit('list:updated', { ...this.stateGroupObject, ...this.updatedStateGroup });
     },
     updateThisState(index, state) {
-      const states = [...this.stateGroupObject?.states];
-      if (!states[index]) states[index] = {};
-      states[index].text = state.text;
-      if (state?.icon) states[index].icon = state.icon;
-      this.stateGroupObject = { ...this.stateGroupObject, states };
-      this.$nextTick(() => this.focusListItem(index));
+      const states = [...this.states];
+      states[index] = {
+        ...(states[index] || {}),
+        value: state.value || getNextUnusedValue(states),
+        text: state.text || states[index].text,
+        icon: state.icon || states[index].icon,
+      };
+      this.updatedStateGroup = { ...this.stateGroupObject, ...this.updatedStateGroup, states };
+      if (index === this.states.length) {
+        if (this.addingItem) { // when we update the states, we reflow the UI, which blurs the items, etc...
+          this.addingItem = false;
+          return;
+        }
+        this.addingItem = true;
+        this.stateGroupObject.states = states;
+        this.states = states;
+        this.$nextTick(() => {
+          this.focusListItem(index);
+          // this.addingItem = false;
+          this.$refs[`stateItem${index + 1}`][0].value = '';
+        });
+      }
     },
     focusListItem(index) {
       const listItemRef = this.$refs[`stateItem${index}`];
