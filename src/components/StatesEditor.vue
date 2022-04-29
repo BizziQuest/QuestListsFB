@@ -3,13 +3,12 @@
     <span>Possible Item States:</span>
     <div id="drop-zone" @drop="onDrop" @dragover="allowDrop" @touchmove="moveTouch" @touchend="endTouch"
       @dragleave="mouseLeave" @dragenter="mouseEnter">
-      <span v-for="(item, index) in items" :key="item.value" :data-index="index"
-        :id="index" @drop="onDrop" @dragstart="startDrag" @dragend="endDrag" @touchstart="startTouch" class="item-row"
-        ref="row" test-list-item>
+      <span v-for="(item, index) in items" :key="item.value + index" :data-index="index" :id="index" @drop="onDrop"
+        @dragstart="startDrag" @dragend="endDrag" @touchstart="startTouch" class="item-row" ref="row" test-list-item>
         <v-row class="justify-start align-center">
-          <list-state list-state-test :ref="`stateItem${index}`" :item="item" :draggable="index !== items.length - 1"
-            :isDraggable="index !== items.length - 1" @update:item="updateThisState(index, $event)"
-            @enterPressed="focusListItem(index + 1, $event)"
+          <list-state list-state-test :ref="`stateItem${index}`" :item="item"
+            :draggable="index !== items.length - 1" :isDraggable="index !== items.length - 1"
+            @update:item="updateThisState(index, $event)" @enterPressed="focusListItem(index + 1, $event)"
             @delete:item="deleteListState(index, $event)" @blur="updateItem(index, $event)" :class="{
               changed: updatedRows.find(e => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
               endDrag: updatedRows[0] && updatedRows[0].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
@@ -118,14 +117,16 @@ export default {
         this.addingItem = true;
         this.stateGroupObject.states = states;
         this.states = states;
+        this.focusListItem(index);
         this.$nextTick(() => {
           this.focusListItem(index);
-          // this.addingItem = false;
+          this.addingItem = false;
           this.$refs[`stateItem${index + 1}`][0].value = '';
         });
       }
     },
     focusListItem(index) {
+      console.debug('focusing', index);
       const listItemRef = this.$refs[`stateItem${index}`];
       if (listItemRef?.length > 0) {
         listItemRef[0].$refs.input.focus(); // this will trigger blur(), which will save the items

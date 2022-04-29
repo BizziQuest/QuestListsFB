@@ -1,5 +1,6 @@
 <template>
-  <v-text-field test-text-field ref="input" placeholder="New Item" :value.sync="item.text" @input="isChanging($event)"
+  <v-text-field test-text-field ref="input" placeholder="New Item" :value.sync="item.text"
+    @keydown.enter="$emit('enterPressed')" @keydown.tab.prevent="$emit('enterPressed')" @input="isChanging($event)"
     @blur="updateText">
     <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
     <icon-state slot="prepend-inner" :icon.sync="item.icon"></icon-state>
