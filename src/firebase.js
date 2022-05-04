@@ -1,5 +1,8 @@
 import {
-  getAuth, connectAuthEmulator, GoogleAuthProvider, FacebookAuthProvider,
+  getAuth,
+  connectAuthEmulator,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
@@ -241,7 +244,7 @@ async function createStateGroup(stateGroupData, defaultStateGroup) {
   const defaultStateData = defaultStateGroup.states[0];
   // TODO: refactor this to handle actual states
   const newStateGroupData = {
-    name: stateGroupData.name || stateGroupData.map((s) => s.text).join(', '),
+    name: stateGroupData.name || stateGroupData.states.map((s) => s.text).join(', '),
     description: stateGroupData.description || '',
     states:
       (stateGroupData.states || stateGroupData).map((stateBody) => ({ ...defaultStateData, ...stateBody }))
@@ -251,7 +254,11 @@ async function createStateGroup(stateGroupData, defaultStateGroup) {
   const stateGroupRef = await addDoc(stateGroupsCollection, newStateGroupData);
   return stateGroupRef;
 }
-async function updateStateGroup(stateGroupRef, newStateGroupData) {
+async function updateStateGroup(listId, stateGroupRef, newStateGroupData) {
+  debugger;
+  if (listId) {
+    // TODO: make sure we get the current stateGroup ref from the list and use that instead of the param
+  }
   if (!newStateGroupData) return stateGroupRef;
   const stateGroupData = (await getDoc(stateGroupRef)).data();
   const updatedStateGroupData = {
@@ -284,8 +291,9 @@ async function createList(payload, defaultStateGroup) {
 async function saveList(payload) {
   const newPayload = { ...payload };
   if (newPayload.newStateGroup) {
-    newPayload.stateGroup = await updateStateGroup(newPayload.stateGroup, newPayload.newStateGroup);
+    newPayload.stateGroup = await updateStateGroup(payload?.id, newPayload.stateGroup, newPayload.newStateGroup);
   }
+  debugger;
   const safePayload = Object.entries(payload).reduce((newObj, [k, v]) => {
     if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
     return newObj;
@@ -310,10 +318,16 @@ function reactToPrefsChange(store) {
     if (prefs.length < 1) return;
 
     const { defaultColor, defaultStateGroup } = prefs[0];
-    const stateGroup = await getDoc(defaultStateGroup);
+    if (defaultStateGroup) {
+      const stateGroup = await getDoc(defaultStateGroup);
+      store.commit('setGlobalPreferences', {
+        defaultColor,
+        defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },
+      });
+      return;
+    }
     store.commit('setGlobalPreferences', {
       defaultColor,
-      defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },
     });
   });
 }

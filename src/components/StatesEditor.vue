@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import ListState from './ListState.vue';
 import DragNDrop from '../mixins/DragNDrop.vue';
 import { getDocRefData } from '../firebase';
@@ -74,6 +75,7 @@ export default {
     },
   },
   computed: {
+    ...mapState(['globalPreferences']),
     items() {
       return [
         ...(this.states || []),
@@ -90,7 +92,17 @@ export default {
   },
   methods: {
     async dereferenceStateGroup() {
-      if (this.stateGroup?.states) this.stateGroupObject = this.stateGroup;
+      console.log('sg:', this.stateGroup, Object.keys({ ...this.stateGroup }).length);
+      if (Object.keys({ ...this.stateGroup }).length < 1) {
+        console.log(this.globalPreferences);
+        this.states = this.globalPreferences.defaultStateGroup.states;
+        return;
+      }
+      if (this.stateGroup?.states) {
+        this.stateGroupObject = this.stateGroup;
+        return;
+      }
+      if (!this.stateGroup) return;
       this.stateGroupObject = await getDocRefData(this.stateGroup);
       console.log(this.stateGroupObject);
       this.states = this.stateGroupObject.states;
@@ -102,11 +114,12 @@ export default {
     },
     updateThisState(index, state) {
       const states = [...this.states];
+      // debugger;
       states[index] = {
         ...(states[index] || {}),
         value: state.value || getNextUnusedValue(states),
-        text: state.text || states[index].text,
-        icon: state.icon || states[index].icon,
+        text: state.text || states[index]?.text || '',
+        icon: state.icon || states[index]?.icon || '',
       };
       this.updatedStateGroup = { ...this.stateGroupObject, ...this.updatedStateGroup, states };
       if (index === this.states.length) {
