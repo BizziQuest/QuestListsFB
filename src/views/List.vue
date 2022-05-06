@@ -82,8 +82,10 @@ export default {
       saveList(this.list);
     },
     appendItem(index, item) {
+      const validItem = { ...item };
+      if (!item.state) [validItem.state] = this.states;
       if (index >= this.listItems.length) {
-        this.listItems.push(item);
+        this.listItems.push(validItem);
         this.$nextTick(() => this.focusNext(index - 1));
       }
     },

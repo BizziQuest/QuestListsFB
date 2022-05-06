@@ -119,7 +119,9 @@ async function updateUserItemStates(listId, items) {
   }, {});
   const userStatesRef = doc(userDocument, 'states', listId);
   await setDoc(userStatesRef, itemStates);
-  return getDoc(userStatesRef);
+  const newStatesDoc = await getDoc(userStatesRef);
+  debugger;
+  return newStatesDoc;
 }
 
 async function getListBySlug(slug) {
@@ -254,11 +256,8 @@ async function createStateGroup(stateGroupData, defaultStateGroup) {
   const stateGroupRef = await addDoc(stateGroupsCollection, newStateGroupData);
   return stateGroupRef;
 }
-async function updateStateGroup(listId, stateGroupRef, newStateGroupData) {
+async function updateStateGroup(stateGroupRef, newStateGroupData) {
   debugger;
-  if (listId) {
-    // TODO: make sure we get the current stateGroup ref from the list and use that instead of the param
-  }
   if (!newStateGroupData) return stateGroupRef;
   const stateGroupData = (await getDoc(stateGroupRef)).data();
   const updatedStateGroupData = {
@@ -290,8 +289,9 @@ async function createList(payload, defaultStateGroup) {
 }
 async function saveList(payload) {
   const newPayload = { ...payload };
+  debugger;
   if (newPayload.newStateGroup) {
-    newPayload.stateGroup = await updateStateGroup(payload?.id, newPayload.stateGroup, newPayload.newStateGroup);
+    newPayload.stateGroup = await updateStateGroup(newPayload.stateGroup, newPayload.newStateGroup);
   }
   debugger;
   const safePayload = Object.entries(payload).reduce((newObj, [k, v]) => {

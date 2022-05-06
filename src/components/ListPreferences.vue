@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     updateStateGroup(stateGroup) {
-      this.metadataPrefs.stateGroup = stateGroup;
+      this.metadataPrefs.newStateGroup = stateGroup;
     },
     updateListPreferences() {
       this.$emit('update:list', this.metadataPrefs);
