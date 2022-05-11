@@ -32,8 +32,6 @@ function getNextUnusedValue(unsortedItems) {
   sortedItems.sort((a, b) => parseInt(a.value, 10) - parseInt(b.value, 10));
   const newValue = parseInt(sortedItems[sortedItems.length - 1].value, 10) + 1;
   // console.log(newValue, sortedItems);
-  // debugger;
-  // debugger;
   // const allValues = new Set(items.map((item) => item.value));
   // while (allValues.has(newValue)) {
   //   newValue += 1;
@@ -113,8 +111,7 @@ export default {
       this.$emit('list:updated', { ...this.stateGroupObject, ...this.updatedStateGroup });
     },
     updateThisState(index, state) {
-      const states = [...this.states];
-      // debugger;
+      const states = [...(this.updatedStateGroup.states.length > 0 ? this.updatedStateGroup.states : this.states)];
       states[index] = {
         ...(states[index] || {}),
         value: state.value || getNextUnusedValue(states),

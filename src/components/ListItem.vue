@@ -180,7 +180,7 @@ export default {
     this.isNewItem = this.$props.value.isNewItem;
     this.listId = this.$props.value.listId;
     if (this.$props.value.state?.value) {
-      this.currentStateIdx = parseInt(this.$props.value.state.value, 10);
+      this.currentStateIdx = parseInt(this.$props.value.state.order, 10);
     }
     if (this.value.subList) {
       await this.computeSubListPath(this.value.subList);
@@ -198,10 +198,10 @@ export default {
     },
     icon() {
       if (this.isNewItem) return 'mdi-plus';
-      return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].icon;
+      return this.states[this.currentStateIdx || 0]?.icon;
     },
     iconTitle() {
-      return this.states[this.currentStateIdx] && this.states[this.currentStateIdx].name;
+      return this.states[this.currentStateIdx || 0]?.text;
     },
     placeholder() {
       return this.isNewItem ? 'New Item' : '';

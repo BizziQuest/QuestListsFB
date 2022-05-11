@@ -120,7 +120,6 @@ async function updateUserItemStates(listId, items) {
   const userStatesRef = doc(userDocument, 'states', listId);
   await setDoc(userStatesRef, itemStates);
   const newStatesDoc = await getDoc(userStatesRef);
-  debugger;
   return newStatesDoc;
 }
 
@@ -257,7 +256,6 @@ async function createStateGroup(stateGroupData, defaultStateGroup) {
   return stateGroupRef;
 }
 async function updateStateGroup(stateGroupRef, newStateGroupData) {
-  debugger;
   if (!newStateGroupData) return stateGroupRef;
   const stateGroupData = (await getDoc(stateGroupRef)).data();
   const updatedStateGroupData = {
@@ -279,8 +277,9 @@ async function createList(payload, defaultStateGroup) {
   };
   let newPayload = { ...defaultPayload, ...payload };
   newPayload.slug = await ensureSlugUniqueness(payload.title || defaultPayload.title);
-  newPayload.stateGroup = await createStateGroup(newPayload.stateGroup, defaultStateGroup);
+  newPayload.stateGroup = await createStateGroup(newPayload.newStateGroup, defaultStateGroup);
   newPayload = Object.entries(newPayload).reduce((newObj, [k, v]) => {
+    if (k === 'newStateGroup') return newObj;
     if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
     return newObj;
   }, {});
@@ -289,11 +288,9 @@ async function createList(payload, defaultStateGroup) {
 }
 async function saveList(payload) {
   const newPayload = { ...payload };
-  debugger;
   if (newPayload.newStateGroup) {
     newPayload.stateGroup = await updateStateGroup(newPayload.stateGroup, newPayload.newStateGroup);
   }
-  debugger;
   const safePayload = Object.entries(payload).reduce((newObj, [k, v]) => {
     if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
     return newObj;
