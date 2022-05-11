@@ -79,6 +79,7 @@ export default {
         updatedPrefs.stateGroup = this.list.stateGroup;
       }
       this.list = { ...this.list, ...updatedPrefs };
+      if (updatedPrefs.newStateGroup?.states) this.states = updatedPrefs.newStateGroup.states;
       saveList(this.list);
     },
     appendItem(index, item) {
