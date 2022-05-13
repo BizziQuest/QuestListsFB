@@ -14,9 +14,10 @@
     <v-btn style="display: block" class="ma-2" color="orange darken-2" dark @click="$router.back()">
       <v-icon dark left> mdi-arrow-left </v-icon>Back
     </v-btn>
-    <div v-if="showPreferences" class="border-1">
-      <list-preferences :list="list" @update:list="updateListPreferences" saveButtonText="Update"></list-preferences>
-    </div>
+    <v-card elevation="3" v-if="showPreferences" class="border-1 pa-3 ma-2 mb-5">
+      <list-preferences compact :list="list" @update:list="updateListPreferences" saveButtonText="Update">
+      </list-preferences>
+    </v-card>
     <div id="items">
       <transition-group name="slide-x-transition" hide-on-leave leave-absolute :duration="{ enter: 200, leave: 200 }">
         <list-item v-for="(item, index) in listItemsWithBlank" :ref="`listItem${index}`" :key="`${item.title}${index}`"

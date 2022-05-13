@@ -1,5 +1,5 @@
 <template>
-  <v-text-field test-text-field ref="input" placeholder="New Item" :value.sync="item.text"
+  <v-text-field test-text-field ref="input" :dense="compact" placeholder="New Item" :value.sync="item.text"
     @keydown.enter="$emit('enterPressed')" @keydown.tab.prevent="$emit('enterPressed')" @input="isChanging($event)"
     @blur="updateText">
     <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
@@ -13,7 +13,23 @@
 import IconState from './IconState.vue';
 
 export default {
-  props: ['item', 'isDraggable'],
+  props: {
+    item: {
+      description: 'The list state item we are editing',
+      type: Object,
+      default: () => ({}),
+    },
+    isDraggable: {
+      description: 'Whether to show the drag handle and enable drag and drop.',
+      type: Boolean,
+      default: false,
+    },
+    compact: {
+      description: 'Whether to show a compact UI.',
+      type: Boolean,
+      default: false,
+    },
+  },
   components: {
     IconState,
   },

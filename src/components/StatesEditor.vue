@@ -1,22 +1,28 @@
 <template>
   <v-container fluid>
-    <span>Possible Item States:</span>
-    <div id="drop-zone" @drop="onDrop" @dragover="allowDrop" @touchmove="moveTouch" @touchend="endTouch"
-      @dragleave="mouseLeave" @dragenter="mouseEnter">
-      <span v-for="(item, index) in items" :key="item.value + index" :data-index="index" :id="index" @drop="onDrop"
-        @dragstart="startDrag" @dragend="endDrag" @touchstart="startTouch" class="item-row" ref="row" test-list-item>
-        <v-row class="justify-start align-center">
-          <list-state list-state-test :ref="`stateItem${index}`" :item="item"
-            :draggable="index !== items.length - 1" :isDraggable="index !== items.length - 1"
-            @update:item="updateThisState(index, $event)" @enterPressed="focusListItem(index + 1, $event)"
-            @delete:item="deleteListState(index, $event)" @blur="updateItem(index, $event)" :class="{
-              changed: updatedRows.find(e => e && e.localeCompare(`${item.text}${index}${numForceRedraws}`) === 0),
-              endDrag: updatedRows[0] && updatedRows[0].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0,
-              startDrag: updatedRows[1] && updatedRows[1].localeCompare(`${item.text}${index}${numForceRedraws}`) === 0
-            }" />
-        </v-row>
-      </span>
-    </div>
+     <v-expansion-panels style="background-color: #ccc;">
+    <v-expansion-panel style="background-color: #eee;" elevation="0">
+      <v-expansion-panel-header>
+        Possible Item States:
+      </v-expansion-panel-header>
+      <v-expansion-panel-content>
+        <div id="drop-zone" @drop="onDrop" @dragover="allowDrop" @touchmove="moveTouch" @touchend="endTouch"
+          @dragleave="mouseLeave" @dragenter="mouseEnter">
+          <span v-for="(item, index) in items" :key="item.value + index" :data-index="index" :id="index" @drop="onDrop"
+            @dragstart="startDrag" @dragend="endDrag" @touchstart="startTouch" class="item-row" ref="row"
+            test-list-item>
+            <v-row class="justify-start align-center">
+              <list-state list-state-test :ref="`stateItem${index}`" :compact="compact" :item="item"
+                :draggable="index !== items.length - 1" :isDraggable="index !== items.length - 1"
+                @update:item="updateThisState(index, $event)" @enterPressed="focusListItem(index + 1, $event)"
+                @delete:item="deleteListState(index, $event)" @blur="updateItem(index, $event)"
+                :class="itemStateClasses(item, index)" />
+            </v-row>
+          </span>
+        </div>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+    </v-expansion-panels>
   </v-container>
 </template>
 
@@ -50,6 +56,11 @@ export default {
       type: Object,
       default: () => ({}),
       description: 'The default StateGroup object we want to manage. It can be a reference or an object.',
+    },
+    compact: {
+      description: 'Whether to show a compact UI.',
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -89,6 +100,13 @@ export default {
     this.dereferenceStateGroup();
   },
   methods: {
+    itemStateClasses(item, index) {
+      return {
+        changed: this.updatedRows.find((e) => e && e.localeCompare(`${item.text}${index}`) === 0),
+        endDrag: this.updatedRows[0] && this.updatedRows[0].localeCompare(`${item.text}${index}`) === 0,
+        startDrag: this.updatedRows[1] && this.updatedRows[1].localeCompare(`${item.text}${index}`) === 0,
+      };
+    },
     async dereferenceStateGroup() {
       console.log('sg:', this.stateGroup, Object.keys({ ...this.stateGroup }).length);
       if (Object.keys({ ...this.stateGroup }).length < 1) {
@@ -152,7 +170,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 #drop-zone {
-  min-height: 300px;
+  // min-height: 300px;
   min-width: 200px;
   width: 100%;
   height: auto;

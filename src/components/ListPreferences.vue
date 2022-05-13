@@ -1,9 +1,10 @@
 <template>
   <div>
-    <list-metadata-preferences v-bind.sync="metadataPrefs"></list-metadata-preferences>
-    <states-editor :stateGroup="list.stateGroup" @list:updated="updateStateGroup" />
+    <list-metadata-preferences v-bind.sync="metadataPrefs" :compact="compact" class="pb-2">
+    </list-metadata-preferences>
+    <states-editor :stateGroup="list.stateGroup" @list:updated="updateStateGroup" :compact="compact" />
     <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="updateListPreferences">{{
-      saveButtonText
+        saveButtonText
     }}</v-btn>
   </div>
 </template>
@@ -36,6 +37,11 @@ export default {
       type: String,
       default: 'Save',
       description: 'The text of the save button.',
+    },
+    compact: {
+      description: 'Whether to show a compact UI.',
+      type: Boolean,
+      default: false,
     },
   },
   data() {
