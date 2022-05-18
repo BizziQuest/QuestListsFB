@@ -135,7 +135,7 @@ export default {
     cycleIcon() {
       if (this.isNewItem) return;
       this.activate();
-      let nextIdx = this.currentStateIdx + 1;
+      let nextIdx = (this.currentStateIdx || 0) + 1;
       if (nextIdx > this.states.length - 1) nextIdx = 0;
       this.currentStateIdx = nextIdx;
     },
@@ -198,6 +198,9 @@ export default {
     },
     icon() {
       if (this.isNewItem) return 'mdi-plus';
+      if (this.currentStateIdx >= this.states.length) {
+        return this.states[this.states.length - 1]?.icon;
+      }
       return this.states[this.currentStateIdx || 0]?.icon;
     },
     iconTitle() {

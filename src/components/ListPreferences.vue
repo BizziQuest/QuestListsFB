@@ -53,6 +53,7 @@ export default {
         color: this.list.color,
         adultContent: false,
       },
+      deletedIndexes: [],
     };
   },
   computed: {
@@ -73,7 +74,7 @@ export default {
       this.metadataPrefs.newStateGroup = stateGroup;
     },
     updateListPreferences() {
-      this.$emit('update:list', this.metadataPrefs);
+      this.$emit('update:list', { ...this.metadataPrefs, deletedindexes: this.deletedIndexes });
     },
   },
   mounted() {

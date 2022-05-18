@@ -1,7 +1,6 @@
 <template>
   <div>
     <user-auth-alert action="edit this list or save any changes" />
-
     <h1 class="d-flex">
       {{ list.title }}
       <v-icon class="justify-self-end ml-auto mr-2" @click="showPreferences = !showPreferences"
@@ -75,10 +74,14 @@ export default {
   methods: {
     updateListPreferences(newPrefs) {
       const updatedPrefs = { ...newPrefs };
+      const { deletedIndexes } = updatedPrefs;
+      delete updatedPrefs.deletedIndexes;
       if (Array.isArray(updatedPrefs.stateGroup)) {
         updatedPrefs.newStateGroup = updatedPrefs.stateGroup;
         updatedPrefs.stateGroup = this.list.stateGroup;
       }
+      // const updatedList = this.list.forEach(list);
+      console.log(deletedIndexes);
       this.list = { ...this.list, ...updatedPrefs };
       if (updatedPrefs.newStateGroup?.states) this.states = updatedPrefs.newStateGroup.states;
       saveList(this.list);
