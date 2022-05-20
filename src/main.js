@@ -16,8 +16,6 @@ Vue.config.productionTip = false;
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // TODO: payload is only from firebase, not firecloud db,
-    //   so we should load profile daata from DB.
     store.dispatch('authenticationChanged', {
       uid: user.uid,
       email: user.email,

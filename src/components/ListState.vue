@@ -40,10 +40,10 @@ export default {
   },
   methods: {
     updateText($event) {
-      this.$emit('blur', { icon: this.item.icon, text: $event.target.value });
+      this.$emit('blur', { ...this.item, text: $event.target.value });
     },
     isChanging(evt) {
-      this.$emit('update:item', { icon: this.item.icon, text: evt });
+      this.$emit('update:item', { ...this.item, text: evt });
     },
     del(item) {
       this.$emit('delete:item', item);

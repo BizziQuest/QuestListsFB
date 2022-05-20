@@ -74,14 +74,23 @@ export default {
   methods: {
     updateListPreferences(newPrefs) {
       const updatedPrefs = { ...newPrefs };
-      const { deletedIndexes } = updatedPrefs;
-      delete updatedPrefs.deletedIndexes;
+      const { deletedValues } = updatedPrefs;
+      delete updatedPrefs.deletedValues;
       if (Array.isArray(updatedPrefs.stateGroup)) {
+        debugger;
         updatedPrefs.newStateGroup = updatedPrefs.stateGroup;
         updatedPrefs.stateGroup = this.list.stateGroup;
+        if (deletedValues.length > 0) {
+          console.log(deletedValues);
+          this.list = this.list.map((item) => {
+            if (deletedValues.includes(item.state)) {
+              return { ...item, icon: updatedPrefs.stateGroup.states[0] };
+            }
+            return item;
+          });
+          saveListItems(this.list.id, this.items);
+        }
       }
-      // const updatedList = this.list.forEach(list);
-      console.log(deletedIndexes);
       this.list = { ...this.list, ...updatedPrefs };
       if (updatedPrefs.newStateGroup?.states) this.states = updatedPrefs.newStateGroup.states;
       saveList(this.list);

@@ -74,7 +74,7 @@ export default {
       states: this.$props.stateGroup.states,
       rowItems: [],
       addingItem: false,
-      deletedIndexes: [],
+      deletedValues: [],
     };
   },
   watch: {
@@ -89,7 +89,7 @@ export default {
         ...(this.states || []),
         {
           icon: 'mdi-plus',
-          value: getNextUnusedValue(this.states),
+          value: -1,
           isNewItem: true,
           text: '',
         }];
@@ -126,11 +126,9 @@ export default {
     },
     updateThisState(index, state) {
       const states = [...(this.updatedStateGroup.states.length > 0 ? this.updatedStateGroup.states : this.states)];
-      console.log(state);
-      // TODO: find out why the value is not getting set
       states[index] = {
         ...(states[index] || {}),
-        value: state.value || getNextUnusedValue(states),
+        value: (state?.value || -1) >= 0 ? state.value : getNextUnusedValue(states),
         text: state.text || states[index]?.text || '',
         icon: state.icon || states[index]?.icon || '',
       };
@@ -147,7 +145,6 @@ export default {
         this.$nextTick(() => {
           this.focusListItem(index);
           this.addingItem = false;
-          this.$refs[`stateItem${index + 1}`][0].value = '';
         });
       }
     },
@@ -159,7 +156,7 @@ export default {
       }
     },
     deleteListState(index) {
-      this.deletedIndexes.push(this.states[index].value);
+      this.deletedValues.push(this.states[index].value);
       const newItems = [...this.states];
       this.states = newItems.filter((_item, idx) => idx !== index);
       this.updatedStateGroup = { ...this.updatedStateGroup, states: this.states };
@@ -167,7 +164,7 @@ export default {
       this.$emit('list:updated', {
         ...this.stateGroupObject,
         ...this.updatedStateGroup,
-        deletedIndexes: this.deletedIndexes,
+        deletedValues: this.deletedValues,
       });
     },
   },

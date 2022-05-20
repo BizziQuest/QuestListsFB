@@ -64,6 +64,8 @@ import {
   createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB,
 } from '../firebase';
 
+// TODO: use states.value instead of states[index] for saving/storing state values.
+
 export default {
   props: {
     value: {
