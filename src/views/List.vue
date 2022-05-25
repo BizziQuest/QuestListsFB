@@ -77,11 +77,9 @@ export default {
       const { deletedValues } = updatedPrefs;
       delete updatedPrefs.deletedValues;
       if (Array.isArray(updatedPrefs.stateGroup)) {
-        debugger;
         updatedPrefs.newStateGroup = updatedPrefs.stateGroup;
         updatedPrefs.stateGroup = this.list.stateGroup;
         if (deletedValues.length > 0) {
-          console.log(deletedValues);
           this.list = this.list.map((item) => {
             if (deletedValues.includes(item.state)) {
               return { ...item, icon: updatedPrefs.stateGroup.states[0] };

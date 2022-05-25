@@ -36,7 +36,6 @@ function getNextUnusedValue(unsortedItems) {
   // if (!unsortedItems || unsortedItems.length < 1) return 0;
   let highestValue = 0;
   unsortedItems?.forEach(({ value }) => {
-    console.log(highestValue, value);
     const intValue = parseInt(value, 10);
     if (intValue > highestValue) highestValue = intValue;
   });
@@ -149,7 +148,6 @@ export default {
       }
     },
     focusListItem(index) {
-      console.debug('focusing', index);
       const listItemRef = this.$refs[`stateItem${index}`];
       if (listItemRef?.length > 0) {
         listItemRef[0].$refs.input.focus(); // this will trigger blur(), which will save the items
