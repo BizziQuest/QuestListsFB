@@ -94,6 +94,7 @@ export default {
     isActive: false,
     isNewItem: false,
     currentStateIdx: 0,
+    currentStateValue: 0, // the value if the icon
     subListSlug: '',
     subListPath: '',
     subList: null,
@@ -140,13 +141,14 @@ export default {
       let nextIdx = (this.currentStateIdx || 0) + 1;
       if (nextIdx > this.states.length - 1) nextIdx = 0;
       this.currentStateIdx = nextIdx;
+      this.currentStateValue = this.states[nextIdx]?.value;
     },
     updateItem({ to } = {}) {
       if (this.isNewItem) return;
       this.$emit('update', {
         ...this.value,
         title: this.title,
-        state: this.states[this.currentStateIdx],
+        state: this.states.find((state) => state.value === this.currentStateValue),
         isNewItem: this.isNewItem,
         subList: this.subList,
       });
@@ -182,7 +184,7 @@ export default {
     this.isNewItem = this.$props.value.isNewItem;
     this.listId = this.$props.value.listId;
     if (this.$props.value.state?.value) {
-      this.currentStateIdx = parseInt(this.$props.value.state.order, 10);
+      this.currentStateValue = parseInt(this.$props.value.state.value, 10) || this.$props.states[0].value;
     }
     if (this.value.subList) {
       await this.computeSubListPath(this.value.subList);
@@ -200,10 +202,12 @@ export default {
     },
     icon() {
       if (this.isNewItem) return 'mdi-plus';
-      if (this.currentStateIdx >= this.states.length) {
-        return this.states[this.states.length - 1]?.icon;
+      let currentStateIdx = this.states.findIndex((state) => state.value === this.currentStateValue);
+      if (currentStateIdx < 0) {
+        currentStateIdx = 0;
+        return 'mdi-help-box';
       }
-      return this.states[this.currentStateIdx || 0]?.icon;
+      return this.states[currentStateIdx || 0]?.icon;
     },
     iconTitle() {
       return this.states[this.currentStateIdx || 0]?.text;
