@@ -129,7 +129,7 @@ export default {
     saveItem(idx, item) {
       const items = [...this.listItems];
       items[idx] = { ...item };
-      updateUserItemStates(this.list.id, items);
+      updateUserItemStates(this.list, items);
       saveListItems(this.list.id, items);
       this.listItems = items;
     },

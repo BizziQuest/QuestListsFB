@@ -149,7 +149,7 @@ export default {
         stateGroup,
         description: this.description,
         createdAt: Date.now(),
-        createdBy: auth.currentUser.uid,
+        createdBy: auth.currentUser?.uid,
         parent: 'none',
       };
       this.createList(payload);

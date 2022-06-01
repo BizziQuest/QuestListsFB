@@ -12,12 +12,15 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import {
-  signInWithEmailAndPassword, signInWithPopup, signOut, getAdditionalUserInfo,
-  createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  getAdditionalUserInfo,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
 } from 'firebase/auth';
-import {
-  addDoc,
-} from 'firebase/firestore';
+import { addDoc } from 'firebase/firestore';
 import router from '../router';
 import { getAvatarForUser } from '../util';
 import {
@@ -30,6 +33,7 @@ import {
   saveUserPreferences,
   getUserPreferences,
   fetchQuestLists,
+  getRecentlyUsedLists,
 } from '../firebase';
 
 import { algoliaIndex } from '../algolia';
@@ -46,10 +50,12 @@ const defaultState = {
     useGravatar: false,
   },
   lists: [],
-  message: [{
-    text: '',
-    type: 'none', // it can be error, info, or warning
-  }],
+  message: [
+    {
+      text: '',
+      type: 'none', // it can be error, info, or warning
+    },
+  ],
 };
 
 const store = new Vuex.Store({
@@ -73,16 +79,25 @@ const store = new Vuex.Store({
             shortName: 'notDone',
             value: '0',
             order: 0,
-          }, {
+          },
+          {
             color: '#ffffff',
             icon: 'mdi-checkbox-marked-outline',
             name: 'Done',
             shortName: 'done',
             value: '1',
             order: 1,
-          }],
+          },
+        ],
       },
     },
+    recentQuests: [
+      {
+        title: "Sample Favorite Quest with amazingly long title and now that's about it",
+        icon: 'mdi-heart',
+        slug: null,
+      },
+    ],
   },
   getters: {
     getCurrentUser: (state) => state.currentUser,
@@ -128,6 +143,9 @@ const store = new Vuex.Store({
         list.bgColor = payload.color;
         state.lists.push(list);
       }
+    },
+    setRecentQuests(state, payload) {
+      state.recentQuests = payload;
     },
   },
   actions: {
@@ -227,9 +245,7 @@ const store = new Vuex.Store({
     async createList({ dispatch }, listData) {
       const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
       const doc = await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
-      algoliaIndex.saveObject(
-        { ...listData, objectID: doc.id },
-      );
+      algoliaIndex.saveObject({ ...listData, objectID: doc.id });
       router.push(`/lists/${listData.slug}`);
     },
     updateUserInfo({ commit }, payload) {
@@ -253,6 +269,15 @@ const store = new Vuex.Store({
         commit('setUser', payload);
       } catch (error) {
         console.warn('saveProfile', error);
+      }
+    },
+    addRecentlyUsedQuest({ commit, state }, newQuest) {
+      commit('setRecentQuests', [...state.recentQuests, newQuest]);
+    },
+    async getRecentlyUsedQuests({ commit }) {
+      const recent = await getRecentlyUsedLists();
+      if (recent) {
+        commit('setRecentQuests', recent);
       }
     },
   },

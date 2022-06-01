@@ -93,7 +93,7 @@
     "eslint-plugin-vue": "^7.4.1",
     "firebase-admin": "^10.0.0",
     "firebase-functions": "^3.15.7",
-    "firebase-tools": "^9.21.0",
+    "firebase-tools": "^11.0.1",
     "flush-promises": "^1.0.2",
     "jest-environment-node": "^27.3.1",
     "sass": "^1.32.4",
