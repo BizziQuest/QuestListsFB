@@ -25,3 +25,5 @@ export const createList = jest.fn(() => ({}));
 export const computeSubListPath = jest.fn(() => Promise.resolve(''));
 
 export const reactToPrefsChange = jest.fn(() => Promise.resolve(''));
+
+export const getRecentlyUsedLists = jest.fn(() => Promise.resolve([]));

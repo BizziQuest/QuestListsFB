@@ -7,6 +7,12 @@ import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
 import routes from '@/router/routes';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
+const recentLists = [
+  {
+    name: 'Test List!',
+  },
+];
+
 jest.mock('firebase.js', () => ({
   auth: {
     currentUser: {
@@ -18,6 +24,11 @@ jest.mock('firebase.js', () => ({
   },
   reactToPrefsChange: jest.fn(),
   ensureSlugUniqueness: jest.fn(),
+  getRecentlyUsedLists: jest.fn([
+    {
+      name: 'Test List!',
+    },
+  ]),
 }));
 
 toHaveBeenWarnedInit();
@@ -59,8 +70,16 @@ describe('Drawer Menu', () => {
     expect(wrapper.find('[test-default-create-list-item]').text()).toBe('New Quest');
   });
   it('component include favorites list', () => {
-    expect(wrapper.find('[test-fav-header]').text()).toBe('Favorite Quests');
+    const w = wrapper;
+    expect(wrapper.find('[test-fav-header]').text()).toBe('Recent Quests');
     expect(wrapper.findAll('[test-fav-link]').length).toBe(1);
     expect(wrapper.findAll('[test-fav-link]').at(0).text()).toBe('My Favorite Quest');
+  });
+});
+
+describe('Recently Used Menu', () => {
+  it('shows the most recently used items', () => {
+    expect(wrapper.findAll('[test-fav-link]').length).toBe(1);
+    expect(wrapper.findAll('[test-fav-link]').at(0).text()).toBe('Test List!');
   });
 });
