@@ -18,7 +18,9 @@ import {
   limit,
   setDoc,
   doc,
+  orderBy,
   onSnapshot,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 import slugify from 'slugify';
@@ -86,7 +88,7 @@ async function computeSubListPath(subListRef, routePath) {
   return `${routePath}/${slug}`;
 }
 
-async function fetchQuestLists({ pageSize = 10, slugs = null, callback = () => { } } = {}) {
+async function fetchQuestLists({ pageSize = 10, slugs = null, callback = () => {} } = {}) {
   let q = query(listsCollection, limit(pageSize));
   if (slugs && slugs.length > 0) {
     q = query(q, where('slug', 'in', slugs));
@@ -105,19 +107,37 @@ async function fetchQuestLists({ pageSize = 10, slugs = null, callback = () => {
 }
 
 async function getUserDocumentRef() {
+  if (!auth.currentUser) return null;
   const userDocument = doc(db, 'users', auth.currentUser.uid);
   if (!userDocument.exists) await setDoc(userDocument, {}, { merge: true });
   return userDocument;
 }
 
-async function updateUserItemStates(listId, items) {
+async function getRecentlyUsedLists() {
+  const userDocument = await getUserDocumentRef();
+  if (!userDocument) return null;
+  const q = query(collection(userDocument, 'states'), orderBy('updated', 'desc'), limit(10));
+  const querySnapshot = await getDocs(q);
+  const docs = [];
+  querySnapshot.forEach((ss) => docs.push(ss.data()));
+  console.info('recent:', docs);
+  return docs;
+}
+
+async function updateUserItemStates(list, items) {
   const userDocument = await getUserDocumentRef();
   const itemStates = items.reduce((states, item, itemIdx) => {
     const state = { ...item.state };
     if (!state.value) return states;
-    return { ...states, [itemIdx]: { value: state.value, title: item.title } };
+    return {
+      ...states,
+      title: list.title,
+      slug: list.slug,
+      updated: serverTimestamp(),
+      [itemIdx]: { value: state.value, title: item.title },
+    };
   }, {});
-  const userStatesRef = doc(userDocument, 'states', listId);
+  const userStatesRef = doc(userDocument, 'states', list.id);
   await setDoc(userStatesRef, itemStates);
   return getDoc(userStatesRef);
 }
@@ -231,7 +251,7 @@ async function saveUserPreferences(prefs) {
 async function getUserPreferences() {
   const userDocument = await getDocs(collection(db, 'users'), auth.currentUser.uid);
   if (userDocument.exists) return userDocument.data();
-  console.warn("User Prefs don't exist: ", auth.currentUser.uid, userDocument.path);
+  console.warn("User Prefs don't exist: ", auth.currentUser?.uid, userDocument?.path);
   return {};
 }
 
@@ -241,7 +261,7 @@ async function createList(payload) {
     color: '#333333',
     description: 'Newly Created List',
     createdAt: Date.now(),
-    createdBy: auth.currentUser.uid,
+    createdBy: auth.currentUser?.uid,
   };
   const newPayload = { ...defaultPayload, ...payload };
   newPayload.slug = await ensureSlugUniqueness(payload.title || 'New List');
@@ -299,4 +319,5 @@ export {
   reactToPrefsChange,
   getStateGroup,
   fetchQuestLists,
+  getRecentlyUsedLists,
 };
