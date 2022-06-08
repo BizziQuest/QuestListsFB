@@ -27,7 +27,7 @@
         <v-subheader>Recent Quests</v-subheader>
       </v-list-item>
 
-      <v-list-item test-fav-link v-for="item in recentQuests" :key="`${item.slug}${item.title}`" link :title="item.name"
+      <v-list-item test-fav-link v-for="item in recentQuests" :key="`${item.slug}${item.title}`" link :title="item.title"
         :to="item.slug ? `/lists/${item.slug}` : ''">
         <v-list-item-action>
           <v-icon>{{ item.icon || '$questlists' }}</v-icon>

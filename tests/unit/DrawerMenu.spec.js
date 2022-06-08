@@ -7,10 +7,12 @@ import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
 import routes from '@/router/routes';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
-const recentLists = [
+const recentQuests = [
   {
-    name: 'Test List!',
-  },
+    title: 'My Favorite Quest',
+    icon: 'mdi-flower',
+    id: '123abc',
+  }
 ];
 
 jest.mock('firebase.js', () => ({
@@ -33,6 +35,24 @@ jest.mock('firebase.js', () => ({
 
 toHaveBeenWarnedInit();
 
+const localStore = new Vuex.Store({
+  state: {
+    recentQuests,
+    currentUser: {
+      avatar: '/img/unknown_user.svg', // when we set the user in the store, we default to this.
+      displayName: null,
+      email: 'tersterson3@test.com',
+      emailVerified: false,
+      uid: 'UUID123456',
+      useGravatar: false,
+    },
+  },
+  actions: {
+    getRecentlyUsedQuests: jest.fn(),
+  }
+});
+
+
 const localVue = createLocalVue();
 const router = new VueRouter({ routes });
 const vuetify = new Vuetify();
@@ -45,13 +65,8 @@ beforeEach(async () => {
     localVue,
     router,
     vuetify,
-    store,
+    store: localStore,
   });
-  wrapper.vm.favoriteQuests = [{
-    name: 'My Favorite Quest',
-    icon: 'mdi-flower',
-    id: '123abc',
-  }];
   await wrapper.vm.$nextTick();
 });
 
@@ -74,12 +89,5 @@ describe('Drawer Menu', () => {
     expect(wrapper.find('[test-fav-header]').text()).toBe('Recent Quests');
     expect(wrapper.findAll('[test-fav-link]').length).toBe(1);
     expect(wrapper.findAll('[test-fav-link]').at(0).text()).toBe('My Favorite Quest');
-  });
-});
-
-describe('Recently Used Menu', () => {
-  it('shows the most recently used items', () => {
-    expect(wrapper.findAll('[test-fav-link]').length).toBe(1);
-    expect(wrapper.findAll('[test-fav-link]').at(0).text()).toBe('Test List!');
   });
 });
