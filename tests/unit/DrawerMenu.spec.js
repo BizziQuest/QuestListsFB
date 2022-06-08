@@ -2,7 +2,6 @@ import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
-import store from '@/store';
 import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
 import routes from '@/router/routes';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
@@ -12,7 +11,7 @@ const recentQuests = [
     title: 'My Favorite Quest',
     icon: 'mdi-flower',
     id: '123abc',
-  }
+  },
 ];
 
 jest.mock('firebase.js', () => ({
@@ -49,9 +48,8 @@ const localStore = new Vuex.Store({
   },
   actions: {
     getRecentlyUsedQuests: jest.fn(),
-  }
+  },
 });
-
 
 const localVue = createLocalVue();
 const router = new VueRouter({ routes });
@@ -85,7 +83,6 @@ describe('Drawer Menu', () => {
     expect(wrapper.find('[test-default-create-list-item]').text()).toBe('New Quest');
   });
   it('component include favorites list', () => {
-    const w = wrapper;
     expect(wrapper.find('[test-fav-header]').text()).toBe('Recent Quests');
     expect(wrapper.findAll('[test-fav-link]').length).toBe(1);
     expect(wrapper.findAll('[test-fav-link]').at(0).text()).toBe('My Favorite Quest');
