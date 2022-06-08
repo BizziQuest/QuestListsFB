@@ -34,32 +34,27 @@ jest.mock('firebase.js', () => ({
 
 toHaveBeenWarnedInit();
 
-const localStore = new Vuex.Store({
-  state: {
-    recentQuests,
-    currentUser: {
-      avatar: '/img/unknown_user.svg', // when we set the user in the store, we default to this.
-      displayName: null,
-      email: 'tersterson3@test.com',
-      emailVerified: false,
-      uid: 'UUID123456',
-      useGravatar: false,
-    },
-  },
-  actions: {
-    getRecentlyUsedQuests: jest.fn(),
-  },
-});
 
 const localVue = createLocalVue();
+localVue.use(Vuex);
 const router = new VueRouter({ routes });
 const vuetify = new Vuetify();
 localVue.use(VueRouter, Vuetify, Vuex);
 
+
 let wrapper;
 
 beforeEach(async () => {
-  wrapper = mount(DrawerMenu, {
+  const localStore = new Vuex.Store({
+    state: {
+      recentQuests,
+      currentUser: {},
+    },
+    actions: {
+      getRecentlyUsedQuests: jest.fn(),
+    },
+  });
+    wrapper = mount(DrawerMenu, {
     localVue,
     router,
     vuetify,
