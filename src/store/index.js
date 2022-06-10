@@ -93,7 +93,7 @@ const store = new Vuex.Store({
     },
     recentQuests: [
       {
-        title: "Sample Favorite Quest with amazingly long title and now that's about it",
+        title: "No Recent Quests",
         icon: 'mdi-heart',
         slug: null,
       },

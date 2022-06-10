@@ -34,6 +34,7 @@ const localStore = new Vuex.Store({
       }
     },
   },
+  actions: {fetchLists: jest.fn()}
 });
 
 describe('Lists.vue', () => {
@@ -48,6 +49,7 @@ describe('Lists.vue', () => {
         mocks: {
           $route,
         },
+        stubs: ['router-link'],
       });
       await flushPromises();
     });
@@ -69,6 +71,7 @@ describe('Lists.vue', () => {
         mocks: {
           $route,
         },
+        stubs: ['router-link'],
       });
       await flushPromises(); // for fetchList() call in List.mounted()
     });
@@ -174,6 +177,7 @@ describe('Lists.vue', () => {
         mocks: {
           $route,
         },
+        stubs: ['router-link'],
       });
       await flushPromises(); // for fetchList() call in List.mounted()
     });
