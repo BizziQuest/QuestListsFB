@@ -24,6 +24,7 @@ const localStore = new Vuex.Store({
       useGravatar: false,
     },
   },
+  mutations: { setPageBackgroundColor: jest.fn() },
 });
 
 describe('List.vue', () => {

@@ -40,7 +40,11 @@ beforeEach(() => {
   const localStore = new Vuex.Store({
     getters: { getGlobalPreferences: (s) => s.globalPreferences },
     state,
-    actions: { fetchLists: jest.fn(), fetchList: jest.fn() },
+    actions: {
+      fetchLists: jest.fn(),
+      fetchList: jest.fn(),
+      getRecentlyUsedQuests: jest.fn(),
+    },
   });
 
   wrapper = mount(App, {

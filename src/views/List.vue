@@ -16,7 +16,7 @@
     class="ma-2" color="orange darken-2" dark @click="$router.back()">
       <v-icon dark left> mdi-arrow-left </v-icon>Back
     </v-btn>
-    <v-alert v-if="errors" type="danger">
+    <v-alert v-if="errors" type="error">
       {{errors}}
     </v-alert>
     <div id="items">
