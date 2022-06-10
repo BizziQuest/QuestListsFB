@@ -136,7 +136,7 @@ export default {
   methods: {
     saveForm() {
       const userInfo = {
-        uid: this.currentUser.uid,
+        uid: this.currentUser?.uid,
         email: this.email,
         displayName: this.displayName || 'New Member',
         avatar: this.avatar || '/img/unknown_user.svg',

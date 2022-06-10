@@ -62,6 +62,9 @@ describe('default state', () => {
   afterEach(() => {
     wrapper.destroy();
   });
+  it('should not have a color', () => {
+    expect(wrapper.vm.currentColor).toBe(undefined);
+  });
   it('should not show make sub list icon on empty text filed', async () => {
     expect(wrapper.find('[test-make-sublist]').exists()).toBe(false);
   });
@@ -137,6 +140,7 @@ describe('ListItem.vue', () => {
         title: 'Test Item',
         isNewItem: false,
         listId: 'test-list',
+
       };
       wrapper = mount(ListItem, {
         localVue,
@@ -144,8 +148,21 @@ describe('ListItem.vue', () => {
         store: localStore,
         propsData: {
           value: item,
+          states: [
+            { icon: 'Foo', name: 'Foo state', color: 'red' },
+            { icon: 'Bar', name: 'Bar state', color: 'blue' },
+          ],
         },
       });
+    });
+    it('should have the correct color', () => {
+      expect(wrapper.vm.currentColor).toBe('red');
+    });
+    it('should have the correct icon', () => {
+      expect(wrapper.vm.icon).toBe('Foo');
+    });
+    it('should have the correct icon text', () => {
+      expect(wrapper.vm.iconTitle).toBe('Foo state');
     });
     it('should have the correct title', () => {
       expect(wrapper.vm.title).toBe(item.title);
@@ -291,6 +308,11 @@ describe('ListItem.vue', () => {
       });
     });
   });
+});
+
+describe('user changes the item\'s state', () => {
+  it.todo('should change the background color to the current state\'s color');
+  it.todo('should send the updated state to the database');
 });
 
 describe('user is not logged in', () => {

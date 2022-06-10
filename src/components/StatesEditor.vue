@@ -59,6 +59,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    reset: {
+      type: Number,
+      default: 0,
+      description: 'Increment to reset the form.',
+    },
   },
   data() {
     return {

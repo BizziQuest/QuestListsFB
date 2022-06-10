@@ -1,10 +1,10 @@
 <template>
   <span class="icon-state">
-    <v-icon color="primary" @click.stop="dialog = true">{{ localIcon }}</v-icon>
+    <v-icon :color="color" @click.stop="dialog = true">{{ localIcon }}</v-icon>
     <v-dialog v-model="dialog" persistent max-width="400">
       <v-card>
         <v-card-title class="headline">Please choose your Icon</v-card-title>
-        <v-form ref="iconForm" @submit.prevent="chooseIcon">
+        <v-form ref="iconForm" @submit.prevent.stop="chooseIcon">
           <v-card-text>
             <v-row>
               <div class="pa-5 mb-5 rounded-t-xl" color="info">
@@ -24,8 +24,13 @@
               <div class="local-icon">
                 <v-icon ref="icon" test-icon> {{ localIcon }} </v-icon>
               </div>
-              <v-text-field v-model="localIcon"
-              :rules="iconNamingRules" ref="iconInput" test-icon-input required></v-text-field>
+              <v-text-field
+                v-model="localIcon"
+                :rules="iconNamingRules"
+                ref="iconInput"
+                test-icon-input
+                required
+              ></v-text-field>
             </v-row>
           </v-card-text>
           <v-card-actions>
@@ -41,7 +46,16 @@
 
 <script>
 export default {
-  props: ['icon'],
+  props: {
+    icon: {
+      type: String,
+      description: 'The icon string',
+    },
+    color: {
+      type: String,
+      description: 'The hex color for this icon',
+    },
+  },
   data() {
     return {
       localIcon: this.icon,

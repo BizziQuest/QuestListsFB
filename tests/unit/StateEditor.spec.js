@@ -21,6 +21,7 @@ const localStore = new Vuex.Store({
       useGravatar: false,
     },
   },
+  actions: {getRecentlyUsedQuests: jest.fn()}
 });
 
 describe('StatesEditor.vue', () => {

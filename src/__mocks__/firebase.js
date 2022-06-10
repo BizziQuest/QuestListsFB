@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-export const getListBySlug = jest.fn(() => Promise.resolve([]));
+export const getListBySlug = jest.fn(() => Promise.resolve({}));
 
 export const getListItems = jest.fn(() => Promise.resolve([]));
 
@@ -25,3 +25,5 @@ export const createList = jest.fn(() => ({}));
 export const computeSubListPath = jest.fn(() => Promise.resolve(''));
 
 export const reactToPrefsChange = jest.fn(() => Promise.resolve(''));
+
+export const getRecentlyUsedLists = jest.fn(() => Promise.resolve([]));

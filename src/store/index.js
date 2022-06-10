@@ -13,8 +13,13 @@ import Vuex from 'vuex';
 import { getDoc } from 'firebase/firestore';
 
 import {
-  signInWithEmailAndPassword, signInWithPopup, signOut, getAdditionalUserInfo,
-  createUserWithEmailAndPassword, updateProfile, sendEmailVerification,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  getAdditionalUserInfo,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
 } from 'firebase/auth';
 import router from '../router';
 import { getAvatarForUser } from '../util';
@@ -28,6 +33,7 @@ import {
   saveUserPreferences,
   getUserPreferences,
   fetchQuestLists,
+  getRecentlyUsedLists,
 } from '../firebase';
 
 import { algoliaIndex } from '../algolia';
@@ -44,14 +50,17 @@ const defaultState = {
     useGravatar: false,
   },
   lists: [],
-  message: [{
-    text: '',
-    type: 'none', // it can be error, info, or warning
-  }],
+  message: [
+    {
+      text: '',
+      type: 'none', // it can be error, info, or warning
+    },
+  ],
 };
 
 const store = new Vuex.Store({
   state: {
+    pageBackgroundColor: null,
     currentUser: defaultState.currentUser,
     lists: defaultState.lists,
     messages: [],
@@ -64,22 +73,31 @@ const store = new Vuex.Store({
         description: 'NOTE: the default state has not loaded from the server yet.',
         states: [
           {
-            color: '#00ff00',
+            color: '#ffffff',
             icon: 'mdi-checkbox-blank-outline',
             name: 'Not Done',
             shortName: 'notDone',
             value: '0',
             order: 0,
-          }, {
-            color: '#00ff00',
+          },
+          {
+            color: '#ffffff',
             icon: 'mdi-checkbox-marked-outline',
             name: 'Done',
             shortName: 'done',
             value: '1',
             order: 1,
-          }],
+          },
+        ],
       },
     },
+    recentQuests: [
+      {
+        title: "No Recent Quests",
+        icon: 'mdi-heart',
+        slug: null,
+      },
+    ],
   },
   getters: {
     getCurrentUser: (state) => state.currentUser,
@@ -89,6 +107,9 @@ const store = new Vuex.Store({
     getGlobalPreferences: (state) => state.globalPreferences,
   },
   mutations: {
+    setPageBackgroundColor(state, color) {
+      state.pageBackgroundColor = color;
+    },
     setUser(state, user) {
       state.currentUser = {
         uid: user.uid,
@@ -122,6 +143,9 @@ const store = new Vuex.Store({
         list.bgColor = payload.color;
         state.lists.push(list);
       }
+    },
+    setRecentQuests(state, payload) {
+      state.recentQuests = payload;
     },
   },
   actions: {
@@ -240,6 +264,15 @@ const store = new Vuex.Store({
         commit('setUser', payload);
       } catch (error) {
         console.warn('saveProfile', error);
+      }
+    },
+    addRecentlyUsedQuest({ commit, state }, newQuest) {
+      commit('setRecentQuests', [...state.recentQuests, newQuest]);
+    },
+    async getRecentlyUsedQuests({ commit }) {
+      const recent = await getRecentlyUsedLists();
+      if (recent) {
+        commit('setRecentQuests', recent);
       }
     },
   },

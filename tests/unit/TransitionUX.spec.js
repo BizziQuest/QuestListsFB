@@ -1,4 +1,4 @@
-import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
@@ -32,7 +32,7 @@ beforeEach(() => {
   const localStore = new Vuex.Store({
     getters: { getGlobalPreferences: (s) => s.globalPreferences },
     state,
-    actions: { fetchLists: jest.fn() },
+    actions: { fetchLists: jest.fn(), getRecentlyUsedQuests: jest.fn() },
   });
   wrapper = mount(App, {
     localVue,
@@ -48,12 +48,7 @@ afterEach(() => {
 
 describe('smoother ux transition', () => {
   it('has a transition component', () => {
-    const wrapper1 = shallowMount(App, {
-      localVue,
-      router,
-      vuetify,
-    });
-    expect(wrapper1.find('transition-stub[name="router-anim"]').exists()).toBe(true);
+    expect(wrapper.find('transition-stub[name="router-anim"]').exists()).toBe(true);
   });
 
   describe('transitioning between lists view and edit info page (should be less than 0.3 seconds)', () => {

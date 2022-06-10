@@ -1,6 +1,6 @@
 <template>
   <div class="user-menu-item">
-    <login-or-signup :dark='dark' v-if="!currentUser.uid" :toolbar="toolbar">
+    <login-or-signup :dark='dark' v-if="!(currentUser && currentUser.uid)" :toolbar="toolbar">
       <template v-slot:default="slotProps">
         <slot name="login" :on="slotProps.on"/>
       </template>
@@ -8,7 +8,7 @@
     <slot v-else name="avatar"
       :avatar="avatar"
       :username="currentUser.displayName"
-      :userId="currentUser.uid"
+      :userId="currentUser && currentUser.uid"
     >
       <v-list-item link title="User Management" to="/EditInfo">
         <v-list-item-avatar size="28">
@@ -18,7 +18,7 @@
         <v-list-item-content class="ml-3">
           <v-list-item-title class="text-truncate">{{currentUser.displayName}}</v-list-item-title>
         </v-list-item-content>
-        <v-icon icon small v-if="currentUser.uid" @click.stop.prevent="logoutAndGoHome" title="Logout">
+        <v-icon icon small v-if="currentUser && currentUser.uid" @click.stop.prevent="logoutAndGoHome" title="Logout">
           mdi-exit-to-app
         </v-icon>
       </v-list-item>

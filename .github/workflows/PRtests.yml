@@ -28,7 +28,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
+        node-version: [16.x] # only use 10, for firebase-tools compatibility
 
     steps:
     - uses: actions/checkout@v2
@@ -36,25 +36,25 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn @vue/cli
-    - run: yarn
-    - run: yarn lint
+    - run: npm install -g pnpm @vue/cli
+    - run: pnpm install
+    - run: pnpm lint
 
   unit-tests:
     needs: linting
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
+        node-version: [16.x] # only use 10, for firebase-tools compatibility
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn @vue/cli
-    - run: yarn
-    - run: CI=true yarn ci:unit
+    - run: npm install -g pnpm @vue/cli
+    - run: pnpm install
+    - run: CI=true pnpm test:unit
 
   # end2end-tests:
   #   needs: linting

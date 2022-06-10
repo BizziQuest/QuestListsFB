@@ -18,6 +18,7 @@
       :single-line="readOnly"
       :solo="readOnly"
       :tabindex="tabindex"
+      :color="currentColor"
     >
       <v-icon
         slot="prepend-inner"
@@ -26,6 +27,7 @@
         @click.prevent="cycleIcon"
         @blur="deactivate"
         :title="iconTitle"
+        :color="currentColor"
         >{{ icon }}</v-icon
       >
       {{ isNewItem ? '' : title }}
@@ -200,6 +202,10 @@ export default {
       if (!this.title || this.title === '') return false;
       return true;
     },
+    currentColor() {
+      return this.states[this.currentStateIdx]?.color;
+    },
+
     icon() {
       if (this.isNewItem) return 'mdi-plus';
       let currentStateIdx = this.states.findIndex((state) => state.value === this.currentStateValue);

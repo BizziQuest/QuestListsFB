@@ -1,34 +1,19 @@
 <template>
-  <v-navigation-drawer
-    :bottom="isMobile"
-    :floating="isMobile"
-    :expand-on-hover="!isMobile && !$vuetify.breakpoint.lgAndUp"
-    :app="!isMobile"
-    :permanent="!isMobile"
-    v-model="showDrawer"
-    :fixed="isMobile"
-    :dark="!isDark"
-    :light="isDark"
-    test-navigation-drawer
-  >
+  <v-navigation-drawer :bottom="isMobile" :floating="isMobile"
+    :expand-on-hover="!isMobile && !$vuetify.breakpoint.lgAndUp" :app="!isMobile" :permanent="!isMobile"
+    v-model="showDrawer" :fixed="isMobile" :dark="!isDark" :light="isDark" test-navigation-drawer>
     <v-list dense nav>
       <user-menu-item :dark="!isDark" :light="isDark" />
-        <v-list-item test-questlists-link link :color="menuHighlightColor" title="View All QuestLists" to="/">
-          <v-list-item-action style="margin-right: 15px;">
-            <v-icon>ql-0</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title style="margin-left: 0px;">QuestLists</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+      <v-list-item test-questlists-link link :color="menuHighlightColor" title="View All QuestLists" to="/">
+        <v-list-item-action style="margin-right: 15px;">
+          <v-icon>ql-0</v-icon>
+        </v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title style="margin-left: 0px;">QuestLists</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
 
-      <v-list-item
-        test-default-create-list-item
-        to="/new"
-        link
-        :color="menuHighlightColor"
-        title="Create A New Quest"
-      >
+      <v-list-item test-default-create-list-item to="/new" link :color="menuHighlightColor" title="Create A New Quest">
         <v-list-item-action style="margin-right: 15px;">
           <v-icon>ql-plus</v-icon>
         </v-list-item-action>
@@ -39,18 +24,19 @@
 
       <v-list-item test-fav-header>
         <v-divider class="my-4"></v-divider>
-        <v-subheader>Favorite Quests</v-subheader>
+        <v-subheader>Recent Quests</v-subheader>
       </v-list-item>
 
-        <v-list-item test-fav-link v-for="item in favoriteQuests"
-        :key="`${item.id}${item.name}`" link :title="item.name" :to="`/lists/${item.id}`">
-          <v-list-item-action>
-            <v-icon>{{item.icon || '$questlists'}}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>{{item.name}}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+      <v-list-item test-fav-link v-for="item in recentQuests"
+        :key="`${item.slug}${item.title}`" link :title="item.title"
+        :to="item.slug ? `/lists/${item.slug}` : ''">
+        <v-list-item-action>
+          <v-icon>{{ item.icon || '$questlists' }}</v-icon>
+        </v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
 
       <v-list-item>
         <v-divider class="my-4"></v-divider>
@@ -59,10 +45,10 @@
 
       <v-list-item test-dark-mode-switch link @click="isDark = !isDark">
         <v-list-item-action>
-          <v-icon>{{isDark ? 'mdi-brightness-4' : 'mdi-brightness-7'}}</v-icon>
+          <v-icon>{{ isDark ? 'mdi-brightness-4' : 'mdi-brightness-7' }}</v-icon>
         </v-list-item-action>
         <v-list-item-content>
-          <v-list-item-title>Turn Dark Mode {{isDark ? 'Off' : 'On'}}</v-list-item-title>
+          <v-list-item-title>Turn Dark Mode {{ isDark ? 'Off' : 'On' }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -79,6 +65,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import { auth } from '../../firebase';
 import UserMenuItem from './UserMenuItem.vue';
 
@@ -103,16 +90,21 @@ export default {
       currentTheme: this.$vuetify.theme,
       showCreateList: false,
       auth,
-      favoriteQuests: [
-        {
-          name: "Sample Favorite Quest with amazingly long title and now that's about it",
-          icon: 'mdi-heart',
-          id: 0,
-        },
-      ],
     };
   },
+  mounted() {
+    this.getRecentlyUsedQuests(this.currentUser);
+  },
+  methods: {
+    ...mapActions(['getRecentlyUsedQuests']),
+  },
+  watch: {
+    currentUser(_oldUser, newUser) {
+      this.getRecentlyUsedQuests(newUser);
+    },
+  },
   computed: {
+    ...mapState(['currentUser', 'recentQuests']),
     isMobile() {
       return this.$vuetify.breakpoint.xs;
     },
@@ -148,23 +140,29 @@ export default {
 .v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
   &:not([color]) {
     color: #ffffff !important;
+
     &.theme--light {
       color: #ffffff !important;
+
       .v-icon {
         color: #ffffff;
       }
     }
   }
+
   &.theme--dark {
     color: #ffffff !important;
+
     .secondary--text {
       color: var(--v-secondary-base) !important;
     }
+
     .v-icon {
       color: #ffffff;
     }
   }
 }
+
 /* /deep/ .theme--light {
   &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]) {
     color: #ffffff !important;

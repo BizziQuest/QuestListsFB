@@ -28,6 +28,7 @@
   </div>
 </template>
 <script>
+import { mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
@@ -65,6 +66,9 @@ export default {
       states: [],
       showPreferences: false,
     };
+  },
+  beforeRouteLeave() {
+    this.setPageBackgroundColor(null);
   },
   computed: {
     listItemsWithBlank() {
@@ -111,10 +115,15 @@ export default {
       const context = slug.split('/');
       const currentSlug = context[context.length - 1];
       const fbList = await getListBySlug(currentSlug);
+      if (!fbList || !fbList.docs || fbList.docs.length < 1) {
+        this.errors = 'Could not locate list.';
+        return;
+      }
       let foundList = fbList.docs[fbList.docs.length - 1];
       foundList = { id: foundList.id, ...foundList.data() };
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
+      this.setPageBackgroundColor(foundList.color);
       this.list.id = foundList.id || 'none';
       this.list = foundList;
       this.listItems = listItems;
@@ -123,7 +132,7 @@ export default {
     saveItem(idx, item) {
       const items = [...this.listItems];
       items[idx] = { ...item };
-      updateUserItemStates(this.list.id, items);
+      updateUserItemStates(this.list, items);
       saveListItems(this.list.id, items);
       this.listItems = items;
     },

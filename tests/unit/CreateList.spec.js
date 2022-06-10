@@ -7,7 +7,7 @@ import routes from '@/router/routes';
 import CreateList from '@/components/CreateList.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
-let scrollIntoViewMock = jest.fn();
+const scrollIntoViewMock = jest.fn();
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
 jest.mock('../../src/algolia.js');
@@ -45,7 +45,6 @@ beforeEach(() => {
 afterEach(() => {
   wrapper.destroy();
 });
-
 
 describe('entering information in the page', () => {
   beforeEach(async () => {
@@ -155,6 +154,9 @@ describe('list creation', () => {
           emailVerified: true,
           uid: 'UUID1',
         },
+        globalPreferences: {
+          defaultStateGroup: { states: [{ icon: 'default', name: 'default' }] },
+        },
       },
     });
     wrapper = mount(CreateList, {
@@ -204,7 +206,7 @@ describe('list creation', () => {
       { type: 'info', text: 'No states configured. Using default states.' },
     );
     const createParams = actions.createList.mock.calls[0][1];
-    expect(createParams.stateGroup).toStrictEqual({ states: [] });
+    expect(createParams.stateGroup).toStrictEqual({ states: [{ icon: 'default', name: 'default' }] });
     expect(createParams.adultContent).toStrictEqual(true);
   });
   it('should notify users when there are no states given.', async () => {
@@ -217,9 +219,10 @@ describe('list creation', () => {
       { type: 'info', text: 'No states configured. Using default states.' },
     );
     const createParams = actions.createList.mock.calls[0][1];
-    expect(createParams.stateGroup).toStrictEqual({ states: [] });
+    expect(createParams.stateGroup).toStrictEqual({ states: [{ icon: 'default', name: 'default' }] });
   });
 
+  // TODO: move this into ColorPicker
   it.todo('should show the color picker when the color picker icon is clicked.');
   it.todo('should set the color of the color picker icon when the color picker menu is closed.');
 });
