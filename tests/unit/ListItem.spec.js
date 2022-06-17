@@ -149,8 +149,8 @@ describe('ListItem.vue', () => {
         propsData: {
           value: item,
           states: [
-            { icon: 'Foo', name: 'Foo state', color: 'red' },
-            { icon: 'Bar', name: 'Bar state', color: 'blue' },
+            { icon: 'Foo', text: 'Foo state', color: 'red', value: 0 },
+            { icon: 'Bar', text: 'Bar state', color: 'blue', value: 1 },
           ],
         },
       });

@@ -66,39 +66,39 @@ describe('the title field', () => {
   });
   it('should not allow empty titles', async () => {
     wrapper.find('input[test-title-input]').setValue('');
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(wrapper.text()).toContain('Title is required');
   });
 });
 describe('the color field', () => {
   it('should not allow invalid colors', async () => {
     await wrapper.find('input[test-color-input]').setValue('HELLO');
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(wrapper.text()).toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
   });
   it('should allow blank/no colors', async () => {
     await wrapper.find('input[test-color-input]').setValue('');
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(wrapper.text()).toContain('Color ​Description');
   });
   it('should allow 6-digit hexadecimal color strings', async () => {
     await wrapper.find('input[test-color-input]').setValue('#ABC123');
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(wrapper.text()).not.toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
   });
   it('should allow 6-digit mixed-case hexadecimal color strings', async () => {
     await wrapper.find('input[test-color-input]').setValue('#AbCd23');
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(wrapper.text()).not.toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
   });
   it('should allow 3 digit hexadecimal color strings', async () => {
     await wrapper.find('input[test-color-input]').setValue('#ABC');
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(wrapper.text()).not.toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
   });
   it('should allow 3 digit mixed-case hexadecimal color strings', async () => {
     await wrapper.find('input[test-color-input]').setValue('#Abc');
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
+    await wrapper.vm.$nextTick();
     expect(wrapper.text()).not.toContain('Color Format Must be #FFF or #FFFFFF, case-insensitive');
   });
 });
@@ -106,21 +106,21 @@ describe('the description field', () => {
   it('should not be required', async () => {
     await wrapper.find('input[test-title-input]').setValue('A Title');
     await wrapper.find('input[test-description-input]').setValue('');
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
-    expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help\s+Possible/);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help/);
   });
   it('should allow simple text', async () => {
     await wrapper.find('input[test-title-input]').setValue('A Tile');
     await wrapper.find('input[test-description-input]').setValue('I am a description');
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
-    expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help\s+Possible/);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help/);
   });
   it('should allow complex text (this is to make sure our tools support complex inputs)', async () => {
     const unicodeString = 'ʕノ•ᴥ•ʔノ ︵ ┻━┻ ✌.ʕʘ‿ʘʔ.✌ 😀';
     await wrapper.find('input[test-title-input]').setValue('A Title');
     await wrapper.find('input[test-description-input]').setValue(unicodeString);
-    expect(wrapper.vm.description).toEqual(unicodeString);
-    await wrapper.find('.v-btn[name="submit"]').trigger('click');
-    expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help\s+Possible/);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.emitted()['update:description'][0][0]).toBe(unicodeString);
+    expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help/);
   });
 });
