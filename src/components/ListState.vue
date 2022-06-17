@@ -31,25 +31,15 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  components: {
-    IconState,
-    ColorSwatch,
-  },
-  props: {
-    item: {
-      type: Object,
-      description: 'The initial state of this component.',
-    },
-    isDraggable: {
-      type: Boolean,
-      description: 'Whether this item should be draggable',
-    },
     isNewItem: {
       type: Boolean,
       description: 'Whether this item is a new item field.',
       default: false,
     },
+  },
+  components: {
+    IconState,
+    ColorSwatch,
   },
   data() {
     return {

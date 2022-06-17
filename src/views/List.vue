@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-import { mapMutations } from 'vuex';
+// import { mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';

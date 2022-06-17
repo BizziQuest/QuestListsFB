@@ -4,7 +4,7 @@
       <v-form ref="addTitleAndColorForm" v-model="formIsValid" @submit.prevent>
         <v-row>
           <v-col cols="12" sm="6" md="6">
-            <v-text-field label="List Title*" :rules="titleRules" :value="title" @change="$emit('update:title', $event)"
+            <v-text-field label="List Title*" :rules="titleRules" :value="title" @change="updateTitle"
               required placeholder="Your Title" :outlined="!compact" test-title-input :dense="compact"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="6">
@@ -108,6 +108,10 @@ export default {
     },
     updateListColor(newValue) {
       this.$emit('update:color', newValue);
+    },
+    updateTitle(newValue) {
+      debugger;
+      this.$emit('update:title', newValue);
     },
   },
   computed: {
