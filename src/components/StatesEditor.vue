@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-expansion-panels style="background-color: #ccc;">
-      <v-expansion-panel style="background-color: #eee;" elevation="0">
+      <v-expansion-panel style="background-color: #eee;" elevation="0" test-expander-header>
         <v-expansion-panel-header>
           Possible Item States:
         </v-expansion-panel-header>
@@ -35,7 +35,7 @@ import { getDocRefData } from '../firebase';
 function getNextUnusedValue(unsortedItems) {
   // if (!unsortedItems || unsortedItems.length < 1) return 0;
   let highestValue = 0;
-  unsortedItems?.forEach(({ value }) => {
+  (unsortedItems || []).forEach(({ value }) => {
     const intValue = parseInt(value, 10);
     if (intValue > highestValue) highestValue = intValue;
   });

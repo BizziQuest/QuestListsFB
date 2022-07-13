@@ -236,7 +236,12 @@ const store = new Vuex.Store({
       commit('addState', stateGroupRef);
     },
     async createList({ state }, listData) {
-      const docRef = await createList(listData, state.globalPreferences.defaultStateGroup);
+      let docRef = null;
+      try {
+        docRef = await createList(listData, state.globalPreferences.defaultStateGroup);
+      } catch (err) {
+        console.error(err);
+      }
       const createdDocData = (await getDoc(docRef)).data();
       algoliaIndex.saveObject(
         { ...createdDocData, objectID: docRef.id },

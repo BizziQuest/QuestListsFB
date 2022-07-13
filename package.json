@@ -13,10 +13,11 @@
     "container": "yarn fb:emulate; yarn serve",
     "fb:deploy": "firebase deploy",
     "fb:dev:clean": "firebase emulators:exec --only firestore,auth 'yarn serve --open'",
-    "fb:dev": "firebase emulators:exec --only firestore,auth --import tests/data 'yarn serve --open'",
+    "fb:dev": "firebase emulators:exec --only firestore,auth --ui --import tests/data 'yarn serve --open'",
     "fb:exec": "firebase emulators:exec --only firestore,auth --import tests/data",
     "fb:e2e:clean": "firebase emulators:exec --only firestore,auth 'yarn test:e2e --headless --mode=development'",
     "fb:e2e": "firebase emulators:exec --only firestore,auth 'yarn test:e2e --mode=development'",
+    "fb:cypress": "firebase emulators:exec --only firestore,auth 'npx cypress open'",
     "fb:emulate:save": "firebase emulators:export --force tests/data",
     "fb:emulate:stop": "firebase emulators:stop",
     "fb:emulate": "firebase emulators:start --only firestore,auth --import tests/data",
@@ -58,7 +59,7 @@
     "vue-template-compiler": "^2.6.12",
     "vuetify": "^2.6.6",
     "vuex": "^3.6.0",
-    "webpack": "^5.73.0",
+    "webpack": "^4.0.0",
     "yorkie": "^2.0.0"
   },
   "devDependencies": {
@@ -88,7 +89,9 @@
     "babel-jest": "27.3.1",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.2.7",
-    "eslint": "^7.17.0",
+    "cypress": "^10.3.0",
+    "cypress-dotenv": "^2.0.0",
+    "eslint": "^6",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-promise": "^5.1.1",
     "eslint-plugin-vue": "^7.4.1",
@@ -102,7 +105,7 @@
     "style-loader": "^2.0.0",
     "vue-cli-plugin-vuetify": "^2.0.7",
     "vue-jest": "^3.0.7",
-    "vue-loader": "^15.9.8",
+    "vue-loader": "^14",
     "vuetify-loader": "^1.6.0"
   }
 }

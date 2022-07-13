@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="list">
     <user-auth-alert action="edit this list or save any changes" />
     <h1 class="d-flex">
       {{ list.title }}
@@ -14,8 +14,7 @@
       <v-icon dark left> mdi-arrow-left </v-icon>Back
     </v-btn>
     <v-card elevation="3" v-if="showPreferences" class="border-1 pa-3 ma-2 mb-5">
-      <list-preferences compact :list="list" @update:list="updateListPreferences" saveButtonText="Update">
-      </list-preferences>
+      <list-preferences compact :list="list" @update:list="updateListPreferences" saveButtonText="Update" />
     </v-card>
     <div id="items">
       <transition-group name="slide-x-transition" hide-on-leave leave-absolute :duration="{ enter: 200, leave: 200 }">
@@ -28,7 +27,7 @@
   </div>
 </template>
 <script>
-// import { mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
@@ -47,7 +46,7 @@ export default {
     },
     slug: {
       type: String,
-      description: 'slug that identifed a list',
+      description: 'slug that identified a list',
     },
   },
   mixins: [userAuthMixin],
@@ -76,6 +75,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['setPageBackgroundColor']),
     updateListPreferences(newPrefs) {
       const updatedPrefs = { ...newPrefs };
       const { deletedValues } = updatedPrefs;

@@ -27,10 +27,12 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-new Vue({
+const app = new Vue({
   router,
   store,
   vuetify,
   i18n,
   render: (h) => h(App),
 }).$mount('#app');
+
+if(window.Cypress) window.$app = app;
