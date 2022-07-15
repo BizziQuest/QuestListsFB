@@ -27,44 +27,42 @@ import slugify from 'slugify';
 
 // require('dotenv').config();
 
-const { env } = process;
-
 // firebase init goes here
 const firebaseConfig = {
-  apiKey: env.VUE_APP_FIREBASE_API_KEY,
-  appId: env.VUE_APP_FIREBASE_APP_ID,
-  authDomain: env.VUE_APP_FIREBASE_AUTH_DOMAIN,
-  databaseURL: env.VUE_APP_FIREBASE_DATABASE_URL,
-  // measurementId: env.VUE_APP_FIREBASE_APP_ID,
-  // messagingSenderId: env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
-  projectId: env.VUE_APP_FIREBASE_PROJECT_ID,
-  // storageBucket: env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  apiKey: import.meta.env.VITE_APP_FIREBASE_API_KEY,
+  appId: import.meta.env.VITE_APP_FIREBASE_APP_ID,
+  authDomain: import.meta.env.VITE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_APP_FIREBASE_DATABASE_URL,
+  // measurementId: import.meta.env.VITE_APP_FIREBASE_APP_ID,
+  // messagingSenderId: import.meta.env.VITE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  projectId: import.meta.env.VITE_APP_FIREBASE_PROJECT_ID,
+  // storageBucket: import.meta.env.VITE_APP_FIREBASE_STORAGE_BUCKET,
 };
 console.log(firebaseConfig);
-if (env.NODE_ENV !== 'development') {
-  firebaseConfig.measurementId = env.VUE_APP_FIREBASE_APP_ID;
-  firebaseConfig.messagingSenderId = env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID;
-  firebaseConfig.storageBucket = env.VUE_APP_FIREBASE_STORAGE_BUCKET;
+if (import.meta.env.NODE_ENV !== 'development') {
+  firebaseConfig.measurementId = import.meta.env.VITE_APP_FIREBASE_APP_ID;
+  firebaseConfig.messagingSenderId = import.meta.env.VITE_APP_FIREBASE_MESSAGING_SENDER_ID;
+  firebaseConfig.storageBucket = import.meta.env.VITE_APP_FIREBASE_STORAGE_BUCKET;
 } else {
-  global.self.FIREBASE_APPCHECK_DEBUG_TOKEN = env.VUE_APP_FIREBASE_APPCHECK_DEBUG_TOKEN;
+  global.self.FIREBASE_APPCHECK_DEBUG_TOKEN = env.VITE_APP_FIREBASE_APPCHECK_DEBUG_TOKEN;
 }
 // firebase utils
 const fbApp = initializeApp(firebaseConfig);
 
-const nodeEnv = env.NODE_ENV;
+const nodeEnv = import.meta.env.NODE_ENV;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? getAnalytics() : null;
 let tappCheck = null;
-if (env.NODE_ENV !== 'development') {
+if (import.meta.env.NODE_ENV !== 'development') {
   tappCheck = initializeAppCheck(fbApp, {
-    provider: new ReCaptchaV3Provider(env.VUE_APP_RECAPTCHA_SITE_KEY),
-    isTokenAutoRefreshEnabled: env.NODE_ENV === 'production', // refresh app tokens as needed?
+    provider: new ReCaptchaV3Provider(import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY),
+    isTokenAutoRefreshEnabled: import.meta.env.NODE_ENV === 'production', // refresh app tokens as needed?
   });
 }
 const appCheck = tappCheck;
 
 const auth = getAuth(fbApp);
-if (env.VUE_APP_FIREBASE_AUTH_HOST) {
-  connectAuthEmulator(auth, env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
+if (import.meta.env.VITE_APP_FIREBASE_AUTH_HOST) {
+  connectAuthEmulator(auth, import.meta.env.VITE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
 }
 
 const db = getFirestore();
@@ -73,9 +71,9 @@ const { currentUser } = auth;
 // // firebase settings go here
 // const settings = { };
 
-if (env.NODE_ENV !== 'production') {
-  connectAuthEmulator(auth, env.VUE_APP_FIREBASE_AUTH_HOST);
-  connectFirestoreEmulator(db, env.VUE_APP_FIREBASE_DATABASE_HOST, env.VUE_APP_FIREBASE_DATABASE_PORT);
+if (import.meta.env.NODE_ENV !== 'production') {
+  connectAuthEmulator(auth, import.meta.env.VITE_APP_FIREBASE_AUTH_HOST);
+  connectFirestoreEmulator(db, import.meta.env.VITE_APP_FIREBASE_DATABASE_HOST, import.meta.env.VITE_APP_FIREBASE_DATABASE_PORT);
 }
 
 const globalPreferences = collection(db, 'globalPreferences');
