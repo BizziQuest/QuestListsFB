@@ -1,60 +1,100 @@
 <template>
-    <v-bottom-navigation
-      fixed
-      v-if="isMobile"
-      :app="isMobile"
-      :input-value="isMobile"
+  <v-bottom-navigation
+    v-if="isMobile"
+    fixed
+    :app="isMobile"
+    :input-value="isMobile"
+    :dark="!isDark"
+    :light="isDark"
+    grow
+  >
+    <v-btn
+      :color="menuHighlightColor"
+      icon
+      title="View App Menu"
+      @click="$emit('update:drawer', !drawer)"
+    >
+      <span>QuestLists</span>
+      <i
+        style="font-size: 140%"
+        class="ql questlists"
+      />
+    </v-btn>
+    <v-btn
+      value="search"
+      icon
+      to="/search"
+      :color="menuHighlightColor"
+    >
+      <span>Search</span>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+    <v-btn
+      fab
+      :dark="!isDark"
+      :color="menuHighlightColor"
+      absolute
+      top
+      center
+      medium
+      to="/new"
+      class="rounded-circle main-fab"
+    >
+      <i
+        style="font-size: 230%"
+        class="ql ql-plus"
+      />
+    </v-btn>
+    <v-btn
+      value="favorite"
+      icon
+      to="/favorites"
+      :color="menuHighlightColor"
+    >
+      <span>Favorites</span>
+      <v-icon>mdi-heart</v-icon>
+    </v-btn>
+    <user-menu-item
       :dark="!isDark"
       :light="isDark"
-      grow
-      >
+      class="d-flex flex-row align-center"
+    >
+      <template #login="slotProps">
         <v-btn
-          :color="menuHighlightColor"
+          value="signIn"
           icon
-          title="View App Menu"
-          @click="$emit('update:drawer', !drawer)"
+          :color="menuHighlightColor"
+          v-on="slotProps.on"
         >
-          <span>QuestLists</span>
-          <i style="font-size: 140%" class="ql questlists"></i>
+          <span>Sign In</span>
+          <v-icon>mdi-account-arrow-right</v-icon>
         </v-btn>
-        <v-btn value="search" icon to="/search" :color="menuHighlightColor">
-          <span>Search</span>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-        <v-btn fab
-          :dark="!isDark" :color="menuHighlightColor"
-          absolute top center
-          medium
-          to="/new"
-          class="rounded-circle main-fab"
+      </template>
+      <template #avatar="slotProps">
+        <v-btn
+          value="viewProfile"
+          class="d-flex flex-column text-truncate align-center"
+          icon
+          to="/EditInfo"
+          :color="menuHighlightColor"
         >
-          <i style="font-size: 230%" class="ql ql-plus"></i>
+          <span
+            class="text-truncate d-inline-block"
+            style="max-width:100px"
+          >{{ slotProps.username }}</span>
+          <v-avatar size="24">
+            <v-img
+              v-if="slotProps.avatar"
+              :src="slotProps.avatar"
+            />
+            <v-icon v-else>
+              mdi-account
+            </v-icon>
+          </v-avatar>
         </v-btn>
-        <v-btn value="favorite" icon to="/favorites" :color="menuHighlightColor">
-          <span>Favorites</span>
-          <v-icon>mdi-heart</v-icon>
-        </v-btn>
-        <user-menu-item :dark="!isDark" :light="isDark" class="d-flex flex-row align-center">
-          <template v-slot:login="slotProps">
-            <v-btn value="signIn" v-on="slotProps.on" icon :color="menuHighlightColor">
-              <span>Sign In</span>
-              <v-icon>mdi-account-arrow-right</v-icon>
-            </v-btn>
-          </template>
-          <template v-slot:avatar="slotProps">
-            <v-btn value="viewProfile"
-              class="d-flex flex-column text-truncate align-center"
-              icon to="/EditInfo" :color="menuHighlightColor"
-            >
-              <span class="text-truncate d-inline-block" style="max-width:100px">{{slotProps.username}}</span>
-              <v-avatar size="24">
-                <v-img v-if="slotProps.avatar" :src="slotProps.avatar"/>
-                <v-icon v-else>mdi-account</v-icon>
-              </v-avatar>
-            </v-btn>
-          </template>
-        </user-menu-item>
-    </v-bottom-navigation>
+      </template>
+    </user-menu-item>
+  </v-bottom-navigation>
 </template>
 
 <script>
@@ -63,10 +103,10 @@ import UserMenuItem from './UserMenuItem.vue';
 
 export default {
   name: 'BottomDrawerMenu',
-  props: ['drawer'],
   components: {
     UserMenuItem,
   },
+  props: ['drawer'],
   data() {
     return {
       currentTheme: this.$vuetify.theme,

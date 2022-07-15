@@ -1,13 +1,30 @@
 <template>
-  <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
-    <template v-slot:activator="{ on }">
-      <div :style="swatchStyle()" v-on="on" />
+  <v-menu
+    v-model="colorPickerShown"
+    :close-on-content-click="false"
+    :close-on-click="false"
+    left
+    top
+  >
+    <template #activator="{ on }">
+      <div
+        :style="swatchStyle()"
+        v-on="on"
+      />
     </template>
     <v-card>
       <v-card-text>
-        <CustomColorPicker :value="value" @input="$emit('input', $event)" />
+        <CustomColorPicker
+          :value="value"
+          @input="$emit('input', $event)"
+        />
         <v-row align="center">
-          <v-btn @click="closeSwatch" class="mx-auto mt-3">Close</v-btn>
+          <v-btn
+            class="mx-auto mt-3"
+            @click="closeSwatch"
+          >
+            Close
+          </v-btn>
         </v-row>
       </v-card-text>
     </v-card>

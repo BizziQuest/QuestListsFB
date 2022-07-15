@@ -1,8 +1,19 @@
 <template>
-  <v-dialog v-model="dialog" persistent :dark="dark" max-width="600px">
-    <template v-slot:activator="{ on }">
+  <v-dialog
+    v-model="dialog"
+    persistent
+    :dark="dark"
+    max-width="600px"
+  >
+    <template #activator="{ on }">
       <slot :on="on">
-        <v-list-item link :dark="dark" v-on="on" test-open-dialog title="Sign In / Sign Up">
+        <v-list-item
+          link
+          :dark="dark"
+          test-open-dialog
+          title="Sign In / Sign Up"
+          v-on="on"
+        >
           <v-list-item-action>
             <v-icon>mdi-account-arrow-right</v-icon>
           </v-list-item-action>
@@ -20,18 +31,20 @@
         <v-card-text>
           <v-row>
             <v-col cols="12">
-              <v-text-field test-email-field
+              <v-text-field
                 v-model="email"
+                test-email-field
                 :rules="[rules.emailPresent, rules.emailFormat]"
                 outlined
                 label="Email*"
                 required
                 clearable
-              ></v-text-field>
+              />
             </v-col>
             <v-col cols="12">
-              <v-text-field test-password-field
+              <v-text-field
                 v-model="password"
+                test-password-field
                 :rules="[rules.passwordPresent, rules.passwordLength]"
                 outlined
                 label="Password*"
@@ -39,26 +52,53 @@
                 required
                 counter
                 clearable
-              >
-              </v-text-field>
+              />
             </v-col>
           </v-row>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="secondary" text @click="googleSignin()">
+            <v-btn
+              color="secondary"
+              text
+              @click="googleSignin()"
+            >
               <v-icon>mdi-google</v-icon>
             </v-btn>
-            <v-btn color="secondary" text @click="faceBookSignin()">
+            <v-btn
+              color="secondary"
+              text
+              @click="faceBookSignin()"
+            >
               <v-icon>mdi-facebook</v-icon>
             </v-btn>
             <v-spacer />
           </v-card-actions>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary-lighten1" text @click="dialog = false"> Cancel</v-btn>
+          <v-btn
+            color="primary-lighten1"
+            text
+            @click="dialog = false"
+          >
+            Cancel
+          </v-btn>
           <v-spacer />
-          <v-btn color="success" test-login-button text @click="loginOrSignUser()"> Log In</v-btn>
-          <v-btn color="secondary" text @click="loginOrSignUser(true)" test-signup-button> Sign Up</v-btn>
+          <v-btn
+            color="success"
+            test-login-button
+            text
+            @click="loginOrSignUser()"
+          >
+            Log In
+          </v-btn>
+          <v-btn
+            color="secondary"
+            text
+            test-signup-button
+            @click="loginOrSignUser(true)"
+          >
+            Sign Up
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-form>

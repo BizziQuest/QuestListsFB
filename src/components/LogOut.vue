@@ -1,14 +1,21 @@
 <template>
   <div>
-    <v-tooltip left test-logout-tooltip>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn class="primary--text"
+    <v-tooltip
+      left
+      test-logout-tooltip
+    >
+      <template #activator="{ on, attrs }">
+        <v-btn
+          class="primary--text"
           text
           test-logout-button
           v-bind="attrs"
           v-on="on"
-          v-on:click="logoutUser">
-          <v-icon color="secondary">exit_to_app</v-icon>
+          @click="logoutUser"
+        >
+          <v-icon color="secondary">
+            exit_to_app
+          </v-icon>
         </v-btn>
       </template>
       <span>Log Out</span>

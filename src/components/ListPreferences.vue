@@ -1,11 +1,26 @@
 <template>
   <div>
-    <list-metadata-preferences v-bind.sync="metadataPrefs" :compact="compact" class="pb-2">
-    </list-metadata-preferences>
-    <states-editor :stateGroup="list.stateGroup" @list:updated="updateStateGroup" :compact="compact" />
-    <v-btn color="blue" name="submit" elevation-13 test-submit-form @click="updateListPreferences">{{
+    <list-metadata-preferences
+      v-model="metadataPrefs"
+      :compact="compact"
+      class="pb-2"
+    />
+    <states-editor
+      :state-group="list.stateGroup"
+      :compact="compact"
+      @list:updated="updateStateGroup"
+    />
+    <v-btn
+      color="blue"
+      name="submit"
+      elevation-13
+      test-submit-form
+      @click="updateListPreferences"
+    >
+      {{
         saveButtonText
-    }}</v-btn>
+      }}
+    </v-btn>
   </div>
 </template>
 
@@ -69,14 +84,6 @@ export default {
       };
     },
   },
-  methods: {
-    updateStateGroup(stateGroup) {
-      this.metadataPrefs.newStateGroup = stateGroup;
-    },
-    updateListPreferences() {
-      this.$emit('update:list', { ...this.metadataPrefs, deletedValues: this.deletedValues });
-    },
-  },
   mounted() {
     this.metadataPrefs = {
       title: this.list.title,
@@ -84,6 +91,14 @@ export default {
       color: this.list.color,
       adultContent: this.list.adultContent,
     };
+  },
+  methods: {
+    updateStateGroup(stateGroup) {
+      this.metadataPrefs.newStateGroup = stateGroup;
+    },
+    updateListPreferences() {
+      this.$emit('update:list', { ...this.metadataPrefs, deletedValues: this.deletedValues });
+    },
   },
 };
 </script>

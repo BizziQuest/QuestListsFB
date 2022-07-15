@@ -1,24 +1,50 @@
 <template>
   <div class="user-menu-item">
-    <login-or-signup :dark='dark' v-if="!(currentUser && currentUser.uid)" :toolbar="toolbar">
-      <template v-slot:default="slotProps">
-        <slot name="login" :on="slotProps.on"/>
+    <login-or-signup
+      v-if="!(currentUser && currentUser.uid)"
+      :dark="dark"
+      :toolbar="toolbar"
+    >
+      <template #default="slotProps">
+        <slot
+          name="login"
+          :on="slotProps.on"
+        />
       </template>
     </login-or-signup>
-    <slot v-else name="avatar"
+    <slot
+      v-else
+      name="avatar"
       :avatar="avatar"
       :username="currentUser.displayName"
-      :userId="currentUser && currentUser.uid"
+      :user-id="currentUser && currentUser.uid"
     >
-      <v-list-item link title="User Management" to="/EditInfo">
+      <v-list-item
+        link
+        title="User Management"
+        to="/EditInfo"
+      >
         <v-list-item-avatar size="28">
-          <v-img v-if="avatar" :src="avatar"/>
-          <v-icon v-else>mdi-account</v-icon>
+          <v-img
+            v-if="avatar"
+            :src="avatar"
+          />
+          <v-icon v-else>
+            mdi-account
+          </v-icon>
         </v-list-item-avatar>
         <v-list-item-content class="ml-3">
-          <v-list-item-title class="text-truncate">{{currentUser.displayName}}</v-list-item-title>
+          <v-list-item-title class="text-truncate">
+            {{ currentUser.displayName }}
+          </v-list-item-title>
         </v-list-item-content>
-        <v-icon icon small v-if="currentUser && currentUser.uid" @click.stop.prevent="logoutAndGoHome" title="Logout">
+        <v-icon
+          v-if="currentUser && currentUser.uid"
+          icon
+          small
+          title="Logout"
+          @click.stop.prevent="logoutAndGoHome"
+        >
           mdi-exit-to-app
         </v-icon>
       </v-list-item>
@@ -36,11 +62,6 @@ export default {
   components: {
     LoginOrSignup,
   },
-  data() {
-    return {
-      avatar: null,
-    };
-  },
   props: {
     dark: {
       description: 'sets the dark mode on this component.',
@@ -52,6 +73,11 @@ export default {
       default: false,
       type: Boolean,
     },
+  },
+  data() {
+    return {
+      avatar: null,
+    };
   },
   methods: {
     ...mapActions(['logOut']),

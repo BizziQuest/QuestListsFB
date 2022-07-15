@@ -21,7 +21,7 @@ const localStore = new Vuex.Store({
       useGravatar: false,
     },
   },
-  actions: {getRecentlyUsedQuests: jest.fn()}
+  actions: { getRecentlyUsedQuests: jest.fn() },
 });
 
 describe('StatesEditor.vue', () => {
@@ -91,10 +91,10 @@ describe('StatesEditor.vue', () => {
     const updatedItemValue = { text: 'some text', icon: 'mdi-flower' };
     wrapper.vm.updateItem(0, updatedItemValue);
     expect(wrapper.emitted()['list:updated'].length).toEqual(1);
-    expect(wrapper.emitted()['list:updated'][0][0]).toStrictEqual({states: [{...updatedItemValue, "value": 1}]});
+    expect(wrapper.emitted()['list:updated'][0][0]).toStrictEqual({ states: [{ ...updatedItemValue, value: 1 }] });
 
     wrapper.vm.updateItem(1, { icon: 'kasdjbh', text: 'test' });
     expect(wrapper.emitted()['list:updated'].length).toEqual(2);
-    expect(wrapper.emitted()['list:updated'][1][0]).toStrictEqual({states: [{...updatedItemValue, "value": 1}, { icon: 'kasdjbh', text: 'test', "value": 2}]});
+    expect(wrapper.emitted()['list:updated'][1][0]).toStrictEqual({ states: [{ ...updatedItemValue, value: 1 }, { icon: 'kasdjbh', text: 'test', value: 2 }] });
   });
 });

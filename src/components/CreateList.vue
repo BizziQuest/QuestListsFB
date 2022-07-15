@@ -7,7 +7,10 @@
       <v-card-text>
         <v-container>
           <user-auth-alert />
-          <list-preferences @update:list="createList" saveButtonText="Create"></list-preferences>
+          <list-preferences
+            save-button-text="Create"
+            @update:list="createList"
+          />
         </v-container>
         <small>*indicates required field</small>
       </v-card-text>
@@ -23,16 +26,16 @@ import ListPreferences from './ListPreferences.vue';
 
 export default {
   name: 'CreateList',
-  mixins: [userAuthMixin],
   components: {
     ListPreferences,
     UserAuthAlert,
   },
+  mixins: [userAuthMixin],
+  props: {
+  },
   data() {
     return {
     };
-  },
-  props: {
   },
   methods: {
     ...mapActions(['createList']),

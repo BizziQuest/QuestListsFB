@@ -27,7 +27,7 @@ import slugify from 'slugify';
 
 // require('dotenv').config();
 
-const env = process.env;
+const { env } = process;
 
 // firebase init goes here
 const firebaseConfig = {

@@ -1,5 +1,5 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import Vue from 'vue';
+import { createVue } from 'vue';
 import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
@@ -12,7 +12,7 @@ import { auth } from './firebase';
 
 import i18n from './i18n';
 
-Vue.config.productionTip = false;
+// Vue.config.productionTip = false;
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -27,12 +27,14 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-const app = new Vue({
+const app = createVue({
   router,
   store,
-  vuetify,
+  // vuetify,
   i18n,
   render: (h) => h(App),
 }).$mount('#app');
 
-if(window.Cypress) window.$app = app;
+app.use(vuetify);
+
+if (window.Cypress) window.$app = app;

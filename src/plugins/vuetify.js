@@ -1,9 +1,10 @@
-import Vue from 'vue';
-import Vuetify, { VIcon, VBtn } from 'vuetify/lib';
+// import Vue from 'vue';
+// import Vuetify, { createVuetify, VIcon, VBtn } from 'vuetify/lib';
+import { createVuetify } from 'vuetify';
 import '@mdi/font/css/materialdesignicons.css'; // for the default material design icons
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
-import { preset as replyPreset } from 'vue-cli-plugin-vuetify-preset-reply/preset';
-import { preset as rallyPreset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
+// import { preset as replyPreset } from 'vue-cli-plugin-vuetify-preset-reply/preset';
+// import { preset as rallyPreset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
 import '../assets/QuestLists-font/questlistsicons.scss';
 
 /**
@@ -20,18 +21,18 @@ import '../assets/QuestLists-font/questlistsicons.scss';
  *  },
  */
 
-const preset = replyPreset;
-preset.theme.themes = { // this only works because rally is dark and reply is light
-  dark: { ...rallyPreset.theme.themes.dark },
-  light: { ...replyPreset.theme.themes.light },
-};
+// const preset = replyPreset;
+// preset.theme.themes = { // this only works because rally is dark and reply is light
+//   dark: { ...rallyPreset.theme.themes.dark },
+//   light: { ...replyPreset.theme.themes.light },
+// };
 
-Vue.use(Vuetify, {
-  components: { VIcon, VBtn }, // load components here to use with :is or :tag attributes
-});
+// Vue.use(Vuetify, {
+//   components: { VIcon, VBtn }, // load components here to use with :is or :tag attributes
+// });
 
 export const options = {
-  preset,
+  // preset,
   theme: {
     // default: 'dark',
     options: {
@@ -182,4 +183,4 @@ export const options = {
   },
 };
 
-export default new Vuetify(options);
+export default createVuetify(options);

@@ -146,9 +146,11 @@ export default {
         const array = [...this.items];
         const sourceIndex = draggedRow.getAttribute('data-index');
         const targetIndex = moveToElem.getAttribute('data-index');
-        const orderedArray = this.$_ql_reorder(array,
+        const orderedArray = this.$_ql_reorder(
+          array,
           parseInt(sourceIndex, 10),
-          parseInt(targetIndex, 10));
+          parseInt(targetIndex, 10),
+        );
 
         if (orderedArray === false) {
           this.numForceRedraws += 1;

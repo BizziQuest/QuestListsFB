@@ -1,14 +1,10 @@
 <template>
   <div class="list-item-view">
     <v-text-field
-      test-text-field
       ref="input"
-      dense
       v-model="title"
-      @blur="deactivate"
-      @click.prevent="activate"
-      @keydown.enter.prevent="emitEnterPressed({ title })"
-      @input="emitUpdate({ title: $event })"
+      test-text-field
+      dense
       :clearable="!readOnly"
       :flat="readOnly"
       :hide-details="readOnly"
@@ -16,24 +12,30 @@
       :placeholder="placeholder"
       :readonly="readOnly"
       :single-line="readOnly"
+      @blur="deactivate"
       :solo="readOnly"
+      @click.prevent="activate"
       :tabindex="tabindex"
+      @keydown.enter.prevent="emitEnterPressed({ title })"
       :color="currentColor"
+      @input="emitUpdate({ title: $event })"
     >
+    <template v-slot:prepend-inner>
       <v-icon
-        slot="prepend-inner"
         class="listitem-icon"
         :outlined="isActive"
-        @click.prevent="cycleIcon"
-        @blur="deactivate"
         :title="iconTitle"
         :color="currentColor"
-        >{{ icon }}</v-icon
+        @click.prevent="cycleIcon"
+        @blur="deactivate"
       >
+        {{ icon }}
+      </v-icon>
+      </template>
       {{ isNewItem ? '' : title }}
+      <template v-slot:append>
       <v-btn
         v-if="showAddSubListButton"
-        slot="append"
         :loading="creatingSubList"
         :disabled="creatingSubList"
         title="Make a new sublist from this item."
@@ -41,21 +43,30 @@
         icon
         @click="makeSublist"
       >
-        <i class="ql ql-plus" style="font-size:140%"></i>
+        <i
+          class="ql ql-plus"
+          style="font-size:140%"
+        />
       </v-btn>
       <v-btn
+        v-if="subList"
         icon
         test-sublist-link-icon
-        slot="append"
-        @click="updateItem({ to: subListPath })"
         :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
-        v-if="subList"
+        @click="updateItem({ to: subListPath })"
       >
-        <i class="ql ql-link"></i>
+        <i class="ql ql-link" />
       </v-btn>
-      <v-btn icon slot="append" title="delete" test-delete-icon v-if="!isNewItem" @click="emitDelete">
+      <v-btn
+        v-if="!isNewItem"
+        icon
+        title="delete"
+        test-delete-icon
+        @click="emitDelete"
+      >
         <v-icon>mdi-delete</v-icon>
       </v-btn>
+      </template>
     </v-text-field>
   </div>
 </template>
@@ -103,6 +114,18 @@ export default {
     creatingSubList: false,
     listId: '',
   }),
+  async mounted() {
+    this.title = this.$props.value.title;
+    this.isNewItem = this.$props.value.isNewItem;
+    this.listId = this.$props.value.listId;
+    if (this.$props.value.state?.value) {
+      this.currentStateValue = parseInt(this.$props.value.state.value, 10) || this.$props.states[0].value;
+    }
+    if (this.value.subList) {
+      await this.computeSubListPath(this.value.subList);
+      this.subList = this.value.subList;
+    }
+  },
   methods: {
     emitUpdate(newValues) {
       this.$emit('input', this.$_makeNewItem(newValues));
@@ -180,18 +203,6 @@ export default {
       if (!subListPath) return;
       this.subListPath = subListPath;
     },
-  },
-  async mounted() {
-    this.title = this.$props.value.title;
-    this.isNewItem = this.$props.value.isNewItem;
-    this.listId = this.$props.value.listId;
-    if (this.$props.value.state?.value) {
-      this.currentStateValue = parseInt(this.$props.value.state.value, 10) || this.$props.states[0].value;
-    }
-    if (this.value.subList) {
-      await this.computeSubListPath(this.value.subList);
-      this.subList = this.value.subList;
-    }
   },
   computed: {
     ...mapGetters(['getGlobalPreferences']),

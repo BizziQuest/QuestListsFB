@@ -5,8 +5,8 @@ import Vuetify from 'vuetify';
 import store from '@/store';
 import routes from '@/router/routes';
 import ListMetadataPreferences from '@/components/preferences/ListMetadataPreferences.vue';
-import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 import flushPromises from 'flush-promises';
+import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 const scrollIntoViewMock = jest.fn();
 window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
@@ -46,7 +46,6 @@ beforeEach(() => {
 afterEach(() => {
   wrapper.destroy();
 });
-
 
 describe('the title field', () => {
   it('should set the vm title from the title input', async () => {

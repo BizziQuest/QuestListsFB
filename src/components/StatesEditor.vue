@@ -1,22 +1,51 @@
 <template>
   <v-container fluid>
     <v-expansion-panels style="background-color: #ccc;">
-      <v-expansion-panel style="background-color: #eee;" elevation="0" test-expander-header>
+      <v-expansion-panel
+        style="background-color: #eee;"
+        elevation="0"
+        test-expander-header
+      >
         <v-expansion-panel-header>
           Possible Item States:
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <div id="drop-zone" @drop="onDrop" @dragover="allowDrop" @touchmove="moveTouch" @touchend="endTouch"
-            @dragleave="mouseLeave" @dragenter="mouseEnter">
-            <span v-for="(item, index) in items" :key="item.value + index" :data-index="index" :id="index"
-              @drop="onDrop" @dragstart="startDrag" @dragend="endDrag" @touchstart="startTouch" class="item-row"
-              ref="row" test-list-item>
+          <div
+            id="drop-zone"
+            @drop="onDrop"
+            @dragover="allowDrop"
+            @touchmove="moveTouch"
+            @touchend="endTouch"
+            @dragleave="mouseLeave"
+            @dragenter="mouseEnter"
+          >
+            <span
+              v-for="(item, index) in items"
+              :id="index"
+              :key="item.value + index"
+              ref="row"
+              :data-index="index"
+              class="item-row"
+              test-list-item
+              @drop="onDrop"
+              @dragstart="startDrag"
+              @dragend="endDrag"
+              @touchstart="startTouch"
+            >
               <v-row class="justify-start align-center">
-                <list-state list-state-test :ref="`stateItem${index}`" :compact="compact" :item="item"
-                  :draggable="index !== items.length - 1" :isDraggable="index !== items.length - 1"
-                  @update:item="updateThisState(index, $event)" @enterPressed="focusListItem(index + 1, $event)"
-                  @delete:item="deleteListState(index, $event)" @blur="updateItem(index, $event)"
-                  :class="itemStateClasses(item, index)" />
+                <list-state
+                  :ref="`stateItem${index}`"
+                  list-state-test
+                  :compact="compact"
+                  :item="item"
+                  :draggable="index !== items.length - 1"
+                  :is-draggable="index !== items.length - 1"
+                  :class="itemStateClasses(item, index)"
+                  @update:item="updateThisState(index, $event)"
+                  @enterPressed="focusListItem(index + 1, $event)"
+                  @delete:item="deleteListState(index, $event)"
+                  @blur="updateItem(index, $event)"
+                />
               </v-row>
             </span>
           </div>
@@ -44,10 +73,10 @@ function getNextUnusedValue(unsortedItems) {
 
 export default {
   name: 'StatesEditor',
-  mixins: [DragNDrop],
   components: {
     ListState,
   },
+  mixins: [DragNDrop],
   props: {
     stateGroup: {
       type: Object,

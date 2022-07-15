@@ -3,25 +3,68 @@
     <user-auth-alert action="edit this list or save any changes" />
     <h1 class="d-flex">
       {{ list.title }}
-      <v-icon class="justify-self-end ml-auto mr-2" @click="showPreferences = !showPreferences"
-        title="Configure QuestList">
+      <v-icon
+        class="justify-self-end ml-auto mr-2"
+        title="Configure QuestList"
+        @click="showPreferences = !showPreferences"
+      >
         mdi mdi-cog
       </v-icon>
     </h1>
     <h3>{{ list.description }}</h3>
-    <v-chip class="ma-2" color="red" text-color="white" v-if="!!list.adultContent"> Adult Content </v-chip>
-    <v-btn style="display: block" class="ma-2" color="orange darken-2" dark @click="$router.back()">
-      <v-icon dark left> mdi-arrow-left </v-icon>Back
+    <v-chip
+      v-if="!!list.adultContent"
+      class="ma-2"
+      color="red"
+      text-color="white"
+    >
+      Adult Content
+    </v-chip>
+    <v-btn
+      style="display: block"
+      class="ma-2"
+      color="orange darken-2"
+      dark
+      @click="$router.back()"
+    >
+      <v-icon
+        dark
+        left
+      >
+        mdi-arrow-left
+      </v-icon>Back
     </v-btn>
-    <v-card elevation="3" v-if="showPreferences" class="border-1 pa-3 ma-2 mb-5">
-      <list-preferences compact :list="list" @update:list="updateListPreferences" saveButtonText="Update" />
+    <v-card
+      v-if="showPreferences"
+      elevation="3"
+      class="border-1 pa-3 ma-2 mb-5"
+    >
+      <list-preferences
+        compact
+        :list="list"
+        save-button-text="Update"
+        @update:list="updateListPreferences"
+      />
     </v-card>
     <div id="items">
-      <transition-group name="slide-x-transition" hide-on-leave leave-absolute :duration="{ enter: 200, leave: 200 }">
-        <list-item v-for="(item, index) in listItemsWithBlank" :ref="`listItem${index}`" :key="`${item.title}${index}`"
-          :value="item" :states="states || globalPreferences.defaultStateGroup.states" @update="saveItem(index, $event)"
-          @input="appendItem(index, $event)" @delete="delItem(index, $event)" @enterPressed="focusNext(index, $event)"
-          :tabindex="index" />
+      <transition-group
+        name="slide-x-transition"
+        hide-on-leave
+        leave-absolute
+        :duration="{ enter: 200, leave: 200 }"
+      >
+        <list-item
+          v-for="(item, index) in listItemsWithBlank"
+          :ref="`listItem${index}`"
+          :key="`${item.title}${index}`"
+          :value="item"
+          :states="states || globalPreferences.defaultStateGroup.states"
+          :tabindex="index"
+          @update="saveItem(index, $event)"
+          @input="appendItem(index, $event)"
+          @delete="delItem(index, $event)"
+          @enterPressed="focusNext(index, $event)"
+        />
       </transition-group>
     </div>
   </div>
@@ -37,7 +80,16 @@ import {
 import ListPreferences from '../components/ListPreferences.vue';
 
 export default {
-  name: 'List',
+  name: 'QuestList',
+  components: {
+    ListItem,
+    UserAuthAlert,
+    ListPreferences,
+  },
+  mixins: [userAuthMixin],
+  beforeRouteLeave() {
+    this.setPageBackgroundColor(null);
+  },
   props: {
     title: {
       type: String, // vue check to see if the type you passed is the expected type
@@ -49,12 +101,6 @@ export default {
       description: 'slug that identified a list',
     },
   },
-  mixins: [userAuthMixin],
-  components: {
-    ListItem,
-    UserAuthAlert,
-    ListPreferences,
-  },
   data() {
     return {
       list: {
@@ -65,9 +111,6 @@ export default {
       states: [],
       showPreferences: false,
     };
-  },
-  beforeRouteLeave() {
-    this.setPageBackgroundColor(null);
   },
   computed: {
     listItemsWithBlank() {

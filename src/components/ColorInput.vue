@@ -2,14 +2,17 @@
   <v-text-field
     label="Color"
     :value="value"
-    @input="$emit('input', $event)"
     placeholder="enter color"
     :outlined="outline"
     :rules="colorPickerRules"
     test-color-input
+    @input="$emit('input', $event)"
   >
-    <template v-slot:append>
-      <color-swatch :value="value" @input="$emit('input', $event)" />
+    <template #append>
+      <color-swatch
+        :value="value"
+        @input="$emit('input', $event)"
+      />
     </template>
   </v-text-field>
 </template>
@@ -21,11 +24,6 @@ export default {
   components: {
     ColorSwatch,
   },
-  data: () => ({
-    colorPickerRules: [
-      (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
-    ],
-  }),
   props: {
     outline: {
       type: Boolean,
@@ -36,6 +34,11 @@ export default {
       description: 'value of the default color',
     },
   },
+  data: () => ({
+    colorPickerRules: [
+      (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
+    ],
+  }),
 };
 </script>
 <style scoped>
