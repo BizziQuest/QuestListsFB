@@ -8,8 +8,7 @@
  *    likewise, "lists" must refer to an orderable list of List objects.
  */
 
-import Vue from 'vue';
-import Vuex from 'vuex';
+import {createStore} from 'vuex';
 import { getDoc } from 'firebase/firestore';
 
 import {
@@ -38,8 +37,6 @@ import {
 
 import { algoliaIndex } from '../algolia';
 
-Vue.use(Vuex);
-
 const defaultState = {
   currentUser: {
     avatar: null,
@@ -58,7 +55,7 @@ const defaultState = {
   ],
 };
 
-const store = new Vuex.Store({
+const store = createStore({
   state: {
     pageBackgroundColor: null,
     currentUser: defaultState.currentUser,

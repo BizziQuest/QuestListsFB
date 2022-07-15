@@ -1,16 +1,15 @@
 import { onAuthStateChanged } from 'firebase/auth';
-import { createVue } from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
 import store from './store';
+// import {setupI18n} from './i18n';
 import vuetify from './plugins/vuetify';
 
 // we can use this if we need, but the reply theme preset uses a different font
 // import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import { auth } from './firebase';
-
-import i18n from './i18n';
 
 // Vue.config.productionTip = false;
 
@@ -27,14 +26,15 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-const app = createVue({
-  router,
-  store,
-  // vuetify,
-  i18n,
-  render: (h) => h(App),
-}).$mount('#app');
+// const i18n = setupI18n();
+
+const app = createApp(App)
 
 app.use(vuetify);
+app.use(store);
+app.use(router);
+// app.use(i18n);
 
 if (window.Cypress) window.$app = app;
+
+app.mount('#app')
