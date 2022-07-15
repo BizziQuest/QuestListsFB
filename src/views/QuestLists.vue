@@ -143,7 +143,7 @@ ul {
 .fade-leave-active {
   opacity: 0;
 }
-.lists-view::v-deep .search-box .v-label {
+:deep(.lists-view .search-box .v-label) {
   margin-left: 10px;
 }
 </style>

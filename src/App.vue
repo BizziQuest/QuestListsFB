@@ -53,7 +53,7 @@ export default {
     ...mapState(['pageBackgroundColor']),
   },
   mounted() {
-    this.$watch('$vuetify.breakpoint.name', (from, to) => {
+    this.$watch('$vuetify.display.name', (from, to) => {
       if (from !== 'sm' && to === 'sm') {
         this.drawer = false;
       }

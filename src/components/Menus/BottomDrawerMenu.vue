@@ -109,7 +109,6 @@ export default {
   props: ['drawer'],
   data() {
     return {
-      currentTheme: this.$vuetify.theme,
       showCreateList: false,
       auth,
       favoriteQuests: [
@@ -123,7 +122,7 @@ export default {
   },
   computed: {
     isMobile() {
-      return this.$vuetify.breakpoint.xs;
+      return this.$vuetify.display.xs;
     },
     menuHighlightColor() {
       return this.isDark ? 'primary' : 'secondary';

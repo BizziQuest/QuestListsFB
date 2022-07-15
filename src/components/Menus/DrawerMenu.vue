@@ -3,7 +3,7 @@
     v-model="showDrawer"
     :bottom="isMobile"
     :floating="isMobile"
-    :expand-on-hover="!isMobile && !$vuetify.breakpoint.lgAndUp"
+    :expand-on-hover="!isMobile && !$vuetify.display.lgAndUp"
     :app="!isMobile"
     :permanent="!isMobile"
     :fixed="isMobile"
@@ -129,7 +129,6 @@ export default {
   },
   data() {
     return {
-      currentTheme: this.$vuetify.theme,
       showCreateList: false,
       auth,
     };
@@ -148,7 +147,7 @@ export default {
   computed: {
     ...mapState(['currentUser', 'recentQuests']),
     isMobile() {
-      return this.$vuetify.breakpoint.xs;
+      return this.$vuetify.display.xs;
     },
     menuHighlightColor() {
       return this.isDark ? 'primary' : 'secondary';

@@ -97,13 +97,13 @@ export default {
   computed: {
     ...mapState(['globalPreferences']),
     cardClasses() {
-      if (this.$vuetify.breakpoint.lgAndUp) return 'rounded-t-xl';
-      if (this.$vuetify.breakpoint.smAndDown) return 'rounded-xl';
+      if (this.$vuetify.display.lgAndUp) return 'rounded-t-xl';
+      if (this.$vuetify.display.smAndDown) return 'rounded-xl';
       return '';
     },
     imageClasses() {
-      if (this.$vuetify.breakpoint.lgAndUp) return 'rounded-tl-xl rounded-tr-0';
-      if (this.$vuetify.breakpoint.smAndDown) return 'rounded-l-xl rounded-tr-0';
+      if (this.$vuetify.display.lgAndUp) return 'rounded-tl-xl rounded-tr-0';
+      if (this.$vuetify.display.smAndDown) return 'rounded-l-xl rounded-tr-0';
       return '';
     },
     textStyles() {

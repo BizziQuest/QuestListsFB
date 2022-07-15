@@ -247,19 +247,19 @@ export default {
 .listitem-text {
   // display: inline-block;
 }
-::v-deep .theme--light.v-text-field--solo > .v-input__control > .v-input__slot,
-::v-deep .theme--dark.v-text-field--solo > .v-input__control > .v-input__slot {
+:deep(.theme--light.v-text-field--solo > .v-input__control > .v-input__slot),
+:deep(.theme--dark.v-text-field--solo > .v-input__control > .v-input__slot) {
   background: none;
   align-items: center;
 }
-::v-deep v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__prefix,
-::v-deep .v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__suffix,
-::v-deep .v-text-field.v-input--dense:not(.v-text-field--outlined) input {
+:deep(v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__prefix),
+:deep(.v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__suffix),
+:deep(.v-text-field.v-input--dense:not(.v-text-field--outlined) input) {
     padding: 0;
   align-items: center;
   margin-top: -10px;
 }
-::v-deep .v-input__append-inner button {
+:deep(.v-input__append-inner button) {
   margin-top: -3px;
 }
 </style>
