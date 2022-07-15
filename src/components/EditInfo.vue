@@ -1,4 +1,3 @@
-<!--eslint-disable-file vuejs-accessibility/label-has-for -->
 <template>
   <div>
     <v-card
@@ -55,6 +54,7 @@
                 color="secondary"
                 id="useGravatar"
               />
+              <!-- eslint-disable-next-line vuejs-accessibility/label-has-for -->
               <label
                 style="color: rgba(0, 0, 0, 0.6)"
                 class="pt-5 pl-2"

@@ -4771,13 +4771,6 @@
   resolved "https://registry.yarnpkg.com/@vue/web-component-wrapper/-/web-component-wrapper-1.3.0.tgz#b6b40a7625429d2bd7c2281ddba601ed05dc7f1a"
   integrity sha512-Iu8Tbg3f+emIIMmI2ycSI8QcEuAUgPTgHwesDU1eKMLE4YC/c/sFbGc70QgMq31ijRftV0R7vCm9co6rldCeOA==
 
-"@vuetify/cli-plugin-utils@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@vuetify/cli-plugin-utils/-/cli-plugin-utils-0.0.7.tgz#103e0ce504253dbe87bc7fe7e096992beac9bf9b"
-  integrity sha512-34INe4rcsus6ByNgrpIPAyJaTRt1j+5YaMWt2Lh3iDZLn9h69tEp83Imqefze7weRbg+qukJYdnaWDFjFUAf2g==
-  dependencies:
-    semver "^7.1.2"
-
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"
@@ -19311,20 +19304,6 @@ void-elements@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-3.1.0.tgz#614f7fbf8d801f0bb5f0661f5b2f5785750e4f09"
   integrity sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==
-
-vue-cli-plugin-vuetify-preset-rally@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify-preset-rally/-/vue-cli-plugin-vuetify-preset-rally-1.0.4.tgz#d2dc553f11391e4f59cab9460a4cd42a8d0b733c"
-  integrity sha512-0l+8Nokn1TgBgw4MYwfwDj9D1ZSEWIC5RkZahCWikRANwt3mxP5RwOBfGF/e8QL8CZQigx6Qf6VqWlmu1AufVg==
-  dependencies:
-    "@vuetify/cli-plugin-utils" "^0.0.7"
-
-vue-cli-plugin-vuetify-preset-reply@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify-preset-reply/-/vue-cli-plugin-vuetify-preset-reply-1.0.4.tgz#32025e0a54dee9452e88331ee4366cdcfb75c5e8"
-  integrity sha512-4d1Sdad6kAcRc2MPWyY9LESsD3rTz2xNmZDVDizczRmSfeRf2V4p4UpFOnAd0AAGYL1tA4OBm0+UfteH0o55+Q==
-  dependencies:
-    "@vuetify/cli-plugin-utils" "^0.0.7"
 
 vue-cli-plugin-vuetify@^2.5.1:
   version "2.5.1"

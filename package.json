@@ -51,8 +51,6 @@
     "slugify": "^1.6.5",
     "storybook": "^6.5.8",
     "vue": "^3.2.37",
-    "vue-cli-plugin-vuetify-preset-rally": "^1.0.4",
-    "vue-cli-plugin-vuetify-preset-reply": "^1.0.4",
     "vue-i18n": "^9.1.10",
     "vue-router": "^4.1.2",
     "vue-template-compiler": "^2.7.5",
