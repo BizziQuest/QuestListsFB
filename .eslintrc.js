@@ -16,6 +16,7 @@ module.exports = {
 
   env: {
     node: true,
+    es2021: true,
   },
 
   extends: [
@@ -23,10 +24,6 @@ module.exports = {
     '@vue/airbnb',
     'plugin:vue/vue3-essential',
   ],
-
-  parserOptions: {
-    parser: '@babel/eslint-parser',
-  },
 
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
