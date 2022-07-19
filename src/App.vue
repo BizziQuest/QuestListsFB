@@ -5,9 +5,11 @@
   >
     <drawer-menu v-model:drawer="drawer" />
     <v-main :style="`max-width: 100%; background-color: ${pageBackgroundColor}`">
-      <transition name="router-anim">
-        <router-view :key="$route.path" />
-      </transition>
+      <router-view v-slot="{ Component }" :key="$route.path">
+        <transition name="router-anim" >
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </v-main>
     <bottom-drawer-menu v-model:drawer="drawer" />
     <notification />
@@ -35,13 +37,16 @@ import DrawerMenu from './components/Menus/DrawerMenu.vue';
 import BottomDrawerMenu from './components/Menus/BottomDrawerMenu.vue';
 import Notification from './components/GlobalNotification.vue';
 import appUpdate from './mixins/appUpdate';
-
+// import {
+//   VApp, VButton, VMain
+// } from 'vuetify';
 export default {
   name: 'App',
   components: {
     DrawerMenu,
     BottomDrawerMenu,
     Notification,
+    // VApp,VButton,VMain
   },
   mixins: [appUpdate],
   data() {

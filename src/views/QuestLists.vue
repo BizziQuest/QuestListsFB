@@ -21,7 +21,7 @@
       item-value="API"
       label="Search Quests"
       placeholder="Start typing to Search"
-      prepend-inner-icon="$questlists-search"
+      prepend-inner-icon="questlists-search"
       @input="getSuggestions($event)"
       @keydown.enter="search($event)"
     />
@@ -35,13 +35,13 @@
         key="skeleton"
         class="mt-5"
       >
-        <v-skeleton-loader
+        <!-- <v-skeleton-loader
           v-for="i in 6"
           :key="i"
           class="mx-auto"
           max-width="800"
           type="list-item-avatar, divider, list-item-three-line, card-heading, image, actions"
-        />
+        /> -->
       </v-col>
       <v-row
         v-if="lists && lists.length < 1"
@@ -50,12 +50,12 @@
       >
         <v-alert
           prominent
-          icon="$questlists-plus"
+          icon="questlists-plus"
           type="info"
           class="col-12"
         >
           Welcome to Quest Lists! You don't have any Quests yet, but have no fear, simply click on the
-          <v-icon>$questlists-plus</v-icon> icon on the left to get started!
+          <v-icon>questlists-plus</v-icon> icon on the left to get started!
         </v-alert>
       </v-row>
       <v-col

@@ -29,11 +29,11 @@
         <v-list-item-action style="margin-right: 15px;">
           <v-icon>ql-0</v-icon>
         </v-list-item-action>
-        <v-list-item-content>
+        <v-list-item-title>
           <v-list-item-title style="margin-left: 0px;">
             QuestLists
           </v-list-item-title>
-        </v-list-item-content>
+        </v-list-item-title>
       </v-list-item>
 
       <v-list-item
@@ -46,14 +46,14 @@
         <v-list-item-action style="margin-right: 15px;">
           <v-icon>ql-plus</v-icon>
         </v-list-item-action>
-        <v-list-item-content>
+        <v-list-item-title>
           <v-list-item-title>New Quest</v-list-item-title>
-        </v-list-item-content>
+        </v-list-item-title>
       </v-list-item>
 
       <v-list-item test-fav-header>
         <v-divider class="my-4" />
-        <v-subheader>Recent Quests</v-subheader>
+        <v-list-subheader>Recent Quests</v-list-subheader>
       </v-list-item>
 
       <v-list-item
@@ -67,14 +67,14 @@
         <v-list-item-action>
           <v-icon>{{ item.icon || '$questlists' }}</v-icon>
         </v-list-item-action>
-        <v-list-item-content>
+        <v-list-item-title>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
+        </v-list-item-title>
       </v-list-item>
 
       <v-list-item>
         <v-divider class="my-4" />
-        <v-subheader />
+        <v-list-subheader />
       </v-list-item>
 
       <v-list-item
@@ -85,9 +85,9 @@
         <v-list-item-action>
           <v-icon>{{ isDark ? 'mdi-brightness-4' : 'mdi-brightness-7' }}</v-icon>
         </v-list-item-action>
-        <v-list-item-content>
+        <v-list-item-title>
           <v-list-item-title>Turn Dark Mode {{ isDark ? 'Off' : 'On' }}</v-list-item-title>
-        </v-list-item-content>
+        </v-list-item-title>
       </v-list-item>
 
       <v-list-item
@@ -98,9 +98,9 @@
         <v-list-item-action>
           <v-icon>mdi-information</v-icon>
         </v-list-item-action>
-        <v-list-item-content>
+        <v-list-item-title>
           <v-list-item-title>About QuestLists</v-list-item-title>
-        </v-list-item-content>
+        </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>

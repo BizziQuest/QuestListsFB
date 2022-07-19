@@ -6,7 +6,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 // import { preset as replyPreset } from 'vue-cli-plugin-vuetify-preset-reply/preset';
 // import { preset as rallyPreset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
 import '../assets/QuestLists-font/questlistsicons.scss';
-
+import 'vuetify/styles'
 /**
  * We are using two different preset themes. Reply and Rally. See the material presets for more.
  * Here are the original theme colors:

@@ -52,7 +52,7 @@ const fbApp = initializeApp(firebaseConfig);
 const nodeEnv = import.meta.env.NODE_ENV;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? getAnalytics() : null;
 let tappCheck = null;
-if (import.meta.env.NODE_ENV !== 'development') {
+if (import.meta.env.NODE_ENV === 'production') {
   tappCheck = initializeAppCheck(fbApp, {
     provider: new ReCaptchaV3Provider(import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY),
     isTokenAutoRefreshEnabled: import.meta.env.NODE_ENV === 'production', // refresh app tokens as needed?

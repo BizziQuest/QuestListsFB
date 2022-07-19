@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { SUPPORT_LOCALES, setI18nLanguage, loadLocaleMessages } from '../i18n';
+// import { SUPPORT_LOCALES, setI18nLanguage, loadLocaleMessages } from '../i18n';
 import routes from './routes';
 
 const router = createRouter({

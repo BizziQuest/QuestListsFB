@@ -5,23 +5,20 @@
     :dark="dark"
     max-width="600px"
   >
-    <template #activator="{ on }">
-      <slot :on="on">
+    <template #activator="{ props }">
         <v-list-item
           link
           :dark="dark"
           test-open-dialog
           title="Sign In / Sign Up"
-          v-on="on"
         >
           <v-list-item-action>
             <v-icon>mdi-account-arrow-right</v-icon>
           </v-list-item-action>
-          <v-list-item-content>
+          <v-list-item-title>
             <v-list-item-title>Sign In or Sign Up</v-list-item-title>
-          </v-list-item-content>
+          </v-list-item-title>
         </v-list-item>
-      </slot>
     </template>
     <v-form ref="form">
       <v-card>

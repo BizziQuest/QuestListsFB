@@ -33,11 +33,11 @@
             mdi-account
           </v-icon>
         </v-list-item-avatar>
-        <v-list-item-content class="ml-3">
+        <v-list-item-title class="ml-3">
           <v-list-item-title class="text-truncate">
             {{ currentUser.displayName }}
           </v-list-item-title>
-        </v-list-item-content>
+        </v-list-item-title>
         <v-icon
           v-if="currentUser && currentUser.uid"
           icon
