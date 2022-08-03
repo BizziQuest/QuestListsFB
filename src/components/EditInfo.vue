@@ -162,7 +162,7 @@ export default {
     }),
     avatarPreview() {
       if (this.useGravatar) {
-        return `https://www.gravatar.com/avatar/${md5(this.email)}`;
+        return `https://www.gravatar.com/avatar/${md5(this.email)}?d=wavatar`;
       }
       return this.avatar || '/img/unknown_user.svg';
     },

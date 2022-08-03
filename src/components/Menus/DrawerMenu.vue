@@ -19,21 +19,17 @@
         :dark="!isDark"
         :light="isDark"
       />
+      <v-divider/>
       <v-list-item
         test-questlists-link
         link
         :color="menuHighlightColor"
-        title="View All QuestLists"
         to="/"
       >
-        <v-list-item-action style="margin-right: 15px;">
-          <v-icon>ql-0</v-icon>
-        </v-list-item-action>
-        <v-list-item-title>
-          <v-list-item-title style="margin-left: 0px;">
-            QuestLists
-          </v-list-item-title>
-        </v-list-item-title>
+        <template v-slot:prepend>
+          <v-icon icon="$questlists"/>
+        </template>
+        <v-list-item-title v-text="'QuestLists'" class="ml-4"/>
       </v-list-item>
 
       <v-list-item
@@ -41,14 +37,11 @@
         to="/new"
         link
         :color="menuHighlightColor"
-        title="Create A New Quest"
       >
-        <v-list-item-action style="margin-right: 15px;">
-          <v-icon>ql-plus</v-icon>
-        </v-list-item-action>
-        <v-list-item-title>
-          <v-list-item-title>New Quest</v-list-item-title>
-        </v-list-item-title>
+        <template v-slot:prepend>
+          <v-icon icon="$questlists-plus"/>
+        </template>
+        <v-list-item-title v-text="'New Quest'" class="ml-4"/>
       </v-list-item>
 
       <v-list-item test-fav-header>
@@ -61,15 +54,12 @@
         :key="`${item.slug}${item.title}`"
         test-fav-link
         link
-        :title="item.title"
-        :to="item.slug ? `/lists/${item.slug}` : ''"
+          :to="item.slug ? `/lists/${item.slug}` : ''"
       >
-        <v-list-item-action>
+      <template v-slot:prepend>
           <v-icon>{{ item.icon || '$questlists' }}</v-icon>
-        </v-list-item-action>
-        <v-list-item-title>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-title>
+        </template>
+        <v-list-item-title v-text="item.title" class="ml-4"/>
       </v-list-item>
 
       <v-list-item>
@@ -82,25 +72,20 @@
         link
         @click="isDark = !isDark"
       >
-        <v-list-item-action>
+        <template v-slot:prepend>
           <v-icon>{{ isDark ? 'mdi-brightness-4' : 'mdi-brightness-7' }}</v-icon>
-        </v-list-item-action>
-        <v-list-item-title>
-          <v-list-item-title>Turn Dark Mode {{ isDark ? 'Off' : 'On' }}</v-list-item-title>
-        </v-list-item-title>
+        </template>
+        <v-list-item-title class="ml-4">Turn Dark Mode {{ isDark ? 'Off' : 'On' }}</v-list-item-title>
       </v-list-item>
 
       <v-list-item
         link
-        title="About QuestLists"
         to="/about"
       >
-        <v-list-item-action>
+        <template v-slot:prepend>
           <v-icon>mdi-information</v-icon>
-        </v-list-item-action>
-        <v-list-item-title>
-          <v-list-item-title>About QuestLists</v-list-item-title>
-        </v-list-item-title>
+        </template>
+        <v-list-item-title class="ml-4">About QuestLists</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -110,6 +95,7 @@
 import { mapState, mapActions } from 'vuex';
 import { auth } from '../../firebase';
 import UserMenuItem from './UserMenuItem.vue';
+import { useTheme } from 'vuetify';
 
 export default {
   name: 'DrawerMenu',
@@ -131,6 +117,7 @@ export default {
     return {
       showCreateList: false,
       auth,
+      theme: useTheme(),
     };
   },
   mounted() {
@@ -168,10 +155,11 @@ export default {
     },
     isDark: {
       get() {
-        return this.$vuetify.theme.dark;
+        return this.theme.global.current.dark;
       },
       set(val) {
-        this.$vuetify.theme.dark = val;
+        this.theme.global.name = this.theme.global.current.dark ? 'light' : 'dark'
+        // this.$vuetify.theme.dark = val;
       },
     },
   },
@@ -180,7 +168,7 @@ export default {
 <style scoped lang="scss">
 .v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
   &:not([color]) {
-    color: #ffffff !important;
+    // color: #ffffff !important;
 
     &.theme--light {
       color: #ffffff !important;

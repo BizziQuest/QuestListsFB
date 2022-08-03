@@ -14,7 +14,7 @@
     "ci:e2e:clean": "firebase emulators:exec --only firestore,auth 'yarn test:e2e'",
     "ci:unit": "firebase emulators:exec --only firestore,auth 'yarn test:unit --detectOpenHandles --forceExit'",
     "container": "yarn fb:emulate; yarn serve",
-    "dev": "firebase emulators:exec --only firestore,auth 'pnpm serve'",
+    "dev": "firebase emulators:exec --only firestore,auth --ui 'pnpm serve'",
     "fb:cypress": "firebase emulators:exec --only firestore,auth 'npx cypress open'",
     "fb:deploy": "firebase deploy",
     "fb:dev": "firebase emulators:exec --only firestore,auth --ui --import tests/data 'yarn serve --open'",

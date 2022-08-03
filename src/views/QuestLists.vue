@@ -50,7 +50,7 @@
       >
         <v-alert
           prominent
-          icon="questlists-plus"
+          icon="$questlists-plus"
           type="info"
           class="col-12"
         >

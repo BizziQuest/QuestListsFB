@@ -51,7 +51,7 @@ export default {
   mixins: [appUpdate],
   data() {
     return {
-      drawer: false,
+      drawer: true,
     };
   },
   computed: {

@@ -7,6 +7,8 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 // import { preset as rallyPreset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
 import '../assets/QuestLists-font/questlistsicons.scss';
 import 'vuetify/styles'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
+
 /**
  * We are using two different preset themes. Reply and Rally. See the material presets for more.
  * Here are the original theme colors:
@@ -40,7 +42,8 @@ export const options = {
     },
   },
   icons: {
-    values: {
+    aliases: {
+      ...aliases,
       questlists: 'ql ql-➰',
       'questlists-27B0': 'ql ql-27B0',
       'questlists-➰': 'ql ql-CurlyLoopEmoji',

@@ -15,29 +15,18 @@
     <slot
       v-else
       name="avatar"
-      :avatar="avatar"
+      :prepend-avatar="avatar"
       :username="currentUser.displayName"
       :user-id="currentUser && currentUser.uid"
     >
       <v-list-item
         link
-        title="User Management"
         to="/EditInfo"
+        :prepend-avatar="avatar"
+        :prepend-icon="!avatar && 'mdi-account'"
+        :title="currentUser.displayName"
       >
-        <v-list-item-avatar size="28">
-          <v-img
-            v-if="avatar"
-            :src="avatar"
-          />
-          <v-icon v-else>
-            mdi-account
-          </v-icon>
-        </v-list-item-avatar>
-        <v-list-item-title class="ml-3">
-          <v-list-item-title class="text-truncate">
-            {{ currentUser.displayName }}
-          </v-list-item-title>
-        </v-list-item-title>
+        <template #append>
         <v-icon
           v-if="currentUser && currentUser.uid"
           icon
@@ -47,6 +36,7 @@
         >
           mdi-exit-to-app
         </v-icon>
+        </template>
       </v-list-item>
     </slot>
   </div>

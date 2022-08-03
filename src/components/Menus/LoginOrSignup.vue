@@ -7,17 +7,14 @@
   >
     <template #activator="{ props }">
         <v-list-item
-          link
           :dark="dark"
           test-open-dialog
-          title="Sign In / Sign Up"
+          v-bind="props"
         >
-          <v-list-item-action>
+          <template v-slot:prepend>
             <v-icon>mdi-account-arrow-right</v-icon>
-          </v-list-item-action>
-          <v-list-item-title>
-            <v-list-item-title>Sign In or Sign Up</v-list-item-title>
-          </v-list-item-title>
+          </template>
+          <v-list-item-title v-text="'Sign In or Sign Up'" class="ml-4"/>
         </v-list-item>
     </template>
     <v-form ref="form">
