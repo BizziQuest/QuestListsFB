@@ -6,10 +6,10 @@
         elevation="0"
         test-expander-header
       >
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           Possible Item States:
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <div
             id="drop-zone"
             @drop="onDrop"
@@ -49,7 +49,7 @@
               </v-row>
             </span>
           </div>
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
   </v-container>

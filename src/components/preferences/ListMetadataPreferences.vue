@@ -29,7 +29,8 @@
             sm="6"
             md="6"
           >
-            <v-text-field
+          <ColorInput v-model:value="color"/>
+            <!-- <v-text-field
               label="Color"
               :rules="colorPickerRules"
               :value="color"
@@ -47,11 +48,11 @@
                   left
                   top
                 >
-                  <template #activator="{ on }">
+                  <template #activator="{ props }">
                     <div
                       :style="swatchStyle"
                       class="color-picker-swatch"
-                      v-on="on"
+                      v-bind="props"
                     />
                   </template>
                   <v-card>
@@ -72,7 +73,7 @@
                   </v-card>
                 </v-menu>
               </template>
-            </v-text-field>
+            </v-text-field> -->
           </v-col>
         </v-row>
         <v-row class="mt-0">
@@ -107,13 +108,12 @@
           right
           max-width="200"
         >
-          <template #activator="{ on, attrs }">
+          <template #activator="{ props, attrs }">
             <v-icon
               class="ml-4 mt-0"
               color="info"
               dark
-              v-bind="attrs"
-              v-on="on"
+              v-bind="props"
             >
               help
             </v-icon>
@@ -130,10 +130,11 @@
 
 <script>
 import CustomColorPicker from '../CustomColorPicker.vue';
-
+import ColorInput from '../ColorInput.vue';
 export default {
   components: {
     CustomColorPicker,
+    ColorInput
   },
   props: {
     adultContent: {

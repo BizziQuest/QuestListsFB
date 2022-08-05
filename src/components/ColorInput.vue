@@ -1,17 +1,17 @@
 <template>
   <v-text-field
     label="Color"
-    :value="value"
+    :model-value="modelValue"
     placeholder="enter color"
     :outlined="outline"
     :rules="colorPickerRules"
     test-color-input
-    @input="$emit('input', $event)"
+    @update:modelValue="$emit('update:modelValue', $event)"
   >
     <template #append>
       <color-swatch
-        :value="value"
-        @input="$emit('input', $event)"
+        v-model:modelValue="modelValue"
+        @update:modelValue="$emit('update:modelValue', $event)"
       />
     </template>
   </v-text-field>
@@ -29,7 +29,7 @@ export default {
       type: Boolean,
       description: 'show the outline on the text field',
     },
-    value: {
+    modelValue: {
       type: String,
       description: 'value of the default color',
     },

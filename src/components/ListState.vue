@@ -1,7 +1,7 @@
 <template>
   <v-text-field
     ref="input"
-    v-model:value="{...item}.text"
+    :model-value="item.text"
     test-text-field
     :dense="compact"
     placeholder="New Item"
@@ -28,7 +28,6 @@
     <template v-slot:append>
     <color-swatch
       v-if="!item.isNewItem"
-
       v-model="listColor"
       :outline="false"
     />
@@ -36,7 +35,6 @@
     <template v-slot:append-outer>
     <v-btn
       v-if="!item.isNewItem"
-
       icon
       test-delete-icon
       @click="del(item)"

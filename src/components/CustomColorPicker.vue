@@ -37,21 +37,21 @@
       </v-btn>
     </v-btn-toggle>
     <v-color-picker
-      :value="value"
+      v-model="modelValue"
       :hide-inputs="!colorPickerState.includes(0)"
       :hide-canvas="!colorPickerState.includes(2)"
       :hide-sliders="!colorPickerState.includes(1)"
       mode="hexa"
       :swatches="swatches"
       show-swatches
-      @input="updateColor"
+      @update:modelValue="updateColor"
     />
   </div>
 </template>
 <script>
 export default {
   name: 'CustomColorPicker',
-  props: ['value'],
+  props: ['modelValue'],
   data() {
     return {
       colorPickerState: [],
@@ -64,11 +64,12 @@ export default {
   },
   methods: {
     updateColor($event) {
+      console.log($event)
       if (typeof $event === 'string') {
-        this.$emit('input', $event.slice(0, 7));
+        this.$emit('update:modelValue', $event.slice(0, 7));
         return;
       }
-      this.$emit('input', $event.hex);
+      this.$emit('update:modelValue', $event.hex);
     },
   },
 };

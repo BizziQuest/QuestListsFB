@@ -1,22 +1,24 @@
 <template>
+  <div class="color-swatch">
   <v-menu
-    v-model="colorPickerShown"
+    v-model:value="colorPickerShown"
     :close-on-content-click="false"
     :close-on-click="false"
     left
     top
+    transition="slide-x-transition"
   >
-    <template #activator="{ on }">
+    <template #activator="{ props }">
       <div
         :style="swatchStyle()"
-        v-on="on"
+        v-bind="props"
       />
     </template>
     <v-card>
       <v-card-text>
         <CustomColorPicker
-          :value="value"
-          @input="$emit('input', $event)"
+          v-model:modelValue="modelValue"
+          @update:modelValue="$emit('update:modelValue', $event)"
         />
         <v-row align="center">
           <v-btn
@@ -29,7 +31,9 @@
       </v-card-text>
     </v-card>
   </v-menu>
+  </div>
 </template>
+
 <script>
 import CustomColorPicker from './CustomColorPicker.vue';
 
@@ -44,7 +48,7 @@ export default {
       description: 'show the outline on the text field',
       required: false,
     },
-    value: {
+    modelValue: {
       type: String,
       description: 'the value of the color, in hex',
     },
@@ -57,7 +61,7 @@ export default {
   methods: {
     swatchStyle() {
       return {
-        backgroundColor: this.value,
+        backgroundColor: this.modelValue,
         cursor: 'pointer',
         height: '30px',
         width: '30px',
@@ -67,7 +71,7 @@ export default {
       };
     },
     closeSwatch() {
-      this.$emit('input', this.value);
+      this.$emit('update:modelValue', this.modelValue);
       this.colorPickerShown = false;
     },
   },
