@@ -15,13 +15,13 @@
             <v-text-field
               label="List Title*"
               :rules="titleRules"
-              :value="title"
+              :model-value="title"
               required
               placeholder="Your Title"
               :outlined="!compact"
               test-title-input
               :dense="compact"
-              @input="updateAttribute('title', $event)"
+              @update:model-value="updateAttribute('title', $event)"
             />
           </v-col>
           <v-col
@@ -84,25 +84,25 @@
           >
             <v-text-field
               label="Description"
-              :value="description"
+              :model-value="description"
               required
               placeholder="Describe your list purpose."
               :outlined="!compact"
               test-description-input
               :dense="compact"
-              @input="updateAttribute('description', $event)"
+              @update:model-value="updateAttribute('description', $event)"
             />
           </v-col>
         </v-row>
       </v-form>
       <v-row class="mt-0">
         <v-checkbox
-          :value="adultContent"
+          :model-value="adultContent"
           test-adult-content
           class="mr-5 ml-3 mt-0"
           label="Adult Content"
           hide-details
-          @change="updateAttribute('adultContent', $event || false)"
+          @update:model-value="updateAttribute('adultContent', $event || false)"
         />
         <v-tooltip
           right
@@ -155,7 +155,7 @@ export default {
     title: {
       description: 'A short description of the list.',
       type: String,
-      default: null,
+      default: '',
     },
     compact: {
       description: 'Whether to show a compact UI.',
@@ -190,7 +190,7 @@ export default {
   methods: {
     updateAttribute(attributeName, newValue) {
       if (this.$refs.addTitleAndColorForm.validate()) {
-        this.$emit(`update:${attributeName}`, newValue);
+        this.$emit('update:prop', {name: attributeName, value: newValue});
       }
     },
   },

@@ -1,4 +1,5 @@
 <template>
+  <span>
   <v-text-field
     label="Color"
     :model-value="modelValue"
@@ -15,6 +16,7 @@
       />
     </template>
   </v-text-field>
+  </span>
 </template>
 <script>
 import ColorSwatch from './ColorSwatch.vue';

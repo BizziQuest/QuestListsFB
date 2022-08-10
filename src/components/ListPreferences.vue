@@ -1,8 +1,9 @@
 <template>
   <div>
     <list-metadata-preferences
-      v-model="metadataPrefs"
+      v-bind="metadataPrefs"
       :compact="compact"
+      @update:prop="metadataPrefs[$event.name] = $event.value"
       class="pb-2"
     />
     <states-editor
