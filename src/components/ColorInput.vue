@@ -7,12 +7,12 @@
     :outlined="outline"
     :rules="colorPickerRules"
     test-color-input
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:modelValue="updateValue"
   >
     <template #append>
       <color-swatch
-        v-model:modelValue="modelValue"
-        @update:modelValue="$emit('update:modelValue', $event)"
+        :modelValue="modelValue"
+        @update:modelValue="updateValue"
       />
     </template>
   </v-text-field>
@@ -41,6 +41,12 @@ export default {
       (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
     ],
   }),
+  methods: {
+    updateValue(newValue) {
+      console.debug('Updating:', newValue);
+      this.$emit('update:modelValue', newValue);
+    },
+  },
 };
 </script>
 <style scoped>

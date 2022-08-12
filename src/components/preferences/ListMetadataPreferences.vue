@@ -29,51 +29,7 @@
             sm="6"
             md="6"
           >
-          <ColorInput v-model:value="color"/>
-            <!-- <v-text-field
-              label="Color"
-              :rules="colorPickerRules"
-              :value="color"
-              placeholder="#FFFFFF"
-              :outlined="!compact"
-              test-color-input
-              :dense="compact"
-              @input="updateAttribute('color', $event)"
-            >
-              <template #append>
-                <v-menu
-                  v-model="colorPickerShown"
-                  :close-on-content-click="false"
-                  :close-on-click="false"
-                  left
-                  top
-                >
-                  <template #activator="{ props }">
-                    <div
-                      :style="swatchStyle"
-                      class="color-picker-swatch"
-                      v-bind="props"
-                    />
-                  </template>
-                  <v-card>
-                    <v-card-text>
-                      <CustomColorPicker
-                        :value="color"
-                        @input="updateAttribute('color', $event)"
-                      />
-                      <v-row align="center">
-                        <v-btn
-                          class="mx-auto mt-3"
-                          @click="colorPickerShown = false"
-                        >
-                          Close
-                        </v-btn>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                </v-menu>
-              </template>
-            </v-text-field> -->
+          <ColorInput v-model="color" />
           </v-col>
         </v-row>
         <v-row class="mt-0">

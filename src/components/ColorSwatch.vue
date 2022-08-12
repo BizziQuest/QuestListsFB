@@ -1,16 +1,15 @@
 <template>
   <div class="color-swatch">
   <v-menu
-    v-model:value="colorPickerShown"
+    v-model="colorPickerShown"
     :close-on-content-click="false"
     :close-on-click="false"
-    left
-    top
+    location="start"
     transition="slide-x-transition"
   >
     <template #activator="{ props }">
       <div
-        :style="swatchStyle()"
+        :style="swatchStyle"
         v-bind="props"
       />
     </template>
@@ -58,7 +57,7 @@ export default {
       colorPickerShown: false,
     };
   },
-  methods: {
+  computed: {
     swatchStyle() {
       return {
         backgroundColor: this.modelValue,
@@ -70,6 +69,9 @@ export default {
         transition: 'border-radius 200ms ease-in-out',
       };
     },
+
+  },
+  methods: {
     closeSwatch() {
       this.$emit('update:modelValue', this.modelValue);
       this.colorPickerShown = false;
