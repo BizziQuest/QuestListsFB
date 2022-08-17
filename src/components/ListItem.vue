@@ -2,7 +2,7 @@
   <div class="list-item-view">
     <v-text-field
       ref="input"
-      v-model="title"
+      :model-value="title"
       test-text-field
       dense
       :clearable="!readOnly"
@@ -18,7 +18,7 @@
       :tabindex="tabindex"
       @keydown.enter.prevent="emitEnterPressed({ title })"
       :color="currentColor"
-      @input="emitUpdate({ title: $event })"
+      @update:modelValue="emitUpdate({ title: $event })"
     >
     <template v-slot:prepend-inner>
       <v-icon

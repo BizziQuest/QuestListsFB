@@ -96,8 +96,9 @@ export default {
       default: 'New List', // the default value. if the type is Object, this MUST use a function
       description: 'The title of the list you are displaying. Defaults to "New List".',
     },
+    /**@type {string | string[]} */
     slug: {
-      type: String,
+      type: [String,Array],
       description: 'slug that identified a list',
     },
   },
@@ -188,9 +189,11 @@ export default {
       this.saveItem();
     },
   },
-  mounted() {
-    const path = this.$route.params.slug.split('/');
-    this.fetchList({ slug: path[path.length - 1] });
+  beforeRouteEnter(to, _from, next) {
+    next(vm => {
+      const path = to.params.slug;
+      vm.fetchList({ slug: path[path.length - 1] });
+    });
   },
 };
 </script>

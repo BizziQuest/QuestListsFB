@@ -22,7 +22,7 @@
             <span
               v-for="(item, index) in items"
               :id="index"
-              :key="item.value + index"
+              :key="`${item.text}${index}`"
               ref="row"
               :data-index="index"
               class="item-row"
@@ -36,6 +36,7 @@
                 <list-state
                   :ref="`stateItem${index}`"
                   list-state-test
+                  class="mt-1"
                   :compact="compact"
                   :item="item"
                   :draggable="index !== items.length - 1"
@@ -154,7 +155,7 @@ export default {
       // this.states[this.states.length - 1].value = getNextUnusedValue(this.states);
     },
     updateItem(index, state) {
-      this.updateThisState(index, state);
+      this.states = this.updateThisState(index, state);
       this.$emit('list:updated', { ...this.stateGroupObject, ...this.updatedStateGroup });
     },
     updateThisState(index, state) {
@@ -173,13 +174,13 @@ export default {
         }
         this.addingItem = true;
         this.stateGroupObject.states = states;
-        this.states = states;
         this.focusListItem(index);
         this.$nextTick(() => {
           this.focusListItem(index);
           this.addingItem = false;
         });
       }
+      return states;
     },
     focusListItem(index) {
       const listItemRef = this.$refs[`stateItem${index}`];

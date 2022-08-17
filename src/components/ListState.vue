@@ -1,4 +1,5 @@
 <template>
+  <div class="list-state w-100" >
   <v-text-field
     ref="input"
     :model-value="item.text"
@@ -7,7 +8,7 @@
     placeholder="New Item"
     @keydown.enter="$emit('enterPressed')"
     @keydown.tab.prevent="$emit('enterPressed')"
-    @input="isChanging($event)"
+    @update:modelValue="isChanging($event)"
     @blur="updateText"
   >
     <template v-slot:prepend>
@@ -43,6 +44,7 @@
     </v-btn>
     </template>
   </v-text-field>
+  </div>
 </template>
 <script>
 import IconState from './IconState.vue';

@@ -243,7 +243,7 @@ const store = createStore({
       algoliaIndex.saveObject(
         { ...createdDocData, objectID: docRef.id },
       );
-      router.push(`/lists/${createdDocData.slug}`);
+      router.push(`/Lists/${createdDocData.slug}`);
     },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);

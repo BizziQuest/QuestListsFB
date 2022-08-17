@@ -23,9 +23,11 @@
         link
         to="/EditInfo"
         :prepend-avatar="avatar"
-        :prepend-icon="!avatar && 'mdi-account'"
         :title="currentUser.displayName"
       >
+        <template #prepend v-if="!avatar">
+          <v-icon>mdi-account</v-icon>
+        </template>
         <template #append>
         <v-icon
           v-if="currentUser && currentUser.uid"

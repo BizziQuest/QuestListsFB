@@ -55,7 +55,7 @@
           class="col-12"
         >
           Welcome to Quest Lists! You don't have any Quests yet, but have no fear, simply click on the
-          <v-icon>questlists-plus</v-icon> icon on the left to get started!
+          <v-icon class="mx-2">$questlists-plus</v-icon> icon on the left to get started!
         </v-alert>
       </v-row>
       <v-col

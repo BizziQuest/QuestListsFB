@@ -1,4 +1,5 @@
 <template>
+  <div v-if="updatedList?.slug">
   <v-badge
     overlap
     offset-x="100"
@@ -64,6 +65,7 @@
       </v-container>
     </v-card>
   </v-badge>
+  </div>
 </template>
 
 <script>

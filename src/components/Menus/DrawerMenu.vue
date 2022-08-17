@@ -56,7 +56,7 @@
         link
           :to="item.slug ? `/lists/${item.slug}` : ''"
       >
-      <template v-slot:prepend>
+        <template v-slot:prepend>
           <v-icon>{{ item.icon || '$questlists' }}</v-icon>
         </template>
         <v-list-item-title v-text="item.title" class="ml-4"/>
