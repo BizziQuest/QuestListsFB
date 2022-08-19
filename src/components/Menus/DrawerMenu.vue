@@ -61,6 +61,10 @@
         </template>
         <v-list-item-title v-text="item.title" class="ml-4"/>
       </v-list-item>
+      <v-list-item v-if="recentQuests.length < 1">
+      <template #prepend><v-icon>mdi-heart</v-icon></template>
+        <v-list-item-title v-text="'No Recent Questlists'" class="ml-4"/>
+      </v-list-item>
 
       <v-list-item>
         <v-divider class="my-4" />

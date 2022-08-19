@@ -77,6 +77,11 @@ import {
   createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB,
 } from '../firebase';
 
+// TODO: rethink how this is supposed to work.
+//       instead of having weird list management, maybe we can change this invalidate this item as new,
+//        then emit a changed event so the parent knows to add another new item. That way we don't have to
+//       redraw the current edited field.
+
 // TODO: use states.value instead of states[index] for saving/storing state values.
 
 export default {
@@ -115,26 +120,27 @@ export default {
     listId: '',
   }),
   async mounted() {
-    this.title = this.$props.value.title;
-    this.isNewItem = this.$props.value.isNewItem;
-    this.listId = this.$props.value.listId;
-    if (this.$props.value.state?.value) {
-      this.currentStateValue = parseInt(this.$props.value.state.value, 10) || this.$props.states[0].value;
+    this.title = this.modelValue.title;
+    this.isNewItem = this.modelValue.isNewItem;
+    this.listId = this.modelValue.listId;
+    if (this.modelValue.state?.value) {
+      this.currentStateValue = parseInt(this.modelValue.state.value, 10) || this.states[0].value;
     }
     if (this.value.subList) {
-      await this.computeSubListPath(this.value.subList);
-      this.subList = this.value.subList;
+      await this.computeSubListPath(this.modelValue.subList);
+      this.subList = this.modelValue.subList;
     }
   },
   methods: {
     emitUpdate(newValues) {
-      this.$emit('input', this.$_makeNewItem(newValues));
+      this.updateItem();
+      // this.$emit('update:modelValue', this.$_makeNewItem(newValues));
     },
     emitEnterPressed(newValues) {
       this.$emit('enterPressed', newValues);
     },
     $_makeNewItem(newValues) {
-      const newItem = { ...this.value, ...newValues };
+      const newItem = { ...this.modelValue, ...newValues };
       if (newValues?.title !== '') this.isNewItem = false;
       if (this.subList && !newItem.subList) {
         newItem.subList = this.subList;
@@ -170,8 +176,9 @@ export default {
     },
     updateItem({ to } = {}) {
       if (this.isNewItem) return;
-      this.$emit('update', {
-        ...this.value,
+      debugger;
+      this.$emit('update:modelValue', {
+        ...this.modelValue,
         title: this.title,
         state: this.states.find((state) => state.value === this.currentStateValue),
         isNewItem: this.isNewItem,

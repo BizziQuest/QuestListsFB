@@ -47,25 +47,18 @@
       />
     </v-card>
     <div id="items">
-      <transition-group
-        name="slide-x-transition"
-        hide-on-leave
-        leave-absolute
-        :duration="{ enter: 200, leave: 200 }"
-      >
         <list-item
           v-for="(item, index) in listItemsWithBlank"
           :ref="`listItem${index}`"
           :key="`${item.title}${index}`"
-          :value="item"
+          :model-value="item"
           :states="states || globalPreferences.defaultStateGroup.states"
           :tabindex="index"
           @update="saveItem(index, $event)"
-          @input="appendItem(index, $event)"
+          @valueChanged="appendItem(index, $event)"
           @delete="delItem(index, $event)"
           @enterPressed="focusNext(index, $event)"
         />
-      </transition-group>
     </div>
   </div>
 </template>
