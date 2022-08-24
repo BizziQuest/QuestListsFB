@@ -50,12 +50,13 @@
         <list-item
           v-for="(item, index) in listItemsWithBlank"
           :ref="`listItem${index}`"
-          :key="`${item.title}${index}`"
-          :model-value="item"
+          :key="`${index}`"
+          :modelValue="item"
+          :isNewItem="item.isNewItem"
           :states="states || globalPreferences.defaultStateGroup.states"
           :tabindex="index"
           @update="saveItem(index, $event)"
-          @valueChanged="appendItem(index, $event)"
+          @update:modelValue="appendItem(index, $event)"
           @delete="delItem(index, $event)"
           @enterPressed="focusNext(index, $event)"
         />
@@ -137,10 +138,7 @@ export default {
     appendItem(index, item) {
       const validItem = { ...item };
       if (!item.state) [validItem.state] = this.states;
-      if (index >= this.listItems.length) {
-        this.listItems.push(validItem);
-        this.$nextTick(() => this.focusNext(index - 1));
-      }
+      this.listItems[index] = validItem;
     },
     focusNext(index) {
       const listItemRef = this.$refs[`listItem${index + 1}`];

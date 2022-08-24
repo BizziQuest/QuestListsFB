@@ -2,13 +2,13 @@
   <div class="list-item-view">
     <v-text-field
       ref="input"
-      :model-value="title"
+      :model-value="modelValue.title"
       test-text-field
       dense
       :clearable="!readOnly"
       :flat="readOnly"
       :hide-details="readOnly"
-      :outlined="isActive"
+      :outlined="modelValue.isActive"
       :placeholder="placeholder"
       :readonly="readOnly"
       :single-line="readOnly"
@@ -16,14 +16,14 @@
       :solo="readOnly"
       @click.prevent="activate"
       :tabindex="tabindex"
-      @keydown.enter.prevent="emitEnterPressed({ title })"
+      @keydown.enter.prevent="emitEnterPressed"
       :color="currentColor"
-      @update:modelValue="emitUpdate({ title: $event })"
+      @update:modelValue="updateData({ title: $event })"
     >
     <template v-slot:prepend-inner>
       <v-icon
         class="listitem-icon"
-        :outlined="isActive"
+        :outlined="modelValue.isActive"
         :title="iconTitle"
         :color="currentColor"
         @click.prevent="cycleIcon"
@@ -49,11 +49,11 @@
         />
       </v-btn>
       <v-btn
-        v-if="subList"
+        v-if="modelValue.subList"
         icon
         test-sublist-link-icon
         :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
-        @click="updateItem({ to: subListPath })"
+        @click="saveItem({ to: subListPath })"
       >
         <i class="ql ql-link" />
       </v-btn>
@@ -78,15 +78,30 @@ import {
 } from '../firebase';
 
 // TODO: rethink how this is supposed to work.
-//       instead of having weird list management, maybe we can change this invalidate this item as new,
-//        then emit a changed event so the parent knows to add another new item. That way we don't have to
+//       instead of having weird list management, maybe we can change this: invalidate this item as new,
+//       then emit a changed event so the parent knows to add another new item. That way we don't have to
 //       redraw the current edited field.
 
 // TODO: use states.value instead of states[index] for saving/storing state values.
 
+/** @typedef {object} modelValue
+ * @property {boolean} isActive
+ * @property {boolean} isNewItem
+ * @property {string} title
+ * @property {boolean} currentStateIdx
+ * @property {boolean} currentStateValue
+ * @property {boolean} subListSlug
+ * @property {boolean} subListPath
+ * @property {boolean} subList
+ * @property {boolean} creatingSubList
+ * @property {boolean} listId
+ *
+*/
 export default {
   props: {
-    value: {
+
+    /** @type {modelValue} */
+    modelValue: {
       type: Object,
       default: () => ({}),
       description: 'List Item is an object in the form: {title, state}',
@@ -101,6 +116,11 @@ export default {
       default: false,
       description: 'Whether to allow editing of the content or only view it.',
     },
+    isNewItem: {
+      type: Boolean,
+      default: false,
+      description: 'Whether this is a new, empty item at the end of a list.',
+    },
     tabindex: {
       type: Number,
       default: null,
@@ -108,60 +128,16 @@ export default {
     },
   },
   data: () => ({
-    title: '',
-    isActive: false,
-    isNewItem: false,
-    currentStateIdx: 0,
-    currentStateValue: 0, // the value if the icon
-    subListSlug: '',
-    subListPath: '',
-    subList: null,
-    creatingSubList: false,
-    listId: '',
   }),
-  async mounted() {
-    this.title = this.modelValue.title;
-    this.isNewItem = this.modelValue.isNewItem;
-    this.listId = this.modelValue.listId;
-    if (this.modelValue.state?.value) {
-      this.currentStateValue = parseInt(this.modelValue.state.value, 10) || this.states[0].value;
-    }
-    if (this.value.subList) {
-      await this.computeSubListPath(this.modelValue.subList);
-      this.subList = this.modelValue.subList;
-    }
-  },
   methods: {
-    emitUpdate(newValues) {
-      this.updateItem();
-      // this.$emit('update:modelValue', this.$_makeNewItem(newValues));
-    },
-    emitEnterPressed(newValues) {
-      this.$emit('enterPressed', newValues);
-    },
-    $_makeNewItem(newValues) {
-      const newItem = { ...this.modelValue, ...newValues };
-      if (newValues?.title !== '') this.isNewItem = false;
-      if (this.subList && !newItem.subList) {
-        newItem.subList = this.subList;
-      } else {
-        delete newItem.subList;
-      }
-      if (!this.isNewItem) delete newItem.isNewItem;
-      return newItem;
-    },
-    invalidateNewItem(newValue) {
-      if (this.isNewItem && (newValue !== '' || !!newValue)) {
-        this.isNewItem = false;
-        this.emitUpdate({ title: newValue, isNewItem: false });
-      }
+    emitEnterPressed() {
+      this.$emit('enterPressed');
     },
     emitDelete() {
       this.$emit('delete');
     },
     deactivate() {
       this.isActive = false;
-      this.updateItem();
     },
     activate() {
       this.isActive = !this.readOnly;
@@ -169,21 +145,19 @@ export default {
     cycleIcon() {
       if (this.isNewItem) return;
       this.activate();
-      let nextIdx = (this.currentStateIdx || 0) + 1;
+      let nextIdx = (this.modelValue?.currentStateIdx || 0) + 1;
       if (nextIdx > this.states.length - 1) nextIdx = 0;
-      this.currentStateIdx = nextIdx;
-      this.currentStateValue = this.states[nextIdx]?.value;
-    },
-    updateItem({ to } = {}) {
-      if (this.isNewItem) return;
-      debugger;
-      this.$emit('update:modelValue', {
-        ...this.modelValue,
-        title: this.title,
-        state: this.states.find((state) => state.value === this.currentStateValue),
-        isNewItem: this.isNewItem,
-        subList: this.subList,
+      this.modelValue;
+      this.updateData({
+        currentStateIdx: nextIdx,
+        currentStateValue: this.states[nextIdx]?.value
       });
+    },
+    updateData(data) {
+      this.$emit('update:modelValue', {...this.modelValue, ...data, isNewItem: false});
+    },
+    saveItem({to}) {
+      // this.$emit('save')
       if (to) {
         this.$nextTick(() => {
           this.$router.push(to);
@@ -195,46 +169,58 @@ export default {
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
       const stateGroup = getStateGroup(stateGroupsCollection, stateGroupDoc.id);
       const payload = {
-        title: this.title,
-        description: `sublist of ${this.title}`, // same as title
+        title: this.modelValue.title,
+        description: `sublist of ${this.modelValue.title}`, // same as title
         stateGroup,
       };
-      this.subList = await createList(payload);
-      this.subListSlug = this.subList.slug;
-      await this.computeSubListPath(this.subList);
-      this.updateItem();
+      const subList = await createList(payload);
+      const subListSlug = this.subList.slug;
+      await this.computeSubListPath(this.modelValue.subList);
+      this.updateItem({
+        ...this.modelValue,
+        subList,
+        subListSlug
+      });
       this.creatingSubList = false;
     },
     async computeSubListPath(subListRef) {
       const subListPath = await computeSubListPathFB(subListRef, this.$route.path);
       if (!subListPath) return;
-      this.subListPath = subListPath;
+      this.modelValue.subListPath = subListPath;
     },
   },
   computed: {
     ...mapGetters(['getGlobalPreferences']),
     showAddSubListButton() {
-      if (this.readOnly) return false;
+      if (this.modelValue.readOnly) return false;
       if (this.isNewItem) return false;
-      if (this.subList !== null) return false;
-      if (!this.title || this.title === '') return false;
+      if (this.modelValue.subList !== null) return false;
+      if (!this.modelValue.title || this.modelValue.title === '') return false;
       return true;
     },
     currentColor() {
-      return this.states[this.currentStateIdx]?.color;
+      return this.states[this.modelValue?.currentStateIdx]?.color;
     },
 
     icon() {
       if (this.isNewItem) return 'mdi-plus';
-      let currentStateIdx = this.states.findIndex((state) => state.value === this.currentStateValue);
+      let firstStateIndex = 0;
+      if (!this.modelValue.currentStateValue) {
+        let currentOrder = this.states[0].order;
+        this.states.forEach((state, index) => {
+          if(state.order > currentOrder) return;
+          currentOrder = state.order;
+          firstStateIndex = index;
+        });
+      }
+      let currentStateIdx = this.states.findIndex((state) => state.value === (this.modelValue.currentStateValue || this.states[firstStateIndex].value) );
       if (currentStateIdx < 0) {
-        currentStateIdx = 0;
         return 'mdi-help-box';
       }
       return this.states[currentStateIdx || 0]?.icon;
     },
     iconTitle() {
-      return this.states[this.currentStateIdx || 0]?.text;
+      return this.states[this.modelValue?.currentStateIdx || 0]?.text;
     },
     placeholder() {
       return this.isNewItem ? 'New Item' : '';
