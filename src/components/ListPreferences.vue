@@ -1,9 +1,15 @@
 <template>
   <div>
+    <v-form
+        ref="listPreferencesForm"
+        v-model="formIsValid"
+        @submit.prevent
+      >
     <list-metadata-preferences
       v-bind="metadataPrefs"
       :compact="compact"
       @update:prop="metadataPrefs[$event.name] = $event.value"
+      @valid="formIsValid = $event"
       class="pb-2"
     />
     <states-editor
@@ -11,6 +17,7 @@
       :compact="compact"
       @list:updated="updateStateGroup"
     />
+
     <v-btn
       color="blue"
       name="submit"
@@ -22,6 +29,7 @@
         saveButtonText
       }}
     </v-btn>
+  </v-form>
   </div>
 </template>
 
@@ -70,6 +78,7 @@ export default {
         adultContent: false,
       },
       deletedValues: [],
+      formIsValid: false,
     };
   },
   computed: {
@@ -98,7 +107,9 @@ export default {
       this.metadataPrefs.newStateGroup = stateGroup;
     },
     updateListPreferences() {
-      this.$emit('update:list', { ...this.metadataPrefs, deletedValues: this.deletedValues });
+      if (this.formIsValid) {
+        this.$emit('update:list', { ...this.metadataPrefs, deletedValues: this.deletedValues });
+      }
     },
   },
 };

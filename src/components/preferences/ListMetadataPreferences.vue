@@ -87,7 +87,9 @@
 <script>
 import CustomColorPicker from '../CustomColorPicker.vue';
 import ColorInput from '../ColorInput.vue';
+
 export default {
+  // TODO: make this component Validatable vis composition
   components: {
     CustomColorPicker,
     ColorInput
@@ -119,6 +121,11 @@ export default {
       default: false,
     },
 
+  },
+  watch: {
+    formIsValid(val) {
+      this.$emit('valid', val);
+    }
   },
   data: () => ({
     titleRules: [
