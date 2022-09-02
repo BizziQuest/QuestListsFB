@@ -155,6 +155,7 @@ export default {
       // this.states[this.states.length - 1].value = getNextUnusedValue(this.states);
     },
     updateItem(index, state) {
+      if(state.text === '' && state.icon === 'mdi-plus') return;
       this.states = this.updateThisState(index, state);
       this.$emit('list:updated', { ...this.stateGroupObject, ...this.updatedStateGroup });
     },
@@ -174,6 +175,7 @@ export default {
         }
         this.addingItem = true;
         this.stateGroupObject.states = states;
+        this.states = states;
         this.focusListItem(index);
         this.$nextTick(() => {
           this.focusListItem(index);
