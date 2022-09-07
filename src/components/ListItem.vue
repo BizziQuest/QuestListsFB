@@ -32,7 +32,7 @@
         {{ icon }}
       </v-icon>
       </template>
-      {{ isNewItem ? '' : title }}
+      {{ isNewItem ? '' : modelValue.title }}
       <template v-slot:append>
       <v-btn
         v-if="showAddSubListButton"
@@ -40,7 +40,7 @@
         :disabled="creatingSubList"
         title="Make a new sublist from this item."
         test-make-sublist
-        icon
+        variant="text"
         @click="makeSublist"
       >
         <i
@@ -50,18 +50,18 @@
       </v-btn>
       <v-btn
         v-if="modelValue.subList"
-        icon
         test-sublist-link-icon
         :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
+        variant="text"
         @click="saveItem({ to: subListPath })"
       >
         <i class="ql ql-link" />
       </v-btn>
       <v-btn
         v-if="!isNewItem"
-        icon
         title="delete"
         test-delete-icon
+        variant="text"
         @click="emitDelete"
       >
         <v-icon>mdi-delete</v-icon>
@@ -137,6 +137,7 @@ export default {
       this.$emit('delete');
     },
     deactivate() {
+      this.$emit('update',  {...this.modelValue, isNewItem: false});
       this.isActive = false;
     },
     activate() {
@@ -147,7 +148,6 @@ export default {
       this.activate();
       let nextIdx = (this.modelValue?.currentStateIdx || 0) + 1;
       if (nextIdx > this.states.length - 1) nextIdx = 0;
-      this.modelValue;
       this.updateData({
         currentStateIdx: nextIdx,
         currentStateValue: this.states[nextIdx]?.value

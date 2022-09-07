@@ -23,6 +23,7 @@
     <icon-state
 
       v-model:icon="icon"
+      @update:icon="updateIcon"
       :color="listColor"
     />
     </template>
@@ -85,17 +86,17 @@ export default {
     };
   },
   methods: {
+    updateIcon($event) {
+      this.$emit('blur', { ...this.item, icon: $event });
+    },
     updateText($event) {
       this.$emit('blur', { ...this.item, text: $event.target.value });
     },
-    isChanging(evt) {
-      this.$emit('update:item', { ...this.item, text: evt });
+    isChanging($event) {
+      this.$emit('update:item', { ...this.item, text: $event });
     },
     del(item) {
       this.$emit('delete:item', item);
-    },
-    changeColor($event) {
-      this.listColor = $event;
     },
   },
 };

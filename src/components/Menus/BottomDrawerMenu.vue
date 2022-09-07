@@ -10,7 +10,7 @@
   >
     <v-btn
       :color="menuHighlightColor"
-      icon
+      variant="text"
       title="View App Menu"
       @click="$emit('update:drawer', !drawer)"
     >
@@ -22,7 +22,7 @@
     </v-btn>
     <v-btn
       value="search"
-      icon
+      variant="plain"
       to="/search"
       :color="menuHighlightColor"
     >
@@ -47,7 +47,7 @@
     </v-btn>
     <v-btn
       value="favorite"
-      icon
+      variant="plain"
       to="/favorites"
       :color="menuHighlightColor"
     >
@@ -74,7 +74,7 @@
         <v-btn
           value="viewProfile"
           class="d-flex flex-column text-truncate align-center"
-          icon
+          variant="plain"
           to="/EditInfo"
           :color="menuHighlightColor"
         >

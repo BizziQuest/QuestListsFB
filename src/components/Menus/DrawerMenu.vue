@@ -27,7 +27,7 @@
         to="/"
       >
         <template v-slot:prepend>
-          <v-icon icon="$questlists"/>
+          <v-icon>$questlists</v-icon>
         </template>
         <v-list-item-title v-text="'QuestLists'" class="ml-4"/>
       </v-list-item>
@@ -39,7 +39,7 @@
         :color="menuHighlightColor"
       >
         <template v-slot:prepend>
-          <v-icon icon="$questlists-plus"/>
+          <v-icon>$questlists-plus</v-icon>
         </template>
         <v-list-item-title v-text="'New Quest'" class="ml-4"/>
       </v-list-item>
@@ -53,14 +53,13 @@
         v-for="item in recentQuests"
         :key="`${item.slug}${item.title}`"
         test-fav-link
+        :prepend-icon="item.icon || '$questlists'"
         link
           :to="item.slug ? `/lists/${item.slug}` : ''"
+          :title="item.title"
       >
-        <template v-slot:prepend>
-          <v-icon>{{ item.icon || '$questlists' }}</v-icon>
-        </template>
-        <v-list-item-title v-text="item.title" class="ml-4"/>
       </v-list-item>
+
       <v-list-item v-if="recentQuests.length < 1">
       <template #prepend><v-icon>mdi-heart</v-icon></template>
         <v-list-item-title v-text="'No Recent Questlists'" class="ml-4"/>

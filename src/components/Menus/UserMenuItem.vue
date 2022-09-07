@@ -31,7 +31,6 @@
         <template #append>
         <v-icon
           v-if="currentUser && currentUser.uid"
-          icon
           small
           title="Logout"
           @click.stop.prevent="logoutAndGoHome"
