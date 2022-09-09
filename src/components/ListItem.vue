@@ -1,24 +1,24 @@
 <template>
   <div class="list-item-view">
     <v-text-field
-      ref="input"
-      :model-value="modelValue.title"
-      test-text-field
-      dense
       :clearable="!readOnly"
+      :color="currentColor"
       :flat="readOnly"
       :hide-details="readOnly"
+      :model-value="modelValue.title"
       :outlined="modelValue.isActive"
       :placeholder="placeholder"
       :readonly="readOnly"
       :single-line="readOnly"
-      @blur="deactivate"
       :solo="readOnly"
-      @click.prevent="activate"
       :tabindex="tabindex"
+      @blur="deactivate"
+      @click.prevent="activate"
       @keydown.enter.prevent="emitEnterPressed"
-      :color="currentColor"
       @update:modelValue="updateData({ title: $event })"
+      dense
+      ref="input"
+      test-text-field
     >
     <template v-slot:prepend-inner>
       <v-icon
@@ -32,7 +32,6 @@
         {{ icon }}
       </v-icon>
       </template>
-      {{ isNewItem ? '' : modelValue.title }}
       <template v-slot:append>
       <v-btn
         v-if="showAddSubListButton"
