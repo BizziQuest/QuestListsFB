@@ -165,7 +165,6 @@ export default {
       this.states = states;
     },
     saveItem(idx, item) {
-      // debugger;
       const items = [...this.listItems];
       items[idx] = { ...item };
       updateUserItemStates(this.list, items);

@@ -241,7 +241,7 @@ async function ensureSlugUniqueness(title) {
   const allListsWithTitle = query(listsCollection, where('title', '==', title));
   let lists = await getDocs(allListsWithTitle);
   if (lists.size < 2) return slugify(title);
-  lists = lists.sort((a, b) => a.created_at < b.created_at);
+  lists = lists.docs.map(d => d.data()).sort((a, b) => a.createdAt < b.createdAt);
   const lastList = lists[lists.length - 1];
   const titleArray = lastList.title.split('-');
   if (titleArray.length < 2) return slugify(`${title}-1`);
@@ -303,6 +303,7 @@ async function createList(payload, defaultStateGroup) {
     createdAt: Date.now(),
     createdBy: auth.currentUser?.uid,
   };
+  debugger;
   let newPayload = { ...defaultPayload, ...payload };
   newPayload.slug = await ensureSlugUniqueness(payload.title || defaultPayload.title);
   newPayload.stateGroup = await createStateGroup(newPayload.newStateGroup, defaultStateGroup);
@@ -311,8 +312,8 @@ async function createList(payload, defaultStateGroup) {
     if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
     return newObj;
   }, {});
-  const subList = await addDoc(listsCollection, newPayload);
-  return subList;
+  const subListDocRef = await addDoc(listsCollection, newPayload);
+  return (await getDoc(subListDocRef)).data();
 }
 async function saveList(payload) {
   const newPayload = { ...payload };

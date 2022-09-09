@@ -35,12 +35,14 @@
       <template v-slot:append>
       <v-btn
         v-if="showAddSubListButton"
+        class="px-0"
         :loading="creatingSubList"
         :disabled="creatingSubList"
         title="Make a new sublist from this item."
         test-make-sublist
         variant="text"
         @click="makeSublist"
+        icon="ql ql-plus"
       >
         <i
           class="ql ql-plus"
@@ -92,7 +94,6 @@ import {
  * @property {boolean} subListSlug
  * @property {boolean} subListPath
  * @property {boolean} subList
- * @property {boolean} creatingSubList
  * @property {boolean} listId
  *
 */
@@ -127,6 +128,7 @@ export default {
     },
   },
   data: () => ({
+    creatingSubList: false,
   }),
   methods: {
     emitEnterPressed() {
@@ -173,7 +175,7 @@ export default {
         stateGroup,
       };
       const subList = await createList(payload);
-      const subListSlug = this.subList.slug;
+      const subListSlug = subList.slug;
       await this.computeSubListPath(this.modelValue.subList);
       this.updateItem({
         ...this.modelValue,
@@ -191,9 +193,9 @@ export default {
   computed: {
     ...mapGetters(['getGlobalPreferences']),
     showAddSubListButton() {
-      if (this.modelValue.readOnly) return false;
+      if (this.readOnly) return false;
       if (this.isNewItem) return false;
-      if (this.modelValue.subList !== null) return false;
+      if (this.modelValue.subList) return false;
       if (!this.modelValue.title || this.modelValue.title === '') return false;
       return true;
     },
