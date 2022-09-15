@@ -303,7 +303,6 @@ async function createList(payload, defaultStateGroup) {
     createdAt: Date.now(),
     createdBy: auth.currentUser?.uid,
   };
-  debugger;
   let newPayload = { ...defaultPayload, ...payload };
   newPayload.slug = await ensureSlugUniqueness(payload.title || defaultPayload.title);
   newPayload.stateGroup = await createStateGroup(newPayload.newStateGroup, defaultStateGroup);
@@ -313,7 +312,7 @@ async function createList(payload, defaultStateGroup) {
     return newObj;
   }, {});
   const subListDocRef = await addDoc(listsCollection, newPayload);
-  return (await getDoc(subListDocRef)).data();
+  return {...(await getDoc(subListDocRef)).data(), id: subListDocRef.id};
 }
 async function saveList(payload) {
   const newPayload = { ...payload };
