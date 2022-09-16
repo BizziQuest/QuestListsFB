@@ -182,8 +182,8 @@ export default {
   },
   beforeRouteEnter(to, _from, next) {
     next(vm => {
-      const path = to.params.slug;
-      vm.fetchList({ slug: path[path.length - 1] });
+      const slugPathArray = to.params.slug;
+      vm.fetchList({ slug: slugPathArray[slugPathArray.length - 1] });
     });
   },
 };

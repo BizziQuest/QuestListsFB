@@ -177,8 +177,7 @@ export default {
       const subList = await createList(payload);
       const subListSlug = subList.slug;
       await this.computeSubListPath(this.modelValue.subList);
-      this.updateItem({
-        ...this.modelValue,
+      this.updateData({
         subList,
         subListSlug
       });
