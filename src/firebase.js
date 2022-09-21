@@ -227,13 +227,14 @@ async function getOrderedCollectionAsList(collectionPath) {
 }
 
 async function getListStates(fbList) {
+  debugger;
   if (Array.isArray(fbList.stateGroup?.states)) {
-    return fbList.stateGroup.states.sort((state) => state.order);
+    return fbList.stateGroup.states.sort((a,b) => a.order < b.order);
   }
   const fbStatesDoc = await getDoc(fbList.stateGroup);
   if (!fbStatesDoc) return [];
   const statesDoc = fbStatesDoc.data();
-  return statesDoc.states.sort((state) => state.order);
+  return statesDoc.states.sort((a,b) => a.order < b.order);
 }
 
 async function ensureSlugUniqueness(title) {

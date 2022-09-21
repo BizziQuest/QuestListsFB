@@ -72,16 +72,14 @@ const store = createStore({
           {
             color: '#ffffff',
             icon: 'mdi-checkbox-blank-outline',
-            name: 'Not Done',
-            shortName: 'notDone',
+            text: 'Not Done',
             value: '0',
             order: 0,
           },
           {
             color: '#ffffff',
             icon: 'mdi-checkbox-marked-outline',
-            name: 'Done',
-            shortName: 'done',
+            text: 'Done',
             value: '1',
             order: 1,
           },

@@ -43,7 +43,6 @@ export default {
   }),
   methods: {
     updateValue(newValue) {
-      console.debug('Updating:', newValue);
       this.$emit('update:modelValue', newValue);
     },
   },

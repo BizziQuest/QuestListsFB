@@ -111,16 +111,14 @@ describe('QuestLists.vue', () => {
                   {
                     color: '#0000ff',
                     icon: 'mdi-checkbox-blank-outline',
-                    name: 'Not Done',
-                    shortName: 'notDone',
+                    text: 'Not Done',
                     value: '0',
                     order: 0,
                   },
                   {
                     color: '#00ff00',
                     icon: 'mdi-checkbox-marked-outline',
-                    name: 'Done',
-                    shortName: 'done',
+                    text: 'Done',
                     value: '1',
                     order: 1,
                   },

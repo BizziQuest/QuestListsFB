@@ -30,6 +30,7 @@
                 test-email-field
                 :rules="[rules.emailPresent, rules.emailFormat]"
                 outlined
+                autocomplete="email"
                 label="Email*"
                 required
                 clearable
@@ -43,6 +44,7 @@
                 outlined
                 label="Password*"
                 type="password"
+                autocomplete="current-password"
                 required
                 counter
                 clearable
