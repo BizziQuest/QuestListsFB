@@ -227,7 +227,6 @@ async function getOrderedCollectionAsList(collectionPath) {
 }
 
 async function getListStates(fbList) {
-  debugger;
   if (Array.isArray(fbList.stateGroup?.states)) {
     return fbList.stateGroup.states.sort((a,b) => a.order < b.order);
   }

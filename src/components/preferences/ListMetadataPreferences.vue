@@ -29,7 +29,7 @@
             sm="6"
             md="6"
           >
-          <ColorInput v-model="color" />
+          <ColorInput :model-value="color" @update:model-value="updateAttribute('color', $event)"/>
           </v-col>
         </v-row>
         <v-row class="mt-0">

@@ -8,7 +8,7 @@
     <list-metadata-preferences
       v-bind="metadataPrefs"
       :compact="compact"
-      @update:prop="metadataPrefs[$event.name] = $event.value"
+      @update:prop="updateProperty"
       @valid="formIsValid = $event"
       class="pb-2"
     />
@@ -103,6 +103,9 @@ export default {
     };
   },
   methods: {
+    updateProperty($event) {
+      this.metadataPrefs[$event.name] = $event.value
+    },
     updateStateGroup(stateGroup) {
       this.metadataPrefs.newStateGroup = stateGroup;
     },

@@ -118,7 +118,6 @@ describe('list creation', () => {
   it.skip('should do nothing if the title and color form does not validate', () => {
     wrapper.vm.title = '123';
     wrapper.vm.color = 'kajsbfkajsb';
-    debugger;
     wrapper.vm.createList();
     expect(actions.createList).not.toHaveBeenCalled();
   });
