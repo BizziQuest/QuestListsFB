@@ -270,7 +270,7 @@ async function getUserPreferences() {
 async function createStateGroup(stateGroupData, defaultStateGroup) {
   if (!stateGroupData) return defaultStateGroup;
   // TODO: check for groups that have the current values and use that one instead.
-  const defaultStateData = defaultStateGroup.states[0];
+  const defaultStateData = {}; //defaultStateGroup.states[0];
   // TODO: refactor this to handle actual states
   const newStateGroupData = {
     name: stateGroupData.name || stateGroupData.states.map((s) => s.text).join(', '),

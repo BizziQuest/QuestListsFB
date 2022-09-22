@@ -166,6 +166,7 @@ export default {
         value: (state?.value || -1) >= 0 ? state.value : getNextUnusedValue(states),
         text: state.text || states[index]?.text || '',
         icon: state.icon || states[index]?.icon || '',
+        order: state.order || states[index]?.order || index,
       };
       this.updatedStateGroup = { ...this.stateGroupObject, ...this.updatedStateGroup, states };
       if (index === this.states.length) {
