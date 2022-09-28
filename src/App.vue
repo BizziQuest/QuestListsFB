@@ -4,7 +4,7 @@
     @keyup.ctrl.f="handleFind"
   >
     <drawer-menu v-model:drawer="drawer" />
-    <v-main :style="`max-width: 100%; background-color: ${pageBackgroundColor}`">
+    <v-main :style="pageBackgroundColor" style="max-width: 100%;">
       <router-view v-slot="{ Component }" :key="$route.path">
         <transition name="router-anim" >
           <component :is="Component" />
@@ -55,7 +55,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['pageBackgroundColor']),
+    ...mapState({
+      pageBackgroundColor: (state) => {
+        if (state.pageBackgroundColor)
+          return `background-color: ${state.pageBackgroundColor}`
+        return '';
+      }
+    }),
   },
   mounted() {
     this.$watch('$vuetify.display.name', (from, to) => {
