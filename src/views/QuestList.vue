@@ -182,7 +182,9 @@ export default {
   },
   beforeRouteEnter(to, _from, next) {
     next(vm => {
-      const slugPathArray = to.params.slug;
+      let slugPathArray = to.params.slug;
+      if(!Array.isArray(slugPathArray))
+        slugPathArray = [slugPathArray];
       vm.fetchList({ slug: slugPathArray[slugPathArray.length - 1] });
     });
   },
