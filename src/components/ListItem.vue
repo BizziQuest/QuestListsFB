@@ -54,7 +54,7 @@
         test-sublist-link-icon
         :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
         variant="text"
-        @click="saveItem({ to: subListPath })"
+        @click="saveItem({ to: modelValue.subListPath })"
       >
         <i class="ql ql-link" />
       </v-btn>
@@ -77,11 +77,6 @@ import { mapGetters } from 'vuex';
 import {
   createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB,
 } from '../firebase';
-
-// TODO: rethink how this is supposed to work.
-//       instead of having weird list management, maybe we can change this: invalidate this item as new,
-//       then emit a changed event so the parent knows to add another new item. That way we don't have to
-//       redraw the current edited field.
 
 // TODO: use states.value instead of states[index] for saving/storing state values.
 
@@ -158,7 +153,8 @@ export default {
       this.$emit('update:modelValue', {...this.modelValue, ...data, isNewItem: false});
     },
     saveItem({to}) {
-      // this.$emit('save')
+      debugger;
+      this.$emit('update', this.modelValue)
       if (to) {
         this.$nextTick(() => {
           this.$router.push(to);
@@ -168,25 +164,23 @@ export default {
     async makeSublist() {
       this.creatingSubList = true;
       const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
-      const stateGroup = getStateGroup(stateGroupsCollection, stateGroupDoc.id);
+      const newStateGroup = getStateGroup(stateGroupsCollection, stateGroupDoc.id);
+      debugger;
       const payload = {
         title: this.modelValue.title,
         description: `sublist of ${this.modelValue.title}`, // same as title
-        stateGroup,
+        newStateGroup,
       };
       const subList = await createList(payload);
       const subListSlug = subList.slug;
-      await this.computeSubListPath(this.modelValue.subList);
-      this.updateData({
-        subList,
-        subListSlug
+      const subListPath = await computeSubListPathFB(subListSlug, this.$route.path);
+      this.$emit('update', {
+        ...this.modelValue,
+        subListPath,
+        subList: subListSlug,
+        isNewItem: false
       });
       this.creatingSubList = false;
-    },
-    async computeSubListPath(subListRef) {
-      const subListPath = await computeSubListPathFB(subListRef, this.$route.path);
-      if (!subListPath) return;
-      this.modelValue.subListPath = subListPath;
     },
   },
   computed: {

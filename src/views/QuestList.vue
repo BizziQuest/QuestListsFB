@@ -169,6 +169,7 @@ export default {
       items[idx] = { ...item };
       updateUserItemStates(this.list, items);
       saveListItems(this.list.id, items);
+
       this.listItems = items;
     },
     delItem(index) {
@@ -179,6 +180,12 @@ export default {
     addNewSubList() {
       this.saveItem();
     },
+  },
+  beforeRouteUpdate(to, _from) {
+      let slugPathArray = to.params.slug;
+      if(!Array.isArray(slugPathArray))
+        slugPathArray = [slugPathArray];
+      this.fetchList({ slug: slugPathArray[slugPathArray.length - 1] });
   },
   beforeRouteEnter(to, _from, next) {
     next(vm => {

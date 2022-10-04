@@ -87,9 +87,12 @@ const googleOAuthLogin = new GoogleAuthProvider();
 const facebookOAuthLogin = new FacebookAuthProvider();
 
 async function computeSubListPath(subListRef, routePath) {
-  if (!subListRef) return false;
-  const subList = await getDoc(subListRef);
-  const { slug } = subList.data();
+  if (!subListRef) return routePath;
+  let slug = subListRef;
+  if(typeof subListRef !== 'string') {
+    const subList = await getDoc(subListRef);
+    slug = subList.data()?.slug;
+  }
   return `${routePath}/${slug}`;
 }
 
