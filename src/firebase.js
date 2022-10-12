@@ -297,6 +297,24 @@ async function updateStateGroup(stateGroupRef, newStateGroupData) {
   await setDoc(stateGroupRef, updatedStateGroupData);
   return stateGroupRef;
 }
+
+async function createSubList(listItem, path) {
+  const payload = {
+    title: listItem.title,
+    description: `sublist of ${listItem.title}`, // same as title
+  };
+  const subList = await createList(payload);
+  const subListSlug = subList.slug;
+  const subListPath = await computeSubListPath(subListSlug, path);
+  return {
+    ...listItem,
+    subListPath,
+    subList: subListSlug,
+    isNewItem: false
+  };
+
+}
+
 async function createList(payload, defaultStateGroup) {
   const defaultPayload = {
     title: 'New List',
@@ -363,6 +381,7 @@ export {
   appCheck,
   auth,
   computeSubListPath,
+  createSubList,
   createList,
   createStateGroup,
   currentUser,

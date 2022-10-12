@@ -75,7 +75,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import {
-  createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB,
+  createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB, createSubList
 } from '../firebase';
 
 // TODO: use states.value instead of states[index] for saving/storing state values.
@@ -161,25 +161,11 @@ export default {
         });
       }
     },
+    // TODO: move this to firebase.js
     async makeSublist() {
       this.creatingSubList = true;
-      const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
-      const newStateGroup = getStateGroup(stateGroupsCollection, stateGroupDoc.id);
-      debugger;
-      const payload = {
-        title: this.modelValue.title,
-        description: `sublist of ${this.modelValue.title}`, // same as title
-        newStateGroup,
-      };
-      const subList = await createList(payload);
-      const subListSlug = subList.slug;
-      const subListPath = await computeSubListPathFB(subListSlug, this.$route.path);
-      this.$emit('update', {
-        ...this.modelValue,
-        subListPath,
-        subList: subListSlug,
-        isNewItem: false
-      });
+      const listWithSubList = await createSubList(this.modelValue, this.$route.path);
+      this.$emit('update', listWithSubList);
       this.creatingSubList = false;
     },
   },
