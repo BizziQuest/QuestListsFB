@@ -317,7 +317,7 @@ async function createSubList(listItem, path, defaultStateGroup) {
 async function createList(payload, defaultStateGroup) {
   const defaultPayload = {
     title: 'New List',
-    color: '#333333',
+    // color: '#333333',
     description: 'Newly Created List',
     stateGroup: defaultStateGroup,
     createdAt: Date.now(),
