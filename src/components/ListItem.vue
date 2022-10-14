@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import {
   createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB, createSubList
 } from '../firebase';
@@ -153,7 +153,6 @@ export default {
       this.$emit('update:modelValue', {...this.modelValue, ...data, isNewItem: false});
     },
     saveItem({to}) {
-      debugger;
       this.$emit('update', this.modelValue)
       if (to) {
         this.$nextTick(() => {
@@ -164,13 +163,13 @@ export default {
     // TODO: move this to firebase.js
     async makeSublist() {
       this.creatingSubList = true;
-      const listWithSubList = await createSubList(this.modelValue, this.$route.path);
+      const listWithSubList = await createSubList(this.modelValue, this.$route.path, this.globalPreferences.defaultStateGroup);
       this.$emit('update', listWithSubList);
       this.creatingSubList = false;
     },
   },
   computed: {
-    ...mapGetters(['getGlobalPreferences']),
+    ...mapState([ 'globalPreferences']),
     showAddSubListButton() {
       if (this.readOnly) return false;
       if (this.isNewItem) return false;

@@ -271,15 +271,14 @@ async function getUserPreferences() {
   return {};
 }
 async function createStateGroup(stateGroupData, defaultStateGroup) {
-  if (!stateGroupData) return defaultStateGroup;
   // TODO: check for groups that have the current values and use that one instead.
   const defaultStateData = {}; //defaultStateGroup.states[0];
   // TODO: refactor this to handle actual states
   const newStateGroupData = {
-    name: stateGroupData.name || stateGroupData.states.map((s) => s.text).join(', '),
-    description: stateGroupData.description || '',
+    name: stateGroupData?.name || (stateGroupData?.states || defaultStateGroup.states).map((s) => s.text)?.join(', '),
+    description: stateGroupData?.description || defaultStateGroup?.description || '',
     states:
-      (stateGroupData.states || stateGroupData).map((stateBody) => ({ ...defaultStateData, ...stateBody }))
+      (stateGroupData?.states || stateGroupData)?.map((stateBody) => ({ ...defaultStateData, ...stateBody }))
       || defaultStateGroup.states,
   };
 
@@ -298,12 +297,12 @@ async function updateStateGroup(stateGroupRef, newStateGroupData) {
   return stateGroupRef;
 }
 
-async function createSubList(listItem, path) {
+async function createSubList(listItem, path, defaultStateGroup) {
   const payload = {
     title: listItem.title,
     description: `sublist of ${listItem.title}`, // same as title
   };
-  const subList = await createList(payload);
+  const subList = await createList(payload, defaultStateGroup);
   const subListSlug = subList.slug;
   const subListPath = await computeSubListPath(subListSlug, path);
   return {
@@ -327,6 +326,7 @@ async function createList(payload, defaultStateGroup) {
   let newPayload = { ...defaultPayload, ...payload };
   newPayload.slug = await ensureSlugUniqueness(payload.title || defaultPayload.title);
   newPayload.stateGroup = await createStateGroup(newPayload.newStateGroup, defaultStateGroup);
+  debugger;
   newPayload = Object.entries(newPayload).reduce((newObj, [k, v]) => {
     if (k === 'newStateGroup') return newObj;
     if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
