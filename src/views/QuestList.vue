@@ -1,5 +1,5 @@
 <template>
-  <div class="list">
+  <div class="list" :key="list.id">
     <user-auth-alert action="edit this list or save any changes" />
     <h1 class="d-flex">
       {{ list.title }}
@@ -155,20 +155,20 @@ export default {
         return;
       }
       let foundList = fbList.docs[fbList.docs.length - 1];
-      foundList = { id: foundList.id, ...foundList.data() };
+      foundList = {...foundList.data(),  id: foundList.id };
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
       this.setPageBackgroundColor(foundList.color);
-      this.list.id = foundList.id || 'none';
+      foundList.listItems = listItems;
       this.list = foundList;
       this.listItems = listItems;
       this.states = states;
     },
-    saveItem(idx, item) {
+    async saveItem(idx, item) {
       const items = [...this.listItems];
       items[idx] = { ...item };
-      updateUserItemStates(this.list, items);
-      saveListItems(this.list.id, items);
+      await updateUserItemStates(this.list, items);
+      await saveListItems(this.list.id, items);
 
       this.listItems = items;
     },
@@ -177,22 +177,24 @@ export default {
       this.listItems = items;
       saveListItems(this.list.id, items);
     },
-    addNewSubList() {
-      this.saveItem();
+    async addNewSubList() {
+      await this.saveItem();
     },
-  },
-  beforeRouteUpdate(to, _from) {
-      let slugPathArray = to.params.slug;
+    loadList(paramSlug) {
+      let slugPathArray = paramSlug;
       if(!Array.isArray(slugPathArray))
         slugPathArray = [slugPathArray];
-      this.fetchList({ slug: slugPathArray[slugPathArray.length - 1] });
+      const slug = slugPathArray[slugPathArray.length - 1]
+      if(this.list.slug !== slug) this.fetchList({ slug });
+    },
+  },
+  beforeRouteUpdate(to, _from, next) {
+    this.loadList(to.params.slug);
+    next();
   },
   beforeRouteEnter(to, _from, next) {
     next(vm => {
-      let slugPathArray = to.params.slug;
-      if(!Array.isArray(slugPathArray))
-        slugPathArray = [slugPathArray];
-      vm.fetchList({ slug: slugPathArray[slugPathArray.length - 1] });
+      vm.loadList(to.params.slug);
     });
   },
 };

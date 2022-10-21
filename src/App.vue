@@ -5,7 +5,7 @@
   >
     <drawer-menu v-model:drawer="drawer" />
     <v-main :style="pageBackgroundColor" style="max-width: 100%;">
-      <router-view v-slot="{ Component }" :key="$route.path">
+      <router-view v-slot="{ Component }">
         <transition name="router-anim" >
           <component :is="Component" />
         </transition>
