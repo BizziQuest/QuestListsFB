@@ -162,11 +162,12 @@ export default {
         });
       }
     },
-    // TODO: move this to firebase.js
     async makeSublist() {
       this.creatingSubList = true;
       const listWithSubList = await createSubList(this.modelValue, this.$route.path, this.globalPreferences.defaultStateGroup);
+      listWithSubList.skipUpdate = true;
       this.$emit('update', listWithSubList);
+      this.$nextTick(() => this.$router.push(listWithSubList.subListPath));
       this.creatingSubList = false;
     },
   },
