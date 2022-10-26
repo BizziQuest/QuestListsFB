@@ -133,7 +133,9 @@ export default {
       this.$emit('delete');
     },
     deactivate() {
-      this.$emit('update',  {...this.modelValue, isNewItem: false});
+      if (this.modelValue.title || this.modelValue.icon) {
+        this.$emit('update',  {...this.modelValue, isNewItem: false});
+      }
       this.isActive = false;
     },
     activate() {
