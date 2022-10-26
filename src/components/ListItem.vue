@@ -153,7 +153,7 @@ export default {
       this.$emit('update:modelValue', {...this.modelValue, ...data, isNewItem: false});
     },
     saveItem({to}) {
-      this.$emit('update', this.modelValue)
+      this.$emit('update', {...this.modelValue, skipUpdate: !!to})
       if (to) {
         this.$nextTick(() => {
           this.$router.push(to);

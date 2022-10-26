@@ -165,12 +165,15 @@ export default {
       this.states = states;
     },
     async saveItem(idx, item) {
+      const update = !item?.skipUpdate;
+      if (item.skipUpdate) delete item.skipUpdate;
+
       const items = [...this.listItems];
       items[idx] = { ...item };
       await updateUserItemStates(this.list, items);
       await saveListItems(this.list.id, items);
 
-      this.listItems = items;
+      if(update) this.listItems = items;
     },
     delItem(index) {
       const items = this.listItems.filter((_itm, idx) => idx !== index);
