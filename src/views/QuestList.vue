@@ -59,6 +59,7 @@
           @update:modelValue="appendItem(index, $event)"
           @delete="delItem(index, $event)"
           @enterPressed="focusNext(index, $event)"
+          @tabPressed="focusNext(index, $event)"
         />
     </div>
   </div>

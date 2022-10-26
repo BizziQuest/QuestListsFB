@@ -15,6 +15,7 @@
       @blur="deactivate"
       @click.prevent="activate"
       @keydown.enter.prevent="emitEnterPressed"
+      @keydown.tab.prevent="emitTabPressed"
       @update:modelValue="updateData({ title: $event })"
       dense
       ref="input"
@@ -128,6 +129,9 @@ export default {
   methods: {
     emitEnterPressed() {
       this.$emit('enterPressed');
+    },
+    emitTabPressed() {
+      this.$emit('tabPressed');
     },
     emitDelete() {
       this.$emit('delete');
