@@ -185,7 +185,7 @@ export default {
       return true;
     },
     currentColor() {
-      return this.states[this.modelValue?.currentStateIdx]?.color;
+      return this.states[this.modelValue?.currentStateIdx || 0]?.color;
     },
 
     icon() {
