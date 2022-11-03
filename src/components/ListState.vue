@@ -1,5 +1,5 @@
 <template>
-  <div class="list-state w-100" >
+  <div class="list-state w-100" data-key="">
   <v-text-field
     ref="input"
     :model-value="item.text"
@@ -16,8 +16,8 @@
       v-if="isDraggable"
       class="drag-handle"
     >
-      drag_indicator
-    </v-icon>
+      mdi-drag-vertical
+   </v-icon>
     </template>
     <template v-slot:prepend-inner>
     <icon-state

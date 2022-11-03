@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid :dark="this.theme.global.current.dark">
     <v-expansion-panels style="background-color: #ccc;">
       <v-expansion-panel
         style="background-color: #eee;"
@@ -61,7 +61,7 @@ import { mapState } from 'vuex';
 import ListState from './ListState.vue';
 import DragNDrop from '../mixins/DragNDrop.vue';
 import { getDocRefData } from '../firebase';
-
+import { useTheme } from 'vuetify';
 function getNextUnusedValue(unsortedItems) {
   // if (!unsortedItems || unsortedItems.length < 1) return 0;
   let highestValue = 0;
@@ -109,12 +109,19 @@ export default {
       rowItems: [],
       addingItem: false,
       deletedValues: [],
+      theme: useTheme(),
     };
   },
   watch: {
     stateGroup() {
       this.dereferenceStateGroup();
     },
+    dnd_items(val) {
+      this.states = val;
+    },
+    states(val) {
+      this.dnd_items = val;
+    }
   },
   computed: {
     ...mapState(['globalPreferences']),

@@ -13,7 +13,7 @@
       class="pb-2"
     />
     <states-editor
-      :state-group="list.stateGroup"
+      :state-group="states"
       :compact="compact"
       @list:updated="updateStateGroup"
     />
@@ -77,12 +77,16 @@ export default {
         color: this.list.color,
         adultContent: false,
       },
+      newStateGroup: null,
       deletedValues: [],
       formIsValid: false,
     };
   },
   computed: {
     ...mapState(['globalPreferences']),
+    states() {
+      return this.newStateGroup || this.list.stateGroup;
+    },
   },
   watch: {
     list(newValue) {
@@ -107,7 +111,9 @@ export default {
       this.metadataPrefs[$event.name] = $event.value
     },
     updateStateGroup(stateGroup) {
-      this.metadataPrefs.newStateGroup = stateGroup;
+      // NOTE: we are not using metadataPrefs
+      // this.metadataPrefs.newStateGroup = stateGroup;
+      this.newStateGroup = stateGroup;
     },
     updateListPreferences() {
       if (this.formIsValid) {

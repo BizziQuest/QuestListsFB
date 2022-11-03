@@ -8,6 +8,7 @@ export default {
       $_rowOffset: 0,
       $_dragging: false,
       $_leftDragArea: false,
+      dnd_items: []
     };
   },
   methods: {
@@ -34,7 +35,7 @@ export default {
     },
     onDrop($event) {
       const event = $event;
-      const array = [...this.items];
+      const array = [...this.dnd_items];
       const sourceIndex = parseInt($event.dataTransfer
         .getData('sourceIndex'), 10);
       const targetIndex = parseInt($event.target
@@ -47,11 +48,6 @@ export default {
       droppedItem.classList.remove('start-drag');
       droppedItem.classList.remove('hide-drag');
       droppedItem.classList.add('end-drag');
-      const sourceKey = droppedItem
-        .closest('[data-key]')
-        .getAttribute('data-key');
-      const targetKey = $event.target.closest('[data-key]').getAttribute('data-key');
-      this.updatedRows = [sourceKey, targetKey];
 
       const orderedArray = this.$_ql_reorder(array, sourceIndex, targetIndex);
       if (orderedArray === false) {
@@ -59,8 +55,8 @@ export default {
         $event.stopPropagation();
         return;
       }
-      this.items = orderedArray;
-      this.$emit('list:updated', this.items.slice(0, -1));
+      this.dnd_items = [...orderedArray];
+      this.$emit('list:updated', this.dnd_items.slice(0, -1));
       $event.preventDefault();
       $event.stopPropagation();
     },
@@ -95,31 +91,27 @@ export default {
       }
     },
     $_ql_reorder(array, sourceIndex, targetIndex) {
-      const arrayExcludingLast = array.slice(0, array.length - 1);
-      const lastItem = array.slice(array.length - 1);
-      if (targetIndex > array.length - 2 || sourceIndex === targetIndex || sourceIndex === targetIndex + 1) {
+      if (targetIndex > array.length - 1 || sourceIndex === targetIndex) {
         return false;
       }
       let sortedList = [];
-      if (sourceIndex > targetIndex) {
-        const itemsBeforeAndIncludingTarget = arrayExcludingLast.slice(0, targetIndex + 1);
-        const itemsTargetToSourceNotIncludingSource = arrayExcludingLast.slice(targetIndex + 1, sourceIndex);
-        const itemsAfterSource = arrayExcludingLast.slice(sourceIndex + 1);
+      if (sourceIndex > targetIndex) {  // moving an item up in the list
+        const itemsBeforeAndIncludingTarget = array.slice(0, targetIndex + 1);
+        const itemsTargetToSourceNotIncludingSource = array.slice(targetIndex + 1, sourceIndex);
+        const itemsAfterSource = array.slice(sourceIndex + 1);
         sortedList = itemsBeforeAndIncludingTarget.concat(
-          arrayExcludingLast[sourceIndex],
+          array[sourceIndex],
           itemsTargetToSourceNotIncludingSource,
           itemsAfterSource,
-          lastItem,
         );
-      } else {
-        const itemsBeforeAndNOTIncludingSource = arrayExcludingLast.slice(0, sourceIndex);
-        const itemsAfterSourceToTargetIncludingTarget = arrayExcludingLast.slice(sourceIndex + 1, targetIndex + 1);
-        const itemsAfterTarget = arrayExcludingLast.slice(targetIndex + 1);
+      } else { // moving an item down in the list
+        const itemsBeforeAndNOTIncludingSource = array.slice(0, sourceIndex);
+        const itemsAfterSourceToTargetIncludingTarget = array.slice(sourceIndex + 1, targetIndex + 1);
+        const itemsAfterTarget = array.slice(targetIndex + 1);
         sortedList = itemsBeforeAndNOTIncludingSource.concat(
           itemsAfterSourceToTargetIncludingTarget,
-          arrayExcludingLast[sourceIndex],
+          array[sourceIndex],
           itemsAfterTarget,
-          lastItem,
         );
       }
       return sortedList;
@@ -143,7 +135,7 @@ export default {
           return;
         }
 
-        const array = [...this.items];
+        const array = [...this.dnd_items];
         const sourceIndex = draggedRow.getAttribute('data-index');
         const targetIndex = moveToElem.getAttribute('data-index');
         const orderedArray = this.$_ql_reorder(
@@ -156,7 +148,7 @@ export default {
           this.numForceRedraws += 1;
           return;
         }
-        this.items = orderedArray;
+        this.dnd_items = orderedArray;
       }
     },
   },
