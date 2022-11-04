@@ -5,6 +5,7 @@
         style="background-color: #eee;"
         elevation="0"
         test-expander-header
+        value="1"
       >
         <v-expansion-panel-title>
           Possible Item States:
@@ -24,7 +25,7 @@
               :id="index"
               :key="`${item.text}${index}`"
               ref="row"
-              :data-index="index"
+              :data-index="item.isNewItem ? -1 : index"
               class="item-row"
               test-list-item
               @drop="onDrop"

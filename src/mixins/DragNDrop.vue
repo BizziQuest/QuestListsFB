@@ -24,13 +24,16 @@ export default {
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('sourceIndex', sourceIndex);
     },
-    mouseLeave() {
+    mouseLeave($event) {
       this.$_leftDragArea = true;
+      $event.target.querySelector('.start-drag')?.classList?.remove('start-drag');
+      $event.target.querySelector('.end-drag')?.classList?.remove('end-drag');
+      $event.target.querySelector('.hide-drag')?.classList?.remove('hide-drag');
     },
     mouseEnter() {
       this.$_leftDragArea = false;
     },
-    endDrag() {
+    endDrag($event) {
       if (this.$_leftDragArea) this.numForceRedraws += 1;
     },
     onDrop($event) {
@@ -38,10 +41,22 @@ export default {
       const array = [...this.dnd_items];
       const sourceIndex = parseInt($event.dataTransfer
         .getData('sourceIndex'), 10);
-      const targetIndex = parseInt($event.target
-        .closest('[data-index]')
-        .getAttribute('data-index'), 10);
-      const droppedItem = event.target
+
+      const targetElement = $event.target.closest('[data-index]');
+      if (!targetElement) {
+        $event.target.classList.remove('start-drag');
+        $event.target.classList.remove('end-drag');
+        $event.target.classList.remove('hide-drag');
+        return;
+      }
+
+      let targetIndex = 0;
+      if(targetElement.getAttribute('data-index') === '-1')
+        targetIndex = array.length - 1;
+      else
+        targetIndex = parseInt(targetElement.getAttribute('data-index'), 10);
+
+        const droppedItem = event.target
         .closest('#drop-zone')
         .querySelector(`[data-index="${sourceIndex}"]`);
       if (!droppedItem) return;
@@ -62,6 +77,10 @@ export default {
     },
     allowDrop($event) {
       $event.preventDefault();
+      // debugger;
+      $event.target.querySelector('.list-state')?.classList?.add('start-drag');
+      $event.target.querySelector('.list-state')?.classList?.add('hide-drag');
+
     },
     startTouch($event) {
       const evt = $event;

@@ -21,7 +21,6 @@
     </template>
     <template v-slot:prepend-inner>
     <icon-state
-
       v-model:icon="icon"
       @update:icon="updateIcon"
       :color="listColor"
