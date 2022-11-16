@@ -15,6 +15,8 @@
     <v-icon
       v-if="isDraggable"
       class="drag-handle"
+      @mousedown="selectForDrag"
+      @mouseup="$emit('end-select-drag-row')"
     >
       mdi-drag-vertical
    </v-icon>
@@ -85,6 +87,9 @@ export default {
     };
   },
   methods: {
+    selectForDrag() {
+      this.$emit('selectDragRow', {});
+    },
     updateIcon($event) {
       this.$emit('blur', { ...this.item, icon: $event });
     },

@@ -39,8 +39,9 @@ export default {
     onDrop($event) {
       const event = $event;
       const array = [...this.dnd_items];
-      const sourceIndex = parseInt($event.dataTransfer
-        .getData('sourceIndex'), 10);
+      const sourceIndex = parseInt(
+        $event.dataTransfer.getData('sourceIndex'), 10
+      );
 
       const targetElement = $event.target.closest('[data-index]');
       if (!targetElement) {

@@ -13,34 +13,31 @@
         <v-expansion-panel-text>
           <div
             id="drop-zone"
-            @drop="onDrop"
-            @dragover="allowDrop"
-            @touchmove="moveTouch"
-            @touchend="endTouch"
-            @dragleave="mouseLeave"
-            @dragenter="mouseEnter"
           >
-            <span
+            <v-row
               v-for="(item, index) in items"
               :id="index"
               :key="`${item.text}${index}`"
-              ref="row"
+              :ref="`row${index}`"
               :data-index="item.isNewItem ? -1 : index"
-              class="item-row"
+              :draggable="index !== items.length - 1"
+              class="item-row ma-0 px-2"
               test-list-item
-              @drop="onDrop"
+              @drop.prevent="onDrop"
               @dragstart="startDrag"
+              @dragenter="onDragEnter"
+              @dragleave="onDragLeave"
+              @dragover.prevent="null"
               @dragend="endDrag"
-              @touchstart="startTouch"
             >
-              <v-row class="justify-start align-center">
                 <list-state
                   :ref="`stateItem${index}`"
                   list-state-test
                   class="mt-1"
                   :compact="compact"
                   :item="item"
-                  :draggable="index !== items.length - 1"
+                  @selectDragRow="setSelectedRow(index)"
+                  @endSelectDragRow="setSelectedRow(null)"
                   :is-draggable="index !== items.length - 1"
                   :class="itemStateClasses(item, index)"
                   @update:item="updateThisState(index, $event)"
@@ -48,8 +45,7 @@
                   @delete:item="deleteListState(index, $event)"
                   @blur="updateItem(index, $event)"
                 />
-              </v-row>
-            </span>
+            </v-row>
           </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -60,7 +56,7 @@
 <script>
 import { mapState } from 'vuex';
 import ListState from './ListState.vue';
-import DragNDrop from '../mixins/DragNDrop.vue';
+// import DragNDrop from '../mixins/DragNDrop.vue';
 import { getDocRefData } from '../firebase';
 import { useTheme } from 'vuetify';
 function getNextUnusedValue(unsortedItems) {
@@ -78,7 +74,7 @@ export default {
   components: {
     ListState,
   },
-  mixins: [DragNDrop],
+  // mixins: [DragNDrop],
   props: {
     stateGroup: {
       type: Object,
@@ -102,6 +98,7 @@ export default {
       stateGroupObject: {
         states: [],
       },
+      selectedRow: null,
       // our internal representation that is updated, but not used for updating DOM.
       updatedStateGroup: {
         states: [],
@@ -111,6 +108,7 @@ export default {
       addingItem: false,
       deletedValues: [],
       theme: useTheme(),
+      updatedRows: [],
     };
   },
   watch: {
@@ -141,7 +139,80 @@ export default {
     this.dereferenceStateGroup();
   },
   methods: {
+    setSelectedRow(index){
+      if(index === null || index < 0) {
+        this.selectedRow = null;
+        return;
+      }
+      console.log('selected:', index);
+      // BUGFIX: vue mangles the refs order so we need to come up with another
+      //  way to reference the items
+      this.selectedRow = this.$refs[`row${index}`].$el;
+    },
+    startDrag(event) {
+      debugger;
+      const index = event.target.getAttribute('data-index');
+      if (event.target === this.selectedRow) {
+        event.dataTransfer.setData('text/plain', index);
+      } else {
+        event.preventDefault();
+      }
+      const current = this.$refs[`row${index}`].$el;
+      for (let it of this.$refs.row) {
+        if (it.$el != current) {
+          it.$el.closest('.item-row').classList.add("hint");
+        }
+      }
+    },
+    endDrag() {
+      for (let it of this.$refs.row) {
+        if (it.$el != this.selectedRow) {
+          const item = it.$el.closest('.item-row');
+          item.classList.remove("hint");
+          item.classList.remove("active");
+        }
+      }
+      this.selectedRow = null;
+    },
+    onDrop(event) {
+      const dragItem = this.selectedRow;
+      const dropItem = event.target.closest('.item-row');
+      if (dragItem != dropItem) {
+        let currentpos = parseInt(dragItem.getAttribute('data-index')),
+            droppedpos = parseInt(dropItem.getAttribute('data-index'));
+        // we have the html moved, but not the items reordered
+        const currentStates = [...this.states];
+        if (currentpos > droppedpos) { // we are moving an item up, so insert dragItem before dropitem
+          // move currentStates[currentpos] to currentStates[droppedpos]
+          const itemsBeforeDropped = currentStates.slice(0,droppedpos);
+          const itemsBetween = currentStates.slice(droppedpos,currentpos);
+          const endItems = currentStates.slice(currentpos + 1);
+          this.states = [...itemsBeforeDropped, currentStates[currentpos],...itemsBetween, ...endItems]
+          // dropItem.parentNode.insertBefore(dragItem, dropItem.nextSibling);
+        } else { // moving down. insert dragItem after dropItem
+          const itemsBeforeCurrent = currentStates.slice(0,currentpos);
+          const itemsBetween = currentStates.slice(currentpos+1, droppedpos+1);
+          const endItems = currentStates.slice(droppedpos+1);
+          debugger;
+          this.states = [...itemsBeforeCurrent,...itemsBetween, currentStates[currentpos], ...endItems]
+          // dropItem.parentNode.insertBefore(dragItem, dropItem);
+        }
+      }
+      this.selectedRow = null;
+
+    },
+    onDragEnter(event) {
+      const elementBelow = event.target.closest('.item-row');
+      if (elementBelow != this.selectedRow) {
+        elementBelow.classList.add("active");
+      }
+    },
+    onDragLeave(event) {
+      const elementBelow = event.target.closest('.item-row');
+      elementBelow.classList.remove("active");
+    },
     itemStateClasses(item, index) {
+      if (!this.updatedRows) return {};
       return {
         changed: this.updatedRows.find((e) => e && e.localeCompare(`${item.text}${index}`) === 0),
         endDrag: this.updatedRows[0] && this.updatedRows[0].localeCompare(`${item.text}${index}`) === 0,
@@ -231,7 +302,9 @@ export default {
 .hide-drag {
   transform: translateX(-9999px);
 }
-
+.hint {
+  border: #990000 solid 2px;
+}
 .start-drag {
   // opacity: 0.8;
   border: 1px dashed red;
@@ -252,5 +325,8 @@ export default {
 .end-drag {
   opacity: 1;
   border: 1px solid blue;
+}
+.item-row.active {
+  background-color: #666;
 }
 </style>
