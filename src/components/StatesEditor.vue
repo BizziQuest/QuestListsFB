@@ -144,30 +144,30 @@ export default {
         this.selectedRow = null;
         return;
       }
-      console.log('selected:', index);
-      // BUGFIX: vue mangles the refs order so we need to come up with another
-      //  way to reference the items
-      this.selectedRow = this.$refs[`row${index}`].$el;
+      // console.log('selected:', this.$refs[`row${index}`][0].$el);
+      this.selectedRow = this.$refs[`row${index}`][0].$el;
     },
     startDrag(event) {
-      debugger;
       const index = event.target.getAttribute('data-index');
+      const curRow = this.selectedRow;
       if (event.target === this.selectedRow) {
         event.dataTransfer.setData('text/plain', index);
       } else {
         event.preventDefault();
       }
-      const current = this.$refs[`row${index}`].$el;
-      for (let it of this.$refs.row) {
-        if (it.$el != current) {
-          it.$el.closest('.item-row').classList.add("hint");
+      const current = this.$refs[`row${index}`][0].$el;
+      for (let idx = 0; idx < this.states.length; idx++) {
+        const otherRow = this.$refs[`row${idx}`][0].$el;
+        if (otherRow != current) {
+          otherRow.closest('.item-row').classList.add("hint");
         }
       }
     },
     endDrag() {
-      for (let it of this.$refs.row) {
-        if (it.$el != this.selectedRow) {
-          const item = it.$el.closest('.item-row');
+      for (let idx = 0; idx < this.states.length; idx++) {
+        const otherRow = this.$refs[`row${idx}`][0].$el;
+        if (otherRow != this.selectedRow) {
+          const item = otherRow.closest('.item-row');
           item.classList.remove("hint");
           item.classList.remove("active");
         }
@@ -177,9 +177,11 @@ export default {
     onDrop(event) {
       const dragItem = this.selectedRow;
       const dropItem = event.target.closest('.item-row');
+
       if (dragItem != dropItem) {
         let currentpos = parseInt(dragItem.getAttribute('data-index')),
             droppedpos = parseInt(dropItem.getAttribute('data-index'));
+        if(droppedpos < 0) return;
         // we have the html moved, but not the items reordered
         const currentStates = [...this.states];
         if (currentpos > droppedpos) { // we are moving an item up, so insert dragItem before dropitem
@@ -193,7 +195,6 @@ export default {
           const itemsBeforeCurrent = currentStates.slice(0,currentpos);
           const itemsBetween = currentStates.slice(currentpos+1, droppedpos+1);
           const endItems = currentStates.slice(droppedpos+1);
-          debugger;
           this.states = [...itemsBeforeCurrent,...itemsBetween, currentStates[currentpos], ...endItems]
           // dropItem.parentNode.insertBefore(dragItem, dropItem);
         }
@@ -203,7 +204,8 @@ export default {
     },
     onDragEnter(event) {
       const elementBelow = event.target.closest('.item-row');
-      if (elementBelow != this.selectedRow) {
+      const belowPos = parseInt(elementBelow.getAttribute('data-index'))
+      if (elementBelow != this.selectedRow && belowPos >= 0) {
         elementBelow.classList.add("active");
       }
     },

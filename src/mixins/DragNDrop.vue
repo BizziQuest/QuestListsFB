@@ -78,7 +78,6 @@ export default {
     },
     allowDrop($event) {
       $event.preventDefault();
-      // debugger;
       $event.target.querySelector('.list-state')?.classList?.add('start-drag');
       $event.target.querySelector('.list-state')?.classList?.add('hide-drag');
 
