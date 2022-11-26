@@ -2,7 +2,7 @@ import { mount, createLocalVue } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
-import Lists from '@/views/Lists.vue';
+import Lists from '@/views/QuestLists.vue';
 import { algoliaIndex } from '../../src/algolia';
 import { fetchQuestLists } from '../../src/firebase';
 
@@ -34,10 +34,10 @@ const localStore = new Vuex.Store({
       }
     },
   },
-  actions: {fetchLists: jest.fn()}
+  actions: { fetchLists: jest.fn() },
 });
 
-describe('Lists.vue', () => {
+describe('QuestLists.vue', () => {
   describe('when there are no lists', () => {
     let wrapper;
     beforeEach(async () => {
@@ -112,7 +112,6 @@ describe('Lists.vue', () => {
                     color: '#0000ff',
                     icon: 'mdi-checkbox-blank-outline',
                     name: 'Not Done',
-                    shortName: 'notDone',
                     value: '0',
                     order: 0,
                   },
@@ -120,7 +119,6 @@ describe('Lists.vue', () => {
                     color: '#00ff00',
                     icon: 'mdi-checkbox-marked-outline',
                     name: 'Done',
-                    shortName: 'done',
                     value: '1',
                     order: 1,
                   },

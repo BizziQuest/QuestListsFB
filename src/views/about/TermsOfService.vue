@@ -1,12 +1,20 @@
 <template>
-  <v-container class="terms">
+  <v-container class="terms-of-service">
     <v-card elevation="3">
       <v-card-title>QuestLists Terms and Conditions</v-card-title>
       <v-card-text>
         <p>
           These terms and conditions (&quot;Agreement&quot;) set forth the general terms and conditions of your use of
-          the <a target="_blank" rel="nofollow" href="https://questlists.web.app">questlists.web.app</a> website and/or
-          the <a target="_blank" rel="nofollow" href="https://questlists.firebaseapp.com">questlists.firebaseapp.com</a>
+          the <a
+            target="_blank"
+            rel="nofollow"
+            href="https://questlists.web.app"
+          >questlists.web.app</a> website and/or
+          the <a
+            target="_blank"
+            rel="nofollow"
+            href="https://questlists.firebaseapp.com"
+          >questlists.firebaseapp.com</a>
           website
           (&quot;Website&quot; or &quot;Service&quot;) and any of its related products and services (collectively,
           &quot;Services&quot;). This Agreement is legally binding between you (&quot;User&quot;, &quot;you&quot; or
@@ -20,9 +28,10 @@
           Agreement is a contract between you and the Operator, even though it is electronic and is not physically
           signed by you, and it governs your use of the Website and Services. This terms and conditions policy was
           created with the help of the
-          <a target="_blank" href="https://www.websitepolicies.com/terms-and-conditions-generator"
-            >terms and conditions generator</a
-          >.
+          <a
+            target="_blank"
+            href="https://www.websitepolicies.com/terms-and-conditions-generator"
+          >terms and conditions generator</a>.
         </p>
         <h2>Accounts and membership</h2>
         <p>

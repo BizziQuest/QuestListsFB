@@ -1,32 +1,57 @@
- <template>
+<template>
   <div>
-    <v-btn-toggle v-model="colorPickerState" dense multiple height="28px" class="mb-2">
-      <v-btn test-inputs-btn title="HTML Hex Code" class="ml-2" icon small>
+    <v-btn-toggle
+      v-model="colorPickerState"
+      dense
+      multiple
+      height="28px"
+      class="mb-2"
+    >
+      <v-btn
+        test-inputs-btn
+        title="HTML Hex Code"
+        class="ml-2"
+        icon
+        small
+      >
         <v-icon>mdi-form-textbox</v-icon>
       </v-btn>
-      <v-btn test-sliders-btn title="Color Sliders" class="ml-2" icon small>
+      <v-btn
+        test-sliders-btn
+        title="Color Sliders"
+        class="ml-2"
+        icon
+        small
+      >
         <v-icon>mdi-gauge</v-icon>
       </v-btn>
-      <v-btn test-canvas-btn title="Color Gradient" class="ml-2" icon small rounded>
+      <v-btn
+        test-canvas-btn
+        title="Color Gradient"
+        class="ml-2"
+        icon
+        small
+        rounded
+      >
         <v-icon>mdi-palette</v-icon>
       </v-btn>
     </v-btn-toggle>
     <v-color-picker
-      :value="value"
-      @input="updateColor"
+      v-model="modelValue"
       :hide-inputs="!colorPickerState.includes(0)"
       :hide-canvas="!colorPickerState.includes(2)"
       :hide-sliders="!colorPickerState.includes(1)"
       mode="hexa"
       :swatches="swatches"
       show-swatches
+      @update:modelValue="updateColor"
     />
   </div>
 </template>
 <script>
 export default {
   name: 'CustomColorPicker',
-  props: ['value'],
+  props: ['modelValue'],
   data() {
     return {
       colorPickerState: [],
@@ -39,11 +64,12 @@ export default {
   },
   methods: {
     updateColor($event) {
+      console.log($event)
       if (typeof $event === 'string') {
-        this.$emit('input', $event.slice(0, 7));
+        this.$emit('update:modelValue', $event.slice(0, 7));
         return;
       }
-      this.$emit('input', $event.hex);
+      this.$emit('update:modelValue', $event.hex);
     },
   },
 };

@@ -1,17 +1,22 @@
 <template>
+  <span>
   <v-text-field
     label="Color"
-    :value="value"
-    @input="$emit('input', $event)"
+    :model-value="modelValue"
     placeholder="enter color"
     :outlined="outline"
     :rules="colorPickerRules"
     test-color-input
+    @update:modelValue="updateValue"
   >
-    <template v-slot:append>
-      <color-swatch :value="value" @input="$emit('input', $event)" />
+    <template #append>
+      <color-swatch
+        :modelValue="modelValue"
+        @update:modelValue="updateValue"
+      />
     </template>
   </v-text-field>
+  </span>
 </template>
 <script>
 import ColorSwatch from './ColorSwatch.vue';
@@ -21,19 +26,24 @@ export default {
   components: {
     ColorSwatch,
   },
-  data: () => ({
-    colorPickerRules: [
-      (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
-    ],
-  }),
   props: {
     outline: {
       type: Boolean,
       description: 'show the outline on the text field',
     },
-    value: {
+    modelValue: {
       type: String,
       description: 'value of the default color',
+    },
+  },
+  data: () => ({
+    colorPickerRules: [
+      (v) => !v || /^#([A-F0-9]{3}){1,2}$/i.test(v) || 'Color Format Must be #FFF or #FFFFFF, case-insensitive',
+    ],
+  }),
+  methods: {
+    updateValue(newValue) {
+      this.$emit('update:modelValue', newValue);
     },
   },
 };

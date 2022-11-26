@@ -34,13 +34,11 @@ jest.mock('firebase.js', () => ({
 
 toHaveBeenWarnedInit();
 
-
 const localVue = createLocalVue();
 localVue.use(Vuex);
 const router = new VueRouter({ routes });
 const vuetify = new Vuetify();
 localVue.use(VueRouter, Vuetify, Vuex);
-
 
 let wrapper;
 
@@ -54,7 +52,7 @@ beforeEach(async () => {
       getRecentlyUsedQuests: jest.fn(),
     },
   });
-    wrapper = mount(DrawerMenu, {
+  wrapper = mount(DrawerMenu, {
     localVue,
     router,
     vuetify,

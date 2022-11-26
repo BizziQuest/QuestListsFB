@@ -1,21 +1,25 @@
 <template>
-    <v-snackbar
-      v-if="messages[0]"
-      v-model="showSnackbar"
-      top
-      shaped
-      transition="fab-transition"
-      :color="messages[0].type"
-      :timeout="messages[0].timeout"
-      @input="nextMessage"
-    >
-      {{ messages[0].text }}
-      <template v-slot:action="{ attrs }">
-        <v-btn text v-bind="attrs" @click="showSnackbar = false">
-          X
-        </v-btn>
-      </template>
-    </v-snackbar>
+  <v-snackbar
+    v-if="messages[0]"
+    v-model="showSnackbar"
+    top
+    shaped
+    transition="fab-transition"
+    :color="messages[0].type"
+    :timeout="messages[0].timeout"
+    @input="nextMessage"
+  >
+    {{ messages[0].text }}
+    <template #action="{ attrs }">
+      <v-btn
+        text
+        v-bind="attrs"
+        @click="showSnackbar = false"
+      >
+        X
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex';

@@ -1,8 +1,14 @@
 <template>
-  <v-badge overlap
-           offset-x="100" class="list-card-badge" content="adult content"
-           :value="!!updatedList.adultContent" color="red">
-     <v-card
+  <div v-if="updatedList?.slug">
+  <v-badge
+    overlap
+    offset-x="100"
+    class="list-card-badge"
+    content="adult content"
+    :value="!!updatedList.adultContent"
+    color="red"
+  >
+    <v-card
       light
       :color="updatedList.color"
       :style="textStyles"
@@ -11,34 +17,55 @@
       elevation="3"
       :to="{ name: 'List', params: { slug: updatedList.slug } }"
     >
-      <v-img :src="updatedList.image || 'https://picsum.photos/200/300'" max-width="100" :class="imageClasses"></v-img>
-      <v-container class="ma-0 pa-1 align-self-start" dark>
-        <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold">{{ updatedList.title }}</v-card-title>
+      <v-img
+        :src="updatedList.image || 'https://picsum.photos/200/300'"
+        max-width="100"
+        :class="imageClasses"
+      />
+      <v-container
+        class="ma-0 pa-1 align-self-start"
+        dark
+      >
+        <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold">
+          {{ updatedList.title }}
+        </v-card-title>
 
-        <v-card-subtitle class="ml-0 px-1 text-subtitle-2" dark>{{ updatedList.description }}</v-card-subtitle>
+        <v-card-subtitle
+          class="ml-0 px-1 text-subtitle-2"
+          dark
+        >
+          {{ updatedList.description }}
+        </v-card-subtitle>
         <v-card-text class="ml-0 px-1">
-          <v-list dense class="ml-0 px-0">
+          <v-list
+            dense
+            class="ml-0 px-0"
+          >
             <v-list-item-title class="ml-0 px-0 font-weight-medium text-decoration-underline">
               Next Items:
             </v-list-item-title>
-            <v-list-item class="font-weight-bold" v-if="!updatedList.nextItems || updatedList.nextItems.length < 1">
+            <v-list-item
+              v-if="!updatedList.nextItems || updatedList.nextItems.length < 1"
+              class="font-weight-bold"
+            >
               There is nothing to do in this list. Click this card to add your quest items.
             </v-list-item>
             <list-item
-              class="ml-0 px-0"
               v-for="item in updatedList.nextItems"
-              :color="globalPreferences.defaultStateGroup.color"
               :key="item.order"
+              class="ml-0 px-0"
+              :color="globalPreferences.defaultStateGroup.color"
               :list-item="item"
               :states="states || globalPreferences.defaultStateGroup.states"
+              read-only
               @click.prevent.stop="null"
-              readOnly
             />
           </v-list>
         </v-card-text>
       </v-container>
     </v-card>
   </v-badge>
+  </div>
 </template>
 
 <script>
@@ -72,13 +99,13 @@ export default {
   computed: {
     ...mapState(['globalPreferences']),
     cardClasses() {
-      if (this.$vuetify.breakpoint.lgAndUp) return 'rounded-t-xl';
-      if (this.$vuetify.breakpoint.smAndDown) return 'rounded-xl';
+      if (this.$vuetify.display.lgAndUp) return 'rounded-t-xl';
+      if (this.$vuetify.display.smAndDown) return 'rounded-xl';
       return '';
     },
     imageClasses() {
-      if (this.$vuetify.breakpoint.lgAndUp) return 'rounded-tl-xl rounded-tr-0';
-      if (this.$vuetify.breakpoint.smAndDown) return 'rounded-l-xl rounded-tr-0';
+      if (this.$vuetify.display.lgAndUp) return 'rounded-tl-xl rounded-tr-0';
+      if (this.$vuetify.display.smAndDown) return 'rounded-l-xl rounded-tr-0';
       return '';
     },
     textStyles() {

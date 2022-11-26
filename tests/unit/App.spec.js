@@ -87,7 +87,7 @@ describe('App.vue response to service worker update', () => {
     const localStore = new Vuex.Store({
       getters: { getGlobalPreferences: (s) => s.globalPreferences },
       state,
-      actions: { fetchLists: jest.fn(), getRecentlyUsedQuests: jest.fn(), },
+      actions: { fetchLists: jest.fn(), getRecentlyUsedQuests: jest.fn() },
     });
     wrapper = mount(App, {
       localVue,

@@ -16,13 +16,12 @@ export default {
     document.addEventListener('swUpdated', this.updateAvailable, { once: true });
 
     // Prevent multiple refreshes
-    navigator.serviceWorker?.addEventListener('controllerchange', () => {
+    navigator.serviceWorker?.addEventListener('controllerchange', () => { // eslint-disable-line no-unused-expressions
       if (this.refreshing) return;
       this.refreshing = true;
       window.location.reload();
     });
   },
-
   methods: {
     updateAvailable(event) {
       this.registration = event.detail; // store this so we can use it if needed

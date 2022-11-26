@@ -1,18 +1,38 @@
 <template>
-  <v-menu :close-on-content-click="false" :close-on-click="false" v-model="colorPickerShown" left top>
-    <template v-slot:activator="{ on }">
-      <div :style="swatchStyle()" v-on="on" />
+  <div class="color-swatch">
+  <v-menu
+    v-model="colorPickerShown"
+    :close-on-content-click="false"
+    :close-on-click="false"
+    location="start"
+    transition="slide-x-transition"
+  >
+    <template #activator="{ props }">
+      <div
+        :style="swatchStyle"
+        v-bind="props"
+      />
     </template>
     <v-card>
       <v-card-text>
-        <CustomColorPicker :value="value" @input="$emit('input', $event)" />
+        <CustomColorPicker
+          v-model:modelValue="modelValue"
+          @update:modelValue="$emit('update:modelValue', $event)"
+        />
         <v-row align="center">
-          <v-btn @click="closeSwatch" class="mx-auto mt-3">Close</v-btn>
+          <v-btn
+            class="mx-auto mt-3"
+            @click="closeSwatch"
+          >
+            Close
+          </v-btn>
         </v-row>
       </v-card-text>
     </v-card>
   </v-menu>
+  </div>
 </template>
+
 <script>
 import CustomColorPicker from './CustomColorPicker.vue';
 
@@ -27,7 +47,7 @@ export default {
       description: 'show the outline on the text field',
       required: false,
     },
-    value: {
+    modelValue: {
       type: String,
       description: 'the value of the color, in hex',
     },
@@ -37,10 +57,10 @@ export default {
       colorPickerShown: false,
     };
   },
-  methods: {
+  computed: {
     swatchStyle() {
       return {
-        backgroundColor: this.value,
+        backgroundColor: this.modelValue,
         cursor: 'pointer',
         height: '30px',
         width: '30px',
@@ -49,8 +69,11 @@ export default {
         transition: 'border-radius 200ms ease-in-out',
       };
     },
+
+  },
+  methods: {
     closeSwatch() {
-      this.$emit('input', this.value);
+      this.$emit('update:modelValue', this.modelValue);
       this.colorPickerShown = false;
     },
   },

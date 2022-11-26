@@ -1,10 +1,27 @@
 <template>
-  <svg v-if="size > 500" width="500" height="500" viewbox="0 0 500 500">
-    <path :d="absolutePath"></path>
+  <svg
+    v-if="size > 500"
+    width="500"
+    height="500"
+    viewbox="0 0 500 500"
+  >
+    <path :d="absolutePath" />
   </svg>
-  <svg v-else :width="size" :height="size" viewbox="0 0 26 26">
-    <path :d="variant ? variants[variant] : size24" :transform="`scale(${size/26})`"></path>
-    <path v-if="decoration" :d="decoration ? decorations[decoration] : null" :transform="`scale(${size/26})`"></path>
+  <svg
+    v-else
+    :width="size"
+    :height="size"
+    viewbox="0 0 26 26"
+  >
+    <path
+      :d="variant ? variants[variant] : size24"
+      :transform="`scale(${size/26})`"
+    />
+    <path
+      v-if="decoration"
+      :d="decoration ? decorations[decoration] : null"
+      :transform="`scale(${size/26})`"
+    />
   </svg>
 </template>
 

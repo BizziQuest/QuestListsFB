@@ -1,16 +1,21 @@
 <template>
-  <v-dialog v-model="dialog" persistent :dark="dark" max-width="600px">
-    <template v-slot:activator="{ on }">
-      <slot :on="on">
-        <v-list-item link :dark="dark" v-on="on" test-open-dialog title="Sign In / Sign Up">
-          <v-list-item-action>
+  <v-dialog
+    v-model="dialog"
+    persistent
+    :dark="dark"
+    max-width="600px"
+  >
+    <template #activator="{ props }">
+        <v-list-item
+          :dark="dark"
+          test-open-dialog
+          v-bind="props"
+        >
+          <template v-slot:prepend>
             <v-icon>mdi-account-arrow-right</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Sign In or Sign Up</v-list-item-title>
-          </v-list-item-content>
+          </template>
+          <v-list-item-title v-text="'Sign In or Sign Up'" class="ml-4"/>
         </v-list-item>
-      </slot>
     </template>
     <v-form ref="form">
       <v-card>
@@ -20,45 +25,76 @@
         <v-card-text>
           <v-row>
             <v-col cols="12">
-              <v-text-field test-email-field
+              <v-text-field
                 v-model="email"
+                test-email-field
                 :rules="[rules.emailPresent, rules.emailFormat]"
                 outlined
+                autocomplete="email"
                 label="Email*"
                 required
                 clearable
-              ></v-text-field>
+              />
             </v-col>
             <v-col cols="12">
-              <v-text-field test-password-field
+              <v-text-field
                 v-model="password"
+                test-password-field
                 :rules="[rules.passwordPresent, rules.passwordLength]"
                 outlined
                 label="Password*"
                 type="password"
+                autocomplete="current-password"
                 required
                 counter
                 clearable
-              >
-              </v-text-field>
+              />
             </v-col>
           </v-row>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="secondary" text @click="googleSignin()">
+            <v-btn
+              color="secondary"
+              text
+              @click="googleSignin()"
+            >
               <v-icon>mdi-google</v-icon>
             </v-btn>
-            <v-btn color="secondary" text @click="faceBookSignin()">
+            <v-btn
+              color="secondary"
+              text
+              @click="faceBookSignin()"
+            >
               <v-icon>mdi-facebook</v-icon>
             </v-btn>
             <v-spacer />
           </v-card-actions>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary-lighten1" text @click="dialog = false"> Cancel</v-btn>
+          <v-btn
+            color="primary-lighten1"
+            text
+            @click="dialog = false"
+          >
+            Cancel
+          </v-btn>
           <v-spacer />
-          <v-btn color="success" test-login-button text @click="loginOrSignUser()"> Log In</v-btn>
-          <v-btn color="secondary" text @click="loginOrSignUser(true)" test-signup-button> Sign Up</v-btn>
+          <v-btn
+            color="success"
+            test-login-button
+            text
+            @click="loginOrSignUser()"
+          >
+            Log In
+          </v-btn>
+          <v-btn
+            color="secondary"
+            text
+            test-signup-button
+            @click="loginOrSignUser(true)"
+          >
+            Sign Up
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-form>
