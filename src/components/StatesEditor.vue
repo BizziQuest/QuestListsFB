@@ -1,8 +1,7 @@
 <template>
-  <v-container fluid :dark="this.theme.global.current.dark">
-    <v-expansion-panels style="background-color: #ccc;">
+  <v-container fluid >
+    <v-expansion-panels>
       <v-expansion-panel
-        style="background-color: #eee;"
         elevation="0"
         test-expander-header
         value="1"
