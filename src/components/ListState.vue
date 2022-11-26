@@ -25,13 +25,13 @@
     <icon-state
       v-model:icon="icon"
       @update:icon="updateIcon"
-      :color="listColor"
+      :color="listItemColor"
     />
     </template>
     <template v-slot:append>
     <color-swatch
       v-if="!item.isNewItem"
-      v-model="listColor"
+      v-model="listItemColor"
       :outline="false"
     />
     </template>
@@ -82,13 +82,21 @@ export default {
   data() {
     return {
       text: this.item.text,
-      listColor: this.item.color,
+      listItemColor: this.item.color,
       icon: this.item.icon,
     };
+  },
+  watch: {
+    listItemColor(val) {
+      this.updateColor(val);
+    }
   },
   methods: {
     selectForDrag() {
       this.$emit('selectDragRow', {});
+    },
+    updateColor($event) {
+      this.$emit('blur', { ...this.item, color: $event });
     },
     updateIcon($event) {
       this.$emit('blur', { ...this.item, icon: $event });

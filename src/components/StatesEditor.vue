@@ -235,6 +235,7 @@ export default {
       // this.states[this.states.length - 1].value = getNextUnusedValue(this.states);
     },
     updateItem(index, state) {
+      debugger;
       if(state.text === '' && state.icon === 'mdi-plus') return;
       this.states = this.updateThisState(index, state);
       this.$emit('list:updated', { ...this.stateGroupObject, ...this.updatedStateGroup });
@@ -247,6 +248,7 @@ export default {
         text: state.text || states[index]?.text || '',
         icon: state.icon || states[index]?.icon || '',
         order: state.order || states[index]?.order || index,
+        color: state.color || states[index]?.color || undefined,
       };
       this.updatedStateGroup = { ...this.stateGroupObject, ...this.updatedStateGroup, states };
       if (index === this.states.length) {
