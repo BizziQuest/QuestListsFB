@@ -117,7 +117,7 @@ export default {
     },
     updateListPreferences() {
       if (this.formIsValid) {
-        this.$emit('update:list', { ...this.metadataPrefs, deletedValues: this.deletedValues });
+        this.$emit('update:list', { ...this.metadataPrefs, newStateGroup: this.newStateGroup, deletedValues: this.deletedValues });
       }
     },
   },

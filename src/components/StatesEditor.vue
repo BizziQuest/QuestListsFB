@@ -186,8 +186,8 @@ export default {
         const currentStates = [...this.states];
         if (currentpos > droppedpos) { // we are moving an item up, so insert dragItem before dropitem
           // move currentStates[currentpos] to currentStates[droppedpos]
-          const itemsBeforeDropped = currentStates.slice(0,droppedpos);
-          const itemsBetween = currentStates.slice(droppedpos,currentpos);
+          const itemsBeforeDropped = currentStates.slice(0, droppedpos);
+          const itemsBetween = currentStates.slice(droppedpos, currentpos);
           const endItems = currentStates.slice(currentpos + 1);
           this.states = [...itemsBeforeDropped, currentStates[currentpos],...itemsBetween, ...endItems]
           // dropItem.parentNode.insertBefore(dragItem, dropItem.nextSibling);
@@ -200,11 +200,10 @@ export default {
         }
       }
       this.selectedRow = null;
-
     },
     onDragEnter(event) {
       const elementBelow = event.target.closest('.item-row');
-      const belowPos = parseInt(elementBelow.getAttribute('data-index'))
+      const belowPos = parseInt(elementBelow.getAttribute('data-index'));
       if (elementBelow != this.selectedRow && belowPos >= 0) {
         elementBelow.classList.add("active");
       }
