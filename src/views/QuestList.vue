@@ -13,12 +13,12 @@
     </h1>
     <h3>{{ list.description }}</h3>
     <v-chip
-      v-if="!!list.adultContent"
+      v-if="!!list.explicitContent"
       class="ma-2"
       color="red"
       text-color="white"
     >
-      Adult Content
+      Explicit Content
     </v-chip>
     <v-btn
       style="display: block"

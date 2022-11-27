@@ -46,7 +46,7 @@ const defaultFormData = {
   updatedListStatesItems: [],
   description: '',
   color: '',
-  adultContent: false,
+  explicitContent: false,
 };
 
 export default {
@@ -75,7 +75,7 @@ export default {
         title: this.list.title,
         description: this.list.description,
         color: this.list.color,
-        adultContent: false,
+        explicitContent: false,
       },
       newStateGroup: null,
       deletedValues: [],
@@ -94,7 +94,7 @@ export default {
         title: newValue.title,
         description: newValue.description,
         color: newValue.color,
-        adultContent: newValue.adultContent,
+        explicitContent: newValue.explicitContent,
       };
     },
   },
@@ -103,7 +103,7 @@ export default {
       title: this.list.title,
       description: this.list.description,
       color: this.list.color,
-      adultContent: this.list.adultContent,
+      explicitContent: this.list.explicitContent,
     };
   },
   methods: {

@@ -107,13 +107,13 @@ describe('the description field', () => {
     await wrapper.find('input[test-title-input]').setValue('A Title');
     await wrapper.find('input[test-description-input]').setValue('');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help/);
+    expect(wrapper.text()).toMatch(/Description\s+Explicit Content\s+help/);
   });
   it('should allow simple text', async () => {
     await wrapper.find('input[test-title-input]').setValue('A Tile');
     await wrapper.find('input[test-description-input]').setValue('I am a description');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help/);
+    expect(wrapper.text()).toMatch(/Description\s+Explicit Content\s+help/);
   });
   it('should allow complex text (this is to make sure our tools support complex inputs)', async () => {
     const unicodeString = 'ʕノ•ᴥ•ʔノ ︵ ┻━┻ ✌.ʕʘ‿ʘʔ.✌ 😀';
@@ -121,6 +121,6 @@ describe('the description field', () => {
     await wrapper.find('input[test-description-input]').setValue(unicodeString);
     await wrapper.vm.$nextTick();
     expect(wrapper.emitted()['update:description'][0][0]).toBe(unicodeString);
-    expect(wrapper.text()).toMatch(/Description\s+Adult Content\s+help/);
+    expect(wrapper.text()).toMatch(/Description\s+Explicit Content\s+help/);
   });
 });
