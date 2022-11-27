@@ -14,7 +14,12 @@ export default defineConfig({
       // etc.
     ],
   },
-  plugins: [vue(),vuetify({ autoImport: true })],
+  plugins: [
+    vue(),
+    vuetify({
+      autoImport: true
+    })
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
