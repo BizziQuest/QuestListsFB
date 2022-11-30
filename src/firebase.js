@@ -38,24 +38,24 @@ const firebaseConfig = {
   projectId: import.meta.env.VITE_APP_FIREBASE_PROJECT_ID,
   // storageBucket: import.meta.env.VITE_APP_FIREBASE_STORAGE_BUCKET,
 };
-console.log(firebaseConfig);
-if (import.meta.env.NODE_ENV !== 'development') {
-  firebaseConfig.measurementId = import.meta.env.VITE_APP_FIREBASE_APP_ID;
+console.log(import.meta.env.MODE, firebaseConfig);
+if (import.meta.env.MODE !== 'development') {
+  firebaseConfig.measurementId = import.meta.env.VITE_APP_GOOGLE_ANALYTICS_ID;
   firebaseConfig.messagingSenderId = import.meta.env.VITE_APP_FIREBASE_MESSAGING_SENDER_ID;
   firebaseConfig.storageBucket = import.meta.env.VITE_APP_FIREBASE_STORAGE_BUCKET;
 } else {
-  global.self.FIREBASE_APPCHECK_DEBUG_TOKEN = env.VITE_APP_FIREBASE_APPCHECK_DEBUG_TOKEN;
+  // global.self.FIREBASE_APPCHECK_DEBUG_TOKEN = env.VITE_APP_FIREBASE_APPCHECK_DEBUG_TOKEN;
 }
 // firebase utils
 const fbApp = initializeApp(firebaseConfig);
 
-const nodeEnv = import.meta.env.NODE_ENV;
+const nodeEnv = import.meta.env.MODE;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? getAnalytics() : null;
 let tappCheck = null;
-if (import.meta.env.NODE_ENV === 'production') {
+if (import.meta.env.MODE === 'production') {
   tappCheck = initializeAppCheck(fbApp, {
     provider: new ReCaptchaV3Provider(import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY),
-    isTokenAutoRefreshEnabled: import.meta.env.NODE_ENV === 'production', // refresh app tokens as needed?
+    isTokenAutoRefreshEnabled: import.meta.env.MODE === 'production', // refresh app tokens as needed?
   });
 }
 const appCheck = tappCheck;
@@ -71,7 +71,7 @@ const { currentUser } = auth;
 // // firebase settings go here
 // const settings = { };
 
-if (import.meta.env.NODE_ENV !== 'production') {
+if (import.meta.env.MODE !== 'production') {
   connectAuthEmulator(auth, import.meta.env.VITE_APP_FIREBASE_AUTH_HOST);
   connectFirestoreEmulator(db, import.meta.env.VITE_APP_FIREBASE_DATABASE_HOST, import.meta.env.VITE_APP_FIREBASE_DATABASE_PORT);
 }
