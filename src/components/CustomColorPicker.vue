@@ -37,7 +37,7 @@
       </v-btn>
     </v-btn-toggle>
     <v-color-picker
-      v-model="modelValue"
+      :modelValue="modelValue"
       :hide-inputs="!colorPickerState.includes(0)"
       :hide-canvas="!colorPickerState.includes(2)"
       :hide-sliders="!colorPickerState.includes(1)"
