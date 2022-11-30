@@ -1,7 +1,7 @@
 import { onAuthStateChanged } from 'firebase/auth';
 import { createApp } from 'vue';
 import App from './App.vue';
-import './registerServiceWorker';
+// import './registerServiceWorker';
 import router from './router';
 import store from './store';
 // import {setupI18n} from './i18n';
