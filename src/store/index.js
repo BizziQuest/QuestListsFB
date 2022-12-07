@@ -58,6 +58,7 @@ const defaultState = {
 const store = createStore({
   state: {
     pageBackgroundColor: null,
+    pageForegroundColor: null,
     currentUser: defaultState.currentUser,
     lists: defaultState.lists,
     messages: [],
@@ -104,6 +105,9 @@ const store = createStore({
   mutations: {
     setPageBackgroundColor(state, color) {
       state.pageBackgroundColor = color;
+    },
+    setPageForegroundColor(state, color) {
+      state.pageForegroundColor = color;
     },
     setUser(state, user) {
       state.currentUser = {

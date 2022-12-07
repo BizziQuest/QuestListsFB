@@ -4,7 +4,7 @@
     @keyup.ctrl.f="handleFind"
   >
     <drawer-menu v-model:drawer="drawer" />
-    <v-main :style="pageBackgroundColor" style="max-width: 100%;">
+    <v-main :style="`${pageBackgroundColor};${pageForegroundColor}`" style="max-width: 100%;">
       <router-view v-slot="{ Component }">
         <transition name="router-anim" >
           <component :is="Component" />
@@ -59,6 +59,11 @@ export default {
       pageBackgroundColor: (state) => {
         if (state.pageBackgroundColor)
           return `background-color: ${state.pageBackgroundColor}`
+        return '';
+      },
+      pageForegroundColor: (state) => {
+        if (state.pageForegroundColor)
+          return `--v-theme-on-background: ${state.pageForegroundColor}`
         return '';
       }
     }),
