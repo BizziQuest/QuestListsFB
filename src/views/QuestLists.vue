@@ -35,7 +35,7 @@
         key="skeleton"
         class="mt-5"
       >
-        <!-- <v-skeleton-loader
+        <!-- TODO: <v-skeleton-loader
           v-for="i in 6"
           :key="i"
           class="mx-auto"

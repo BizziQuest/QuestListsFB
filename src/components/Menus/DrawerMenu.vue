@@ -103,7 +103,6 @@ import { useTheme } from 'vuetify';
 export default {
   name: 'DrawerMenu',
   components: {
-    // CreateList,
     UserMenuItem,
   },
   props: {
