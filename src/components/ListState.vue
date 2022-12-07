@@ -1,12 +1,52 @@
 <template>
-  <v-text-field test-text-field v-model="text" @input="updateItem">
-    <v-icon v-if="isDraggable" slot="prepend" class="drag-handle">drag_indicator</v-icon>
-    <icon-state slot="prepend-inner"  :color="listColor"  :icon.sync="icon"></icon-state>
-    <color-swatch slot="append" :outline="false" v-if="!item.isNewItem" v-model="listColor" />
-    <v-btn icon slot="append-outer" v-if="!item.isNewItem" test-delete-icon @click="del(item)">
+  <div class="list-state w-100" data-key="">
+  <v-text-field
+    ref="input"
+    :model-value="item.text"
+    test-text-field
+    :dense="compact"
+    placeholder="New Item"
+    @keydown.enter="$emit('enterPressed')"
+    @keydown.tab.prevent="$emit('enterPressed')"
+    @update:modelValue="isChanging($event)"
+    @blur="updateText"
+  >
+    <template v-slot:prepend>
+    <v-icon
+      v-if="isDraggable"
+      class="drag-handle"
+      @mousedown="selectForDrag"
+      @mouseup="$emit('end-select-drag-row')"
+    >
+      mdi-drag-vertical
+   </v-icon>
+    </template>
+    <template v-slot:prepend-inner>
+    <icon-state
+      v-model:icon="icon"
+      @update:icon="updateIcon"
+      :color="listItemColor"
+    />
+    </template>
+    <template v-slot:append>
+    <color-swatch
+      v-if="!item.isNewItem"
+      v-model="listItemColor"
+      :outline="false"
+    />
+    </template>
+    <template v-slot:append-outer>
+    <v-btn
+      v-if="!item.isNewItem"
+      icon
+      test-delete-icon
+      @click="del(item)"
+    >
       <v-icon>mdi-delete</v-icon>
     </v-btn>
+    </template>
   </v-text-field>
+  </div>
 </template>
 <script>
 import IconState from './IconState.vue';
@@ -19,12 +59,19 @@ export default {
   },
   props: {
     item: {
+      description: 'The list state item we are editing',
       type: Object,
-      description: 'The initial state of this component.',
+      default: () => ({}),
     },
     isDraggable: {
+      description: 'Whether to show the drag handle and enable drag and drop.',
       type: Boolean,
-      description: 'Whether this item should be draggable',
+      default: false,
+    },
+    compact: {
+      description: 'Whether to show a compact UI.',
+      type: Boolean,
+      default: false,
     },
     isNewItem: {
       type: Boolean,
@@ -35,32 +82,49 @@ export default {
   data() {
     return {
       text: this.item.text,
-      listColor: this.item.color,
+      listItemColor: this.item.color,
       icon: this.item.icon,
     };
   },
   watch: {
-    item(val) {
-      this.listColor = val.color;
-    },
+    listItemColor(val) {
+      this.updateColor(val);
+    }
   },
   methods: {
-    updateItem() {
-      this.$emit('update:item', {
-        ...this.item,
-        icon: this.icon,
-        text: this.text,
-        color: this.listColor,
-      });
+    selectForDrag() {
+      this.$emit('selectDragRow', {});
+    },
+    updateColor($event) {
+      this.$emit('blur', { ...this.item, color: $event });
+    },
+    updateIcon($event) {
+      this.$emit('blur', { ...this.item, icon: $event });
+    },
+    updateText($event) {
+      this.$emit('blur', { ...this.item, text: $event.target.value });
+    },
+    isChanging($event) {
+      this.$emit('update:item', { ...this.item, text: $event });
     },
     del(item) {
       this.$emit('delete:item', item);
-    },
-    changeColor($event) {
-      this.listColor = $event;
     },
   },
 };
 </script>
 <style scoped lang="scss">
+.list-state {
+  align-items: center;
+}
+
+.icon-state {
+  width: 30px;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.drag-handle {
+  padding-right: 10px;
+}
 </style>

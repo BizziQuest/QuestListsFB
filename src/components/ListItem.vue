@@ -1,74 +1,103 @@
 <template>
   <div class="list-item-view">
     <v-text-field
-      test-text-field
-      ref="input"
-      dense
-      v-model="title"
-      @blur="deactivate"
-      @click.prevent="activate"
-      @keydown.enter.prevent="emitEnterPressed({ title })"
-      @input="emitUpdate({ title: $event })"
       :clearable="!readOnly"
+      :color="currentColor"
       :flat="readOnly"
       :hide-details="readOnly"
-      :outlined="isActive"
+      :model-value="modelValue.title"
+      :outlined="modelValue.isActive"
       :placeholder="placeholder"
       :readonly="readOnly"
       :single-line="readOnly"
       :solo="readOnly"
       :tabindex="tabindex"
-      :color="currentColor"
+      @blur="deactivate"
+      @click.prevent="activate"
+      @keydown.enter.prevent="emitEnterPressed"
+      @keydown.tab.prevent="emitTabPressed"
+      @update:modelValue="updateData({ title: $event })"
+      dense
+      ref="input"
+      test-text-field
     >
+    <template v-slot:prepend-inner>
       <v-icon
-        slot="prepend-inner"
         class="listitem-icon"
-        :outlined="isActive"
-        @click.prevent="cycleIcon"
-        @blur="deactivate"
+        :outlined="modelValue.isActive"
         :title="iconTitle"
         :color="currentColor"
-        >{{ icon }}</v-icon
+        @click.prevent="cycleIcon"
+        @blur="deactivate"
       >
-      {{ isNewItem ? '' : title }}
+        {{ icon }}
+      </v-icon>
+      </template>
+      <template v-slot:append>
       <v-btn
         v-if="showAddSubListButton"
-        slot="append"
+        class="px-0"
         :loading="creatingSubList"
         :disabled="creatingSubList"
         title="Make a new sublist from this item."
         test-make-sublist
-        icon
+        variant="text"
         @click="makeSublist"
+        icon="ql ql-plus"
       >
-        <i class="ql ql-plus" style="font-size:140%"></i>
+        <i
+          class="ql ql-plus"
+          style="font-size:140%"
+        />
       </v-btn>
       <v-btn
-        icon
+        v-if="modelValue.subList"
         test-sublist-link-icon
-        slot="append"
-        @click="updateItem({ to: subListPath })"
         :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
-        v-if="subList"
+        variant="text"
+        @click="saveItem({ to: modelValue.subListPath })"
       >
-        <i class="ql ql-link"></i>
+        <i class="ql ql-link" />
       </v-btn>
-      <v-btn icon slot="append" title="delete" test-delete-icon v-if="!isNewItem" @click="emitDelete">
+      <v-btn
+        v-if="!isNewItem"
+        title="delete"
+        test-delete-icon
+        variant="text"
+        @click="emitDelete"
+      >
         <v-icon>mdi-delete</v-icon>
       </v-btn>
+      </template>
     </v-text-field>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import {
-  createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB,
+  createList, stateGroupsCollection, getStateGroup, computeSubListPath as computeSubListPathFB, createSubList
 } from '../firebase';
 
+// TODO: use states.value instead of states[index] for saving/storing state values.
+
+/** @typedef {object} modelValue
+ * @property {boolean} isActive
+ * @property {boolean} isNewItem
+ * @property {string} title
+ * @property {boolean} currentStateIdx
+ * @property {boolean} currentStateValue
+ * @property {boolean} subListSlug
+ * @property {boolean} subListPath
+ * @property {boolean} subList
+ * @property {boolean} listId
+ *
+*/
 export default {
   props: {
-    value: {
+
+    /** @type {modelValue} */
+    modelValue: {
       type: Object,
       default: () => ({}),
       description: 'List Item is an object in the form: {title, state}',
@@ -83,6 +112,11 @@ export default {
       default: false,
       description: 'Whether to allow editing of the content or only view it.',
     },
+    isNewItem: {
+      type: Boolean,
+      default: false,
+      description: 'Whether this is a new, empty item at the end of a list.',
+    },
     tabindex: {
       type: Number,
       default: null,
@@ -90,46 +124,23 @@ export default {
     },
   },
   data: () => ({
-    title: '',
-    isActive: false,
-    isNewItem: false,
-    currentStateIdx: 0,
-    subListSlug: '',
-    subListPath: '',
-    subList: null,
     creatingSubList: false,
-    listId: '',
   }),
   methods: {
-    emitUpdate(newValues) {
-      this.$emit('input', this.$_makeNewItem(newValues));
+    emitEnterPressed() {
+      this.$emit('enterPressed');
     },
-    emitEnterPressed(newValues) {
-      this.$emit('enterPressed', newValues);
-    },
-    $_makeNewItem(newValues) {
-      const newItem = { ...this.value, ...newValues };
-      if (newValues?.title !== '') this.isNewItem = false;
-      if (this.subList && !newItem.subList) {
-        newItem.subList = this.subList;
-      } else {
-        delete newItem.subList;
-      }
-      if (!this.isNewItem) delete newItem.isNewItem;
-      return newItem;
-    },
-    invalidateNewItem(newValue) {
-      if (this.isNewItem && (newValue !== '' || !!newValue)) {
-        this.isNewItem = false;
-        this.emitUpdate({ title: newValue, isNewItem: false });
-      }
+    emitTabPressed() {
+      this.$emit('tabPressed');
     },
     emitDelete() {
       this.$emit('delete');
     },
     deactivate() {
+      if (this.modelValue.title || this.modelValue.icon) {
+        this.$emit('update',  {...this.modelValue, isNewItem: false});
+      }
       this.isActive = false;
-      this.updateItem();
     },
     activate() {
       this.isActive = !this.readOnly;
@@ -137,19 +148,18 @@ export default {
     cycleIcon() {
       if (this.isNewItem) return;
       this.activate();
-      let nextIdx = this.currentStateIdx + 1;
+      let nextIdx = (this.modelValue?.currentStateIdx || 0) + 1;
       if (nextIdx > this.states.length - 1) nextIdx = 0;
-      this.currentStateIdx = nextIdx;
-    },
-    updateItem({ to } = {}) {
-      if (this.isNewItem) return;
-      this.$emit('update', {
-        ...this.value,
-        title: this.title,
-        state: this.states[this.currentStateIdx],
-        isNewItem: this.isNewItem,
-        subList: this.subList,
+      this.updateData({
+        currentStateIdx: nextIdx,
+        currentStateValue: this.states[nextIdx]?.value
       });
+    },
+    updateData(data) {
+      this.$emit('update:modelValue', {...this.modelValue, ...data, isNewItem: false});
+    },
+    saveItem({to}) {
+      this.$emit('update', {...this.modelValue, skipUpdate: !!to})
       if (to) {
         this.$nextTick(() => {
           this.$router.push(to);
@@ -158,56 +168,45 @@ export default {
     },
     async makeSublist() {
       this.creatingSubList = true;
-      const stateGroupDoc = this.getGlobalPreferences.defaultStateGroup;
-      const stateGroup = getStateGroup(stateGroupsCollection, stateGroupDoc.id);
-      const payload = {
-        title: this.title,
-        description: `sublist of ${this.title}`, // same as title
-        stateGroup,
-      };
-      this.subList = await createList(payload);
-      this.subListSlug = this.subList.slug;
-      await this.computeSubListPath(this.subList);
-      this.updateItem();
+      const listWithSubList = await createSubList(this.modelValue, this.$route.path, this.globalPreferences.defaultStateGroup);
+      listWithSubList.skipUpdate = true;
+      this.$emit('update', listWithSubList);
+      this.$nextTick(() => this.$router.push(listWithSubList.subListPath));
       this.creatingSubList = false;
     },
-    async computeSubListPath(subListRef) {
-      const subListPath = await computeSubListPathFB(subListRef, this.$route.path);
-      if (!subListPath) return;
-      this.subListPath = subListPath;
-    },
-  },
-  async mounted() {
-    this.title = this.$props.value.title;
-    this.isNewItem = this.$props.value.isNewItem;
-    this.listId = this.$props.value.listId;
-    if (this.$props.value.state?.value) {
-      this.currentStateIdx = parseInt(this.$props.value.state.value, 10);
-    }
-    if (this.value.subList) {
-      await this.computeSubListPath(this.value.subList);
-      this.subList = this.value.subList;
-    }
   },
   computed: {
-    ...mapGetters(['itemStates', 'getGlobalPreferences']),
+    ...mapState([ 'globalPreferences']),
     showAddSubListButton() {
       if (this.readOnly) return false;
       if (this.isNewItem) return false;
-      if (this.subList !== null) return false;
-      if (!this.title || this.title === '') return false;
+      if (this.modelValue.subList) return false;
+      if (!this.modelValue.title || this.modelValue.title === '') return false;
       return true;
     },
     currentColor() {
-      return this.states[this.currentStateIdx]?.color;
+      return this.states[this.modelValue?.currentStateIdx || 0]?.color;
     },
 
     icon() {
       if (this.isNewItem) return 'mdi-plus';
-      return this.states[this.currentStateIdx]?.icon;
+      let firstStateIndex = 0;
+      if (!this.modelValue.currentStateValue) {
+        let currentOrder = this.states[0].order;
+        this.states.forEach((state, index) => {
+          if(state.order > currentOrder) return;
+          currentOrder = state.order;
+          firstStateIndex = index;
+        });
+      }
+      let currentStateIdx = this.states.findIndex((state) => state.value === (this.modelValue.currentStateValue || this.states[firstStateIndex].value) );
+      if (currentStateIdx < 0) {
+        return 'mdi-help-box';
+      }
+      return this.states[currentStateIdx || 0]?.icon;
     },
     iconTitle() {
-      return this.states[this.currentStateIdx]?.name;
+      return this.states[this.modelValue?.currentStateIdx || 0]?.text;
     },
     placeholder() {
       return this.isNewItem ? 'New Item' : '';
@@ -227,19 +226,19 @@ export default {
 .listitem-text {
   // display: inline-block;
 }
-::v-deep .theme--light.v-text-field--solo > .v-input__control > .v-input__slot,
-::v-deep .theme--dark.v-text-field--solo > .v-input__control > .v-input__slot {
+:deep(.theme--light.v-text-field--solo > .v-input__control > .v-input__slot),
+:deep(.theme--dark.v-text-field--solo > .v-input__control > .v-input__slot) {
   background: none;
   align-items: center;
 }
-::v-deep v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__prefix,
-::v-deep .v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__suffix,
-::v-deep .v-text-field.v-input--dense:not(.v-text-field--outlined) input {
+:deep(v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__prefix),
+:deep(.v-text-field.v-input--dense:not(.v-text-field--outlined) .v-text-field__suffix),
+:deep(.v-text-field.v-input--dense:not(.v-text-field--outlined) input) {
     padding: 0;
   align-items: center;
   margin-top: -10px;
 }
-::v-deep .v-input__append-inner button {
+:deep(.v-input__append-inner button) {
   margin-top: -3px;
 }
 </style>

@@ -1,6 +1,6 @@
 
 # use the node image as the base image
-FROM node:15.2.1
+FROM node:18
 
 # copy contents of 
 COPY ./ /app/
@@ -9,7 +9,8 @@ COPY ./ /app/
 WORKDIR /app
 
 # install all packages globally
-RUN yarn install
+RUN npm install -g pnpm
+RUN pnpm install
 
 # when the image is run, run the server
-CMD ['yarn', 'container']
+CMD ['pnpm', 'container']

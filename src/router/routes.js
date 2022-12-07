@@ -1,7 +1,7 @@
 import EditInfo from '../components/EditInfo.vue';
-import CreateAList from '../components/CreateAList.vue';
-import Lists from '../views/Lists.vue';
-import List from '../views/List.vue';
+import CreateList from '../components/CreateList.vue';
+import Lists from '../views/QuestLists.vue';
+import List from '../views/QuestList.vue';
 
 const routes = [
   {
@@ -18,22 +18,22 @@ const routes = [
   {
     path: '/about',
     name: 'About Questlists',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/AboutQuestLists.vue'),
   },
   {
     path: '/about/terms-of-service',
     name: 'Terms of Service',
-    component: () => import(/* webpackChunkName: "tos" */ '../views/about/Terms.vue'),
+    component: () => import(/* webpackChunkName: "tos" */ '../views/about/TermsOfService.vue'),
   },
   {
     path: '/about/code-of-conduct',
     name: 'Code of Conduct',
-    component: () => import(/* webpackChunkName: "conduct" */ '../views/about/Conduct.vue'),
+    component: () => import(/* webpackChunkName: "conduct" */ '../views/about/CodeOfConduct.vue'),
   },
   {
     path: '/about/privacy-policy',
     name: 'Privacy Policy',
-    component: () => import(/* webpackChunkName: "privacy" */ '../views/about/Privacy.vue'),
+    component: () => import(/* webpackChunkName: "privacy" */ '../views/about/PrivacyPolicy.vue'),
   },
   {
     path: '/editinfo',
@@ -43,7 +43,7 @@ const routes = [
   {
     path: '/new',
     name: 'New QuestList',
-    component: CreateAList,
+    component: CreateList,
   },
 ];
 

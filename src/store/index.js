@@ -8,8 +8,8 @@
  *    likewise, "lists" must refer to an orderable list of List objects.
  */
 
-import Vue from 'vue';
-import Vuex from 'vuex';
+import {createStore} from 'vuex';
+import { getDoc } from 'firebase/firestore';
 
 import {
   signInWithEmailAndPassword,
@@ -20,14 +20,13 @@ import {
   updateProfile,
   sendEmailVerification,
 } from 'firebase/auth';
-import { addDoc } from 'firebase/firestore';
 import router from '../router';
 import { getAvatarForUser } from '../util';
 import {
   reactToPrefsChange,
   auth,
-  listsCollection,
-  stateGroupsCollection,
+  createList,
+  createStateGroup,
   googleOAuthLogin,
   facebookOAuthLogin,
   saveUserPreferences,
@@ -37,8 +36,6 @@ import {
 } from '../firebase';
 
 import { algoliaIndex } from '../algolia';
-
-Vue.use(Vuex);
 
 const defaultState = {
   currentUser: {
@@ -58,7 +55,7 @@ const defaultState = {
   ],
 };
 
-const store = new Vuex.Store({
+const store = createStore({
   state: {
     pageBackgroundColor: null,
     currentUser: defaultState.currentUser,
@@ -75,16 +72,14 @@ const store = new Vuex.Store({
           {
             color: '#ffffff',
             icon: 'mdi-checkbox-blank-outline',
-            name: 'Not Done',
-            shortName: 'notDone',
+            text: 'Not Done',
             value: '0',
             order: 0,
           },
           {
             color: '#ffffff',
             icon: 'mdi-checkbox-marked-outline',
-            name: 'Done',
-            shortName: 'done',
+            text: 'Done',
             value: '1',
             order: 1,
           },
@@ -93,7 +88,7 @@ const store = new Vuex.Store({
     },
     recentQuests: [
       {
-        title: "No Recent Quests",
+        title: 'No Recent Quests',
         icon: 'mdi-heart',
         slug: null,
       },
@@ -231,22 +226,21 @@ const store = new Vuex.Store({
       const userPrefs = await getUserPreferences();
       commit('setUser', { ...payload, ...userPrefs });
     },
-    async addStateGroup({ commit, state }, stateGroupData) {
-      // TODO: check for groups that have the current values and use that one instead.
-      const stateSkeleton = state.globalPreferences.defaultStateGroup.states[0];
-      // TODO: refactor this to handle actual states
-      const states = stateGroupData.states.map((stateBody) => ({ ...stateSkeleton, ...stateBody }));
-      const payload = { ...stateGroupData, states };
-      const stateGroupRef = await addDoc(stateGroupsCollection, payload);
-
-      commit('addState', stateGroupData);
-      return stateGroupRef;
+    async addStateGroup({ commit }, stateGroupData) {
+      const stateGroupRef = createStateGroup(stateGroupData);
+      commit('addState', stateGroupRef);
     },
-    async createList({ dispatch }, listData) {
-      const stateGroupRef = await dispatch('addStateGroup', listData.stateGroup);
-      const doc = await addDoc(listsCollection, { ...listData, stateGroup: stateGroupRef });
-      algoliaIndex.saveObject({ ...listData, objectID: doc.id });
-      router.push(`/lists/${listData.slug}`);
+    async createList({ state }, listData) {
+      let createdDocData = null;
+      try {
+        createdDocData = await createList(listData, state.globalPreferences.defaultStateGroup);
+      } catch (err) {
+        console.error(err);
+      }
+      algoliaIndex.saveObject(
+        { ...createdDocData, objectID: createdDocData.id },
+      );
+      router.push(`/Lists/${createdDocData.slug}`);
     },
     updateUserInfo({ commit }, payload) {
       commit('updateUserInfo', payload);

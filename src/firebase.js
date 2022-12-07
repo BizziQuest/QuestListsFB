@@ -25,39 +25,44 @@ import {
 import { getAnalytics } from 'firebase/analytics';
 import slugify from 'slugify';
 
-require('dotenv').config();
+// require('dotenv').config();
 
 // firebase init goes here
 const firebaseConfig = {
-  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
-  appId: process.env.VUE_APP_FIREBASE_APP_ID,
-  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
-  // measurementId: process.env.VUE_APP_FIREBASE_APP_ID,
-  // messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
-  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
-  // storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  apiKey: import.meta.env.VITE_APP_FIREBASE_API_KEY,
+  appId: import.meta.env.VITE_APP_FIREBASE_APP_ID,
+  authDomain: import.meta.env.VITE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_APP_FIREBASE_DATABASE_URL,
+  // measurementId: import.meta.env.VITE_APP_FIREBASE_APP_ID,
+  // messagingSenderId: import.meta.env.VITE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  projectId: import.meta.env.VITE_APP_FIREBASE_PROJECT_ID,
+  // storageBucket: import.meta.env.VITE_APP_FIREBASE_STORAGE_BUCKET,
 };
-
-if (process.env.NODE_ENV !== 'development') {
-  firebaseConfig.measurementId = process.env.VUE_APP_FIREBASE_APP_ID;
-  firebaseConfig.messagingSenderId = process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID;
-  firebaseConfig.storageBucket = process.env.VUE_APP_FIREBASE_STORAGE_BUCKET;
+console.log(import.meta.env.MODE, firebaseConfig);
+if (import.meta.env.MODE !== 'development') {
+  firebaseConfig.measurementId = import.meta.env.VITE_APP_GOOGLE_ANALYTICS_ID;
+  firebaseConfig.messagingSenderId = import.meta.env.VITE_APP_FIREBASE_MESSAGING_SENDER_ID;
+  firebaseConfig.storageBucket = import.meta.env.VITE_APP_FIREBASE_STORAGE_BUCKET;
+} else {
+  // global.self.FIREBASE_APPCHECK_DEBUG_TOKEN = env.VITE_APP_FIREBASE_APPCHECK_DEBUG_TOKEN;
 }
 // firebase utils
 const fbApp = initializeApp(firebaseConfig);
 
-const nodeEnv = process.env.NODE_ENV;
+const nodeEnv = import.meta.env.MODE;
 const fbAnalytics = !(nodeEnv === 'test' || nodeEnv === 'development') ? getAnalytics() : null;
-
-const appCheck = initializeAppCheck(fbApp, {
-  provider: new ReCaptchaV3Provider(process.env.VUE_APP_RECAPTCHA_SITE_KEY),
-  isTokenAutoRefreshEnabled: true, // refresh app tokens as needed?
-});
+let tappCheck = null;
+if (import.meta.env.MODE === 'production') {
+  tappCheck = initializeAppCheck(fbApp, {
+    provider: new ReCaptchaV3Provider(import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY),
+    isTokenAutoRefreshEnabled: import.meta.env.MODE === 'production', // refresh app tokens as needed?
+  });
+}
+const appCheck = tappCheck;
 
 const auth = getAuth(fbApp);
-if (process.env.VUE_APP_FIREBASE_AUTH_HOST) {
-  connectAuthEmulator(auth, process.env.VUE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
+if (import.meta.env.VITE_APP_FIREBASE_AUTH_HOST) {
+  connectAuthEmulator(auth, import.meta.env.VITE_APP_FIREBASE_AUTH_HOST, { disableWarnings: true });
 }
 
 const db = getFirestore();
@@ -66,9 +71,9 @@ const { currentUser } = auth;
 // // firebase settings go here
 // const settings = { };
 
-if (process.env.NODE_ENV !== 'production') {
-  connectAuthEmulator(auth, process.env.VUE_APP_FIREBASE_AUTH_HOST);
-  connectFirestoreEmulator(db, process.env.VUE_APP_FIREBASE_DATABASE_HOST, process.env.VUE_APP_FIREBASE_DATABASE_PORT);
+if (import.meta.env.MODE !== 'production') {
+  connectAuthEmulator(auth, import.meta.env.VITE_APP_FIREBASE_AUTH_HOST);
+  connectFirestoreEmulator(db, import.meta.env.VITE_APP_FIREBASE_DATABASE_HOST, import.meta.env.VITE_APP_FIREBASE_DATABASE_PORT);
 }
 
 const globalPreferences = collection(db, 'globalPreferences');
@@ -82,9 +87,12 @@ const googleOAuthLogin = new GoogleAuthProvider();
 const facebookOAuthLogin = new FacebookAuthProvider();
 
 async function computeSubListPath(subListRef, routePath) {
-  if (!subListRef) return false;
-  const subList = await getDoc(subListRef);
-  const { slug } = subList.data();
+  if (!subListRef) return routePath;
+  let slug = subListRef;
+  if(typeof subListRef !== 'string') {
+    const subList = await getDoc(subListRef);
+    slug = subList.data()?.slug;
+  }
   return `${routePath}/${slug}`;
 }
 
@@ -139,7 +147,8 @@ async function updateUserItemStates(list, items) {
   }, {});
   const userStatesRef = doc(userDocument, 'states', list.id);
   await setDoc(userStatesRef, itemStates);
-  return getDoc(userStatesRef);
+  const newStatesDoc = await getDoc(userStatesRef);
+  return newStatesDoc;
 }
 
 async function getListBySlug(slug) {
@@ -221,10 +230,13 @@ async function getOrderedCollectionAsList(collectionPath) {
 }
 
 async function getListStates(fbList) {
+  if (Array.isArray(fbList.stateGroup?.states)) {
+    return fbList.stateGroup.states.sort((a,b) => a.order < b.order);
+  }
   const fbStatesDoc = await getDoc(fbList.stateGroup);
   if (!fbStatesDoc) return [];
   const statesDoc = fbStatesDoc.data();
-  return statesDoc.states.sort((state) => state.order);
+  return statesDoc.states.sort((a,b) => a.order < b.order);
 }
 
 async function ensureSlugUniqueness(title) {
@@ -232,7 +244,7 @@ async function ensureSlugUniqueness(title) {
   const allListsWithTitle = query(listsCollection, where('title', '==', title));
   let lists = await getDocs(allListsWithTitle);
   if (lists.size < 2) return slugify(title);
-  lists = lists.sort((a, b) => a.created_at < b.created_at);
+  lists = lists.docs.map(d => d.data()).sort((a, b) => a.createdAt < b.createdAt);
   const lastList = lists[lists.length - 1];
   const titleArray = lastList.title.split('-');
   if (titleArray.length < 2) return slugify(`${title}-1`);
@@ -248,25 +260,92 @@ async function saveUserPreferences(prefs) {
   return getDoc(userDocument);
 }
 
+async function getDocRefData(ref) {
+  return (await getDoc(ref)).data();
+}
+
 async function getUserPreferences() {
   const userDocument = await getDocs(collection(db, 'users'), auth.currentUser.uid);
   if (userDocument.exists) return userDocument.data();
   console.warn("User Prefs don't exist: ", auth.currentUser?.uid, userDocument?.path);
   return {};
 }
+async function createStateGroup(stateGroupData, defaultStateGroup) {
+  // TODO: check for groups that have the current values and use that one instead.
+  const defaultStateData = {}; //defaultStateGroup.states[0];
+  // TODO: refactor this to handle actual states
+  const newStateGroupData = {
+    name: stateGroupData?.name || (stateGroupData?.states || defaultStateGroup.states).map((s) => s.text)?.join(', '),
+    description: stateGroupData?.description || defaultStateGroup?.description || '',
+    states:
+      (stateGroupData?.states || stateGroupData)?.map((stateBody) => ({ ...defaultStateData, ...stateBody }))
+      || defaultStateGroup.states,
+  };
 
-async function createList(payload) {
+  const stateGroupRef = await addDoc(stateGroupsCollection, newStateGroupData);
+  return stateGroupRef;
+}
+async function updateStateGroup(stateGroupRef, newStateGroupData) {
+  if (!newStateGroupData) return stateGroupRef;
+  const stateGroupData = (await getDoc(stateGroupRef)).data();
+  const updatedStateGroupData = {
+    name: newStateGroupData.name || stateGroupData.name || newStateGroupData.map((s) => s.text).join(', '),
+    description: newStateGroupData.description || stateGroupData.description || '',
+    states: newStateGroupData.states || newStateGroupData || stateGroupData.states,
+  };
+  await setDoc(stateGroupRef, updatedStateGroupData);
+  return stateGroupRef;
+}
+
+async function createSubList(listItem, path, defaultStateGroup) {
+  const payload = {
+    title: listItem.title,
+    description: `sublist of ${listItem.title}`, // same as title
+  };
+  const subList = await createList(payload, defaultStateGroup);
+  const subListSlug = subList.slug;
+  const subListPath = await computeSubListPath(subListSlug, path);
+  return {
+    ...listItem,
+    subListPath,
+    subList: subListSlug,
+    isNewItem: false
+  };
+
+}
+
+async function createList(payload, defaultStateGroup) {
   const defaultPayload = {
     title: 'New List',
-    color: '#333333',
+    // color: '#333333',
     description: 'Newly Created List',
+    stateGroup: defaultStateGroup,
     createdAt: Date.now(),
     createdBy: auth.currentUser?.uid,
   };
-  const newPayload = { ...defaultPayload, ...payload };
-  newPayload.slug = await ensureSlugUniqueness(payload.title || 'New List');
-  const subList = await addDoc(listsCollection, newPayload);
-  return subList;
+  let newPayload = { ...defaultPayload, ...payload };
+  newPayload.slug = await ensureSlugUniqueness(payload.title || defaultPayload.title);
+  newPayload.stateGroup = await createStateGroup(newPayload.newStateGroup, defaultStateGroup);
+  newPayload = Object.entries(newPayload).reduce((newObj, [k, v]) => {
+    if (k === 'newStateGroup') return newObj;
+    if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
+    return newObj;
+  }, {});
+  const subListDocRef = await addDoc(listsCollection, newPayload);
+  return {...(await getDoc(subListDocRef)).data(), id: subListDocRef.id};
+}
+async function saveList(payload) {
+  const newPayload = { ...payload };
+  if (newPayload.newStateGroup) {
+    newPayload.stateGroup = await updateStateGroup(newPayload.stateGroup, newPayload.newStateGroup);
+  }
+  const safePayload = Object.entries(payload).reduce((newObj, [k, v]) => {
+    if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
+    return newObj;
+  }, {});
+  const listDocument = doc(db, 'lists', payload.id);
+  await setDoc(listDocument, safePayload, { merge: true });
+  return getDoc(listDocument);
 }
 function getStateGroup(stateGroupsCollectionRef, id) {
   return doc(stateGroupsCollectionRef, id);
@@ -283,41 +362,51 @@ function reactToPrefsChange(store) {
     });
     if (prefs.length < 1) return;
     const { defaultColor, defaultStateGroup } = prefs[0];
-    const stateGroup = await getDoc(defaultStateGroup);
+    if (defaultStateGroup) {
+      const stateGroup = await getDoc(defaultStateGroup);
+      store.commit('setGlobalPreferences', {
+        defaultColor,
+        defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },
+      });
+      return;
+    }
     store.commit('setGlobalPreferences', {
       defaultColor,
-      defaultStateGroup: { ...stateGroup.data(), id: stateGroup.id },
     });
   });
 }
 
 export {
-  fbApp,
-  fbAnalytics,
   appCheck,
-  db,
   auth,
+  computeSubListPath,
+  createSubList,
+  createList,
+  createStateGroup,
   currentUser,
-  globalPreferences,
-  listsCollection,
-  stateGroupsCollection,
-  usersCollection,
-  userStatesCollection,
+  db,
+  ensureSlugUniqueness,
+  facebookOAuthLogin,
+  fbAnalytics,
+  fbApp,
+  fetchQuestLists,
+  getDocRefData,
+  getListBySlug,
   getListItems,
   getListStates,
   getOrderedCollectionAsList,
-  saveListItems,
-  googleOAuthLogin,
-  facebookOAuthLogin,
-  ensureSlugUniqueness,
-  saveUserPreferences,
-  getUserPreferences,
-  createList,
-  getListBySlug,
-  updateUserItemStates,
-  computeSubListPath,
-  reactToPrefsChange,
-  getStateGroup,
-  fetchQuestLists,
   getRecentlyUsedLists,
+  getStateGroup,
+  getUserPreferences,
+  globalPreferences,
+  googleOAuthLogin,
+  listsCollection,
+  reactToPrefsChange,
+  saveList,
+  saveListItems,
+  saveUserPreferences,
+  stateGroupsCollection,
+  updateUserItemStates,
+  usersCollection,
+  userStatesCollection,
 };

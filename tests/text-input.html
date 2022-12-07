@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>VTextInput</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="https://unpkg.com/@vuetify/nightly@3.0.0-beta.10/dist/vuetify.css"
+    />
+    <script src="https://unpkg.com/vue@next/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuetify@3.0.0-beta.10/dist/vuetify.js"></script>
+  </head>
+  <body>
+    <script type="text/x-template" id="app-template">
+      <v-app>
+        <v-responsive
+          class="mx-auto"
+          max-width="1000">
+         <v-text-field
+          style="width:800px"
+          clearable
+          flat
+          dense
+          single-line
+          solo
+          hide-details
+          color="#66ff66"
+          :model-value="modelValue.title"
+          :outlined="modelValue.isActive"
+          :placeholder="placeholder"
+          :readonly="false"
+          tabindex="0"
+          @click.prevent="activate"
+          @keydown.enter.prevent="emitEnterPressed"
+          @update:modelValue="updateData({ title: $event })"
+          ref="input"
+        >
+         <template #prepend-inner>
+          <v-icon
+            class="listitem-icon"
+            outlined
+            title="Some icon"
+            color="#66ff66"
+            @click.prevent="cycleIcon"
+          >
+            {{ icons[iconIndex] }}
+          </v-icon>
+          </template>
+          <template v-slot:append>
+          <v-btn
+            title="Make a new sublist from this item."
+            variant="text"
+            icon="mdi-plus"
+          >
+          </v-btn>
+          <v-btn
+            v-if="modelValue.subList"
+            test-sublist-link-icon
+            :title="`${readOnly ? '' : 'Edit /'}View Sublist`"
+            variant="text"
+            @click="saveItem({ to: subListPath })"
+          >
+            <i class="ql ql-link" />
+          </v-btn>
+          <v-btn
+            v-if="!isNewItem"
+            title="delete"
+            test-delete-icon
+            variant="text"
+            @click="emitDelete"
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+          </template>
+        </v-text-field>
+
+          </v-responsive>
+      </v-app>
+    </script>
+
+    <div id="app"></div>
+    <script>
+      const { createApp } = Vue;
+      const { createVuetify } = Vuetify;
+
+      const vuetify = createVuetify();
+
+      const app = createApp({
+        template: '#app-template',
+        data: () => ({
+          isNewItem: false,
+          modelValue: {
+            title: 'asdasdTitle',
+            isActive: false,
+          },
+          readOnly: true,
+          placeholder: 'Enter Value',
+          currentColor: 'green',
+          iconTitle: 'This icon',
+          iconIndex: 0,
+          icons: ['mdi-bus', 'mdi-airplane', 'mdi-flower'],
+        }),
+        methods: {
+          emitDelete($event) {
+            console.log('emitting delete', $event);
+          },
+          activate($event) {
+            console.log('activate', $event);
+          },
+          deactivate($event) {
+            console.log('deactivate', $event);
+          },
+          emitEnterPressed($event) {
+            console.log('emitEnterPressed', $event);
+          },
+          updateData($event) {
+            this.modelValue = { ...this.modelValue, ...$event };
+            console.log('updateData', $event);
+          },
+          cycleIcon() {
+            console.log("cycle")
+          }
+        },
+      })
+        .use(vuetify)
+        .mount('#app');
+    </script>
+  </body>
+</html>

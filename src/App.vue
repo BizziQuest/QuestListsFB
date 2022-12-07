@@ -1,16 +1,30 @@
 <template>
-  <v-app id="app" @keyup.ctrl.102="handleFind">
-    <drawer-menu :drawer.sync="drawer" />
-    <v-main :style="`max-width: 100%; background-color: ${pageBackgroundColor}`">
-      <transition  name="router-anim">
-        <router-view :key="$route.path"></router-view>
-      </transition>
+  <v-app
+    id="app"
+    @keyup.ctrl.f="handleFind"
+  >
+    <drawer-menu v-model:drawer="drawer" />
+    <v-main :style="pageBackgroundColor" style="max-width: 100%;">
+      <router-view v-slot="{ Component }">
+        <transition name="router-anim" >
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </v-main>
-    <bottom-drawer-menu :drawer.sync="drawer" />
+    <bottom-drawer-menu v-model:drawer="drawer" />
     <notification />
-    <v-snackbar test-update-notification bottom :value="updateExists" :timeout="-1" color="primary">
+    <v-snackbar
+      test-update-notification
+      bottom
+      :value="updateExists"
+      :timeout="-1"
+      color="primary"
+    >
       An update is available
-      <v-btn text @click="refreshApp">
+      <v-btn
+        text
+        @click="refreshApp"
+      >
         Update
       </v-btn>
     </v-snackbar>
@@ -21,36 +35,45 @@
 import { mapState } from 'vuex';
 import DrawerMenu from './components/Menus/DrawerMenu.vue';
 import BottomDrawerMenu from './components/Menus/BottomDrawerMenu.vue';
-import Notification from './components/Notification.vue';
+import Notification from './components/GlobalNotification.vue';
 import appUpdate from './mixins/appUpdate';
-
+// import {
+//   VApp, VButton, VMain
+// } from 'vuetify';
 export default {
   name: 'App',
   components: {
     DrawerMenu,
     BottomDrawerMenu,
     Notification,
-  },
-  data() {
-    return {
-      drawer: false,
-    };
+    // VApp,VButton,VMain
   },
   mixins: [appUpdate],
+  data() {
+    return {
+      drawer: true,
+    };
+  },
   computed: {
-    ...mapState(['pageBackgroundColor']),
+    ...mapState({
+      pageBackgroundColor: (state) => {
+        if (state.pageBackgroundColor)
+          return `background-color: ${state.pageBackgroundColor}`
+        return '';
+      }
+    }),
+  },
+  mounted() {
+    this.$watch('$vuetify.display.name', (from, to) => {
+      if (from !== 'sm' && to === 'sm') {
+        this.drawer = false;
+      }
+    });
   },
   methods: {
     handleFind() {
       console.warn('Search Not Implemented');
     },
-  },
-  mounted() {
-    this.$watch('$vuetify.breakpoint.name', (from, to) => {
-      if (from !== 'sm' && to === 'sm') {
-        this.drawer = false;
-      }
-    });
   },
 };
 </script>

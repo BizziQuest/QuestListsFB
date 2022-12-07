@@ -17,7 +17,9 @@
           <li>How to address concerns over misuse of personal data.</li>
         </ul>
         <section>
-          <h2 id="information-collection">Information Collection, Use, and Sharing</h2>
+          <h2 id="information-collection">
+            Information Collection, Use, and Sharing
+          </h2>
           <p>
             We are the sole owners of the information collected on this site. We only have access to/collect information
             that you voluntarily give us via email or other direct contact from you. We will not sell or rent this
@@ -32,7 +34,9 @@
             Unless you ask us not to, we may contact you via email in the future to tell you about specials, new
             products or services, or changes to this privacy policy.
           </p>
-          <h2 id="access">Your Access to and Control Over Information</h2>
+          <h2 id="access">
+            Your Access to and Control Over Information
+          </h2>
           <p>
             You may opt out of any future contacts from us at any time. You can do the following at any time by
             contacting us via the email address or phone number provided on our website:
@@ -49,7 +53,9 @@
             of your data and this application are cached locally on your device but appear to originate from us. We
             cannot remove that information.
           </p>
-          <h2 id="security">Security</h2>
+          <h2 id="security">
+            Security
+          </h2>
           <p>
             We take precautions to protect your information. When you submit sensitive information via the website, your
             information is protected both online and offline.
@@ -65,11 +71,15 @@
             customer service) are granted access to personally identifiable information. The computers/servers on which
             we store personally identifiable information are kept in a secure environment.
           </p>
-          <h2 id="notification">Notification of Changes</h2>
+          <h2 id="notification">
+            Notification of Changes
+          </h2>
           <p class="italics">
             Whenever material changes are made to the privacy notice specify how you will notify consumers.
           </p>
-          <h2 id="other">Other Provisions as Required by Law</h2>
+          <h2 id="other">
+            Other Provisions as Required by Law
+          </h2>
           <p>
             Numerous other provisions and/or practices may be required as a result of laws, international treaties, or
             industry practices. It is up to you to determine what additional practices must be followed and/or what

@@ -1,9 +1,9 @@
 // https://docs.cypress.io/api/introduction/api.html
 
-describe('App shows app name', () => {
+describe('App shows the welcome text', () => {
   it('Visits the app root url', () => {
     cy.visit('/');
-    cy.contains('header', 'Quest Lists');
+    cy.contains('.v-alert', 'Welcome to Quest Lists! You don\'t have any Quests yet, but have no fear, simply click on the  icon on the left to get started!');
   });
 });
 
