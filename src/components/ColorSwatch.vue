@@ -16,7 +16,7 @@
     <v-card>
       <v-card-text>
         <CustomColorPicker
-          v-model:modelValue="modelValue"
+          :modelValue="modelValue"
           @update:modelValue="$emit('update:modelValue', $event)"
         />
         <v-row align="center">

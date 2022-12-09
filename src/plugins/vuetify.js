@@ -9,6 +9,8 @@ import '../assets/QuestLists-font/questlistsicons.scss';
 import 'vuetify/styles'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
+// TODO: get the presets working!
+
 /**
  * We are using two different preset themes. Reply and Rally. See the material presets for more.
  * Here are the original theme colors:
