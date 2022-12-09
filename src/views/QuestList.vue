@@ -136,6 +136,10 @@ export default {
       this.list = { ...this.list, ...updatedPrefs };
       if (updatedPrefs.newStateGroup?.states) this.states = updatedPrefs.newStateGroup.states;
       saveList(this.list);
+      if(updatedPrefs.color) {
+        this.setPageBackgroundColor(updatedPrefs.color);
+        this.setPageForegroundColor(getContrast(updatedPrefs.color));
+      }
     },
     appendItem(index, item) {
       const validItem = { ...item };
@@ -160,8 +164,10 @@ export default {
       foundList = {...foundList.data(),  id: foundList.id };
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
-      this.setPageBackgroundColor(foundList.color);
-      this.setPageForegroundColor(getContrast(foundList.color));
+      if(foundList.color) {
+        this.setPageBackgroundColor(foundList.color);
+        this.setPageForegroundColor(getContrast(foundList.color));
+      }
       foundList.listItems = listItems;
       this.list = foundList;
       this.listItems = listItems;
