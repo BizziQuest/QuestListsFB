@@ -1,4 +1,5 @@
-module.exports = {
+const { defineConfig } = require('cypress')
+module.exports = defineConfig({
   projectId: 'e7dr8v',
   fixturesFolder: 'tests/e2e/fixtures',
   screenshotsFolder: 'tests/e2e/screenshots',
@@ -20,4 +21,4 @@ module.exports = {
       bundler: 'vite',
     },
   },
-};
+});
