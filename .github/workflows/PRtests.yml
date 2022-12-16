@@ -62,7 +62,7 @@ jobs:
         with:
           build: pnpm i
           start: pnpm fb:dev
-          wait-on: "http://localhost:3000"
+          wait-on: "http://localhost:5173"
           browser: chrome
           record: true
           parallel: true
