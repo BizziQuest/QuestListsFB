@@ -28,7 +28,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x] # only use 10, for firebase-tools compatibility
+        node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -40,12 +40,32 @@ jobs:
     - run: pnpm install
     - run: pnpm lint
 
+  cypress-run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup NPM
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install -g pnpm
+      - run: pnpm install
+      - run: pnpm lint
+      - name: Cypress run
+        uses: cypress-io/github-action@v4.x.x # use the explicit version number
+        with:
+          build: pnpm lint
+          start: pnpm fb:dev
   unit-tests:
     needs: linting
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x] # only use 10, for firebase-tools compatibility
+        node-version: [18.x]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
