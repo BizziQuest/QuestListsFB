@@ -121,7 +121,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 ul {
   list-style-type: none;
   li {
