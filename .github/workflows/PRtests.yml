@@ -63,7 +63,6 @@ jobs:
           build: pnpm i
           start: pnpm fb:dev
   unit-tests:
-    needs: linting
     runs-on: ubuntu-latest
     strategy:
       matrix:
