@@ -62,6 +62,19 @@ jobs:
         with:
           build: pnpm i
           start: pnpm fb:dev
+          wait-on: "http://localhost:3000"
+          browser: chrome
+          record: true
+          parallel: true
+          group: "UI - Chrome"
+        env:
+          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG: "cypress:server:args"
+
   unit-tests:
     runs-on: ubuntu-latest
     strategy:
