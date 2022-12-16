@@ -56,7 +56,7 @@ jobs:
       - run: pnpm install
       - run: pnpm lint
       - name: Cypress run
-        uses: cypress-io/github-action@v4.x.x # use the explicit version number
+        uses: cypress-io/github-action@v5.0.0
         with:
           build: pnpm lint
           start: pnpm fb:dev
