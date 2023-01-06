@@ -23,7 +23,7 @@ yarn-error.log*
 *.sln
 *.sw?
 
-*.log 
+*.log
 *.cache
 
 *.orig
@@ -31,3 +31,5 @@ yarn-error.log*
 .env.*
 !.env.example
 
+cypress/screenshots/
+cypress/videos/

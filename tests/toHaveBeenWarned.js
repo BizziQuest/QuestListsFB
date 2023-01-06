@@ -48,9 +48,9 @@ function createCompareFn(spy) {
 function toHaveBeenWarnedInit() {
   let warn;
   let error;
-  beforeAll(() => {
-    warn = jest.spyOn(console, 'warn').mockImplementation(noop);
-    error = jest.spyOn(console, 'error').mockImplementation(noop);
+  beforeEach(() => {
+    warn = cy.spy(console, 'warn').as(noop);
+    error = cy.spy(console, 'error').as(noop);
     expect.extend({
       toHaveBeenErrored: createCompareFn(error),
       toHaveBeenWarned: createCompareFn(warn),
