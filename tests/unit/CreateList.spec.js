@@ -131,7 +131,7 @@ describe('list creation', () => {
   });
 
   it('should create the list with the proper parameters', async () => {
-    wrapper.find('[test-adult-content]').trigger('click');
+    wrapper.find('[test-explicit-content]').trigger('click');
     await wrapper.find('input[test-title-input]').setValue('A New Title');
     wrapper.find('[test-submit-form]').trigger('click');
     await wrapper.vm.$nextTick();
@@ -142,7 +142,7 @@ describe('list creation', () => {
     );
     const createParams = actions.createList.mock.calls[0][1];
     expect(createParams.stateGroup).toStrictEqual({ states: [{ icon: 'default', name: 'default' }] });
-    expect(createParams.adultContent).toStrictEqual(true);
+    expect(createParams.explicitContent).toStrictEqual(true);
   });
   it('should notify users when there are no states given.', async () => {
     await wrapper.find('input[test-title-input]').setValue('A New Title');

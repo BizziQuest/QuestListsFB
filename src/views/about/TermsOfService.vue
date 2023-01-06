@@ -62,10 +62,10 @@
           to use, reproduce, adapt, modify, publish or distribute the Content created by you or stored in your user
           account for commercial, marketing or any similar purpose.
         </p>
-        <h2>Adult content</h2>
+        <h2>Explicit content</h2>
         <p>
-          Please be aware that there may be certain adult or mature content available on the Website. A warning will be
-          shown to the User prior to adult content being displayed. Where there is mature or adult content, individuals
+          Please be aware that there may be certain explicit or mature content available on the Website. A warning will be
+          shown to the User prior to explicit content being displayed. Where there is mature or explicit content, individuals
           who are less than 18 years of age or are not permitted to access such content under the laws of any applicable
           jurisdiction may not access such content. If we learn that anyone under the age of 18 seeks to conduct a
           transaction through the Services, we will require verified parental consent, in accordance with the Children's
