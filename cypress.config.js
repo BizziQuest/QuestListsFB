@@ -11,9 +11,12 @@ module.exports = {
     },
     specPattern: 'tests/e2e/specs/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'tests/e2e/support/index.js',
+    experimentalStudio: true,
   },
 
   component: {
+    viewportHeight: 768,
+    viewportWidth: 1024,
     devServer: {
       framework: 'vue',
       bundler: 'vite',

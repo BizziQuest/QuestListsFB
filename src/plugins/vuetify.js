@@ -1,13 +1,13 @@
 // import Vue from 'vue';
 // import Vuetify, { createVuetify, VIcon, VBtn } from 'vuetify/lib';
-import { createVuetify } from 'vuetify';
 import '@mdi/font/css/materialdesignicons.css'; // for the default material design icons
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import { createVuetify } from 'vuetify';
 // import { preset as replyPreset } from 'vue-cli-plugin-vuetify-preset-reply/preset';
 // import { preset as rallyPreset } from 'vue-cli-plugin-vuetify-preset-rally/preset';
+import { aliases } from 'vuetify/iconsets/mdi';
+import 'vuetify/styles';
 import '../assets/QuestLists-font/questlistsicons.scss';
-import 'vuetify/styles'
-import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 // TODO: get the presets working!
 
@@ -38,12 +38,13 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi'
 export const options = {
   // preset,
   theme: {
-    // default: 'dark',
+    default: 'dark',
     options: {
       customProperties: true,
     },
   },
   icons: {
+    defaults: 'mdi',
     aliases: {
       ...aliases,
       questlists: 'ql ql-➰',

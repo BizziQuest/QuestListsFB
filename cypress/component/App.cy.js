@@ -1,5 +1,5 @@
 import Vuex from 'vuex';
-import { mountCallback } from 'cypress/vue2';
+import { mountCallback } from 'cypress/vue';
 import App from '../../src/App.vue';
 import router from '../../src/router';
 
