@@ -3,28 +3,7 @@
     fluid
     class="lists-view"
   >
-    <v-autocomplete
-      class="search-box"
-      v-model:search-input="searchTerm"
-      solo
-      filled
-      rounded
-      clearable
-      hide-no-data
-      hide-selected
-      return-object
-      :items="algoliaSuggestions"
-      :loading="isLoading"
-      color="white"
-      :height="19"
-      item-text="Search for"
-      item-value="API"
-      label="Search Quests"
-      placeholder="Start typing to Search"
-      prepend-inner-icon="questlists-search"
-      @input="getSuggestions($event)"
-      @keydown.enter="search($event)"
-    />
+    <search @input=""/>
     <transition-group
       tag="div"
       class="row"
@@ -75,20 +54,28 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
-import ListCard from '../components/ListCard.vue';
 import { algoliaIndex } from '../algolia';
+import ListCard from '../components/ListCard.vue';
+import Search from '../components/QuestListsSearch.vue';
 import { fetchQuestLists } from '../firebase';
 
 export default {
   name: 'QuestLists',
   components: {
     ListCard,
+    Search,
   },
   data: () => ({
     algoliaSuggestions: [],
     searchTerm: '',
     isLoading: false,
+    searchTerm: '',
   }),
+  watch: {
+    searchTerm(val) {
+      this.getSuggestions();
+    }
+  },
   methods: {
     ...mapActions(['fetchLists']),
     ...mapMutations(['setLists']),
