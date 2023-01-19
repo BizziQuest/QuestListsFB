@@ -3,40 +3,57 @@
     fluid
     class="lists-view"
   >
-  <ais-instant-search
-  :index-name="algoliaSuggestionIndexName"
-  :search-client="algolia">
-    <ais-autocomplete
-  :escape-html="true"
-  :class-names="{}">
+    <ais-instant-search
+    :index-name="algoliaIndexName"
+    :search-client="algolia">
+
+    <ais-index :index-name="algoliaIndexName" />
+<!-- <ais-autocomplete>
   <template v-slot="{ currentRefinement, indices, refine }">
-   <v-autocomplete
-      class="search-box"
-      solo
-      filled
-      rounded
-      clearable
-      hide-no-data
-      hide-selected
-      return-object
-      :items="indices[0].hits"
-      :loading="isLoading"
-      color="white"
-      :height="19"
-      item-text="Search for"
-      item-value="API"
-      label="Search Quests"
-      placeholder="Start typing to Search"
-      prepend-inner-icon="questlists-search"
-      @input="checkInput(refine, $event, indices, currentRefinement)"
-      @keydown.enter="search"
+    <input
+      type="search"
+      :value="currentRefinement"
+      placeholder="Search for a product"
+      @input="refine($event.currentTarget.value)"
     >
-    <template v-slot:item="{ props, item }">
-      <ais-highlight attribute="name" :hit="item"/>
-    </template>
-    </v-autocomplete>
-    </template>
-    </ais-autocomplete>
+    <ul v-if="currentRefinement" v-for="index in indices" :key="index.indexId">
+      <li>
+        <h3>{{ index.indexName }}</h3>
+        <ul>
+          <li v-for="hit in index.hits" :key="hit.objectID">
+            <ais-highlight attribute="title" :hit="hit"/>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </template>
+</ais-autocomplete> -->
+    <ais-autocomplete>
+        <template v-slot="{ currentRefinement, indices, refine }">
+          <v-autocomplete
+            class="search-box"
+            solo
+            filled
+            rounded
+            clearable
+            hide-no-data
+            hide-selected
+            return-object
+            :value="currentRefinement"
+            :items="getHits(indices)"
+            :loading="isLoading"
+            label="Search Quests"
+            placeholder="Start typing to Search"
+            prepend-inner-icon="questlists-search"
+            @input="checkInput(refine, $event, indices, currentRefinement)"
+            @keydown.enter="search"
+          >
+            <template v-slot:item="{ props, item }">
+              <ais-highlight attribute="title" :hit="item"/>
+            </template>
+          </v-autocomplete>
+        </template>
+      </ais-autocomplete>
     </ais-instant-search>
   </v-container>
 </template>
@@ -61,15 +78,18 @@ export default {
     algoliaSuggestionIndexName
   }),
   watch: {
-    searchTerm(val) {
-      this.getSuggestions();
-    }
+    // searchTerm(val) {
+    //   this.getSuggestions();
+    // }
   },
   methods: {
     ...mapActions(['fetchLists']),
     ...mapMutations(['setLists']),
+    getHits(indices) {
+      const allHits = indices.reduce((res, idx) => res.concat(idx.hits), []);
+      return allHits
+    },
     checkInput(refine, $event, indices, currentRefinement) {
-      console.log(arguments, indices)
       this.searchTerm = $event.currentTarget.value;
       refine($event.currentTarget.value)
     },
@@ -77,9 +97,9 @@ export default {
       this.isLoading = true;
       this.$emit('search', this.searchTerm);
     },
-    async getSuggestions() {
-      this.algoliaSuggestions = ['suggestions', this.searchTerm];
-    },
+    // async getSuggestions() {
+    //   this.algoliaSuggestions = ['suggestions', this.searchTerm];
+    // },
   },
 };
 </script>
