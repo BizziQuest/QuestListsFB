@@ -47,9 +47,14 @@
             prepend-inner-icon="questlists-search"
             @input="checkInput(refine, $event, indices, currentRefinement)"
             @keydown.enter="search"
+            @update:model-value="checkInput(refine, $event, indices, currentRefinement)"
           >
-            <template v-slot:item="{ props, item }">
-              <ais-highlight attribute="title" :hit="item"/>
+            <template v-slot:item="{ props, item, index }">
+              <v-list-item v-bind="props" :title="null">
+                <v-list-item-title>
+                  <ais-highlight attribute="title" lines="one" :hit="item.value" :key="index"/>
+                </v-list-item-title>
+              </v-list-item>
             </template>
           </v-autocomplete>
         </template>
