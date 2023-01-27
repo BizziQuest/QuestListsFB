@@ -47,7 +47,7 @@
             prepend-inner-icon="questlists-search"
             @input="checkInput(refine, $event, indices, currentRefinement)"
             @keydown.enter="search"
-            @update:model-value="checkInput(refine, $event, indices, currentRefinement)"
+            @update:model-value="search($event, refine)"
           >
             <template v-slot:item="{ props, item, index }">
               <v-list-item v-bind="props" :title="null">
@@ -96,9 +96,11 @@ export default {
     },
     checkInput(refine, $event, indices, currentRefinement) {
       this.searchTerm = $event.currentTarget.value;
-      refine($event.currentTarget.value)
+      refine(this.searchTerm);
     },
-    async search(e) {
+    async search($event, refine) {
+      if ($event?.title) this.searchTerm = $event.title;
+      if (refine) refine(this.searchTerm);
       this.isLoading = true;
       this.$emit('search', this.searchTerm);
     },
