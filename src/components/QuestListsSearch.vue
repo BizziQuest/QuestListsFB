@@ -7,27 +7,7 @@
     :index-name="algoliaIndexName"
     :search-client="algolia">
 
-    <ais-index :index-name="algoliaIndexName" />
-<!-- <ais-autocomplete>
-  <template v-slot="{ currentRefinement, indices, refine }">
-    <input
-      type="search"
-      :value="currentRefinement"
-      placeholder="Search for a product"
-      @input="refine($event.currentTarget.value)"
-    >
-    <ul v-if="currentRefinement" v-for="index in indices" :key="index.indexId">
-      <li>
-        <h3>{{ index.indexName }}</h3>
-        <ul>
-          <li v-for="hit in index.hits" :key="hit.objectID">
-            <ais-highlight attribute="title" :hit="hit"/>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </template>
-</ais-autocomplete> -->
+    <!-- <ais-index :index-name="algoliaIndexName" /> -->
     <ais-autocomplete>
         <template v-slot="{ currentRefinement, indices, refine }">
           <v-autocomplete
@@ -73,6 +53,7 @@ export default {
   components: {
     ListCard,
   },
+  props: ['loading'],
   data: () => ({
     algoliaSuggestions: [],
     searchTerm: '',
@@ -83,9 +64,9 @@ export default {
     algoliaSuggestionIndexName
   }),
   watch: {
-    // searchTerm(val) {
-    //   this.getSuggestions();
-    // }
+    loading(val) {
+      this.isLoading = val;
+    }
   },
   methods: {
     ...mapActions(['fetchLists']),
@@ -104,12 +85,6 @@ export default {
       this.isLoading = true;
       this.$emit('search', this.searchTerm);
     },
-    // async getSuggestions() {
-    //   this.algoliaSuggestions = ['suggestions', this.searchTerm];
-    // },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-</style>

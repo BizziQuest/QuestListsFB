@@ -3,7 +3,7 @@
     fluid
     class="lists-view"
   >
-    <search @search="search"/>
+    <search @search="search" :loading="isLoading"/>
     <transition-group
       tag="div"
       class="row"
@@ -81,19 +81,18 @@ export default {
     ...mapMutations(['setLists']),
     async search(term) {
       console.log('searching for', term)
-
       if (term === '') {
         this.setLists(this.fetchLists());
         return;
       }
       this.isLoading = true;
-      const { hits } = await algoliaIndex.search(this.searchTerm);
+      const { hits } = await algoliaIndex.search(term);
       const slugs = hits.map((hit) => hit.slug);
       fetchQuestLists({
         slugs,
         callback: (lists) => {
-          this.setLists(lists);
           this.isLoading = false;
+          this.setLists(lists);
         },
       });
     },
