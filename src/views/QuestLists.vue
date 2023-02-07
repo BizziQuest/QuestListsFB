@@ -3,28 +3,7 @@
     fluid
     class="lists-view"
   >
-    <v-autocomplete
-      class="search-box"
-      v-model:search-input="searchTerm"
-      solo
-      filled
-      rounded
-      clearable
-      hide-no-data
-      hide-selected
-      return-object
-      :items="algoliaSuggestions"
-      :loading="isLoading"
-      color="white"
-      :height="19"
-      item-text="Search for"
-      item-value="API"
-      label="Search Quests"
-      placeholder="Start typing to Search"
-      prepend-inner-icon="questlists-search"
-      @input="getSuggestions($event)"
-      @keydown.enter="search($event)"
-    />
+    <search @search="search" :loading="isLoading"/>
     <transition-group
       tag="div"
       class="row"
@@ -75,36 +54,45 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
-import ListCard from '../components/ListCard.vue';
 import { algoliaIndex } from '../algolia';
+import ListCard from '../components/ListCard.vue';
+import Search from '../components/QuestListsSearch.vue';
 import { fetchQuestLists } from '../firebase';
 
 export default {
   name: 'QuestLists',
   components: {
     ListCard,
+    Search,
   },
   data: () => ({
     algoliaSuggestions: [],
     searchTerm: '',
     isLoading: false,
+    searchTerm: '',
   }),
+  watch: {
+    searchTerm(val) {
+      this.getSuggestions();
+    }
+  },
   methods: {
     ...mapActions(['fetchLists']),
     ...mapMutations(['setLists']),
-    async search(e) {
-      if (e.target.value === '') {
+    async search(term) {
+      console.log('searching for', term)
+      if (term === '') {
         this.setLists(this.fetchLists());
         return;
       }
       this.isLoading = true;
-      const { hits } = await algoliaIndex.search(this.searchTerm);
-      const resultsSlugs = hits.map((hit) => hit.slug);
+      const { hits } = await algoliaIndex.search(term);
+      const slugs = hits.map((hit) => hit.slug);
       fetchQuestLists({
-        slugs: resultsSlugs,
+        slugs,
         callback: (lists) => {
-          this.setLists(lists);
           this.isLoading = false;
+          this.setLists(lists);
         },
       });
     },
