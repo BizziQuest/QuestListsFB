@@ -34,7 +34,7 @@ jobs:
       - name: Install Global Dependencies
         run: npm install -g pnpm
       - name: Install Local Dependencies
-        run: pnpm -i
+        run: pnpm install
       - name: Build
         run: pnpm build
       - name: Archive Production Artifact
