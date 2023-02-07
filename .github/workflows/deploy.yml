@@ -27,16 +27,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [18.x]
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Install Global Dependencies
-        run: npm install -g yarn @vue/cli
+        run: npm install -g pnpm
       - name: Install Local Dependencies
-        run: yarn
+        run: pnpm -i
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
+        node-version: [18.x] # only use 10, for firebase-tools compatibility
     env:
         NODE_ENV: production
         CI: false
@@ -60,9 +60,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn @vue/cli
-    - run: yarn install --production=false
-    - run: yarn build
+    - run: npm install -g pnpm
+    - run: pnpm install --production=false
+    - run: pnpm build
     - name: Deploy to Firebase
       uses: w9jds/firebase-action@master
       with:
