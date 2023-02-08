@@ -20,6 +20,7 @@ env:
   VITE_APP_ALGOLIA_INDEX_NAME: ${{ secrets.VITE_APP_ALGOLIA_INDEX_NAME }}
   VITE_APP_I18N_LOCALE: en
   VITE_APP_I18N_FALLBACK_LOCALE: en
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
 jobs:
   linting:
@@ -60,6 +61,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Authenticate with GCP
+    - run: |
+          echo ${GCP_SA_KEY} | base64 --decode > ${HOME}/gcp-sa.json
+          export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcp-sa.json
+          sudo apt-get install google-cloud-sdk -y
+          gcloud auth activate-service-account --key-file=${HOME}/gcp-sa.json
     - run: npm install -g pnpm
     - run: pnpm install --production=false
     - run: pnpm build
