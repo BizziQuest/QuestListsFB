@@ -62,7 +62,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Authenticate with GCP
-    - run: |
+      run: |
           echo ${GCP_SA_KEY} | base64 --decode > ${HOME}/gcp-sa.json
           export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcp-sa.json
           sudo apt-get install google-cloud-sdk -y
