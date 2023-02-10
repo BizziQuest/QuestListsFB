@@ -31,7 +31,15 @@ jobs:
         node-version: [18.x]
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@master
+      - name: Use Node.js ${{ matrix.node-version }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - uses: actions/checkout@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
@@ -59,19 +67,21 @@ jobs:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         VITE_APP_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_APP_RECAPTCHA_SITE_KEY }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 7
     - name: Authenticate with GCP
       run: |
           echo ${GCP_SA_KEY} > ${HOME}/gcp-sa.json
           export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcp-sa.json
           sudo apt-get install google-cloud-sdk -y
           gcloud auth activate-service-account --key-file=${HOME}/gcp-sa.json
-    - run: npm install -g pnpm
     - run: pnpm install --production=false
     - run: pnpm build
     - name: Deploy to Firebase
