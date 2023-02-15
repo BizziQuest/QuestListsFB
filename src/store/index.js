@@ -266,7 +266,7 @@ const store = createStore({
       }
     },
     addRecentlyUsedQuest({ commit, state }, newQuest) {
-      commit('setRecentQuests', [...state.recentQuests, newQuest]);
+      commit('setRecentQuests', [newQuest, ...state.recentQuests]);
     },
     async getRecentlyUsedQuests({ commit }) {
       const recent = await getRecentlyUsedLists();
