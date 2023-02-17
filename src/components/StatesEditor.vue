@@ -119,7 +119,10 @@ export default {
     },
     states(val) {
       this.dnd_items = val;
-    }
+    },
+    globalPreferences() {
+      this.dereferenceStateGroup();
+    },
   },
   computed: {
     ...mapState(['globalPreferences']),
