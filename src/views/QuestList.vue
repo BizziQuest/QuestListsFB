@@ -65,7 +65,7 @@
   </div>
 </template>
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 import ListItem from '@/components/ListItem.vue';
 import UserAuthAlert from '@/components/UserAuthAlert.vue';
 import userAuthMixin from '../mixins/UserAuth.vue';
@@ -83,8 +83,17 @@ export default {
     ListPreferences,
   },
   mixins: [userAuthMixin],
+  beforeRouteUpdate(to) {
+    this.loadList(to.params.slug);
+  },
+  beforeRouteEnter(to, _from, next) {
+    next(vm => {
+      vm.loadList(to.params.slug);
+    });
+  },
   beforeRouteLeave() {
     this.setPageBackgroundColor(null);
+    if(this.hasModifiedList) this.addRecentlyUsedQuest(this.list);
   },
   props: {
     title: {
@@ -107,6 +116,7 @@ export default {
       listItems: [],
       states: [],
       showPreferences: false,
+      hasModifiedList: false,
     };
   },
   computed: {
@@ -116,7 +126,9 @@ export default {
   },
   methods: {
     ...mapMutations(['setPageBackgroundColor','setPageForegroundColor']),
+    ...mapActions(['addRecentlyUsedQuest']),
     updateListPreferences(newPrefs) {
+      this.hasModifiedList = true;
       const updatedPrefs = { ...newPrefs };
       const { deletedValues } = updatedPrefs;
       delete updatedPrefs.deletedValues;
@@ -145,6 +157,7 @@ export default {
       const validItem = { ...item };
       if (!item.state) [validItem.state] = this.states;
       this.listItems[index] = validItem;
+      this.hasModifiedList = true;
     },
     focusNext(index) {
       const listItemRef = this.$refs[`listItem${index + 1}`];
@@ -183,11 +196,13 @@ export default {
       await saveListItems(this.list.id, items);
 
       if(update) this.listItems = items;
+      this.hasModifiedList = true;
     },
     delItem(index) {
       const items = this.listItems.filter((_itm, idx) => idx !== index);
       this.listItems = items;
       saveListItems(this.list.id, items);
+      this.hasModifiedList = true;
     },
     async addNewSubList() {
       await this.saveItem();
@@ -199,15 +214,6 @@ export default {
       const slug = slugPathArray[slugPathArray.length - 1]
       if(this.list.slug !== slug) this.fetchList({ slug });
     },
-  },
-  beforeRouteUpdate(to, _from, next) {
-    this.loadList(to.params.slug);
-    next();
-  },
-  beforeRouteEnter(to, _from, next) {
-    next(vm => {
-      vm.loadList(to.params.slug);
-    });
   },
 };
 </script>
