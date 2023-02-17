@@ -132,6 +132,10 @@ export default {
       const updatedPrefs = { ...newPrefs };
       const { deletedValues } = updatedPrefs;
       delete updatedPrefs.deletedValues;
+      if(updatedPrefs.color) {
+        this.setPageBackgroundColor(updatedPrefs.color);
+        this.setPageForegroundColor(getContrast(updatedPrefs.color));
+      }
       if (Array.isArray(updatedPrefs.stateGroup)) {
         updatedPrefs.newStateGroup = updatedPrefs.stateGroup;
         updatedPrefs.stateGroup = this.list.stateGroup;
@@ -148,10 +152,6 @@ export default {
       this.list = { ...this.list, ...updatedPrefs };
       if (updatedPrefs.newStateGroup?.states) this.states = updatedPrefs.newStateGroup.states;
       saveList(this.list);
-      if(updatedPrefs.color) {
-        this.setPageBackgroundColor(updatedPrefs.color);
-        this.setPageForegroundColor(getContrast(updatedPrefs.color));
-      }
     },
     appendItem(index, item) {
       const validItem = { ...item };
