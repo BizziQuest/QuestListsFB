@@ -20,6 +20,7 @@ env:
   VITE_APP_ALGOLIA_INDEX_NAME: ${{ secrets.VITE_APP_ALGOLIA_INDEX_NAME }}
   VITE_APP_I18N_LOCALE: en
   VITE_APP_I18N_FALLBACK_LOCALE: en
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
 jobs:
   linting:
@@ -27,16 +28,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [18.x]
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@master
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
       - name: Install Global Dependencies
-        run: npm install -g yarn @vue/cli
+        run: npm install -g pnpm
       - name: Install Local Dependencies
-        run: yarn
+        run: pnpm install
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
@@ -47,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x] # only use 10, for firebase-tools compatibility
+        node-version: [18.x] # only use 10, for firebase-tools compatibility
     env:
         NODE_ENV: production
         CI: false
@@ -55,14 +63,23 @@ jobs:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         VITE_APP_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_APP_RECAPTCHA_SITE_KEY }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 7
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install -g yarn @vue/cli
-    - run: yarn install --production=false
-    - run: yarn build
+        cache: 'pnpm'
+    - name: Authenticate with GCP
+      run: |
+        echo ${GCP_SA_KEY} > ${HOME}/gcp-sa.json
+        export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/gcp-sa.json
+        sudo apt-get install google-cloud-sdk -y
+        gcloud auth activate-service-account --key-file=${HOME}/gcp-sa.json
+    - run: pnpm install --production=false
+    - run: pnpm build
     - name: Deploy to Firebase
       uses: w9jds/firebase-action@master
       with:

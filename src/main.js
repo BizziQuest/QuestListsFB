@@ -4,6 +4,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 // import {setupI18n} from './i18n';
+import InstantSearch from 'vue-instantsearch/vue3/es';
 import vuetify from './plugins/vuetify';
 
 // we can use this if we need, but the reply theme preset uses a different font
@@ -33,6 +34,7 @@ app.use(vuetify);
 app.use(store);
 app.use(router);
 // app.use(i18n);
+app.use(InstantSearch);
 
 if (window.Cypress) window.$app = app;
 

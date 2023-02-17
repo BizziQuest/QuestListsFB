@@ -4,8 +4,8 @@
     overlap
     offset-x="100"
     class="list-card-badge"
-    content="adult content"
-    :value="!!updatedList.adultContent"
+    content="explicit content"
+    :value="!!updatedList.explicitContent"
     color="red"
   >
     <v-card

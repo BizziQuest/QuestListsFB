@@ -53,12 +53,12 @@
       </v-form>
       <v-row class="mt-0">
         <v-checkbox
-          :model-value="adultContent"
-          test-adult-content
+          :model-value="explicitContent"
+          test-explicit-content
           class="mr-5 ml-3 mt-0"
-          label="Adult Content"
+          label="Explicit Content"
           hide-details
-          @update:model-value="updateAttribute('adultContent', $event || false)"
+          @update:model-value="updateAttribute('explicitContent', $event || false)"
         />
         <v-tooltip
           right
@@ -74,9 +74,9 @@
               help
             </v-icon>
           </template>
-          <span>Adult-oriented content is content which may include nudity, strong sexual themes, or strong descriptions
+          <span>Explicit-oriented content is content which may include nudity, strong sexual themes, or strong descriptions
             of violence. Examples include QuestLists for Cyberpunk 2077 or Grand Theft Auto; Questlists
-            of adult web sites or subreddits;
+            of explicit web sites or subreddits;
           </span>
         </v-tooltip>
       </v-row>
@@ -95,8 +95,8 @@ export default {
     ColorInput
   },
   props: {
-    adultContent: {
-      description: 'Whether this list has adult content.',
+    explicitContent: {
+      description: 'Whether this list has explicit content.',
       type: Boolean,
       default: false,
     },
