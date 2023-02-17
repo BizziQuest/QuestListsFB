@@ -113,7 +113,7 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss">
+<style scoped>
 .list-state {
   align-items: center;
 }

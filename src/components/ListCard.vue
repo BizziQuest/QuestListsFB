@@ -119,7 +119,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 ul {
   margin-left: 0px;
   padding-left: 0px;

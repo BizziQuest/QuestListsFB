@@ -167,10 +167,10 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss">
+<style scoped>
 .v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
   &:not([color]) {
-    // color: #ffffff !important;
+    /* color: #ffffff !important;*/
 
     &.theme--light {
       color: #ffffff !important;

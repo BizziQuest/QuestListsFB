@@ -289,9 +289,9 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style scoped>
 #drop-zone {
-  // min-height: 300px;
+  /* min-height: 300px;*/
   min-width: 200px;
   width: 100%;
   height: auto;
@@ -310,7 +310,7 @@ export default {
   border: #990000 solid 2px;
 }
 .start-drag {
-  // opacity: 0.8;
+  /* opacity: 0.8;*/
   border: 1px dashed red;
 }
 

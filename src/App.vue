@@ -4,13 +4,13 @@
     @keyup.ctrl.f="handleFind"
   >
     <drawer-menu v-model:drawer="drawer" />
-    <v-main :style="pageBackgroundColor" style="max-width: 100%;">
+    <v-main style="max-width: 100%;" :style="`${pageBackgroundColor};${pageForegroundColor};`">
       <router-view v-slot="{ Component }">
         <transition name="router-anim" >
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </v-main>
+              <component :is="Component"/>
+            </transition>
+          </router-view>
+      </v-main>
     <bottom-drawer-menu v-model:drawer="drawer" />
     <notification />
     <v-snackbar
@@ -37,29 +37,31 @@ import DrawerMenu from './components/Menus/DrawerMenu.vue';
 import BottomDrawerMenu from './components/Menus/BottomDrawerMenu.vue';
 import Notification from './components/GlobalNotification.vue';
 import appUpdate from './mixins/appUpdate';
-// import {
-//   VApp, VButton, VMain
-// } from 'vuetify';
+
 export default {
-  name: 'App',
+  name: 'QuestLists App',
   components: {
     DrawerMenu,
     BottomDrawerMenu,
     Notification,
-    // VApp,VButton,VMain
   },
   mixins: [appUpdate],
   data() {
     return {
       drawer: true,
+      mainTheme: 'light',
     };
   },
   computed: {
     ...mapState({
-      pageBackgroundColor: (state) => {
+      pageBackgroundColor(state) {
         if (state.pageBackgroundColor)
           return `background-color: ${state.pageBackgroundColor}`
         return '';
+      },
+      pageForegroundColor(state) {
+        this.mainTheme = state.pageForegroundColor !== 'white' ? 'light' : 'dark';
+        return `color: ${state.pageForegroundColor}`;
       }
     }),
   },

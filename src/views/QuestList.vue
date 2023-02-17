@@ -73,6 +73,7 @@ import {
   getListItems, getListStates, getListBySlug, saveListItems, updateUserItemStates, saveList,
 } from '../firebase';
 import ListPreferences from '../components/ListPreferences.vue';
+import { getContrast } from "../colors"
 
 export default {
   name: 'QuestList',
@@ -124,13 +125,17 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['setPageBackgroundColor']),
+    ...mapMutations(['setPageBackgroundColor','setPageForegroundColor']),
     ...mapActions(['addRecentlyUsedQuest']),
     updateListPreferences(newPrefs) {
       this.hasModifiedList = true;
       const updatedPrefs = { ...newPrefs };
       const { deletedValues } = updatedPrefs;
       delete updatedPrefs.deletedValues;
+      if(updatedPrefs.color) {
+        this.setPageBackgroundColor(updatedPrefs.color);
+        this.setPageForegroundColor(getContrast(updatedPrefs.color));
+      }
       if (Array.isArray(updatedPrefs.stateGroup)) {
         updatedPrefs.newStateGroup = updatedPrefs.stateGroup;
         updatedPrefs.stateGroup = this.list.stateGroup;
@@ -172,7 +177,10 @@ export default {
       foundList = {...foundList.data(),  id: foundList.id };
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
-      this.setPageBackgroundColor(foundList.color);
+      if(foundList.color) {
+        this.setPageBackgroundColor(foundList.color);
+        this.setPageForegroundColor(getContrast(foundList.color));
+      }
       foundList.listItems = listItems;
       this.list = foundList;
       this.listItems = listItems;
@@ -209,7 +217,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style scoped>
 h1 {
   margin-top: 10px;
 }

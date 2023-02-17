@@ -131,7 +131,7 @@ export default {
   },
 };
 </script>
-<style lang='scss' scoped>
+<style scoped>
 .local-icon {
   width: 28px;
   border: 1px solid green;

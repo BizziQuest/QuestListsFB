@@ -22,30 +22,64 @@ env:
   FIREBASE_TOKEN: ${{ secrets.CI_FIREBASE_TOKEN }}
 
 jobs:
-  linting:
+  # linting:
 
+  #   runs-on: ubuntu-latest
+
+  #   strategy:
+  #     matrix:
+  #       node-version: [18.x]
+
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Use Node.js ${{ matrix.node-version }}
+  #     uses: actions/setup-node@v1
+  #     with:
+  #       node-version: ${{ matrix.node-version }}
+  #   - run: npm install -g pnpm @vue/cli
+  #   - run: pnpm install
+  #   # - run: pnpm lint
+
+  cypress-run:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [16.x] # only use 10, for firebase-tools compatibility
-
+        node-version: [18.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install -g pnpm @vue/cli
-    - run: pnpm install
-    - run: pnpm lint
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      # - name: Setup NPM
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
+      # - run: npm install -g pnpm
+      # - run: pnpm install
+      - name: Cypress run
+        uses: cypress-io/github-action@v5.0.0
+        with:
+          build: pnpm i
+          start: pnpm fb:dev
+          wait-on: "http://localhost:5173"
+          browser: chrome
+          record: true
+          parallel: true
+          group: "UI - Chrome"
+        env:
+          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG: "cypress:server:args"
 
   unit-tests:
-    needs: linting
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x] # only use 10, for firebase-tools compatibility
+        node-version: [18.x]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}

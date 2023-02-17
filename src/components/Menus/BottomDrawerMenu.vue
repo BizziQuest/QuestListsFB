@@ -152,7 +152,7 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss">
+<style scoped>
 .v-item-group.v-bottom-navigation .v-btn.align-center {
   height: 100%;
 }

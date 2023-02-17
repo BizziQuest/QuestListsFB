@@ -218,13 +218,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .listitem-icon {
   display: inline-flex;
   margin-right: 10px;
 }
 .listitem-text {
-  // display: inline-block;
+  /* display: inline-block;*/
 }
 :deep(.theme--light.v-text-field--solo > .v-input__control > .v-input__slot),
 :deep(.theme--dark.v-text-field--solo > .v-input__control > .v-input__slot) {
