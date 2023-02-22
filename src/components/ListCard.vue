@@ -1,70 +1,64 @@
 <template>
   <div v-if="updatedList?.slug">
-  <v-badge
-    overlap
-    offset-x="100"
-    class="list-card-badge"
-    content="explicit content"
-    :value="!!updatedList.explicitContent"
-    color="red"
-  >
-    <v-card
-      light
-      :color="updatedList.color"
-      :style="textStyles"
-      class="list-card mb-2 mr-0 d-flex align-stretch flex-row"
-      :class="cardClasses"
-      elevation="3"
-      :to="{ name: 'List', params: { slug: updatedList.slug } }"
+    <v-badge
+      overlap
+      offset-x="100"
+      class="list-card-badge"
+      content="explicit content"
+      :value="!!updatedList.explicitContent"
+      color="red"
     >
-      <v-img
-        :src="updatedList.image || 'https://picsum.photos/200/300'"
-        max-width="100"
-        :class="imageClasses"
-      />
-      <v-container
-        class="ma-0 pa-1 align-self-start"
-        dark
+      <v-card
+        light
+        :color="updatedList.color"
+        :style="textStyles"
+        class="list-card mb-2 mr-0 d-flex align-stretch flex-row"
+        :class="cardClasses"
+        elevation="3"
+        :to="{ name: 'List', params: { slug: updatedList.slug } }"
       >
-        <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold">
-          {{ updatedList.title }}
-        </v-card-title>
-
-        <v-card-subtitle
-          class="ml-0 px-1 text-subtitle-2"
+        <v-img
+          :src="updatedList.image || 'https://picsum.photos/200/300'"
+          max-width="100"
+          :class="imageClasses"
+        />
+        <v-container
+          class="ma-0 pa-1 align-self-start"
           dark
         >
-          {{ updatedList.description }}
-        </v-card-subtitle>
-        <v-card-text class="ml-0 px-1">
-          <v-list
-            dense
-            class="ml-0 px-0"
-          >
-            <v-list-item-title class="ml-0 px-0 font-weight-medium text-decoration-underline">
-              Next Items:
-            </v-list-item-title>
-            <v-list-item
-              v-if="!updatedList.nextItems || updatedList.nextItems.length < 1"
-              class="font-weight-bold"
-            >
-              There is nothing to do in this list. Click this card to add your quest items.
-            </v-list-item>
-            <list-item
-              v-for="item in updatedList.nextItems"
-              :key="item.order"
+          <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold">
+            {{ updatedList.title }}
+          </v-card-title>
+          <v-card-text class="ml-0 px-1">
+            {{ updatedList.description }}
+            <v-list
+              dense
               class="ml-0 px-0"
-              :color="globalPreferences.defaultStateGroup.color"
-              :list-item="item"
-              :states="states || globalPreferences.defaultStateGroup.states"
-              read-only
-              @click.prevent.stop="null"
-            />
-          </v-list>
-        </v-card-text>
-      </v-container>
-    </v-card>
-  </v-badge>
+            >
+              <v-list-item-title class="ml-0 px-0 font-weight-medium text-decoration-underline">
+                Next Items:
+              </v-list-item-title>
+              <v-list-item
+                v-if="!updatedList.nextItems || updatedList.nextItems.length < 1"
+                class="font-weight-bold"
+              >
+                There is nothing to do in this list. Click this card to add your quest items.
+              </v-list-item>
+              <list-item
+                v-for="item in updatedList.nextItems"
+                :key="item.order"
+                class="ml-0 px-0"
+                :color="globalPreferences.defaultStateGroup.color"
+                :list-item="item"
+                :states="states || globalPreferences.defaultStateGroup.states"
+                read-only
+                @click.prevent.stop="null"
+              />
+            </v-list>
+          </v-card-text>
+        </v-container>
+      </v-card>
+    </v-badge>
   </div>
 </template>
 
@@ -168,5 +162,9 @@ ul {
   .v-list .v-list-item__title {
     color: inherit !important;
   }
+}
+
+::v-deep(.v-card-title) {
+  white-space: normal;
 }
 </style>

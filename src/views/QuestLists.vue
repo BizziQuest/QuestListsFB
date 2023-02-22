@@ -9,21 +9,21 @@
       class="row"
       name="fade"
     >
+      <!-- TODO: when vuetify adds the skeleton loader back in to v3
       <v-col
         v-if="lists === null"
         key="skeleton"
         class="mt-5"
       >
-        <!-- TODO: <v-skeleton-loader
+        <v-skeleton-loader
           v-for="i in 6"
           :key="i"
           class="mx-auto"
           max-width="800"
           type="list-item-avatar, divider, list-item-three-line, card-heading, image, actions"
-        /> -->
-      </v-col>
-      <v-row
-        v-if="lists && lists.length < 1"
+        />
+      </v-col> -->
+      <v-row v-if="lists && lists.length < 1"
         key="sad"
         class="ml-5 mr-5 mt-10"
       >
@@ -37,17 +37,16 @@
           <v-icon class="mx-2">$questlists-plus</v-icon> icon on the left to get started!
         </v-alert>
       </v-row>
-      <v-col
-        v-for="list in lists"
-        v-else
-        :key="list.objectID || list.id"
-        md="4"
-        sm="6"
-        xs="12"
-        class="d-flex align-stretch"
-      >
-        <ListCard :list="list" />
-      </v-col>
+      <v-row>
+        <v-col v-for="list in lists"
+          :key="list.objectID || list.id"
+          md="4"
+          sm="6"
+          cols="12"
+        >
+          <ListCard :list="list" />
+        </v-col>
+      </v-row>
     </transition-group>
   </v-container>
 </template>
