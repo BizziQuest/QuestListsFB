@@ -21,7 +21,7 @@ import {
   sendEmailVerification,
 } from 'firebase/auth';
 import router from '../router';
-import { getAvatarForUser } from '../util';
+import { getAvatarForUser, setCookie, getCookie } from '../util';
 import {
   reactToPrefsChange,
   auth,
@@ -117,6 +117,7 @@ const store = createStore({
         avatar: user.avatar || '/img/unknown_user.svg',
         emailVerified: user.emailVerified,
         useGravatar: user.useGravatar,
+        themeName: user.themeName,
       };
     },
     setLists(state, payload) {
@@ -194,6 +195,7 @@ const store = createStore({
       try {
         const googleInfo = await signInWithPopup(auth, googleOAuthLogin);
         const additionalUserInfo = getAdditionalUserInfo(googleInfo);
+        debugger;
         if (additionalUserInfo?.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
@@ -257,7 +259,25 @@ const store = createStore({
         },
       });
     },
+    async loadTheme({commit, state}) {
+      // load from cookie
+      getCookie('themeName');
+      // if user is logged in, get from userprefs
+      if (state.user?.uid) {
+        setTheme()
+      }
+    },
+    async setTheme({ commit, state, dispatch }, themeName) {
+      // set cookie
+      setCookie('themeName', themeName);
+      // set in user prefs
+      debugger;
+      commit('setUser', {...state.currentUser, themeName});
+      dispatch('saveProfile', state.currentUser);
+    },
     async saveProfile({ commit }, payload) {
+      debugger;
+      if (!payload) return;
       try {
         await updateProfile(auth.currentUser, {
           displayName: payload.displayName,
