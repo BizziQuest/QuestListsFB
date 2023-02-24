@@ -1,9 +1,9 @@
 <template>
-  <div v-if="updatedList?.slug">
+  <div v-if="updatedList?.slug" class="h-100">
     <v-badge
       overlap
       offset-x="100"
-      class="list-card-badge"
+      class="list-card-badge h-100"
       content="explicit content"
       :value="!!updatedList.explicitContent"
       color="red"
@@ -12,7 +12,7 @@
         light
         :color="updatedList.color"
         :style="textStyles"
-        class="list-card mb-2 mr-0 d-flex align-stretch flex-row"
+        class="list-card mb-2 mr-0 d-flex align-stretch flex-row h-100"
         :class="cardClasses"
         elevation="3"
         :to="{ name: 'List', params: { slug: updatedList.slug } }"
@@ -30,7 +30,9 @@
             {{ updatedList.title }}
           </v-card-title>
           <v-card-text class="ml-0 px-1">
-            {{ updatedList.description }}
+            <div class="description" :title="updatedList.description">
+              {{ updatedList.description }}
+            </div>
             <v-list
               dense
               class="ml-0 px-0"
@@ -114,6 +116,36 @@ export default {
 </script>
 
 <style scoped>
+.description {
+  position: relative;
+  max-height: 100px;
+  line-height: 20px;
+  overflow: hidden;
+  padding-right: 1rem; /* space for ellipsis */
+}
+/* .description {
+  max-height: 100px;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */
+.description::before {
+  position: absolute;
+  content: "...";
+  bottom: 0;
+  /** width of ellipsis */
+  right: 1rem;
+  z-index:10;
+}
+.description::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 1rem;
+  width: 1rem;
+  height: 1rem;
+  background: inherit;
+}
 ul {
   margin-left: 0px;
   padding-left: 0px;
@@ -164,7 +196,10 @@ ul {
   }
 }
 
-::v-deep(.v-card-title) {
+:deep(.v-card-title) {
   white-space: normal;
+}
+:deep(.v-badge__wrapper) {
+  height: 100%;
 }
 </style>
