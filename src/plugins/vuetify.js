@@ -8,6 +8,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import '../assets/QuestLists-font/questlistsicons.scss';
 import 'vuetify/styles'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { getCookie } from '../util';
 
 // TODO: get the presets working!
 
@@ -35,10 +36,12 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi'
 //   components: { VIcon, VBtn }, // load components here to use with :is or :tag attributes
 // });
 
+const userTheme = getCookie('themeName');
+
 export const options = {
   // preset,
   theme: {
-    // default: 'dark',
+    defaultTheme: userTheme,
     options: {
       customProperties: true,
     },

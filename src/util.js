@@ -31,8 +31,8 @@ function setCookie(cname, cvalue, exdays=365) {
   let expires = "expires="+d.toUTCString();
   const cookieRegex = new RegExp(`${cname}\s*=\s*(.*?)($|;)`, 'gi')
   let newCookie = document.cookie.replaceAll(cookieRegex, "");
-  if (!newCookie.includes("expires")) newCookie = `${newCookie}; ${expires}; path=/`
-  document.cookie = `${newCookie};${cname}=${cvalue}`;
+  if (!newCookie.includes("expires")) newCookie = `${newCookie}; ${expires}; path=/`;
+  document.cookie = `${cname}=${cvalue}; ${newCookie};`;
 }
 
 function getCookie(cname) {
