@@ -76,6 +76,8 @@ if (import.meta.env.MODE !== 'production') {
   connectFirestoreEmulator(db, import.meta.env.VITE_APP_FIREBASE_DATABASE_HOST, import.meta.env.VITE_APP_FIREBASE_DATABASE_PORT);
 }
 
+
+
 const globalPreferences = collection(db, 'globalPreferences');
 
 const listsCollection = collection(db, 'lists');
@@ -85,6 +87,15 @@ const userStatesCollection = collection(db, 'userListItemStates');
 
 const googleOAuthLogin = new GoogleAuthProvider();
 const facebookOAuthLogin = new FacebookAuthProvider();
+
+
+function sanitizeDoc(doc) {
+  return Object.entries(doc).reduce((sanitizedDoc, [name, val]) => {
+    if(name && val) return {...sanitizedDoc, [name]: val};
+    return sanitizedDoc;
+  }, {});
+
+}
 
 async function computeSubListPath(subListRef, routePath) {
   if (!subListRef) return routePath;
@@ -256,7 +267,8 @@ async function ensureSlugUniqueness(title) {
 
 async function saveUserPreferences(prefs) {
   const userDocument = doc(db, 'users', auth.currentUser.uid);
-  await setDoc(userDocument, prefs, { merge: true });
+  debugger;
+  await setDoc(userDocument, sanitizeDoc(prefs), { merge: true });
   return getDoc(userDocument);
 }
 
@@ -402,6 +414,7 @@ export {
   googleOAuthLogin,
   listsCollection,
   reactToPrefsChange,
+  sanitizeDoc,
   saveList,
   saveListItems,
   saveUserPreferences,

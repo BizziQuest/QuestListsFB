@@ -195,7 +195,6 @@ const store = createStore({
       try {
         const googleInfo = await signInWithPopup(auth, googleOAuthLogin);
         const additionalUserInfo = getAdditionalUserInfo(googleInfo);
-        debugger;
         if (additionalUserInfo?.isNewUser) {
           dispatch('notify', { text: 'welcome to world of possibilities', type: 'info' });
         } else {
@@ -230,6 +229,7 @@ const store = createStore({
     },
     async authenticationChanged({ commit }, payload) {
       const userPrefs = await getUserPreferences();
+      // TODO: load theme from firebase
       commit('setUser', { ...payload, ...userPrefs });
     },
     async addStateGroup({ commit }, stateGroupData) {
@@ -259,24 +259,16 @@ const store = createStore({
         },
       });
     },
-    async loadTheme({commit, state}) {
-      // load from cookie
-      getCookie('themeName');
-      // if user is logged in, get from userprefs
-      if (state.user?.uid) {
-        setTheme()
-      }
-    },
     async setTheme({ commit, state, dispatch }, themeName) {
       // set cookie
       setCookie('themeName', themeName);
       // set in user prefs
-      debugger;
-      commit('setUser', {...state.currentUser, themeName});
-      dispatch('saveProfile', state.currentUser);
+      if (state.currentUser?.uid){
+        commit('setUser', {...state.currentUser, themeName});
+        dispatch('saveProfile', state.currentUser);
+      }
     },
     async saveProfile({ commit }, payload) {
-      debugger;
       if (!payload) return;
       try {
         await updateProfile(auth.currentUser, {
