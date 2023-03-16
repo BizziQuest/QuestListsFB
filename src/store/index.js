@@ -21,7 +21,7 @@ import {
   sendEmailVerification,
 } from 'firebase/auth';
 import router from '../router';
-import { getAvatarForUser } from '../util';
+import { getAvatarForUser, setCookie, getCookie } from '../util';
 import {
   reactToPrefsChange,
   auth,
@@ -117,6 +117,7 @@ const store = createStore({
         avatar: user.avatar || '/img/unknown_user.svg',
         emailVerified: user.emailVerified,
         useGravatar: user.useGravatar,
+        themeName: user.themeName,
       };
     },
     setLists(state, payload) {
@@ -226,8 +227,10 @@ const store = createStore({
         dispatch('notify', { text: error, type: 'error' });
       }
     },
-    async authenticationChanged({ commit }, payload) {
+    async authenticationChanged({ commit, dispatch }, payload) {
       const userPrefs = await getUserPreferences();
+      // TODO: load theme from firebase
+      if (userPrefs?.themeName) dispatch('setTheme', userPrefs.themeName)
       commit('setUser', { ...payload, ...userPrefs });
     },
     async addStateGroup({ commit }, stateGroupData) {
@@ -257,7 +260,17 @@ const store = createStore({
         },
       });
     },
+    async setTheme({ commit, state, dispatch }, themeName) {
+      // set cookie
+      setCookie('themeName', themeName);
+      // set in user prefs
+      if (state.currentUser?.uid){
+        commit('setUser', {...state.currentUser, themeName});
+        dispatch('saveProfile', state.currentUser);
+      }
+    },
     async saveProfile({ commit }, payload) {
+      if (!payload) return;
       try {
         await updateProfile(auth.currentUser, {
           displayName: payload.displayName,

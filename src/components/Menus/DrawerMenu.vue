@@ -126,7 +126,7 @@ export default {
     this.getRecentlyUsedQuests(this.currentUser);
   },
   methods: {
-    ...mapActions(['getRecentlyUsedQuests']),
+    ...mapActions(['getRecentlyUsedQuests', 'setTheme']),
   },
   watch: {
     currentUser(_oldUser, newUser) {
@@ -160,8 +160,8 @@ export default {
         return this.theme.global.current.dark;
       },
       set(val) {
-        this.theme.global.name = this.theme.global.current.dark ? 'light' : 'dark'
-        // this.$vuetify.theme.dark = val;
+        this.theme.global.name = this.theme.global.current.dark ? 'light' : 'dark';
+        this.setTheme(this.theme.global.name);
       },
     },
   },
