@@ -26,7 +26,7 @@
           class="ma-0 pa-1 align-self-start"
           dark
         >
-          <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold">
+          <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold text-black text-h4">
             {{ updatedList.title }}
           </v-card-title>
           <v-card-text class="ml-0 px-1">
@@ -117,42 +117,20 @@ export default {
 
 <style scoped>
 .description {
-  position: relative;
-  max-height: 100px;
-  line-height: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  padding-right: 1rem; /* space for ellipsis */
-}
-/* .description {
-  max-height: 100px;
-  line-height: 20px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-} */
-.description::before {
-  position: absolute;
-  content: "...";
-  bottom: 0;
-  /** width of ellipsis */
-  right: 1rem;
-  z-index:10;
-}
-.description::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  right: 1rem;
-  width: 1rem;
-  height: 1rem;
-  background: inherit;
 }
 ul {
+  list-style-type: none;
   margin-left: 0px;
   padding-left: 0px;
-  li {
-    padding-left: 0px;
-    margin-left: 0px;
-  }
+}
+ul li {
+  line-height: 30px;
+  padding-left: 0px;
+  margin-left: 0px;
 }
 .v-list {
   background: none;
@@ -164,12 +142,6 @@ ul {
 .small-image {
   max-width: 30%;
   max-height: 100%;
-}
-ul {
-  list-style-type: none;
-  li {
-    line-height: 30px;
-  }
 }
 .list {
   height: 99px;

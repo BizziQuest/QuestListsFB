@@ -111,9 +111,9 @@ export default {
 <style scoped>
 ul {
   list-style-type: none;
-  li {
-    line-height: 30px;
-  }
+}
+ul li {
+  line-height: 30px;
 }
 .list {
   height: 99px;
