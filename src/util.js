@@ -25,9 +25,36 @@ function contrastColor(foregroundColor, backgroundColor) {
   return pSBC(-0.90, foregroundColor);
 }
 
+function setCookie(cname, cvalue, exdays=365) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  let expires = "expires="+d.toUTCString();
+  const cookieRegex = new RegExp(`${cname}\s*=\s*(.*?)($|;)`, 'gi')
+  let newCookie = document.cookie.replaceAll(cookieRegex, "");
+  if (!newCookie.includes("expires")) newCookie = `${newCookie}; ${expires}; path=/`;
+  document.cookie = `${cname}=${cvalue}; ${newCookie};`;
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 export {
   getGravatarForEmail,
   getAvatarForUser,
   contrastColor,
   useLightText,
+  getCookie,
+  setCookie
 };
