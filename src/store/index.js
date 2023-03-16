@@ -227,9 +227,10 @@ const store = createStore({
         dispatch('notify', { text: error, type: 'error' });
       }
     },
-    async authenticationChanged({ commit }, payload) {
+    async authenticationChanged({ commit, dispatch }, payload) {
       const userPrefs = await getUserPreferences();
       // TODO: load theme from firebase
+      if (userPrefs?.themeName) dispatch('setTheme', userPrefs.themeName)
       commit('setUser', { ...payload, ...userPrefs });
     },
     async addStateGroup({ commit }, stateGroupData) {

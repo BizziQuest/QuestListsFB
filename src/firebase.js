@@ -267,7 +267,6 @@ async function ensureSlugUniqueness(title) {
 
 async function saveUserPreferences(prefs) {
   const userDocument = doc(db, 'users', auth.currentUser.uid);
-  debugger;
   await setDoc(userDocument, sanitizeDoc(prefs), { merge: true });
   return getDoc(userDocument);
 }
@@ -277,7 +276,7 @@ async function getDocRefData(ref) {
 }
 
 async function getUserPreferences() {
-  const userDocument = await getDocs(collection(db, 'users'), auth.currentUser.uid);
+  const userDocument = await getDoc(doc(db, 'users',auth.currentUser.uid));
   if (userDocument.exists) return userDocument.data();
   console.warn("User Prefs don't exist: ", auth.currentUser?.uid, userDocument?.path);
   return {};

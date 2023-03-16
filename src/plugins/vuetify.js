@@ -36,7 +36,7 @@ import { getCookie } from '../util';
 //   components: { VIcon, VBtn }, // load components here to use with :is or :tag attributes
 // });
 
-const userTheme = getCookie('themeName');
+const userTheme = getCookie('themeName') || 'light';
 
 export const options = {
   // preset,
