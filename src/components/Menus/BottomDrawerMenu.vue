@@ -122,7 +122,7 @@ export default {
   },
   computed: {
     isMobile() {
-      return this.$vuetify.display.xs;
+      return this.$vuetify.display.sm;
     },
     menuHighlightColor() {
       return this.isDark ? 'primary' : 'secondary';
