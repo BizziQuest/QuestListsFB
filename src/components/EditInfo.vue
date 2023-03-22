@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <div class="d-flex align-center justify-center h-100">
     <v-card
-      class="mx-auto mt-10"
-      max-width="500"
-      raised
+      width="500"
+      elevation="3"
       shaped
+      variant="tonal"
     >
-      <v-card-text class="d-flex flex-column align-center mt-10">
-        <h1 class="mt-10">
+      <v-card-text class="d-flex flex-column align-center">
+        <h1>
           Edit Profile
         </h1>
         <v-avatar
@@ -23,108 +23,68 @@
           {{ currentUser.email }}
         </h4>
       </v-card-text>
-      <v-card-actions>
         <v-form ref="infoForm">
-          <v-container>
-            <v-row>
+          <v-container class="px-4">
               <v-text-field
                 v-model="displayName"
-                test-dispalyname-input
+                test-displayname-input
                 label="Display Name"
+                variant="solo"
                 clearable
-                color="secondary"
+                color="primary"
                 required
-              />
-            </v-row>
-            <v-row>
+              ></v-text-field>
               <v-text-field
                 v-model="avatar"
                 test-avatar-input
+                variant="solo"
                 clearable
                 :disabled="useGravatar"
-                label="Customized Avatar"
-                color="secondary"
-              />
-            </v-row>
-            <v-row>
+                label="Customized Avatar URL"
+                color="primary"
+              ></v-text-field>
+            <v-row class="justify-center">
               <v-checkbox
                 v-model="useGravatar"
                 test-use-gravatar-checkbox
                 label="Use Gravatar"
                 color="secondary"
                 id="useGravatar"
+                class="pr-3"
               />
-              <!-- eslint-disable-next-line vuejs-accessibility/label-has-for -->
-              <label
-                style="color: rgba(0, 0, 0, 0.6)"
-                class="pt-5 pl-2"
-                for="useGravatar"
-              >
-                <v-tooltip bottom>
-                  <template #activator="{ on, attrs }">
-                    <v-icon
-                      color="primary"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      mdi mdi-help-circle
-                    </v-icon>
-                  </template>
-                  <div style="width: 20vw">
-                    Gravatar is a service for matching emails with avatars. Click sign-up to sign up for yours!
-                  </div>
-                </v-tooltip>
-                (<a
-                  style="color: rgba(0, 0, 0, 0.6)"
-                  target="_new"
-                  href="https://gravatar.com"
-                >sign up</a>)
-              </label>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="12"
-                md="12"
-              >
-                <v-text-field
-                  v-model="email"
-                  label="E-mail"
-                  disabled
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col class="d-flex align-center justify-center">
-                <v-btn
-                  class="success"
-                  color="darken-1"
-                  elevation="2"
-                  x-large
-                  rounded
-                  text
-                  test-save-button
-                  @click="saveForm"
-                >
-                  Save Profile
-                </v-btn>
-                <v-btn
-                  test-cancel-button
-                  class="success"
-                  color="darken-1"
-                  elevation="2"
-                  x-large
-                  rounded
-                  text
-                  @click="cancelForm"
-                >
-                  Cancel Changes
-                </v-btn>
-              </v-col>
+              <div class="mt-4 mr-3">
+              <v-tooltip location="bottom" text="Gravatar is a service for matching emails with avatars. Click sign-up to sign up for yours!">
+                <template #activator="{ props }">
+                  <v-icon
+                    color="primary"
+                    dark
+                    v-bind="props"
+                  >
+                    mdi mdi-help-circle
+                  </v-icon>
+                </template>
+              </v-tooltip>
+              (<a
+                target="_new"
+                href="https://gravatar.com"
+              >sign up</a>)
+              </div>
             </v-row>
           </v-container>
         </v-form>
-      </v-card-actions>
+                <v-card-actions>
+                <v-btn
+                  class="success"
+                  color="primary"
+                  x-large
+                  text
+                  test-save-button
+                  @click="saveForm"
+
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
     </v-card>
   </div>
 </template>
@@ -193,3 +153,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+:deep(.v-input.v-checkbox) {
+  flex: none;
+}
+</style>
