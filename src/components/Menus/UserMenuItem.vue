@@ -28,15 +28,16 @@
         <template #prepend v-if="!avatar">
           <v-icon>mdi-account</v-icon>
         </template>
-        <template #append>
-        <v-icon
-          v-if="currentUser && currentUser.uid"
-          small
-          title="Logout"
-          @click.stop.prevent="logoutAndGoHome"
-        >
-          mdi-exit-to-app
-        </v-icon>
+        <template #title="{title}" class="ml-3">
+          {{ title }}
+          <v-icon
+            v-if="currentUser && currentUser.uid"
+            small
+            title="Logout"
+            @click.stop.prevent="logoutAndGoHome"
+          >
+            mdi-exit-to-app
+          </v-icon>
         </template>
       </v-list-item>
     </slot>

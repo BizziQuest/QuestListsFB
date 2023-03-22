@@ -3,7 +3,8 @@
     v-model="showDrawer"
     :bottom="isMobile"
     :floating="isMobile"
-    :expand-on-hover="!isMobile && !$vuetify.display.lgAndUp"
+    :expand-on-hover="$vuetify.display.md"
+    :rail="$vuetify.display.md"
     :app="!isMobile"
     :permanent="!isMobile"
     :fixed="isMobile"
@@ -26,7 +27,7 @@
         :color="menuHighlightColor"
         to="/"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-icon>$questlists</v-icon>
         </template>
         <v-list-item-title v-text="'QuestLists'" class="ml-4"/>
@@ -75,7 +76,7 @@
         link
         @click="isDark = !isDark"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-icon>{{ isDark ? 'mdi-brightness-4' : 'mdi-brightness-7' }}</v-icon>
         </template>
         <v-list-item-title class="ml-4">Turn Dark Mode {{ isDark ? 'Off' : 'On' }}</v-list-item-title>
@@ -85,7 +86,7 @@
         link
         to="/about"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-icon>mdi-information</v-icon>
         </template>
         <v-list-item-title class="ml-4">About QuestLists</v-list-item-title>
@@ -136,7 +137,7 @@ export default {
   computed: {
     ...mapState(['currentUser', 'recentQuests']),
     isMobile() {
-      return this.$vuetify.display.xs;
+      return this.$vuetify.display.sm;
     },
     menuHighlightColor() {
       return this.isDark ? 'primary' : 'secondary';
@@ -146,7 +147,7 @@ export default {
     },
     showDrawer: {
       get() {
-        return this.drawer;
+        return this.$vuetify.display.mdAndUp && this.drawer;
       },
       set(val) {
         this.$emit('update:drawer', val);
