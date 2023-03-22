@@ -72,7 +72,18 @@
             </v-row>
           </v-container>
         </v-form>
-                <v-card-actions>
+              <v-card-actions>
+                <v-btn
+                  class="error"
+                  color="error"
+                  x-large
+                  text
+                  test-cancel-button
+                  @click="cancelForm"
+
+                >
+                  Reset
+                </v-btn>
                 <v-btn
                   class="success"
                   color="primary"
@@ -90,7 +101,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 // import { getAvatarForUser } from '../util';
 import md5 from 'md5';
 
@@ -128,6 +139,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['notify']),
     saveForm() {
       const userInfo = {
         uid: this.currentUser?.uid,
@@ -136,6 +148,7 @@ export default {
         avatar: this.avatar || '/img/unknown_user.svg',
         useGravatar: this.useGravatar || false,
       };
+      this.notify({text: "Profile Saved!", type: 'success'})
       this.$store.dispatch('saveProfile', userInfo);
     },
     cancelForm() {
