@@ -79,7 +79,7 @@ jobs:
         sudo apt-get install google-cloud-sdk -y
         gcloud auth activate-service-account --key-file=${HOME}/gcp-sa.json
     - run: pnpm install --production=false
-    - run: pnpm build
+    - run: pnpm makeIcons && pnpm build
     - name: Deploy to Firebase
       uses: w9jds/firebase-action@master
       with:
