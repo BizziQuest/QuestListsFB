@@ -2,7 +2,8 @@ lockfileVersion: 5.4
 
 specifiers:
   '@firebase/auth': ^0.21.5
-  '@mdi/font': ^7.1.96
+  '@mdi/font': ^7.2.96
+  '@mdi/svg': ^7.2.96
   '@storybook/addon-a11y': ^6.5.16
   '@storybook/addon-actions': ^6.5.16
   '@storybook/addon-essentials': ^6.5.16
@@ -57,7 +58,8 @@ specifiers:
 
 dependencies:
   '@firebase/auth': 0.21.5
-  '@mdi/font': 7.1.96
+  '@mdi/font': 7.2.96
+  '@mdi/svg': 7.2.96
   algoliasearch: 4.15.0
   core-js: 3.29.1
   dotenv: 16.0.3
@@ -3460,8 +3462,8 @@ packages:
       - supports-color
     dev: true
 
-  /@google-cloud/storage/6.9.4:
-    resolution: {integrity: sha512-5Li+0xRJ8wgc+vlf7Tgew8COKEJgRzRmC5ozdSYaBj7BK+X39aPPBP6ROsDTiCZ0MpAg7dxIc+HhKiCvQDplXQ==}
+  /@google-cloud/storage/6.9.5:
+    resolution: {integrity: sha512-fcLsDA8YKcGuqvhk0XTjJGVpG9dzs5Em8IcUjSjspYvERuHYqMy9CMChWapSjv3Lyw//exa3mv4nUxPlV93BnA==}
     engines: {node: '>=12'}
     requiresBuild: true
     dependencies:
@@ -3873,8 +3875,12 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /@mdi/font/7.1.96:
-    resolution: {integrity: sha512-Imag6npmfkBDi2Ze2jiZVAPTDIKLxhz2Sx82xJ2zctyAU5LYJejLI5ChnDwiD9bMkQfVuzEsI98Q8toHyC+HCg==}
+  /@mdi/font/7.2.96:
+    resolution: {integrity: sha512-e//lmkmpFUMZKhmCY9zdjRe4zNXfbOIJnn6xveHbaV2kSw5aJ5dLXUxcRt1Gxfi7ZYpFLUWlkG2MGSFAiqAu7w==}
+    dev: false
+
+  /@mdi/svg/7.2.96:
+    resolution: {integrity: sha512-rxzuSL2RSt/pWWnFnUFQi5GJArm2tHMhx20Gee3Ydn+xT2bqbR4syfgdPrq2b+j+n5LjC7C8Fb1QDM6LKeF0cA==}
     dev: false
 
   /@mdx-js/mdx/1.6.22:
@@ -10236,7 +10242,7 @@ packages:
       uuid: 9.0.0
     optionalDependencies:
       '@google-cloud/firestore': 6.5.0
-      '@google-cloud/storage': 6.9.4
+      '@google-cloud/storage': 6.9.5
     transitivePeerDependencies:
       - encoding
       - supports-color

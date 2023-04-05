@@ -26,6 +26,7 @@
     "fb:emulate:stop": "firebase emulators:stop",
     "fb:exec": "firebase emulators:exec --only firestore,auth --import tests/data",
     "fb:login": "firebase login --no-localhost",
+    "makeIcons": "node ./scripts/makeIconFile.js",
     "storybook": "start-storybook -p 6006",
     "test": "yarn test:unit && yarn test:e2e --headless",
     "test:jest": "jest --watch --maxWorkers=4 ",
@@ -33,7 +34,8 @@
   },
   "dependencies": {
     "@firebase/auth": "^0.21.5",
-    "@mdi/font": "^7.1.96",
+    "@mdi/font": "^7.2.96",
+    "@mdi/svg": "^7.2.96",
     "algoliasearch": "^4.15.0",
     "core-js": "^3.29.1",
     "dotenv": "^16.0.3",
