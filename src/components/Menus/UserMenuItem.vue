@@ -21,7 +21,7 @@
     >
       <v-list-item
         link
-        to="/EditInfo"
+        to="/profile"
         :prepend-avatar="avatar"
         :title="currentUser.displayName"
       >

@@ -1,4 +1,4 @@
-import EditInfo from '../components/EditInfo.vue';
+import Profile from '../components/Profile.vue';
 import CreateList from '../components/CreateList.vue';
 import Lists from '../views/QuestLists.vue';
 import List from '../views/QuestList.vue';
@@ -36,9 +36,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "privacy" */ '../views/about/PrivacyPolicy.vue'),
   },
   {
-    path: '/editinfo',
-    name: 'EditInfo',
-    component: EditInfo,
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
   },
   {
     path: '/new',
