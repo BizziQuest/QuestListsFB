@@ -4,7 +4,7 @@ import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import md5 from 'md5';
 import routes from '@/router/routes';
-import EditInfo from '@/components/EditInfo.vue';
+import Profile from '@/components/Profile.vue';
 import toHaveBeenWarnedInit from '../toHaveBeenWarned';
 
 jest.mock('../../src/firebase.js');
@@ -33,7 +33,7 @@ describe('default state with unverified username/password user', () => {
         },
       },
     });
-    wrapper = mount(EditInfo, {
+    wrapper = mount(Profile, {
       localVue,
       router,
       vuetify,
@@ -67,7 +67,7 @@ describe('default state with unverified 0Auth user', () => {
         },
       },
     });
-    wrapper = mount(EditInfo, {
+    wrapper = mount(Profile, {
       localVue,
       router,
       vuetify,
@@ -105,7 +105,7 @@ describe('saving a user', () => {
         },
       },
     });
-    wrapper = mount(EditInfo, {
+    wrapper = mount(Profile, {
       localVue,
       router,
       vuetify,

@@ -106,7 +106,7 @@ import { mapState, mapActions } from 'vuex';
 import md5 from 'md5';
 
 export default {
-  name: 'EditInfo',
+  name: 'Profile',
   data() {
     return {
       userId: null,

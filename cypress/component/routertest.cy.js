@@ -5,7 +5,7 @@ import Vuetify from 'vuetify';
 import Lists from '@/views/QuestLists.vue';
 import List from '@/views/QuestList.vue';
 import DrawerMenu from '@/components/Menus/DrawerMenu.vue';
-import EditInfo from '@/components/EditInfo.vue';
+import Profile from '@/components/Profile.vue';
 import App from '@/App.vue';
 import router from '@/router';
 
@@ -72,7 +72,7 @@ describe('Router', () => {
   });
   it('renders the profile component via routing', async () => {
     await wrapper.vm.$router.push('/editinfo');
-    expect(wrapper.findComponent(EditInfo).exists()).toBe(true);
+    expect(wrapper.findComponent(Profile).exists()).toBe(true);
   });
   it('renders the about page via routing', async () => {
     expect(wrapper.text()).not.toContain('Grab the Source or Contribute on Github');

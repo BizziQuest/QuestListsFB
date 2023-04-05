@@ -75,7 +75,7 @@
           value="viewProfile"
           class="d-flex flex-column text-truncate align-center"
           variant="plain"
-          to="/EditInfo"
+          to="/profile"
           :color="menuHighlightColor"
         >
           <span
