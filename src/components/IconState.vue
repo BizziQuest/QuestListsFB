@@ -55,6 +55,10 @@
                 required
               />
             </v-row>
+            <m-d-i-icon-chooser
+              v-model="localIcon"
+              @update:modelValue="localIcon = $event"
+              test-icon-chooser></m-d-i-icon-chooser>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -78,7 +82,12 @@
 </template>
 
 <script>
+import MDIIconChooser from './MDIIconChooser.vue';
+
 export default {
+  components: {
+    MDIIconChooser,
+  },
   props: {
     icon: {
       type: String,
