@@ -80,7 +80,16 @@ jobs:
         gcloud auth activate-service-account --key-file=${HOME}/gcp-sa.json
     - run: pnpm install --production=false
     - run: pnpm makeIcons && pnpm build
-    - name: Deploy to Firebase
-      uses: w9jds/firebase-action@master
+
+    # - name: Deploy to Firebase
+    #   uses: w9jds/firebase-action@master
+    #   with:
+    #     args: deploy
+
+    - name: Deploy to Firebase Hosting
+      uses: FirebaseExtended/action-hosting-deploy@v0
       with:
-        args: deploy
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_QUESTLISTS }}'
+        channelId: live
+        projectId: questlists

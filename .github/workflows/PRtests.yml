@@ -90,6 +90,13 @@ jobs:
     - run: pnpm install
     - run: CI=true pnpm test:unit
 
+    - name: Deploy to Firebase Hosting - PR Channel
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_QUESTLISTS }}'
+        projectId: questlists
+
   # end2end-tests:
   #   needs: linting
   #   runs-on: ubuntu-latest
