@@ -9,9 +9,6 @@
     @update:model-value="$emit('update:modelValue', $event)"
     >
     <template v-slot:item="{ props, item }">
-      <!-- <div :title="item.raw.title" class="ma-2 d-inline-block">
-      <v-icon v-bind="props" >{{item.raw.value}}</v-icon>
-      </div> -->
       <v-list-item
         v-bind="props"
         :prepend-icon="item.raw.value"

@@ -21,39 +21,8 @@
                 class="pa-5 mb-5 rounded-t-xl"
                 color="info"
               >
-                Please enter the name of icon you wish to use for this state. You can get the icon names from the
-                following sites.<br>
-                <v-chip
-                  class="mr-2"
-                  @click="openMaterial"
-                >
-                  <v-icon class="mr-2">mdi-vector-square</v-icon>
-                  Material
-                </v-chip>
-                <v-chip
-                  class="mr-2"
-                  rounded
-                  @click="openMaterialDesign"
-                >
-                  <v-icon class="mr-2">mdi-material-design</v-icon>
-                  Material Design
-                </v-chip>
+                Select an icon to use. You can start typing to filter the results. At least 2 letters must be given.<br>
               </div>
-            </v-row>
-            <v-row>
-              <div class="local-icon">
-                <v-icon
-                  ref="icon"
-                  test-icon
-                > {{ localIcon }} </v-icon>
-              </div>
-              <v-text-field
-                ref="iconInput"
-                v-model="localIcon"
-                :rules="iconNamingRules"
-                test-icon-input
-                required
-              />
             </v-row>
             <m-d-i-icon-chooser
               v-model="localIcon"
@@ -67,7 +36,7 @@
               text
               test-cancel-btn
               @click="close"
-            >Nah...</v-btn>
+            >Nah</v-btn>
             <v-btn
               color="green darken-1"
               text
