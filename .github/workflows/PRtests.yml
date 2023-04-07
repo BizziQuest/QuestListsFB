@@ -90,6 +90,15 @@ jobs:
     - run: pnpm install
     - run: CI=true pnpm test:unit
 
+  deploy-pr-branch:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - run: npm install -g pnpm @vue/cli
+    - run: pnpm install
+    - run: pnpm build
     - name: Deploy to Firebase Hosting - PR Channel
       uses: FirebaseExtended/action-hosting-deploy@v0
       with:
