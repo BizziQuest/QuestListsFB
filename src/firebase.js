@@ -68,7 +68,7 @@ if (import.meta.env.VITE_APP_FIREBASE_AUTH_HOST) {
 const db = getFirestore();
 const { currentUser } = auth;
 
-// // firebase settings go here
+// firebase settings go here
 // const settings = { };
 
 if (import.meta.env.MODE !== 'production') {
