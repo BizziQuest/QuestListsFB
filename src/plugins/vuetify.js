@@ -189,6 +189,9 @@ export const options = {
       'questlists-🔗': 'ql ql-link',
     },
   },
+  display: {
+    mobileBreakpoint: 'sm',
+  },
 };
 
 export default createVuetify(options);

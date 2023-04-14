@@ -23,7 +23,7 @@
     <v-btn
       value="search"
       variant="plain"
-      to="/search"
+      to="/"
       :color="menuHighlightColor"
     >
       <span>Search</span>
@@ -122,7 +122,7 @@ export default {
   },
   computed: {
     isMobile() {
-      return this.$vuetify.display.sm;
+      return this.$vuetify.display.mobile;
     },
     menuHighlightColor() {
       return this.isDark ? 'primary' : 'secondary';
