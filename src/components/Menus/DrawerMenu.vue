@@ -3,7 +3,8 @@
     v-model="showDrawer"
     :bottom="isMobile"
     :floating="isMobile"
-    :expand-on-hover="!isMobile && !$vuetify.display.lgAndUp"
+    :expand-on-hover="isMedium"
+    :rail="isMedium"
     :app="!isMobile"
     :permanent="!isMobile"
     :fixed="isMobile"
@@ -120,6 +121,7 @@ export default {
       showCreateList: false,
       auth,
       theme: useTheme(),
+      showDrawer: true,
     };
   },
   mounted() {
@@ -136,7 +138,10 @@ export default {
   computed: {
     ...mapState(['currentUser', 'recentQuests']),
     isMobile() {
-      return this.$vuetify.display.xs;
+      return this.$vuetify.display.mobile;
+    },
+    isMedium() {
+      return this.$vuetify.display.mdAndDown;
     },
     menuHighlightColor() {
       return this.isDark ? 'primary' : 'secondary';
@@ -144,14 +149,14 @@ export default {
     avatar() {
       return this.$store.state.currentUser?.avatar;
     },
-    showDrawer: {
-      get() {
-        return this.drawer;
-      },
-      set(val) {
-        this.$emit('update:drawer', val);
-      },
-    },
+    // showDrawer: {
+    //   get() {
+    //     return this.drawer;
+    //   },
+    //   set(val) {
+    //     this.$emit('update:drawer', val);
+    //   },
+    // },
     isNavDark() {
       return !this.isDark;
     },
