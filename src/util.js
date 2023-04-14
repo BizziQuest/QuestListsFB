@@ -50,11 +50,22 @@ function getCookie(cname) {
   return "";
 }
 
+function pluralize(str, count) {
+  const irregulars = {
+    'are': 'is',
+  };
+  if (count === 1) {
+    return Object.keys(irregulars).includes(str) ? irregulars[str] : str;
+  }
+  return Object.keys(irregulars).includes(str) ? str : `${str}s`;
+}
+
 export {
-  getGravatarForEmail,
-  getAvatarForUser,
   contrastColor,
-  useLightText,
+  getAvatarForUser,
   getCookie,
-  setCookie
+  getGravatarForEmail,
+  pluralize,
+  setCookie,
+  useLightText,
 };

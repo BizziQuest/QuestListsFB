@@ -269,7 +269,7 @@ const store = createStore({
         dispatch('saveProfile', state.currentUser);
       }
     },
-    async saveProfile({ commit }, payload) {
+    async saveProfile({ commit, state }, payload) {
       if (!payload) return;
       try {
         await updateProfile(auth.currentUser, {
@@ -277,7 +277,7 @@ const store = createStore({
           photoURL: payload.avatar,
         });
         await saveUserPreferences(payload);
-        commit('setUser', payload);
+        commit('setUser', {...state.currentUser, ...payload});
       } catch (error) {
         console.warn('saveProfile', error);
       }

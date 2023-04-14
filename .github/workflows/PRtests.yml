@@ -19,7 +19,7 @@ env:
   VITE_APP_GOOGLE_ANALYTICS_ID: ${{ secrets.VITE_APP_GOOGLE_ANALYTICS_ID }}
   VITE_APP_I18N_LOCALE: en
   VITE_APP_I18N_FALLBACK_LOCALE: en
-  FIREBASE_TOKEN: ${{ secrets.CI_FIREBASE_TOKEN }}
+  # FIREBASE_TOKEN: ${{ secrets.CI_FIREBASE_TOKEN }}
 
 jobs:
   # linting:
@@ -89,6 +89,27 @@ jobs:
     - run: npm install -g pnpm @vue/cli
     - run: pnpm install
     - run: CI=true pnpm test:unit
+
+  deploy-pr-branch:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install -g pnpm @vue/cli
+    - run: pnpm install
+    - run: pnpm build
+    - name: Deploy to Firebase Hosting - PR Channel
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_QUESTLISTS }}'
+        projectId: questlists
 
   # end2end-tests:
   #   needs: linting

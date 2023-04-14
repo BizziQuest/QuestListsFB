@@ -4,7 +4,7 @@
     type="warning"
   >
     You need to be a verified user to {{ action }}. <br>
-    Please sign up and verify your email.
+    Please {{userToBeEnrolled ? "sign up and" : ''}} verify your email and refresh this page.
     <slot />
   </v-alert>
 </template>
@@ -21,6 +21,9 @@ export default {
   },
   computed: {
     ...mapState(['currentUser']),
+    userToBeEnrolled() {
+      return !this.currentUser.uid || this.currentUser.isAnonymous;
+    },
   },
 };
 </script>

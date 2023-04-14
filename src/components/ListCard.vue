@@ -1,9 +1,9 @@
 <template>
-  <div v-if="updatedList?.slug">
+  <div v-if="updatedList?.slug" class="h-100">
     <v-badge
       overlap
       offset-x="100"
-      class="list-card-badge"
+      class="list-card-badge h-100"
       content="explicit content"
       :value="!!updatedList.explicitContent"
       color="red"
@@ -12,7 +12,7 @@
         light
         :color="updatedList.color"
         :style="textStyles"
-        class="list-card mb-2 mr-0 d-flex align-stretch flex-row"
+        class="list-card mb-2 mr-0 d-flex align-stretch flex-row h-100"
         :class="cardClasses"
         elevation="3"
         :to="{ name: 'List', params: { slug: updatedList.slug } }"
@@ -26,11 +26,13 @@
           class="ma-0 pa-1 align-self-start"
           dark
         >
-          <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold">
+          <v-card-title class="mt-0 mb-3 pa-0 px-1 font-weight-bold text-black text-h4">
             {{ updatedList.title }}
           </v-card-title>
           <v-card-text class="ml-0 px-1">
-            {{ updatedList.description }}
+            <div class="description" :title="updatedList.description">
+              {{ updatedList.description }}
+            </div>
             <v-list
               dense
               class="ml-0 px-0"
@@ -114,13 +116,21 @@ export default {
 </script>
 
 <style scoped>
+.description {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 ul {
+  list-style-type: none;
   margin-left: 0px;
   padding-left: 0px;
-  li {
-    padding-left: 0px;
-    margin-left: 0px;
-  }
+}
+ul li {
+  line-height: 30px;
+  padding-left: 0px;
+  margin-left: 0px;
 }
 .v-list {
   background: none;
@@ -132,12 +142,6 @@ ul {
 .small-image {
   max-width: 30%;
   max-height: 100%;
-}
-ul {
-  list-style-type: none;
-  li {
-    line-height: 30px;
-  }
 }
 .list {
   height: 99px;
@@ -164,7 +168,10 @@ ul {
   }
 }
 
-::v-deep(.v-card-title) {
+:deep(.v-card-title) {
   white-space: normal;
+}
+:deep(.v-badge__wrapper) {
+  height: 100%;
 }
 </style>

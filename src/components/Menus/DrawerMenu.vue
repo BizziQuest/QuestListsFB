@@ -27,7 +27,7 @@
         :color="menuHighlightColor"
         to="/"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-icon>$questlists</v-icon>
         </template>
         <v-list-item-title v-text="'QuestLists'" class="ml-4"/>
@@ -76,7 +76,7 @@
         link
         @click="isDark = !isDark"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-icon>{{ isDark ? 'mdi-brightness-4' : 'mdi-brightness-7' }}</v-icon>
         </template>
         <v-list-item-title class="ml-4">Turn Dark Mode {{ isDark ? 'Off' : 'On' }}</v-list-item-title>
@@ -86,7 +86,7 @@
         link
         to="/about"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-icon>mdi-information</v-icon>
         </template>
         <v-list-item-title class="ml-4">About QuestLists</v-list-item-title>
@@ -149,14 +149,6 @@ export default {
     avatar() {
       return this.$store.state.currentUser?.avatar;
     },
-    // showDrawer: {
-    //   get() {
-    //     return this.drawer;
-    //   },
-    //   set(val) {
-    //     this.$emit('update:drawer', val);
-    //   },
-    // },
     isNavDark() {
       return !this.isDark;
     },
@@ -173,55 +165,21 @@ export default {
 };
 </script>
 <style scoped>
-.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-  &:not([color]) {
-    /* color: #ffffff !important;*/
-
-    &.theme--light {
-      color: #ffffff !important;
-
-      .v-icon {
-        color: #ffffff;
-      }
-    }
-  }
-
-  &.theme--dark {
-    color: #ffffff !important;
-
-    .secondary--text {
-      color: var(--v-secondary-base) !important;
-    }
-
-    .v-icon {
-      color: #ffffff;
-    }
-  }
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--light {
+  color: #ffffff !important;
+}
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--light .v-icon{
+  color: #ffffff;
 }
 
-/* /deep/ .theme--light {
-  &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]) {
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--dark {
     color: #ffffff !important;
-  }
-  &.v-icon {
+}
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--dark .secondary--text {
+    color: var(--v-secondary-base) !important;
+}
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--dark .v-icon {
     color: #ffffff;
-  }
-}
-/deep/ [color="secondary"] {
-  &.theme--light {
-    .v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-      color: var(--v-secondary-base) !important;
-    }
-  }
-  &.theme--dark {
-    &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-      color: var(--v-secondary-base) !important;
-    }
-  }
 }
 
-/deep/ .theme--light .secondary--text {
-  font-weight: bold;
-}
-*/
 </style>
