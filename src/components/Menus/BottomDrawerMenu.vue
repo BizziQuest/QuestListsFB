@@ -1,6 +1,6 @@
 <template>
+  <div v-if="isMobile">
   <v-bottom-navigation
-    v-if="isMobile"
     fixed
     :app="isMobile"
     :input-value="isMobile"
@@ -12,47 +12,32 @@
       :color="menuHighlightColor"
       variant="text"
       title="View App Menu"
-      @click="$emit('update:drawer', !drawer)"
+      to="/"
     >
-      <span>QuestLists</span>
-      <i
-        style="font-size: 140%"
-        class="ql questlists"
-      />
-    </v-btn>
+    <i
+    style="font-size: 140%"
+    class="ql questlists"
+    />
+    <span>QuestLists</span>
+  </v-btn>
     <v-btn
       value="search"
       variant="plain"
       to="/search"
       :color="menuHighlightColor"
     >
-      <span>Search</span>
-      <v-icon>mdi-magnify</v-icon>
+    <v-icon>mdi-history</v-icon>
+    <span>Recent</span>
     </v-btn>
-    <v-btn
-      fab
-      :dark="!isDark"
-      :color="menuHighlightColor"
-      absolute
-      top
-      center
-      medium
-      to="/new"
-      class="rounded-circle main-fab"
-    >
-      <i
-        style="font-size: 230%"
-        class="ql ql-plus"
-      />
-    </v-btn>
+    <v-btn variant="plain" :ripple="false" ></v-btn>
     <v-btn
       value="favorite"
       variant="plain"
       to="/favorites"
       :color="menuHighlightColor"
     >
-      <span>Favorites</span>
-      <v-icon>mdi-heart</v-icon>
+    <v-icon>mdi-heart</v-icon>
+    <span>Favorites</span>
     </v-btn>
     <user-menu-item
       :dark="!isDark"
@@ -66,8 +51,8 @@
           :color="menuHighlightColor"
           v-on="slotProps.on"
         >
-          <span>Sign In</span>
-          <v-icon>mdi-account-arrow-right</v-icon>
+        <v-icon>mdi-account-arrow-right</v-icon>
+        <span>Sign In</span>
         </v-btn>
       </template>
       <template #avatar="slotProps">
@@ -78,10 +63,6 @@
           to="/profile"
           :color="menuHighlightColor"
         >
-          <span
-            class="text-truncate d-inline-block"
-            style="max-width:100px"
-          >{{ slotProps.username }}</span>
           <v-avatar size="24">
             <v-img
               v-if="slotProps.avatar"
@@ -91,10 +72,29 @@
               mdi-account
             </v-icon>
           </v-avatar>
+          <span
+            class="text-truncate d-inline-block"
+            style="max-width:100px"
+          >{{ slotProps.username }}</span>
         </v-btn>
       </template>
     </user-menu-item>
   </v-bottom-navigation>
+  <v-btn
+      :dark="!isDark"
+      size="large"
+      color="primary"
+      density="comfortable"
+      to="/new"
+      class="rounded-circle action-btn"
+    >
+      <i
+        style="font-size: 230%"
+        class="ql ql-plus"
+      />
+    </v-btn>
+
+  </div>
 </template>
 
 <script>
@@ -153,6 +153,19 @@ export default {
 };
 </script>
 <style scoped>
+.action-btn {
+  box-shadow: rgb(var(--v-theme-background)) 0px -6px 0px,
+              rgb(var(--v-theme-background)) 0px 6px 0px,
+              rgb(var(--v-theme-background)) -6px 0px 0px,
+              rgb(var(--v-theme-background)) 6px 0px 0px;
+  z-index: 999999999999;
+  width: 75px;
+  height: 75px;
+  max-width: 75px;
+  bottom: calc(56px - 36px);
+  left: calc(50% - 36px);
+  position: absolute;
+}
 .v-item-group.v-bottom-navigation .v-btn.align-center {
   height: 100%;
 }
@@ -164,7 +177,7 @@ export default {
   height: 40px;
   min-width: 40px;
 }
-.v-item-group.v-bottom-navigation .main-fab.v-btn--fab.v-size--default {
+.v-item-group.v-bottom-navigation .main-fab:v-deep(.v-btn--fab.v-size--default) {
   width: 56px;
   height: 56px;
   min-width: 56px;
