@@ -1,11 +1,25 @@
 <template>
-  <div v-if="isMobile">
+  <div v-if="isMobile" :class="{xsmall: $vuetify.display.xs}">
+    <v-menu transition="slide-y-reverse-transition" v-if="showRecent">
+    <v-list-item
+        v-for="item in recentQuests"
+        :key="`${item.slug}${item.title}`"
+        test-fav-link
+        :prepend-icon="item.icon || '$questlists'"
+        link
+          :to="item.slug ? `/lists/${item.slug}` : ''"
+          :title="item.title"
+      >
+      </v-list-item>
+      </v-menu>
+
   <v-bottom-navigation
     fixed
     :app="isMobile"
     :input-value="isMobile"
     :dark="!isDark"
     :light="isDark"
+    :class="{xsmall: $vuetify.display.xs}"
     grow
   >
     <v-btn
@@ -20,7 +34,37 @@
     />
     <span>QuestLists</span>
   </v-btn>
-    <v-btn
+  <v-menu transition="slide-y-reverse-transition" content-class="menu-content" class="recent-menu">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          value="search"
+            variant="plain"
+            v-bind="props"
+            :color="menuHighlightColor"
+          >
+          <v-icon>mdi-history</v-icon>
+          <span>Recent</span>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item v-if="recentQuests.length < 1"
+          :prepend-icon="'$questlists'"
+          title="No Recent Questlists"
+          style="position: relative; z-index: 2147483640;"
+        ></v-list-item>
+        <v-list-item
+          v-for="item in recentQuests"
+          :key="`${item.slug}${item.title}`"
+          test-fav-link
+          :prepend-icon="item.icon || '$questlists'"
+          link
+          :to="item.slug ? `/lists/${item.slug}` : ''"
+          :title="item.title"
+        >
+        </v-list-item>
+      </v-list>
+    </v-menu>
+    <!-- <v-btn
       value="search"
       variant="plain"
       to="/search"
@@ -28,16 +72,16 @@
     >
     <v-icon>mdi-history</v-icon>
     <span>Recent</span>
-    </v-btn>
-    <v-btn variant="plain" :ripple="false" ></v-btn>
+    </v-btn> -->
+    <v-btn variant="plain" :ripple="false"></v-btn>
     <v-btn
-      value="favorite"
+      value="about"
       variant="plain"
-      to="/favorites"
+      to="/about"
       :color="menuHighlightColor"
     >
-    <v-icon>mdi-heart</v-icon>
-    <span>Favorites</span>
+    <v-icon>mdi-information</v-icon>
+    <span>About</span>
     </v-btn>
     <user-menu-item
       :dark="!isDark"
@@ -73,7 +117,7 @@
             </v-icon>
           </v-avatar>
           <span
-            class="text-truncate d-inline-block"
+            class="text-truncate"
             style="max-width:100px"
           >{{ slotProps.username }}</span>
         </v-btn>
@@ -82,7 +126,7 @@
   </v-bottom-navigation>
   <v-btn
       :dark="!isDark"
-      size="large"
+      :size="$vuetify.display.smAndUp ? 'large' : 'small'"
       color="primary"
       density="comfortable"
       to="/new"
@@ -100,6 +144,7 @@
 <script>
 import { auth } from '../../firebase';
 import UserMenuItem from './UserMenuItem.vue';
+import { mapState } from 'vuex';
 
 export default {
   name: 'BottomDrawerMenu',
@@ -121,8 +166,9 @@ export default {
     };
   },
   computed: {
+    ...mapState(['currentUser', 'recentQuests']),
     isMobile() {
-      return this.$vuetify.display.sm;
+      return this.$vuetify.display.smAndDown;
     },
     menuHighlightColor() {
       return this.isDark ? 'primary' : 'secondary';
@@ -152,19 +198,50 @@ export default {
   },
 };
 </script>
+
+<style>
+.menu-content {
+  z-index: 999999;
+}
+</style>
+
 <style scoped>
+.xsmall .v-btn .v-btn__content span{
+  display: none;
+}
+.xsmall .v-btn .v-btn__content i{
+  font-size: 200%;
+}
+.v-bottom-navigation .v-bottom-navigation__content > .v-btn {
+  min-width: 40px;
+}
+
+
+.recent-menu {
+  z-index: 999999 !important;
+}
 .action-btn {
   box-shadow: rgb(var(--v-theme-background)) 0px -6px 0px,
               rgb(var(--v-theme-background)) 0px 6px 0px,
               rgb(var(--v-theme-background)) -6px 0px 0px,
               rgb(var(--v-theme-background)) 6px 0px 0px;
-  z-index: 999999999999;
+  z-index: 99999;
   width: 75px;
   height: 75px;
   max-width: 75px;
   bottom: calc(56px - 36px);
   left: calc(50% - 36px);
   position: absolute;
+}
+.action-btn.v-btn--size-small {
+  width: 45px;
+  height: 45px;
+  max-width: 45px;
+  bottom: calc(56px - 18px);
+  left: calc(50% - 18px);
+}
+.action-btn.v-btn--size-small i {
+  font-size: 200% !important;
 }
 .v-item-group.v-bottom-navigation .v-btn.align-center {
   height: 100%;
