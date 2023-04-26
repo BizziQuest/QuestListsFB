@@ -67,7 +67,7 @@
     <!-- <v-btn
       value="search"
       variant="plain"
-      to="/search"
+      to="/"
       :color="menuHighlightColor"
     >
     <v-icon>mdi-history</v-icon>

@@ -3,8 +3,8 @@
     v-model="showDrawer"
     :bottom="isMobile"
     :floating="isMobile"
-    :expand-on-hover="$vuetify.display.md"
-    :rail="$vuetify.display.md"
+    :expand-on-hover="isMedium"
+    :rail="isMedium"
     :app="!isMobile"
     :permanent="!isMobile"
     :fixed="isMobile"
@@ -121,6 +121,7 @@ export default {
       showCreateList: false,
       auth,
       theme: useTheme(),
+      showDrawer: true,
     };
   },
   mounted() {
@@ -137,21 +138,16 @@ export default {
   computed: {
     ...mapState(['currentUser', 'recentQuests']),
     isMobile() {
-      return this.$vuetify.display.sm;
+      return this.$vuetify.display.mobile;
+    },
+    isMedium() {
+      return this.$vuetify.display.mdAndDown;
     },
     menuHighlightColor() {
       return this.isDark ? 'primary' : 'secondary';
     },
     avatar() {
       return this.$store.state.currentUser?.avatar;
-    },
-    showDrawer: {
-      get() {
-        return this.$vuetify.display.mdAndUp && this.drawer;
-      },
-      set(val) {
-        this.$emit('update:drawer', val);
-      },
     },
     isNavDark() {
       return !this.isDark;
@@ -169,55 +165,21 @@ export default {
 };
 </script>
 <style scoped>
-.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-  &:not([color]) {
-    /* color: #ffffff !important;*/
-
-    &.theme--light {
-      color: #ffffff !important;
-
-      .v-icon {
-        color: #ffffff;
-      }
-    }
-  }
-
-  &.theme--dark {
-    color: #ffffff !important;
-
-    .secondary--text {
-      color: var(--v-secondary-base) !important;
-    }
-
-    .v-icon {
-      color: #ffffff;
-    }
-  }
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--light {
+  color: #ffffff !important;
+}
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--light .v-icon{
+  color: #ffffff;
 }
 
-/* /deep/ .theme--light {
-  &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]) {
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--dark {
     color: #ffffff !important;
-  }
-  &.v-icon {
+}
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--dark .secondary--text {
+    color: var(--v-secondary-base) !important;
+}
+.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled):not([color]).theme--dark .v-icon {
     color: #ffffff;
-  }
-}
-/deep/ [color="secondary"] {
-  &.theme--light {
-    .v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-      color: var(--v-secondary-base) !important;
-    }
-  }
-  &.theme--dark {
-    &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-      color: var(--v-secondary-base) !important;
-    }
-  }
 }
 
-/deep/ .theme--light .secondary--text {
-  font-weight: bold;
-}
-*/
 </style>
