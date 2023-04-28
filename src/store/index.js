@@ -19,7 +19,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
-} from 'firebase/auth';
+} from '@firebase/auth';
 import router from '../router';
 import { getAvatarForUser, setCookie, getCookie } from '../util';
 import {

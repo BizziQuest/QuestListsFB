@@ -1,13 +1,18 @@
 {
   "name": "questlistsfb",
   "version": "0.1.0",
+  "license": "MIT",
+  "main": "src/main.js",
   "private": true,
   "scripts": {
     "serve": "vite --mode development",
     "build": "vite build --mode production",
     "test:unit": "vue-cli-service test:unit --mode=development",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore src",
+    "lint:fix": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "format": "prettier --ignore-path .gitignore --check .",
+    "format:save": "prettier --ignore-path .gitignore --write .",
     "build-storybook": "build-storybook",
     "ci": "CI=true firebase emulators:exec --only firestore,auth 'CI=true yarn test:e2e --headless && yarn test:unit'",
     "ci:e2e": "firebase emulators:exec --only firestore,auth 'yarn test:e2e --headless --mode=development'",
@@ -15,7 +20,7 @@
     "ci:unit": "firebase emulators:exec --only firestore,auth 'yarn test:unit --detectOpenHandles --forceExit'",
     "container": "yarn fb:emulate; yarn serve",
     "dev": "firebase emulators:exec --only firestore,auth --ui 'pnpm serve'",
-    "fb:cypress": "firebase emulators:exec --only firestore,auth 'npx cypress open'",
+    "fb:cypress": "firebase emulators:exec --only firestore,auth 'pnpm cypress open'",
     "fb:deploy": "firebase deploy",
     "fb:dev": "firebase emulators:exec --only firestore,auth --ui --import tests/data 'pnpm serve --open'",
     "fb:dev:clean": "firebase emulators:exec --only firestore,auth 'yarn serve --open'",
@@ -73,9 +78,10 @@
     "@vue/test-utils": "^2.3.2",
     "@vue/vue3-jest": "^29.2.3",
     "css-loader": "^6.7.3",
-    "cypress": "^12.9.0",
+    "cypress": "^12.10.0",
     "cypress-dotenv": "^2.0.0",
     "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.10.0",
@@ -85,10 +91,9 @@
     "firebase-tools": "^11.25.3",
     "flush-promises": "^1.0.2",
     "jest-environment-node": "^29.5.0",
+    "ts-jest": "^29.1.0",
     "vite": "^4.2.1",
     "vite-plugin-vuetify": "^1.0.2",
-    "vitest": "^0.29.8",
-    "vue-cli-plugin-vuetify": "~2.5.8"
-  },
-  "license": "MIT"
+    "vitest": "^0.29.8"
+  }
 }

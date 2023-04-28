@@ -3,7 +3,7 @@ import {
   connectAuthEmulator,
   GoogleAuthProvider,
   FacebookAuthProvider,
-} from 'firebase/auth';
+} from '@firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 import {
