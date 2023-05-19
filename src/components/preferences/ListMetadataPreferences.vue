@@ -51,6 +51,9 @@
           </v-col>
         </v-row>
       </v-form>
+      <v-row class="mt-0 pl-3">
+        <dependency-editor/>
+      </v-row>
       <v-row class="mt-0">
         <v-checkbox
           :model-value="explicitContent"
@@ -87,12 +90,14 @@
 <script>
 import CustomColorPicker from '../CustomColorPicker.vue';
 import ColorInput from '../ColorInput.vue';
+import DependencyEditor from '../DependencyEditor.vue';
 
 export default {
   // TODO: make this component Validatable vis composition
   components: {
     CustomColorPicker,
-    ColorInput
+    ColorInput,
+    DependencyEditor,
   },
   props: {
     explicitContent: {
