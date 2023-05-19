@@ -72,6 +72,7 @@ import userAuthMixin from '../mixins/UserAuth.vue';
 import {
   getListItems, getListStates, getListBySlug, saveListItems, updateUserItemStates, saveList,
 } from '../firebase';
+import {updateListInAlgolia} from '../algolia';
 import ListPreferences from '../components/ListPreferences.vue';
 import { getContrast } from "../colors"
 
@@ -194,9 +195,13 @@ export default {
       items[idx] = { ...item };
       await updateUserItemStates(this.list, items);
       await saveListItems(this.list.id, items);
-
       if(update) this.listItems = items;
       this.hasModifiedList = true;
+      this.updateAlgolia();
+    },
+    updateAlgolia() {
+      const obj = { ...this.list, listItems: this.listItems.map(i => i.title) };
+      updateListInAlgolia(obj);
     },
     delItem(index) {
       const items = this.listItems.filter((_itm, idx) => idx !== index);
