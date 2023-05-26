@@ -16,7 +16,8 @@
       @input="findNextAutocomplete"
     ></v-autocomplete>
     <small>This list will only show if the dependency above are met. The format is
-      <code>&lt;list_name&gt;.&lt;item_name&gt; &lt;operator&gt; &lt;value&gt;</code>.</small>
+      <code>"&lt;list_name&gt;"."&lt;item_name&gt;" &lt;operator&gt; "&lt;value&gt;"</code>.
+      Quotes are optional, for clarification, and can be single or double-quotes</small>
   </div>
 </template>
 
@@ -51,21 +52,30 @@ export default {
   },
   methods: {
     findNextAutocomplete($event) {
+      const equationRegEx = /(?<line>(?<equation>(?<listNameQt>[\"\']?)(?<listName>.*?)\k<listNameQt>\.(?<itemNameQt>[\"\']?)(?<itemName>\w.*?)\k<itemNameQt>\s*(?<operator>[=!><]=?)\s*(?<stateValueQt>[\"\']?)(?<stateValue>\w.*?)\k<stateValueQt>(\s+(?<conjunction>and|or)\s+)?)+?)/ig;
+      const matches = [equationRegEx.exec($event.target.value)];
+      let match = null;
+      while ((match = equationRegEx.exec($event.target.value)) != null) {
+        matches.push(match);
+      }
+      console.log('matches', matches.map(m => m.groups));
+      // matches now contains all the equations
       const equation = $event.target.value;
       const equations = equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
       const lastEquation = equations.at(-1);
       const [item, stateValue] = lastEquation.split(/==|!=|in|<|<=|>|>=/ig); // split by == != in < <= > >=
       const [listName, itemName] = item.split('.');
       const equationSoFar = "";  // this should be filled in
-      if(stateValue) return this.getSuggestionsForWord(stateValue, 'states', equation);
-      if(itemName) return this.getSuggestionsForWord(itemName, 'items', equation);
-      return this.getSuggestionsForWord(listName, 'title', equation);
+      if(stateValue) return this.getSuggestionsForWord(stateValue, 'stateGroup.states.text', equation);
+      if(itemName) return this.getSuggestionsForWord(itemName, 'listItems', listName);
+      return this.getSuggestionsForWord(listName, 'title', '');
     },
     async getSuggestionsForWord(word, field, equation) {
       // we need to pass in the equation, up to this part.
-      console.log(word, field, text);
-      const suggestions = await algoliaIndex.search(`${field}:${word}`, {
+      // console.log(word, field, equation);
+      const suggestions = await algoliaIndex.search(`${word}`, {
         hitsPerPage: 10,
+        restrictSearchableAttributes: [field]
       });
       console.log('suggestions', suggestions, suggestions.hits.length);
 
