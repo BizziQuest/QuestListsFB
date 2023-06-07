@@ -17,7 +17,7 @@
     ></v-autocomplete>
     <small>This list will only show if the dependency above are met. The format is
       <code>"&lt;list_name&gt;"."&lt;item_name&gt;" &lt;operator&gt; "&lt;value&gt;"</code>.
-      Quotes are optional, for clarification, and can be single or double-quotes</small>
+      Quotes are not optional, but can be single or double-quotes.</small>
   </div>
 </template>
 
@@ -62,22 +62,29 @@ export default {
         matches.push(match);
       }
     },
+    /**
+     *
+     * @param {InputEvent} $event
+     */
     async findNextAutocomplete($event) {
       // NOTE: this means we only autocomplete for the last equation typed.
       // one way to get around is to have different inputs for each equation.
+      // TODO: add support for multiple equations! (doesn't work for some reason, probably due to initial blank spaces)
+      // TODO: add support for the 'in' operator
+      /**@type {string} */
       const equation = $event.target.value;
       const equations = equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
       const lastEquation = equations.at(-1);
+      const operator = lastEquation.match(/==|!=|in|<|<=|>|>=/ig)?.[0];
       const [item, stateValue] = lastEquation.split(/==|!=|in|<|<=|>|>=/ig); // split by == != in < <= > >=
       const [listName, itemName] = item.split('.');
-      console.log([listName, itemName, item, stateValue])
+      console.log({listName, itemName, item, stateValue, operator})
       if(stateValue) {
         const stateValuePivot = new RegExp(`${stateValue}$`);
         const previousText = $event.target.value.split(stateValuePivot).slice(0,-1)
         return this.getSuggestionsForStateValue(stateValue, previousText );
       }
       if(itemName !== undefined) {
-        console.log('itemName')
         const itemNamePivot = new RegExp(`${itemName}$`);
         const previousText = $event.target.value.split(itemNamePivot).slice(0,-1);
         return this.getSuggestionsForItemName(itemName, previousText);
@@ -92,19 +99,22 @@ export default {
     getSuggestionsForItemName(word, equation) {
       if(word === '') {
         this.equationSuggestions =  this.autocompleteQuestList.listItems.map(item => ({title: `${equation}"${item}"`}));
-        console.log(this.equationSuggestions)
         return;
       }
 
-      this.equationSuggestions = this.autocompleteQuestList.listItems.filter(listItem => {
-        if(listItem.toLowerCase().includes(word.toLowerCase())) return {title: `${equation}"${listItem}"`}
-      });
-      console.log(this.equationSuggestions)
+      this.equationSuggestions = this.autocompleteQuestList.listItems.filter(listItem =>
+        listItem.toLowerCase().includes(word.toLowerCase().replace(/['"]/g,''))
+      ).map((listItem) => ({title: `${equation}"${listItem}"`}));
     },
     getSuggestionsForStateValue(word, equation) {
-      this.equationSuggestions = this.autocompleteQuestList.stateGroup.states.filter(state => {
-        if(state.text.contains(word)) return {title: `${equation}"${listItem}"`}
-      });
+      const spaceAfterOperator = word.match(/^\s*/)[0];
+      if(word === '' || word === undefined || word === null || /\s+['"]?/.test(word)) {
+        this.equationSuggestions =  this.autocompleteQuestList.stateGroup.states.map(item => ({title: `${equation}${spaceAfterOperator}"${item.text}"`}));
+        return;
+      }
+      this.equationSuggestions = this.autocompleteQuestList.stateGroup.states.filter(state =>
+        state.text.includes(word.toLowerCase().replace(/['"]/g,''))
+      ).map((state) => ({title: `${equation}${spaceAfterOperator}"${state.text}"`}));
     },
     async getSuggestionsForWord(word, field, equation) {
 
@@ -112,7 +122,6 @@ export default {
         hitsPerPage: 10,
         restrictSearchableAttributes: [field]
       });
-      // console.log('suggestions', suggestions.hits.length, suggestions.hits.map(hit => ({title: `${equation}"${hit[field]}"`})));
 
       this.equationSuggestions = suggestions.hits.map(hit => ({title: `${equation}"${hit[field]}"`}));
       return suggestions.hits;
