@@ -52,7 +52,7 @@
         </v-row>
       </v-form>
       <v-row class="mt-0 pl-3">
-        <dependency-editor/>
+        <dependency-editor :dependency="dependency" @update:dependency="updateAttribute('dependency', $event)"/>
       </v-row>
       <v-row class="mt-0">
         <v-checkbox
@@ -124,6 +124,11 @@ export default {
       description: 'Whether to show a compact UI.',
       type: Boolean,
       default: false,
+    },
+    dependency: {
+      description: 'The equation to use to show this list.',
+      type: String,
+      default: '',
     },
 
   },

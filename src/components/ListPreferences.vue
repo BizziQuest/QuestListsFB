@@ -76,6 +76,7 @@ export default {
         description: this.list.description,
         color: this.list.color,
         explicitContent: false,
+        dependency: list.dependency,
       },
       newStateGroup: null,
       deletedValues: [],

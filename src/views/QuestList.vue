@@ -46,6 +46,7 @@
         @update:list="updateListPreferences"
       />
     </v-card>
+    <h3>Active: {{ dependencyResolved }}</h3>
     <div id="items">
         <list-item
           v-for="(item, index) in listItemsWithBlank"
@@ -75,6 +76,7 @@ import {
 import {updateListInAlgolia} from '../algolia';
 import ListPreferences from '../components/ListPreferences.vue';
 import { getContrast } from "../colors"
+import { getValueForDependency } from "../dependency";
 
 export default {
   name: 'QuestList',
@@ -121,6 +123,10 @@ export default {
     };
   },
   computed: {
+    dependencyResolved() {
+      if (!this.list.dependency) return true;
+      return getValueForDependency(this.list?.dependency);
+    },
     listItemsWithBlank() {
       return [...this.listItems, { title: '', isNewItem: true }];
     },

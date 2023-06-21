@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <v-text-field label="Dependency" :model-value="dependency" @update:modelValue="$emit('update:dependency', $event)"></v-text-field> -->
+    <div class="d-flex flex-nowrap align-items-start">
     <v-autocomplete
       v-model="equation"
       v-model:search="equationAutocomplete"
@@ -8,13 +8,16 @@
       :items="equationSuggestions"
       item-title="title"
       item-value="value"
-      class="mx-4"
+      class="w-75 inline-block"
       density="comfortable"
       hide-no-data
       hide-details
       label="Dependency. Start typing to search for a list or item."
       @input="findNextAutocomplete"
-    ></v-autocomplete>
+    >
+  </v-autocomplete>
+  <v-btn slot="append" icon="mdi-content-save-outline" class="ml-3" @click="$emit('update:dependency', equation)"></v-btn>
+  </div>
     <small>This list will only show if the dependency above are met. The format is
       <code>"&lt;list_name&gt;"."&lt;item_name&gt;" &lt;operator&gt; "&lt;value&gt;"</code>.
       Quotes are not optional, but can be single or double-quotes.</small>
@@ -55,7 +58,6 @@ export default {
     parseEquationString() {
       const equationRegEx = /(?<line>(?<equation>(?<listNameQt>[\"\']?)(?<listName>.*?)\k<listNameQt>\.(?<itemNameQt>[\"\']?)(?<itemName>\w.*?)\k<itemNameQt>\s*(?<operator>[=!><]=?)\s*(?<stateValueQt>[\"\']?)(?<stateValue>\w.*?)\k<stateValueQt>(\s+(?<conjunction>and|or)\s+)?)+?)/ig;
       const matches = [equationRegEx.exec($event.target.value)];
-      debugger;
       console.log('matches', matches);
       let match = null;
       while ((match = equationRegEx.exec($event.target.value)) != null) {
@@ -69,16 +71,15 @@ export default {
     async findNextAutocomplete($event) {
       // NOTE: this means we only autocomplete for the last equation typed.
       // one way to get around is to have different inputs for each equation.
-      // TODO: add support for multiple equations! (doesn't work for some reason, probably due to initial blank spaces)
+      // TODO: make this update the parent component so we can save it!
       // TODO: add support for the 'in' operator
       /**@type {string} */
       const equation = $event.target.value;
       const equations = equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
-      const lastEquation = equations.at(-1);
+      const lastEquation = equations.at(-1).trim();
       const operator = lastEquation.match(/==|!=|in|<|<=|>|>=/ig)?.[0];
       const [item, stateValue] = lastEquation.split(/==|!=|in|<|<=|>|>=/ig); // split by == != in < <= > >=
       const [listName, itemName] = item.split('.');
-      console.log({listName, itemName, item, stateValue, operator})
       if(stateValue) {
         const stateValuePivot = new RegExp(`${stateValue}$`);
         const previousText = $event.target.value.split(stateValuePivot).slice(0,-1)
@@ -89,8 +90,8 @@ export default {
         const previousText = $event.target.value.split(itemNamePivot).slice(0,-1);
         return this.getSuggestionsForItemName(itemName, previousText);
       }
-      const listNamePivot = new RegExp(`${stateValue}$`);
-      const previousText = $event.target.value.split(listNamePivot).slice(0,-1)
+      const listNamePivot = new RegExp(`${listName}$`);
+      const previousText = $event.target.value.split(listNamePivot).slice(0,-1);
       const suggestions = await this.getSuggestionsForWord(listName, 'title', previousText);
       this.autocompleteQuestList = suggestions?.[0];
       return suggestions;
