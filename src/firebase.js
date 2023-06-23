@@ -281,6 +281,32 @@ async function getUserPreferences() {
   console.warn("User Prefs don't exist: ", auth.currentUser?.uid, userDocument?.path);
   return {};
 }
+async function getUserListStates(listNameOrSlug) {
+  const userStatesCollection = collection(db, 'users',auth.currentUser.uid, 'states');
+  const matchingStates = await getDocs(
+    query(
+      userStatesCollection,
+      or(
+        where('title', '==', listNameOrSlug),
+        where('slug', '==', listNameOrSlug)
+      )
+    )
+  );
+  if (matchingStates.empty) {
+    console.warn("User States don't exist: ", auth.currentUser?.uid, userStatesDocument?.path);
+    return {};
+  }
+  if (matchingStates.size == 1) return { ...matchingStates[0].data(), id: matchingStates[0].id};
+
+  return matchingStates.filter((state) => state.slug === listNameOrSlug);
+  // matchingStates.forEach((state) => {
+  //   if (state.slug !== listNameOrSlug) return;
+  //   const stateData = state.data();
+  //   stateData.id = state.id;
+  //   return stateData;
+  // });
+}
+
 async function createStateGroup(stateGroupData, defaultStateGroup) {
   // TODO: check for groups that have the current values and use that one instead.
   const defaultStateData = {}; //defaultStateGroup.states[0];
@@ -408,6 +434,7 @@ export {
   getOrderedCollectionAsList,
   getRecentlyUsedLists,
   getStateGroup,
+  getUserListStates,
   getUserPreferences,
   globalPreferences,
   googleOAuthLogin,

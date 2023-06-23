@@ -69,10 +69,8 @@ export default {
      * @param {InputEvent} $event
      */
     async findNextAutocomplete($event) {
-      // NOTE: this means we only autocomplete for the last equation typed.
-      // one way to get around is to have different inputs for each equation.
-      // TODO: make this update the parent component so we can save it!
       // TODO: add support for the 'in' operator
+      // TODO: if there are two lists with the same name, use the slug instead
       /**@type {string} */
       const equation = $event.target.value;
       const equations = equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
