@@ -13,6 +13,7 @@ import {
   addDoc,
   getDocs,
   getDoc,
+  or,
   query,
   where,
   limit,
@@ -282,6 +283,7 @@ async function getUserPreferences() {
   return {};
 }
 async function getUserListStates(listNameOrSlug) {
+  if (!auth.currentUser) return {};
   const userStatesCollection = collection(db, 'users',auth.currentUser.uid, 'states');
   const matchingStates = await getDocs(
     query(

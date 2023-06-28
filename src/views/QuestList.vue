@@ -124,7 +124,7 @@ export default {
   },
   computed: {
     dependencyResolved() {
-      if (!this.list.dependency) return true;
+      if (!this.list?.dependency) return true;
       return getValueForDependency(this.list?.dependency);
     },
     listItemsWithBlank() {

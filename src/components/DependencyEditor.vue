@@ -14,6 +14,7 @@
       hide-details
       label="Dependency. Start typing to search for a list or item."
       @input="findNextAutocomplete"
+      @update:search="findNextAutocomplete({target: {value: $event}})"
     >
   </v-autocomplete>
   <v-btn slot="append" icon="mdi-content-save-outline" class="ml-3" @click="$emit('update:dependency', equation)"></v-btn>
@@ -75,7 +76,6 @@ export default {
       const equation = $event.target.value;
       const equations = equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
       const lastEquation = equations.at(-1).trim();
-      const operator = lastEquation.match(/==|!=|in|<|<=|>|>=/ig)?.[0];
       const [item, stateValue] = lastEquation.split(/==|!=|in|<|<=|>|>=/ig); // split by == != in < <= > >=
       const [listName, itemName] = item.split('.');
       if(stateValue) {
@@ -92,6 +92,7 @@ export default {
       const previousText = $event.target.value.split(listNamePivot).slice(0,-1);
       const suggestions = await this.getSuggestionsForWord(listName, 'title', previousText);
       this.autocompleteQuestList = suggestions?.[0];
+      this.lastSuggestions = suggestions;
       return suggestions;
 
     },
