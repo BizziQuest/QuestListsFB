@@ -20,11 +20,8 @@ function findNextAutocomplete(equation) {
  */
 export function getValueForDependency(equation) {
     // TODO: implement this correctly
-
     const equations = equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
-    const equation_values = equations.map(equation => getEquationValue(equation));
-
-    return false; // fail by default
+    return equations.every(equation => getEquationValue(equation));
 
 }
 
@@ -42,7 +39,9 @@ async function getEquationValue(equation) {
   const listValues = await getUserListStates(listName)
   console.log(operator, stateValue, stateValueList, listValues);
   const savedState = listValues.find(item => item.title === itemName);
+
   if (!savedState) return false;
+
   switch (operator) {
     case '==' : return savedState.value == stateValue;
     case '!=' : return savedState.value != stateValue;

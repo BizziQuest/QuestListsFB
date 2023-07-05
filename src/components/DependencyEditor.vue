@@ -59,7 +59,6 @@ export default {
     parseEquationString() {
       const equationRegEx = /(?<line>(?<equation>(?<listNameQt>[\"\']?)(?<listName>.*?)\k<listNameQt>\.(?<itemNameQt>[\"\']?)(?<itemName>\w.*?)\k<itemNameQt>\s*(?<operator>[=!><]=?)\s*(?<stateValueQt>[\"\']?)(?<stateValue>\w.*?)\k<stateValueQt>(\s+(?<conjunction>and|or)\s+)?)+?)/ig;
       const matches = [equationRegEx.exec($event.target.value)];
-      console.log('matches', matches);
       let match = null;
       while ((match = equationRegEx.exec($event.target.value)) != null) {
         matches.push(match);
