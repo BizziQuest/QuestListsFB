@@ -120,13 +120,10 @@ export default {
       states: [],
       showPreferences: false,
       hasModifiedList: false,
+      dependencyResolved: null,
     };
   },
   computed: {
-    dependencyResolved() {
-      if (!this.list?.dependency) return true;
-      return getValueForDependency(this.list?.dependency);
-    },
     listItemsWithBlank() {
       return [...this.listItems, { title: '', isNewItem: true }];
     },
@@ -134,6 +131,10 @@ export default {
   methods: {
     ...mapMutations(['setPageBackgroundColor','setPageForegroundColor']),
     ...mapActions(['addRecentlyUsedQuest']),
+    async resolveDependency(dependency) {
+      if (!dependency) return true;
+      this.dependencyResolved = await getValueForDependency(dependency);
+    },
     updateListPreferences(newPrefs) {
       this.hasModifiedList = true;
       const updatedPrefs = { ...newPrefs };
@@ -182,6 +183,7 @@ export default {
       }
       let foundList = fbList.docs[fbList.docs.length - 1];
       foundList = {...foundList.data(),  id: foundList.id };
+      this.resolveDependency(foundList?.dependency);
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
       if(foundList.color) {

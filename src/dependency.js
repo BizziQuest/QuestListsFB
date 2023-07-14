@@ -18,11 +18,11 @@ function findNextAutocomplete(equation) {
  * @param {string} equation
  * @returns {boolean}
  */
-export function getValueForDependency(equation) {
+export async function getValueForDependency(equation) {
     // TODO: implement this correctly
     const equations = equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
-    return equations.every(equation => getEquationValue(equation));
-
+    const values = await Promise.all(equations.map(equation => getEquationValue(equation)));
+    return values.every(v => v);
 }
 
 // console.log(getValueForDependency('"list name"."list item" == "new" and "list 2"."item 2" != "old" or "list 3"."item 3" in [list 4, item 4]'));
@@ -35,21 +35,23 @@ async function getEquationValue(equation) {
   const arrayMatches = stateValue.match(/\[(?<list>.*)\]/)
   let stateValueList = arrayMatches?.groups?.list;
 
-  // call firebase and get the values here
-  const listValues = await getUserListStates(listName)
-  console.log(operator, stateValue, stateValueList, listValues);
-  const savedState = listValues.find(item => item.title === itemName);
+  const listValues = await getUserListStates(listName.match(/['"](?<list>.*)['"]/).groups.list);
+
+  const unquotedItemName = itemName.match(/['"](?<name>.*)['"]/).groups.name;
+  const savedState = Object.entries(listValues).filter(([key, item]) => item.title === unquotedItemName)[0][1];
 
   if (!savedState) return false;
 
+  const unquotedStateValue = stateValue.match(/['"](?<name>.*)['"]/).groups.name;
+
   switch (operator) {
-    case '==' : return savedState.value == stateValue;
-    case '!=' : return savedState.value != stateValue;
-    case '<' : return savedState.value < stateValue;
-    case '>' : return savedState.value > stateValue;
-    case '<=' : return savedState.value <= stateValue;
-    case '>=' : return savedState.value >= stateValue;
-    case 'in' : return stateValueList.includes(savedState.value);
+    case '==' : return savedState.state_name == unquotedStateValue || savedState.value == unquotedStateValue;
+    case '!=' : return savedState.state_name != unquotedStateValue || savedState.value != unquotedStateValue;
+    case '<' : return savedState.state_name < unquotedStateValue || savedState.value < unquotedStateValue;
+    case '>' : return savedState.state_name > unquotedStateValue || savedState.value > unquotedStateValue;
+    case '<=' : return savedState.state_name <= unquotedStateValue || savedState.value <= unquotedStateValue;
+    case '>=' : return savedState.state_name >= unquotedStateValue || savedState.value >= unquotedStateValue;
+    case 'in' : return stateValueList.includes(savedState.state_name) || stateValueList.includes(savedState.value);
     default: return false;
   }
 

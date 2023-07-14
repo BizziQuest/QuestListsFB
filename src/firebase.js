@@ -84,7 +84,6 @@ const globalPreferences = collection(db, 'globalPreferences');
 const listsCollection = collection(db, 'lists');
 const stateGroupsCollection = collection(db, 'stateGroups');
 const usersCollection = collection(db, 'users');
-const userStatesCollection = collection(db, 'userListItemStates');
 
 const googleOAuthLogin = new GoogleAuthProvider();
 const facebookOAuthLogin = new FacebookAuthProvider();
@@ -154,7 +153,7 @@ async function updateUserItemStates(list, items) {
       title: list.title,
       slug: list.slug,
       updated: serverTimestamp(),
-      [itemIdx]: { value: state.value, title: item.title },
+      [itemIdx]: { value: state.value, state_name: state.text || '', title: item.title },
     };
   }, {});
   const userStatesRef = doc(userDocument, 'states', list.id);
@@ -284,10 +283,10 @@ async function getUserPreferences() {
 }
 async function getUserListStates(listNameOrSlug) {
   if (!auth.currentUser) return {};
-  const userStatesCollection = collection(db, 'users',auth.currentUser.uid, 'states');
+  const currentUserStatesCollection = collection(db, `users/${auth.currentUser?.uid}/states`);
   const matchingStates = await getDocs(
     query(
-      userStatesCollection,
+      currentUserStatesCollection,
       or(
         where('title', '==', listNameOrSlug),
         where('slug', '==', listNameOrSlug)
@@ -295,18 +294,14 @@ async function getUserListStates(listNameOrSlug) {
     )
   );
   if (matchingStates.empty) {
-    console.warn("User States don't exist: ", auth.currentUser?.uid, userStatesDocument?.path);
+    console.warn("User States don't exist: ", auth.currentUser?.uid, matchingStates?.path);
     return {};
   }
-  if (matchingStates.size == 1) return { ...matchingStates[0].data(), id: matchingStates[0].id};
+  const matchingStateData = []
+  matchingStates.forEach((state) => matchingStateData.push({...state.data(), id: state.id}));
+  if (matchingStates.size == 1) return matchingStateData[0];
 
-  return matchingStates.filter((state) => state.slug === listNameOrSlug);
-  // matchingStates.forEach((state) => {
-  //   if (state.slug !== listNameOrSlug) return;
-  //   const stateData = state.data();
-  //   stateData.id = state.id;
-  //   return stateData;
-  // });
+  return matchingStateData.filter((state) => state.slug === listNameOrSlug);
 }
 
 async function createStateGroup(stateGroupData, defaultStateGroup) {
@@ -449,5 +444,4 @@ export {
   stateGroupsCollection,
   updateUserItemStates,
   usersCollection,
-  userStatesCollection,
 };
