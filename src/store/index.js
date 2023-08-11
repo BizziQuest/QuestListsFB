@@ -25,7 +25,7 @@ import { getAvatarForUser, setCookie, getCookie } from '../util';
 import {
   reactToPrefsChange,
   auth,
-  createList,
+  createList as createListInFirebase,
   createStateGroup,
   googleOAuthLogin,
   facebookOAuthLogin,
@@ -240,7 +240,7 @@ const store = createStore({
     async createList({ state, dispatch }, listData) {
       let createdDocData = null;
       try {
-        createdDocData = await createList(listData, state.globalPreferences.defaultStateGroup);
+        createdDocData = await createListInFirebase(listData, state.globalPreferences.defaultStateGroup);
       } catch (err) {
         console.error(err);
       }

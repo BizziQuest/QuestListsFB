@@ -361,7 +361,11 @@ async function createList(payload, defaultStateGroup) {
   newPayload.slug = await ensureSlugUniqueness(payload.title || defaultPayload.title);
   newPayload.stateGroup = await createStateGroup(newPayload.newStateGroup, defaultStateGroup);
   newPayload = Object.entries(newPayload).reduce((newObj, [k, v]) => {
-    if (k === 'newStateGroup') return newObj;
+    if (k === 'newStateGroup') {  //delete newStateGroup because we should already have stateGroup in lines above
+      const cleaned = {...newObj };
+      delete cleaned[k];
+      return cleaned;
+    }
     if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
     return newObj;
   }, {});

@@ -20,9 +20,9 @@ algoliaIndex.setSettings({
 
 
 async function updateListInAlgolia(listData) {
-  const stateGroupDoc = await getDoc(listData.stateGroup);
+  const stateGroupDoc = await getDoc(listData?.stateGroup);
   algoliaIndex.partialUpdateObject(
-    { ...listData, stateGroup: stateGroupDoc.data(), objectID: listData.id },
+    { ...listData, stateGroup: stateGroupDoc?.data() || listData.newStateGroup, objectID: listData.id },
     { createIfNotExists: true }
   );
 }
