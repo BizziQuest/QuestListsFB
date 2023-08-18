@@ -94,7 +94,6 @@ function sanitizeDoc(doc) {
     if(name && val) return {...sanitizedDoc, [name]: val};
     return sanitizedDoc;
   }, {});
-
 }
 
 async function computeSubListPath(subListRef, routePath) {
@@ -139,7 +138,6 @@ async function getRecentlyUsedLists() {
   const querySnapshot = await getDocs(q);
   const docs = [];
   querySnapshot.forEach((ss) => docs.push(ss.data()));
-  console.info('recent:', docs);
   return docs;
 }
 
@@ -247,7 +245,7 @@ async function getListStates(fbList) {
   const fbStatesDoc = await getDoc(fbList.stateGroup);
   if (!fbStatesDoc) return [];
   const statesDoc = fbStatesDoc.data();
-  return statesDoc.states.sort((a,b) => a.order < b.order);
+  return statesDoc.states //.sort((a,b) => a.order < b.order);
 }
 
 async function ensureSlugUniqueness(title) {
@@ -315,8 +313,7 @@ async function createStateGroup(stateGroupData, defaultStateGroup) {
       (stateGroupData?.states || stateGroupData)?.map((stateBody) => ({ ...defaultStateData, ...stateBody }))
       || defaultStateGroup.states,
   };
-
-  const stateGroupRef = await addDoc(stateGroupsCollection, newStateGroupData);
+  const stateGroupRef = await addDoc(stateGroupsCollection, cleanObject(newStateGroupData));
   return stateGroupRef;
 }
 async function updateStateGroup(stateGroupRef, newStateGroupData) {
@@ -348,6 +345,18 @@ async function createSubList(listItem, path, defaultStateGroup) {
 
 }
 
+function cleanObject(obj, shallow = false) {
+  if(Array.isArray(obj)) return shallow ? obj : obj.map((item) => cleanObject(item));
+  if(typeof(obj) !== 'object') return obj;
+  return Object.entries(obj).reduce((res, [k, v]) => {
+    const newObj = {...res};
+    if (v) newObj[k] = shallow ? v : cleanObject(v) ;
+    return newObj;
+  }, {});
+
+}
+
+
 async function createList(payload, defaultStateGroup) {
   const defaultPayload = {
     title: 'New List',
@@ -360,15 +369,8 @@ async function createList(payload, defaultStateGroup) {
   let newPayload = { ...defaultPayload, ...payload };
   newPayload.slug = await ensureSlugUniqueness(payload.title || defaultPayload.title);
   newPayload.stateGroup = await createStateGroup(newPayload.newStateGroup, defaultStateGroup);
-  newPayload = Object.entries(newPayload).reduce((newObj, [k, v]) => {
-    if (k === 'newStateGroup') {  //delete newStateGroup because we should already have stateGroup in lines above
-      const cleaned = {...newObj };
-      delete cleaned[k];
-      return cleaned;
-    }
-    if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
-    return newObj;
-  }, {});
+  newPayload = cleanObject(newPayload, true);
+  if(Object.hasOwnProperty.call(newPayload, 'newStateGroup')) delete newPayload['newStateGroup'];
   const subListDocRef = await addDoc(listsCollection, newPayload);
   return {...(await getDoc(subListDocRef)).data(), id: subListDocRef.id};
 }
