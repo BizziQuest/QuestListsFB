@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       equationAutocomplete: '',
-      equation: '',
+      equation: this.dependency || '',
       loading: false,
       equationSuggestions: [],
       algoliaSearchClient: algolia,
@@ -51,6 +51,9 @@ export default {
     this.equation = this.dependency;
   },
   watch: {
+    dependency(newValue) {
+      this.equation = newValue;
+    }
     // equationAutocomplete(val) {
     //   this.findNextAutocomplete(val);
     // },
@@ -83,6 +86,7 @@ export default {
         return this.getSuggestionsForStateValue(stateValue, previousText );
       }
       if(itemName !== undefined) {
+        this.autocompleteQuestList = this.lastSuggestions?.[0];
         const itemNamePivot = new RegExp(`${itemName}$`);
         const previousText = $event.target.value.split(itemNamePivot).slice(0,-1);
         return this.getSuggestionsForItemName(itemName, previousText);
@@ -90,7 +94,6 @@ export default {
       const listNamePivot = new RegExp(`${listName}$`);
       const previousText = $event.target.value.split(listNamePivot).slice(0,-1);
       const suggestions = await this.getSuggestionsForWord(listName, 'title', previousText);
-      this.autocompleteQuestList = suggestions?.[0];
       this.lastSuggestions = suggestions;
       return suggestions;
 
@@ -119,7 +122,8 @@ export default {
 
       const suggestions = await algoliaIndex.search(`${word}`, {
         hitsPerPage: 10,
-        restrictSearchableAttributes: [field]
+        restrictSearchableAttributes: [field],
+        cacheable: false,  // XXX: is this even an issue? if an item is editing during the entry phase, it will nor bew shown. this is a somewhat fix for this, but i don't think there is one.
       });
 
       this.equationSuggestions = suggestions.hits.map(hit => ({title: `${equation}"${hit[field]}"`}));

@@ -96,6 +96,7 @@ export default {
         description: newValue.description,
         color: newValue.color,
         explicitContent: newValue.explicitContent,
+        dependency: newValue?.dependency,
       };
     },
   },
@@ -105,6 +106,7 @@ export default {
       description: this.list.description,
       color: this.list.color,
       explicitContent: this.list.explicitContent,
+      dependency: this.list?.dependency,
     };
   },
   methods: {

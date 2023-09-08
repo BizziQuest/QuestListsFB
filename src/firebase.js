@@ -210,12 +210,13 @@ async function saveListItems(fbListId, listItems) {
     listItems.forEach((listItem) => {
       const sanitizedListItem = { ...listItem };
       const listItemProps = Object.keys(listItem);
-      if (listItemProps.includes('isNewItem')) {
-        delete sanitizedListItem.isNewItem;
-      }
+      if (listItemProps.includes('isNewItem')) delete sanitizedListItem.isNewItem;
       if (listItemProps.includes('subList') && !sanitizedListItem.subList) {
         delete sanitizedListItem.subList;
       }
+      // TODO: this cleans up old data. remove after 01/01/2024
+      if (listItemProps.includes('currentStateIdx')) delete sanitizedListItem.currentStateIdx;
+      if (listItemProps.includes('currentStateValue')) delete sanitizedListItem.currentStateValue;
       sanitizedItems.push(sanitizedListItem);
     });
     const docRef = doc(listItemsCollection, docID);

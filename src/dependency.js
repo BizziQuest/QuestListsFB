@@ -28,6 +28,7 @@ export async function getValueForDependency(equation) {
 // console.log(getValueForDependency('"list name"."list item" == "new" and "list 2"."item 2" != "old" or "list 3"."item 3" in [list 4, item 4]'));
 
 async function getEquationValue(equation) {
+  debugger;
   const operator = equation.match(/==|!=|\bin\b|<|<=|>|>=/ig)[0];
   const [item, stateValue] = equation.split(operator);
   const [listName, itemName] = item.split('.');
