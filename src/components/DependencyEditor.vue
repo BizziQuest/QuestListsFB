@@ -80,8 +80,6 @@ export default {
       // TODO: add support for the 'in' operator
       // TODO: if there are two lists with the same name, use the slug instead
 
-      // BUG: this is causing an error on page load when autocompleteQuestList has not been determined.
-              // solution: determine the list on mount
       /**@type {string} */
       const equation = $event.target.value;
       const equations = equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
