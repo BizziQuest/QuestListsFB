@@ -47,6 +47,7 @@ export default {
       loading: false,
       iconItems: [],
       search: null,
+      currentQueryString: null,
     };
   },
   props: {
@@ -74,21 +75,36 @@ export default {
     },
     querySelections(queryString) {
       this.loading = true;
-
+      this.currentQueryString = queryString;
       if (!queryString || queryString.length < 2) {
         this.iconItems = [];
         this.loading = false;
         return;
       }
-      this.iconItems = this.iconInfo
+      const batchSize = 400;
+      const iconFinderPromises = [];
+      let batchStart = 0;
+      let promiseIndex = 0;
+      while(batchStart < this.iconInfo.length) {
+        batchStart = iconFinderPromises.length * batchSize;
+        iconFinderPromises.push(this.findIcon(queryString, batchStart, batchSize, promiseIndex++));
+      }
+      Promise.all(iconFinderPromises).then((lists) => {
+        this.iconItems = [].concat(...lists).slice(0, 25);  // vuetify is slow to assemble the UI, so we need to limit the number of items
+        this.loading = false;
+      })
+    },
+    async findIcon(queryString, batchStart, batchSize, batchNum) {
+      const queryRegex = new RegExp(queryString, 'i');
+      return this.iconInfo.slice(batchStart, batchStart + batchSize)
         .filter(
           (icon) => {
             if (icon.deprecated) return false;
-            return icon?.title.toLowerCase().includes(queryString.toLowerCase())
-                    || (icon?.aliases || []).join(', ').toLowerCase().includes(queryString.toLowerCase());
+            if (queryRegex.test(icon.title)) return true;
+            if (queryRegex.test((icon?.aliases || []).join(', '))) return true;
+            return false;
           }
         )
-      this.loading = false;
     },
   },
   mounted() {

@@ -85,8 +85,6 @@ import {
  * @property {boolean} isActive
  * @property {boolean} isNewItem
  * @property {string} title
- * @property {boolean} currentStateIdx
- * @property {boolean} currentStateValue
  * @property {boolean} subListSlug
  * @property {boolean} subListPath
  * @property {boolean} subList
@@ -148,15 +146,17 @@ export default {
     cycleIcon() {
       if (this.isNewItem) return;
       this.activate();
-      let nextIdx = (this.modelValue?.currentStateIdx || 0) + 1;
-      if (nextIdx > this.states.length - 1) nextIdx = 0;
-      this.updateData({
-        currentStateIdx: nextIdx,
-        currentStateValue: this.states[nextIdx]?.value
-      });
+      let nextOrdinal = (parseInt(this.modelValue?.state.order || 0, 10)) + 1;
+      const highestOrder = this.states.reduce((highest, state) => {
+        if (state.order > highest) return state.order;
+        return highest;
+      }, 0);
+      if (nextOrdinal > highestOrder) nextOrdinal = 0;
+      this.updateData({ state: this.states[nextOrdinal] });
     },
     updateData(data) {
-      this.$emit('update:modelValue', {...this.modelValue, ...data, isNewItem: false});
+      const newData = {...this.modelValue, ...data, isNewItem: false}
+      this.$emit('update:modelValue', newData);
     },
     saveItem({to}) {
       this.$emit('update', {...this.modelValue, skipUpdate: !!to})
@@ -185,28 +185,15 @@ export default {
       return true;
     },
     currentColor() {
-      return this.states[this.modelValue?.currentStateIdx || 0]?.color;
+      return this.modelValue?.state?.color || this.states?.[0]?.color
     },
-
     icon() {
       if (this.isNewItem) return 'mdi-plus';
-      let firstStateIndex = 0;
-      if (!this.modelValue.currentStateValue) {
-        let currentOrder = this.states[0].order;
-        this.states.forEach((state, index) => {
-          if(state.order > currentOrder) return;
-          currentOrder = state.order;
-          firstStateIndex = index;
-        });
-      }
-      let currentStateIdx = this.states.findIndex((state) => state.value === (this.modelValue.currentStateValue || this.states[firstStateIndex].value) );
-      if (currentStateIdx < 0) {
-        return 'mdi-help-box';
-      }
-      return this.states[currentStateIdx || 0]?.icon;
+      if (this.modelValue.state.icon) return this.modelValue.state.icon;
+      return 'mdi-help-box';
     },
     iconTitle() {
-      return this.states[this.modelValue?.currentStateIdx || 0]?.text;
+      return this.modelValue?.state?.text;
     },
     placeholder() {
       return this.isNewItem ? 'New Item' : '';

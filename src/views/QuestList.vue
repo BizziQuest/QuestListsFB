@@ -46,6 +46,7 @@
         @update:list="updateListPreferences"
       />
     </v-card>
+    <h3>Active: {{ dependencyResolved }}</h3>
     <div id="items">
         <list-item
           v-for="(item, index) in listItemsWithBlank"
@@ -72,8 +73,10 @@ import userAuthMixin from '../mixins/UserAuth.vue';
 import {
   getListItems, getListStates, getListBySlug, saveListItems, updateUserItemStates, saveList,
 } from '../firebase';
+import {updateListInAlgolia} from '../algolia';
 import ListPreferences from '../components/ListPreferences.vue';
 import { getContrast } from "../colors"
+import { getValueForDependency } from "../dependency";
 
 export default {
   name: 'QuestList',
@@ -117,16 +120,21 @@ export default {
       states: [],
       showPreferences: false,
       hasModifiedList: false,
+      dependencyResolved: null,
     };
   },
   computed: {
     listItemsWithBlank() {
-      return [...this.listItems, { title: '', isNewItem: true }];
+      return [...this.listItems, { title: '', isNewItem: true}];
     },
   },
   methods: {
     ...mapMutations(['setPageBackgroundColor','setPageForegroundColor']),
     ...mapActions(['addRecentlyUsedQuest']),
+    async resolveDependency(dependency) {
+      if (!dependency) return true;
+      this.dependencyResolved = await getValueForDependency(dependency);
+    },
     updateListPreferences(newPrefs) {
       this.hasModifiedList = true;
       const updatedPrefs = { ...newPrefs };
@@ -175,6 +183,7 @@ export default {
       }
       let foundList = fbList.docs[fbList.docs.length - 1];
       foundList = {...foundList.data(),  id: foundList.id };
+      this.resolveDependency(foundList?.dependency);
       const listItems = await getListItems(foundList);
       const states = await getListStates(foundList);
       if(foundList.color) {
@@ -189,14 +198,17 @@ export default {
     async saveItem(idx, item) {
       const update = !item?.skipUpdate;
       if (item.skipUpdate) delete item.skipUpdate;
-
       const items = [...this.listItems];
       items[idx] = { ...item };
       await updateUserItemStates(this.list, items);
       await saveListItems(this.list.id, items);
-
       if(update) this.listItems = items;
       this.hasModifiedList = true;
+      this.updateAlgolia();
+    },
+    updateAlgolia() {
+      const obj = { ...this.list, listItems: this.listItems.map(i => i.title) };
+      updateListInAlgolia(obj);
     },
     delItem(index) {
       const items = this.listItems.filter((_itm, idx) => idx !== index);

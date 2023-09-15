@@ -1,5 +1,5 @@
 import algoliasearch from 'algoliasearch';
-
+import {getDoc} from 'firebase/firestore';
 const options = {};
 if (import.meta.env.VITE_APP_ALGOLIA_HOST) {
   options.hosts = [{ url: import.meta.env.VITE_APP_ALGOLIA_HOST }];
@@ -18,10 +18,21 @@ algoliaIndex.setSettings({
   ],
 });
 
+
+async function updateListInAlgolia(listData) {
+  const stateGroupDoc = await getDoc(listData?.stateGroup);
+  algoliaIndex.partialUpdateObject(
+    { ...listData, stateGroup: stateGroupDoc?.data() || listData.newStateGroup, objectID: listData.id },
+    { createIfNotExists: true }
+  );
+}
+
+
 export default algoliaIndex;
 export {
   algolia,
   algoliaIndexName,
   algoliaSuggestionIndexName,
   algoliaIndex,
+  updateListInAlgolia,
 };

@@ -239,7 +239,9 @@ export default {
     updateItem(index, state) {
       if(state.text === '' && state.icon === 'mdi-plus') return;
       this.states = this.updateThisState(index, state);
-      this.$emit('list:updated', { ...this.stateGroupObject, ...this.updatedStateGroup });
+      const newObject = { ...this.stateGroupObject, ...this.updatedStateGroup };
+      // newObject.states = [...newObject.states];  // reassign these to get rid of the proxy which interferes with firebase
+      this.$emit('list:updated', newObject);
     },
     updateThisState(index, state) {
       const states = [...(this.updatedStateGroup.states.length > 0 ? this.updatedStateGroup.states : this.states)];

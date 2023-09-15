@@ -23,6 +23,7 @@ module.exports = {
     'plugin:vue/vue3-recommended',
     '@vue/airbnb',
     'plugin:vue/vue3-essential',
+    "prettier"
   ],
 
   rules: {

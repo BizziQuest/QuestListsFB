@@ -19,13 +19,13 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
-} from 'firebase/auth';
+} from '@firebase/auth';
 import router from '../router';
 import { getAvatarForUser, setCookie, getCookie } from '../util';
 import {
   reactToPrefsChange,
   auth,
-  createList,
+  createList as createListInFirebase,
   createStateGroup,
   googleOAuthLogin,
   facebookOAuthLogin,
@@ -35,7 +35,7 @@ import {
   getRecentlyUsedLists,
 } from '../firebase';
 
-import { algoliaIndex } from '../algolia';
+import { algoliaIndex, updateListInAlgolia } from '../algolia';
 
 const defaultState = {
   currentUser: {
@@ -237,16 +237,14 @@ const store = createStore({
       const stateGroupRef = createStateGroup(stateGroupData);
       commit('addState', stateGroupRef);
     },
-    async createList({ state }, listData) {
+    async createList({ state, dispatch }, listData) {
       let createdDocData = null;
       try {
-        createdDocData = await createList(listData, state.globalPreferences.defaultStateGroup);
+        createdDocData = await createListInFirebase(listData, state.globalPreferences.defaultStateGroup);
       } catch (err) {
         console.error(err);
       }
-      algoliaIndex.saveObject(
-        { ...createdDocData, objectID: createdDocData.id },
-      );
+      updateListInAlgolia(createdDocData);
       router.push(`/Lists/${createdDocData.slug}`);
     },
     updateUserInfo({ commit }, payload) {

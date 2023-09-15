@@ -3,7 +3,7 @@ import {
   connectAuthEmulator,
   GoogleAuthProvider,
   FacebookAuthProvider,
-} from 'firebase/auth';
+} from '@firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 import {
@@ -13,6 +13,7 @@ import {
   addDoc,
   getDocs,
   getDoc,
+  or,
   query,
   where,
   limit,
@@ -83,7 +84,6 @@ const globalPreferences = collection(db, 'globalPreferences');
 const listsCollection = collection(db, 'lists');
 const stateGroupsCollection = collection(db, 'stateGroups');
 const usersCollection = collection(db, 'users');
-const userStatesCollection = collection(db, 'userListItemStates');
 
 const googleOAuthLogin = new GoogleAuthProvider();
 const facebookOAuthLogin = new FacebookAuthProvider();
@@ -94,7 +94,6 @@ function sanitizeDoc(doc) {
     if(name && val) return {...sanitizedDoc, [name]: val};
     return sanitizedDoc;
   }, {});
-
 }
 
 async function computeSubListPath(subListRef, routePath) {
@@ -139,7 +138,6 @@ async function getRecentlyUsedLists() {
   const querySnapshot = await getDocs(q);
   const docs = [];
   querySnapshot.forEach((ss) => docs.push(ss.data()));
-  console.info('recent:', docs);
   return docs;
 }
 
@@ -153,7 +151,7 @@ async function updateUserItemStates(list, items) {
       title: list.title,
       slug: list.slug,
       updated: serverTimestamp(),
-      [itemIdx]: { value: state.value, title: item.title },
+      [itemIdx]: { value: state.value, state_name: state.text || '', title: item.title },
     };
   }, {});
   const userStatesRef = doc(userDocument, 'states', list.id);
@@ -212,12 +210,13 @@ async function saveListItems(fbListId, listItems) {
     listItems.forEach((listItem) => {
       const sanitizedListItem = { ...listItem };
       const listItemProps = Object.keys(listItem);
-      if (listItemProps.includes('isNewItem')) {
-        delete sanitizedListItem.isNewItem;
-      }
+      if (listItemProps.includes('isNewItem')) delete sanitizedListItem.isNewItem;
       if (listItemProps.includes('subList') && !sanitizedListItem.subList) {
         delete sanitizedListItem.subList;
       }
+      // TODO: this cleans up old data. remove after 01/01/2024
+      if (listItemProps.includes('currentStateIdx')) delete sanitizedListItem.currentStateIdx;
+      if (listItemProps.includes('currentStateValue')) delete sanitizedListItem.currentStateValue;
       sanitizedItems.push(sanitizedListItem);
     });
     const docRef = doc(listItemsCollection, docID);
@@ -247,7 +246,7 @@ async function getListStates(fbList) {
   const fbStatesDoc = await getDoc(fbList.stateGroup);
   if (!fbStatesDoc) return [];
   const statesDoc = fbStatesDoc.data();
-  return statesDoc.states.sort((a,b) => a.order < b.order);
+  return statesDoc.states //.sort((a,b) => a.order < b.order);
 }
 
 async function ensureSlugUniqueness(title) {
@@ -281,6 +280,29 @@ async function getUserPreferences() {
   console.warn("User Prefs don't exist: ", auth.currentUser?.uid, userDocument?.path);
   return {};
 }
+async function getUserListStates(listNameOrSlug) {
+  if (!auth.currentUser) return {};
+  const currentUserStatesCollection = collection(db, `users/${auth.currentUser?.uid}/states`);
+  const matchingStates = await getDocs(
+    query(
+      currentUserStatesCollection,
+      or(
+        where('title', '==', listNameOrSlug),
+        where('slug', '==', listNameOrSlug)
+      )
+    )
+  );
+  if (matchingStates.empty) {
+    console.warn("User States don't exist: ", auth.currentUser?.uid, matchingStates?.path);
+    return {};
+  }
+  const matchingStateData = []
+  matchingStates.forEach((state) => matchingStateData.push({...state.data(), id: state.id}));
+  if (matchingStates.size == 1) return matchingStateData[0];
+
+  return matchingStateData.filter((state) => state.slug === listNameOrSlug);
+}
+
 async function createStateGroup(stateGroupData, defaultStateGroup) {
   // TODO: check for groups that have the current values and use that one instead.
   const defaultStateData = {}; //defaultStateGroup.states[0];
@@ -292,8 +314,7 @@ async function createStateGroup(stateGroupData, defaultStateGroup) {
       (stateGroupData?.states || stateGroupData)?.map((stateBody) => ({ ...defaultStateData, ...stateBody }))
       || defaultStateGroup.states,
   };
-
-  const stateGroupRef = await addDoc(stateGroupsCollection, newStateGroupData);
+  const stateGroupRef = await addDoc(stateGroupsCollection, cleanObject(newStateGroupData));
   return stateGroupRef;
 }
 async function updateStateGroup(stateGroupRef, newStateGroupData) {
@@ -325,6 +346,18 @@ async function createSubList(listItem, path, defaultStateGroup) {
 
 }
 
+function cleanObject(obj, shallow = false) {
+  if(Array.isArray(obj)) return shallow ? obj : obj.map((item) => cleanObject(item));
+  if(typeof(obj) !== 'object') return obj;
+  return Object.entries(obj).reduce((res, [k, v]) => {
+    const newObj = {...res};
+    if (v) newObj[k] = shallow ? v : cleanObject(v) ;
+    return newObj;
+  }, {});
+
+}
+
+
 async function createList(payload, defaultStateGroup) {
   const defaultPayload = {
     title: 'New List',
@@ -337,11 +370,8 @@ async function createList(payload, defaultStateGroup) {
   let newPayload = { ...defaultPayload, ...payload };
   newPayload.slug = await ensureSlugUniqueness(payload.title || defaultPayload.title);
   newPayload.stateGroup = await createStateGroup(newPayload.newStateGroup, defaultStateGroup);
-  newPayload = Object.entries(newPayload).reduce((newObj, [k, v]) => {
-    if (k === 'newStateGroup') return newObj;
-    if (v) newObj[k] = v; // eslint-disable-line no-param-reassign
-    return newObj;
-  }, {});
+  newPayload = cleanObject(newPayload, true);
+  if(Object.hasOwnProperty.call(newPayload, 'newStateGroup')) delete newPayload['newStateGroup'];
   const subListDocRef = await addDoc(listsCollection, newPayload);
   return {...(await getDoc(subListDocRef)).data(), id: subListDocRef.id};
 }
@@ -408,6 +438,7 @@ export {
   getOrderedCollectionAsList,
   getRecentlyUsedLists,
   getStateGroup,
+  getUserListStates,
   getUserPreferences,
   globalPreferences,
   googleOAuthLogin,
@@ -420,5 +451,4 @@ export {
   stateGroupsCollection,
   updateUserItemStates,
   usersCollection,
-  userStatesCollection,
 };
