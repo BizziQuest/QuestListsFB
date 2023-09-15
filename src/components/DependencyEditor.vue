@@ -47,25 +47,30 @@ export default {
       autocompleteQuestList: null,
     };
   },
-  mount() {
-    this.equation = this.dependency;
+  mounted() {
+    this.parseEquationString(this.dependency);
   },
   watch: {
     dependency(newValue) {
       this.equation = newValue;
+      this.parseEquationString(this.dependency);
     }
     // equationAutocomplete(val) {
     //   this.findNextAutocomplete(val);
     // },
   },
   methods: {
-    parseEquationString() {
-      const equationRegEx = /(?<line>(?<equation>(?<listNameQt>[\"\']?)(?<listName>.*?)\k<listNameQt>\.(?<itemNameQt>[\"\']?)(?<itemName>\w.*?)\k<itemNameQt>\s*(?<operator>[=!><]=?)\s*(?<stateValueQt>[\"\']?)(?<stateValue>\w.*?)\k<stateValueQt>(\s+(?<conjunction>and|or)\s+)?)+?)/ig;
-      const matches = [equationRegEx.exec($event.target.value)];
-      let match = null;
-      while ((match = equationRegEx.exec($event.target.value)) != null) {
-        matches.push(match);
-      }
+    async parseEquationString(equationString) {
+      this.equation = equationString;
+      const equations = this.equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
+      const lastEquation = equations.at(-1).trim();
+      const [item, stateValue] = lastEquation.split(/==|!=|in|<|<=|>|>=/ig); // split by == != in < <= > >=
+      const [listName, itemName] = item.split('.');
+      const listNamePivot = new RegExp(`${listName}$`);
+      const previousText = equationString.split(listNamePivot).slice(0,-1);
+      const suggestions = await this.getSuggestionsForWord(listName, 'title', previousText);
+      this.lastSuggestions = suggestions;
+      this.autocompleteQuestList = this.lastSuggestions?.[0];
     },
     /**
      *
@@ -74,6 +79,9 @@ export default {
     async findNextAutocomplete($event) {
       // TODO: add support for the 'in' operator
       // TODO: if there are two lists with the same name, use the slug instead
+
+      // BUG: this is causing an error on page load when autocompleteQuestList has not been determined.
+              // solution: determine the list on mount
       /**@type {string} */
       const equation = $event.target.value;
       const equations = equation.split(/\band\b|\bor\b/i); // Split by 'and' or 'or'
