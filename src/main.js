@@ -7,6 +7,10 @@ import store from './store';
 import InstantSearch from 'vue-instantsearch/vue3/es';
 import vuetify from './plugins/vuetify';
 
+import { VueHeadMixin, createHead } from '@vueuse/head'
+const head = createHead()
+
+
 // we can use this if we need, but the reply theme preset uses a different font
 // import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import { auth } from './firebase';
@@ -29,12 +33,15 @@ onAuthStateChanged(auth, (user) => {
 // const i18n = setupI18n();
 
 const app = createApp(App)
+const headPlugin = createHead();
 
 app.use(vuetify);
 app.use(store);
 app.use(router);
 // app.use(i18n);
 app.use(InstantSearch);
+app.use(headPlugin);
+app.mixin(VueHeadMixin);
 
 if (window.Cypress) window.$app = app;
 
